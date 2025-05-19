@@ -145,6 +145,7 @@ export default compat.config(
             { pattern: 'components/**', group: 'internal', position: 'before' },
             { pattern: 'icons/**', group: 'internal', position: 'before' },
             { pattern: 'src/**', group: 'internal', position: 'before' },
+            { pattern: 'styles/**', group: 'internal', position: 'before' },
             { pattern: '**css**', group: 'unknown', position: 'after' },
           ],
           pathGroupsExcludedImportTypes: ['builtin'],

@@ -6,8 +6,7 @@ import Navbar from 'components/Navbar';
 import Settings from 'components/Settings';
 import Dashboard from 'components/Dashboard/Dashboard';
 import Profile from 'components/Profile/Profile';
-
-import 'src/App.css';
+import Home from 'components/Home/Home';
 
 function App() {
   return (
@@ -17,7 +16,7 @@ function App() {
           <Navbar />
           <main className='main-content'>
             <Routes>
-              <Route path='/' element={<h1>Master Management</h1>} />
+              <Route path='/' element={<Home />} />
               <Route path='/settings' element={<Settings />} />
               <Route path='/dashboard' element={<Dashboard />} />
               <Route path='/profile' element={<Profile />} />

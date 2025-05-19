@@ -1,7 +1,5 @@
 import { themes, useTheme } from 'context/themeHelpers';
 
-import 'components/Settings.css';
-
 const Settings = () => {
   const { theme: currentTheme, setTheme } = useTheme();
 

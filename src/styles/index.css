@@ -1,3 +1,8 @@
+@import 'styles/App.css';
+
+@import 'styles/components/Navbar.css';
+@import 'styles/components/Settings.css';
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
