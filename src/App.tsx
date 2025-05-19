@@ -3,6 +3,8 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Settings from './components/Settings'
 import { ThemeProvider } from './context/ThemeContext'
+import Dashboard from './components/Dashboard/Dashboard'
+import Profile from './components/Profile/Profile'
 
 function App() {
   return (
@@ -12,8 +14,10 @@ function App() {
           <Navbar />
           <main className="main-content">
             <Routes>
-              <Route path="/settings" element={<Settings />} />
               <Route path="/" element={<h1>Master Management</h1>} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/profile" element={<Profile />} />
             </Routes>
           </main>
         </div>
