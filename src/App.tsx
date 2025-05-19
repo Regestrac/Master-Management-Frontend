@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { ThemeProvider } from 'context/ThemeContext';
 
-import Navbar from 'components/Navbar';
+import Navbar from 'components/Navbar/Navbar';
 import Settings from 'components/Settings';
 import Dashboard from 'components/Dashboard/Dashboard';
 import Profile from 'components/Profile/Profile';
