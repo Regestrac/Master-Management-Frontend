@@ -1,10 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
-import Navbar from './components/Navbar';
-import Settings from './components/Settings';
-import { ThemeProvider } from './context/ThemeContext';
-import Dashboard from './components/Dashboard/Dashboard';
-import Profile from './components/Profile/Profile';
+
+import { ThemeProvider } from 'context/ThemeContext';
+
+import Navbar from 'components/Navbar';
+import Settings from 'components/Settings';
+import Dashboard from 'components/Dashboard/Dashboard';
+import Profile from 'components/Profile/Profile';
+
+import 'src/App.css';
 
 function App() {
   return (

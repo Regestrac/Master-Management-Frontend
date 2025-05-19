@@ -131,6 +131,27 @@ export default compat.config(
         ],
         allowSamePrecedence: false,
       }],
+      'import/order': [
+        'error',
+        {
+          groups: [['builtin', 'external'], ['internal'], ['index', 'parent', 'sibling'], ['unknown']],
+          pathGroups: [
+            { pattern: 'react', group: 'builtin', position: 'before' },
+            { pattern: '<THIRD_PARTY_MODULES>', group: 'external', position: 'after' },
+            { pattern: 'hooks/**', group: 'internal', position: 'before' },
+            { pattern: 'context/**', group: 'internal', position: 'before' },
+            { pattern: 'helpers/**', group: 'internal', position: 'before' },
+            { pattern: 'redux/**', group: 'internal', position: 'before' },
+            { pattern: 'components/**', group: 'internal', position: 'before' },
+            { pattern: 'icons/**', group: 'internal', position: 'before' },
+            { pattern: 'src/**', group: 'internal', position: 'before' },
+            { pattern: '**css**', group: 'unknown', position: 'after' },
+          ],
+          pathGroupsExcludedImportTypes: ['builtin'],
+          warnOnUnassignedImports: true,
+          'newlines-between': 'always',
+        },
+      ],
     },
   },
 );

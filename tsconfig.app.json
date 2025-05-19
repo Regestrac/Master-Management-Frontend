@@ -21,7 +21,18 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Imports */
+    "baseUrl": "src",
+    "paths": {
+      "components/*": ["components/*"],
+      "pages/*": ["pages/*"],
+      "utils/*": ["utils/*"],
+      "styles/*": ["styles/*"],
+      "context/*": ["context/*"],
+      "src/*": ["*"]
+    }
   },
   "include": ["src"]
 }

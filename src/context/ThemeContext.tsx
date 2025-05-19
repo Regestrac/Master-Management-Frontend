@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ThemeContext, themes } from './themeHelpers';
-import { ThemeType } from '../helpers/sharedTypes';
+
+import { ThemeContext, themes } from 'context/themeHelpers';
+
+import { ThemeType } from 'helpers/sharedTypes';
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState<ThemeType>(() => {

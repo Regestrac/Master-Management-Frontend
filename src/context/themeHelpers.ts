@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
-import { ThemeType } from '../helpers/sharedTypes';
+
+import { ThemeType } from 'helpers/sharedTypes';
 
 type ThemeContextType = {
   theme: ThemeType;
