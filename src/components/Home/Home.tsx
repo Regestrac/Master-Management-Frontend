@@ -1,8 +1,17 @@
-import React from 'react';
+import RecentTasks from 'components/Home/RecentTasks';
+import WordsSlider from 'components/Home/WordsSlider';
+
+const introWords = ['Time', 'Tasks', 'Goals'];
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div>
+      <h1 className='intro'>
+        Manage Your&nbsp;
+        <WordsSlider words={introWords} />
+      </h1>
+      <RecentTasks />
+    </div>
   );
 };
 
