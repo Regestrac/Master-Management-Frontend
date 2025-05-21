@@ -1,8 +1,11 @@
-@import 'styles/App.css';
+@import "tailwindcss";
 
-@import 'styles/components/Navbar.css';
-@import 'styles/components/Settings.css';
-@import 'styles/components/Home.css';
+@import './App.css';
+
+@import './components/Navbar.css';
+@import './components/Settings.css';
+@import './components/Home.css';
+@import './components/Tasks.css';
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -11,18 +14,6 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --primary-color: #4f46e5;
-  --primary-hover: #4338ca;
-  --text-color: #374151;
-  --text-light: #6b7280;
-  --bg-color: #ffffff;
-  --border-color: rgba(229, 231, 235, 0.2);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 }
 
 body {
