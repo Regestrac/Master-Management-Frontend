@@ -1,6 +1,6 @@
 .create-task-button {
-  height: 100px;
-  width: 400px;
+  height: 70px;
+  width: 300px;
   border-radius: 16px;
   background-color: var(--bg-secondary);
   color: var(--text-color);
