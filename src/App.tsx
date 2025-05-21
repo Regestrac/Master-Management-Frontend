@@ -7,6 +7,7 @@ import Settings from 'components/Settings';
 import Dashboard from 'components/Dashboard/Dashboard';
 import Profile from 'components/Profile/Profile';
 import Home from 'components/Home/Home';
+import Tasks from 'components/Tasks/Tasks';
 
 function App() {
   return (
@@ -17,8 +18,9 @@ function App() {
           <main className='main-content'>
             <Routes>
               <Route path='/' element={<Home />} />
-              <Route path='/settings' element={<Settings />} />
               <Route path='/dashboard' element={<Dashboard />} />
+              <Route path='/tasks' element={<Tasks />} />
+              <Route path='/settings' element={<Settings />} />
               <Route path='/profile' element={<Profile />} />
             </Routes>
           </main>
