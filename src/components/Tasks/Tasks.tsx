@@ -1,4 +1,6 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import { useNavigate } from 'react-router-dom';
 
 import PlusIcon from 'icons/PlusIcon';
 
@@ -14,8 +16,11 @@ type TaskType = {
 const Tasks = () => {
   const [openForm, setOpenForm] = useState(false);
   const [tasks, setTasks] = useState<TaskType[]>([]);
+  const [filteredTasks, setFilteredTasks] = useState<TaskType[]>([]);
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const taskInputRef = useRef<HTMLInputElement>(null);
+
+  const navigate = useNavigate();
 
   const handleCreateTask = () => {
     setOpenForm(true);
@@ -26,7 +31,7 @@ const Tasks = () => {
   };
 
   const handleSaveTask = () => {
-    const element = inputRef.current;
+    const element = taskInputRef.current;
 
     if (element?.value) {
       setTasks([...tasks, { id: tasks.length + 1, task: element?.value || '', status: 'incomplete' as const, timeSpend: 707330 }]);
@@ -38,11 +43,25 @@ const Tasks = () => {
     setTasks((prev) => prev.filter((task) => task.id !== id));
   };
 
-  const handleStartTask = (_id: number) => {
+  const handleStartTask = (id: number) => {
+    navigate(`/tasks/${id}`);
+  };
 
+  const onSearch = (e:  React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value) {
+      setFilteredTasks(tasks?.filter((item) => item.task?.toLowerCase().includes(e?.target?.value?.toLowerCase())));
+    } else {
+      setFilteredTasks(tasks);
+    }
   };
 
   const totalTasks = tasks.length || 0;
+
+  useEffect(() => {
+    if (tasks.length > 0) {
+      setFilteredTasks(tasks);
+    }
+  }, [tasks]);
 
   return (
     <div className='tasks'>
@@ -51,14 +70,14 @@ const Tasks = () => {
           {totalTasks}
           {` ${totalTasks === 1 ? 'Task' : 'Tasks'} Available`}
         </h3>
-        <input placeholder='Search Task' className='border-1' />
+        <input placeholder='Search Task' className='border-1' onChange={onSearch} />
         <button className='create-task-button' onClick={handleCreateTask}>
           <PlusIcon />
           Create New Task
         </button>
       </div>
       <div className='border-1 rounded-2xl p-2 mt-5'>
-        {tasks.map((task) => (
+        {filteredTasks.map((task) => (
           <div key={task?.id} className='flex justify-between mb-1'>
             <div className='flex'>
               <span className={`${task.status} me-3`}>{capitalize(task?.status)}</span>
@@ -73,7 +92,7 @@ const Tasks = () => {
         ))}
         {openForm ? (
           <div className='w-full flex justify-between mt-3'>
-            <input placeholder='Enter Task Name' className='h-10 w-full border-1' ref={inputRef} />
+            <input placeholder='Enter Task Name' className='h-10 w-full border-1' ref={taskInputRef} />
             <button onClick={handleSaveTask} className='rounded-l h-10 w-32 border-1'>Save</button>
             <button onClick={handleCancel} className='rounded-l h-10 w-32 border-1 ms-2'>Cancel</button>
           </div>

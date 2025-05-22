@@ -8,6 +8,7 @@ import Dashboard from 'components/Dashboard/Dashboard';
 import Profile from 'components/Profile/Profile';
 import Home from 'components/Home/Home';
 import Tasks from 'components/Tasks/Tasks';
+import TaskDetail from 'components/Tasks/TaskDetail';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
               <Route path='/' element={<Home />} />
               <Route path='/dashboard' element={<Dashboard />} />
               <Route path='/tasks' element={<Tasks />} />
+              <Route path='/tasks/:id' element={<TaskDetail />} />
               <Route path='/settings' element={<Settings />} />
               <Route path='/profile' element={<Profile />} />
             </Routes>
