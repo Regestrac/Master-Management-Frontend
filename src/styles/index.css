@@ -18,8 +18,8 @@
 
 body {
   font-family: Inter, system-ui, -apple-system, sans-serif;
-  color: var(--text-color);
-  background-color: var(--bg-color);
+  color: var(--color-text);
+  background-color: var(--color-primary-bg);
 }
 
 /* Better text rendering */
@@ -27,4 +27,20 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* Color themes for tailwind */
+@theme {
+  --color-primary: '#4f46e5';
+  --color-hover-primary: '#4338ca';
+  --color-hover-secondary: 'rgba(75, 85, 99, 0.1)';
+  --color-text: '#e5e7eb';
+  --color-text-light: '#9ca3af';
+  --color-border: 'rgba(75, 85, 99, 0.2)';
+  --color-border-navbar: 'rgba(55, 65, 81, 0.3)';
+  --color-primary-bg: '#1f2937';
+  --color-secondary-bg: '#111827';
+  --color-active-bg: 'rgba(79, 70, 229, 0.1)';
+  --color-navbar-bg: 'rgba(17, 24, 39, 0.95)';
+  --color-mobile-menu-bg: '#1e1e1e';
 }

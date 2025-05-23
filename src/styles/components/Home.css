@@ -1,7 +1,7 @@
 .intro {
   font-size: 100px;
-  color: var(--bg-color);
-  -webkit-text-stroke: 2px var(--text-color);
+  color: var(--color-primary-bg);
+  -webkit-text-stroke: 2px var(--color-text);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -27,8 +27,8 @@
 
 .recent-task-box {
   margin-top: 20px;
-  border: 1px solid var(--border-color);
-  background-color: var(--bg-secondary);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-secondary-bg);
   border-radius: 16px;
   padding: 10px;
   display: flex;
@@ -38,7 +38,7 @@
 
 .recent-task {
   padding: 5px;
-  border: 1px solid var(--border-color);
-  background-color: var(--bg-color);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-primary-bg);
   border-radius: 8px;
 }

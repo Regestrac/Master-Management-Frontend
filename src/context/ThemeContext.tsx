@@ -6,7 +6,7 @@ import { ThemeType } from 'helpers/sharedTypes';
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState<ThemeType>(() => {
-    const savedTheme = localStorage.getItem('theme') as ThemeType;
+    const savedTheme = localStorage.getItem('theme') as ThemeType | null;
     return savedTheme || 'dark';
   });
 
@@ -20,7 +20,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
-      {children}
+      <div data-theme={theme}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 };

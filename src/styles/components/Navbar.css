@@ -3,9 +3,9 @@
   top: 0;
   width: 100%;
   z-index: 40;
-  background-color: var(--navbar-bg, rgba(255, 255, 255, 0.9));
+  background-color: var(--color-navbar-bg, rgba(255, 255, 255, 0.9));
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--navbar-border, var(--border-color));
+  border-bottom: 1px solid var(--color-border-navbar, var(--color-border));
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
@@ -90,7 +90,7 @@
   align-items: center;
   padding: 0.5rem 1rem;
   border-radius: 0.75rem;
-  color: var(--text-color);
+  color: var(--color-text);
   font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
@@ -101,8 +101,8 @@
 }
 
 .nav-link:hover {
-  color: var(--primary-color);
-  background-color: var(--hover-color);
+  color: var(--color-primary);
+  background-color: var(--color-hover-secondary);
 }
 
 .nav-link::after {
@@ -112,7 +112,7 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
@@ -149,19 +149,19 @@
 .profile-name {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-color);
+  color: var(--color-text);
   transition: color 0.3s ease;
 }
 
 .profile-link:hover .profile-name {
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
 .profile-avatar {
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 0.5rem;
-  background: linear-gradient(to right, var(--primary-hover), var(--primary-color));
+  background: linear-gradient(to right, var(--color-hover-primary), var(--color-primary));
   padding: 2px;
   transition: all 0.3s ease;
 }
@@ -206,7 +206,7 @@
   justify-content: center;
   padding: 0.5rem;
   border-radius: 0.5rem;
-  color: var(--text-light);
+  color: var(--color-text-light);
   transition: all 0.3s ease;
   border: none;
   background: none;
@@ -214,8 +214,8 @@
 }
 
 .menu-button:hover {
-  color: var(--primary-color);
-  background-color: var(--hover-color);
+  color: var(--color-primary);
+  background-color: var(--color-hover-secondary);
 }
 
 .menu-icon {
@@ -229,7 +229,7 @@
   right: 0;
   width: 100%;
   height: 100vh;
-  background-color: var(--hover-color);
+  background-color: var(--color-hover-secondary);
   backdrop-filter: blur(8px);
   transform: translateX(100%);
   transition: transform 0.3s ease-in-out;
@@ -241,7 +241,7 @@
 }
 
 .mobile-menu-content {
-  background: var(--mobile-menu-bg);
+  background: var(--color-mobile-menu-bg);
   min-height: 100vh;
   padding: 1rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -259,19 +259,19 @@
 .mobile-menu-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--navbar-bg);
+  color: var(--color-navbar-bg);
 }
 
 .mobile-close-button {
   padding: 0.5rem;
   border-radius: 0.375rem;
-  color: var(--primary-color);
+  color: var(--color-primary);
   transition: all 0.2s;
 }
 
 .mobile-close-button:hover {
-  background-color: var(--hover-color);
-  color: var(--primary-color);
+  background-color: var(--color-hover-secondary);
+  color: var(--color-primary);
 }
 
 .mobile-nav-link {
@@ -281,12 +281,12 @@
   border-radius: 0.5rem;
   font-weight: 500;
   transition: all 0.2s;
-  background-color: var(--bg-color);
+  background-color: var(--color-primary-bg);
 }
 
 .mobile-nav-link:hover {
-  background-color: var(--hover-color);
-  color: var(--primary-color);
+  background-color: var(--color-hover-secondary);
+  color: var(--color-primary);
 }
 
 .mobile-divider {
@@ -302,7 +302,7 @@
   border-radius: 0.5rem;
   color: #4b5563;
   transition: all 0.2s;
-  background-color: var(--bg-color);
+  background-color: var(--color-primary-bg);
 }
 
 .mobile-profile-link:hover {
@@ -320,7 +320,7 @@
   width: 100%;
   height: 100%;
   border-radius: 9999px;
-  background: linear-gradient(to right, var(--primary-color), var(--primary-hover));
+  background: linear-gradient(to right, var(--color-primary), var(--color-hover-primary));
   display: flex;
   align-items: center;
   justify-content: center;
