@@ -65,13 +65,20 @@ const Tasks = () => {
 
   return (
     <div className='tasks'>
-      <div className='flex justify-between items-end'>
-        <h3>
+      <div className='flex flex-wrap justify-between items-end gap-4'>
+        <input
+          placeholder='Search Task'
+          className='border-1 flex-grow md:flex-grow-0 md:order-2 md:mx-auto'
+          onChange={onSearch}
+        />
+        <h3 className='order-2 md:order-1'>
           {totalTasks}
           {` ${totalTasks === 1 ? 'Task' : 'Tasks'} Available`}
         </h3>
-        <input placeholder='Search Task' className='border-1' onChange={onSearch} />
-        <button className='create-task-button' onClick={handleCreateTask}>
+        <button
+          className='create-task-button order-1 md:order-3 w-full md:w-auto'
+          onClick={handleCreateTask}
+        >
           <PlusIcon />
           Create New Task
         </button>

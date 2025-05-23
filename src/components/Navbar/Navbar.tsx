@@ -34,7 +34,7 @@ const Navbar = () => {
           {/* Profile Section */}
           <div className='profile-section'>
             <Link to='/profile' className='profile-link'>
-              <span className='profile-name'>John Doe</span>
+              <span className='profile-name'>Anitta Joshy</span>
               <div className='profile-avatar'>
                 <div className='avatar-inner'>
                   <span className='avatar-text'>JD</span>

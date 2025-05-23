@@ -61,7 +61,7 @@ const MobileMenu = () => {
                 <span className='avatar-text'>JD</span>
               </div>
             </div>
-            <span className='mobile-profile-name'>John Doe</span>
+            <span className='mobile-profile-name'>Anitta Joshy</span>
           </Link>
         </div>
       </div>
