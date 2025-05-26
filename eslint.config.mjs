@@ -141,7 +141,7 @@ export default compat.config(
             { pattern: 'hooks/**', group: 'internal', position: 'before' },
             { pattern: 'context/**', group: 'internal', position: 'before' },
             { pattern: 'helpers/**', group: 'internal', position: 'before' },
-            { pattern: 'redux/**', group: 'internal', position: 'before' },
+            { pattern: 'zustandStore/**', group: 'internal', position: 'before' },
             { pattern: 'components/**', group: 'internal', position: 'before' },
             { pattern: 'icons/**', group: 'internal', position: 'before' },
             { pattern: 'src/**', group: 'internal', position: 'before' },
@@ -153,6 +153,7 @@ export default compat.config(
           'newlines-between': 'always',
         },
       ],
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 );

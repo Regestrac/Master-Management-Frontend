@@ -13,6 +13,7 @@ export default defineConfig({
       styles: '/src/styles',
       context: '/src/context',
       icons: '/src/icons',
+      zustandStore: '/src/zustandStore',
       src: '/src',
     },
   },
