@@ -37,6 +37,7 @@ const Dashboard = () => {
         label: 'Time Spent (%)',
         data: [25, 20, 15, 30, 10],
         backgroundColor: ['#4F46E5', '#22C55E', '#F59E0B', '#EF4444', '#3B82F6'],
+        borderWidth: 0,
       },
     ],
   };
@@ -142,6 +143,7 @@ const Dashboard = () => {
                 textColor: '#FFFFFF',
                 pathColor: '#4F46E5',
                 trailColor: '#374151',
+                backgroundColor: '#4F4FAA',
               })}
             />
           </div>

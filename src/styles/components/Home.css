@@ -36,6 +36,13 @@
   gap: 8px;
 }
 
+.recent-task-box h3 {
+  margin: 0;
+  font-size: 28px;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
 .recent-task {
   padding: 5px;
   border: 1px solid var(--color-border);

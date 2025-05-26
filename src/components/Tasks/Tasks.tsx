@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import PlusIcon from 'icons/PlusIcon';
 
+import { useTaskStore } from 'src/zustandStore/taskStore';
 import { capitalize, formatDuration } from 'src/helpers/utils';
 
 type TaskType = {
@@ -15,8 +16,12 @@ type TaskType = {
 
 const Tasks = () => {
   const [openForm, setOpenForm] = useState(false);
-  const [tasks, setTasks] = useState<TaskType[]>([]);
   const [filteredTasks, setFilteredTasks] = useState<TaskType[]>([]);
+
+  const tasks = useTaskStore((state) => state.tasks);
+  const addTask = useTaskStore((state) => state.addTask);
+  const deleteTask = useTaskStore((state) => state.deleteTask);
+  const updateRecentTask = useTaskStore((state) => state.updateRecentTask);
 
   const taskInputRef = useRef<HTMLInputElement>(null);
 
@@ -34,17 +39,21 @@ const Tasks = () => {
     const element = taskInputRef.current;
 
     if (element?.value) {
-      setTasks([...tasks, { id: tasks.length + 1, task: element?.value || '', status: 'incomplete' as const, timeSpend: 707330 }]);
+      addTask({ id: tasks.length + 1, task: element?.value || '', status: 'incomplete' as const, timeSpend: 707330 });
       element.value = '';
     }
   };
 
   const handleDeleteTask = (id: number) => {
-    setTasks((prev) => prev.filter((task) => task.id !== id));
+    deleteTask(id);
   };
 
   const handleStartTask = (id: number) => {
     navigate(`/tasks/${id}`);
+    const currentTask = tasks?.find((task) => task?.id === id);
+    if (currentTask) {
+      updateRecentTask(currentTask);
+    }
   };
 
   const onSearch = (e:  React.ChangeEvent<HTMLInputElement>) => {
@@ -89,9 +98,9 @@ const Tasks = () => {
             <div className='flex'>
               <span className={`${task.status} me-3`}>{capitalize(task?.status)}</span>
               {task?.task}
-              <div>{formatDuration(task?.timeSpend)}</div>
             </div>
-            <div>
+            <div className='flex items-center'>
+              <div>{formatDuration(task?.timeSpend)}</div>
               <button className='bg-blue-500 ms-2 p-1 rounded-sm' onClick={() => handleStartTask(task?.id)}>Start</button>
               <button className='bg-red-500 ms-2 p-1 rounded-sm' onClick={() => handleDeleteTask(task?.id)}>Delete</button>
             </div>
