@@ -9,6 +9,7 @@ import Profile from 'components/Profile/Profile';
 import Home from 'components/Home/Home';
 import Tasks from 'components/Tasks/Tasks';
 import TaskDetail from 'components/Tasks/TaskDetail';
+import Login from 'components/auth/login';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
               <Route path='/tasks/:id' element={<TaskDetail />} />
               <Route path='/settings' element={<Settings />} />
               <Route path='/profile' element={<Profile />} />
+              <Route path='/login' element={<Login />} />
             </Routes>
           </main>
         </div>
