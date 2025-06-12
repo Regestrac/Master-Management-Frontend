@@ -1,14 +1,34 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+
+import { useParams } from 'react-router-dom';
+
+import { useTaskStore } from 'zustandStore/taskStore';
 
 import TaskTimer from 'components/Tasks/TaskTimer';
+import TaskHistory from 'components/Tasks/TaskHistory';
+import SubTasks from 'components/Tasks/SubTasks';
 
-import TaskHistory from './TaskHistory';
-import SubTasks from './SubTasks';
+import { debounce } from 'src/helpers/utils';
 
 const TaskDetail = () => {
-  const [taskName, setTaskName] = useState('Task 1 - Do Something');
+  const { id } = useParams();
+
+  const task = useTaskStore((state) => state.tasks?.find((item) => item?.id === Number(id)));
+  const updateTask = useTaskStore((state) => state.updateTask);
+
+  const [taskName, setTaskName] = useState(task?.task || '');
   const [description, setDescription] = useState('This task is about doing this, that and the other thing also');
   const [activeTab, setActiveTab] = useState<'history' | 'subtasks'>('history');
+
+  const debounceUpdateTaskName = useMemo(() => debounce((value) => {
+    updateTask({ ...task!, task: value });
+    // setTaskName(taskName); // Add logic to update to api.
+  }, 250), [task, updateTask]);
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    debounceUpdateTaskName(e.target.value);
+    setTaskName(e.target.value);
+  };
 
   const getTabClassName = (tab: 'history' | 'subtasks') => `px-3 py-2 font-medium text-sm ${activeTab === tab
     ? 'border-indigo-500 text-indigo-600'
@@ -23,7 +43,7 @@ const TaskDetail = () => {
             <input
               type='text'
               value={taskName}
-              onChange={(e) => setTaskName(e.target.value)}
+              onChange={handleNameChange}
               className='mt-1 block w-full rounded-md border-amber-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
             />
           </div>

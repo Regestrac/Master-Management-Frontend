@@ -30,8 +30,8 @@ export const capitalize = (word: string): string => {
  * formatDuration(86400);   // "1 day 00:00:00"
  * formatDuration(90061);   // "1 day 01:01:01"
  */
-export function formatDuration(totalSeconds:number) {
-  if (totalSeconds < 0) {return 'Invalid time';}
+export function formatDuration(totalSeconds: number) {
+  if (totalSeconds < 0) { return 'Invalid time'; }
 
   const seconds = totalSeconds % 60;
   const totalMinutes = Math.floor(totalSeconds / 60);
@@ -49,4 +49,23 @@ export function formatDuration(totalSeconds:number) {
   } else {
     return time;
   }
+}
+
+/**
+ * Creates a debounced function that delays invoking `func` until after
+ * `wait` milliseconds have elapsed since the last time the debounced function was invoked.
+ *
+ * @param {Function} func - The function to debounce.
+ * @param {number} wait - The number of milliseconds to delay.
+ * @returns {Function} - The new debounced function.
+ */
+export function debounce<T extends (..._args: any[]) => void>(func: T, wait: number) {
+  let timeout: ReturnType<typeof setTimeout>;
+
+  return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      func.apply(this, args);
+    }, wait);
+  };
 }
