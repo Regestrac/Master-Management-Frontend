@@ -10,6 +10,7 @@ import Home from 'components/Home/Home';
 import Tasks from 'components/Tasks/Tasks';
 import TaskDetail from 'components/Tasks/TaskDetail';
 import Login from 'components/auth/login';
+import Signup from 'components/auth/Signup';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Route path='/settings' element={<Settings />} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/login' element={<Login />} />
+              <Route path='/signup' element={<Signup />} />
             </Routes>
           </main>
         </div>

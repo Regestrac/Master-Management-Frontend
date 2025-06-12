@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 
+import { Link, useNavigate } from 'react-router-dom';
+
+import { login } from 'src/services/auth';
+
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,8 +20,11 @@ const Login: React.FC = () => {
       return;
     }
 
-    // TODO: Replace with real authentication logic
-    alert(`Logging in as ${email}`);
+    login({ email, password }).then(() => {
+      navigate('/', { replace: true });
+    }).catch((err) => {
+      setError(err.message || 'Login failed. Please try again.');
+    });
   };
 
   return (
@@ -65,6 +74,12 @@ const Login: React.FC = () => {
         >
           Login
         </button>
+        <p className='mt-6 text-center text-sm text-text-light'>
+          Don't have an account?&nbsp;
+          <Link to='/signup' className='text-blue-500 hover:underline'>
+            Sign up
+          </Link>
+        </p>
       </form>
     </div>
   );
