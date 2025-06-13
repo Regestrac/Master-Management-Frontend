@@ -9,7 +9,7 @@ type PostHandlerParamsType = {
 const BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
 
 export const postHandler = async ({ path, ...options }: PostHandlerParamsType) => {
-  const url = `${BASE_URL}${path}`;
+  const url = `${BASE_URL}/${path}`;
 
   const response = await fetch(url, {
     method: options?.method || 'POST',
