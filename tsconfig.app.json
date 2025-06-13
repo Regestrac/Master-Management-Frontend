@@ -33,7 +33,9 @@
       "context/*": ["context/*"],
       "icons/*": ["icons/*"],
       "zustandStore/*": ["zustandStore/*"],
-      "src/*": ["*"]
+      "src/*": ["*"],
+      "services/*": ["services/*"],
+      "helpers/*": ["helpers/*"],
     }
   },
   "include": ["src"]

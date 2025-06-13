@@ -15,6 +15,8 @@ export default defineConfig({
       icons: '/src/icons',
       zustandStore: '/src/zustandStore',
       src: '/src',
+      services: '/src/services',
+      helpers: '/src/helpers',
     },
   },
 });

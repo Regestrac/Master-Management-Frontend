@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 import { ThemeProvider } from 'context/ThemeContext';
 
@@ -15,6 +16,18 @@ import Signup from 'components/auth/Signup';
 function App() {
   return (
     <ThemeProvider>
+      <ToastContainer
+        position='top-right'
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='dark'
+      />
       <Router>
         <div className='app-container'>
           <Navbar />
