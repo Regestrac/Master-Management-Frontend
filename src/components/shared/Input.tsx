@@ -13,10 +13,12 @@ const Input = ({ name, label, type = 'text', ...props }: PropsType) => {
   const { field, formState: { errors } } = useController({ name });
 
   return (
-    <div className='mb-6'>
-      <label htmlFor={props?.id || name} className='block mb-2 font-medium text-text-light tracking-wide'>
-        {label}
-      </label>
+    <div className='mb-6 w-full'>
+      {label ? (
+        <label htmlFor={props?.id || name} className='block mb-2 font-medium text-text-light tracking-wide'>
+          {label}
+        </label>
+      ) : null}
       <input
         {...field}
         {...props}

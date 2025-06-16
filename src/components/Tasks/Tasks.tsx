@@ -2,12 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { FormProvider, useForm } from 'react-hook-form';
+
+import Input from 'components/shared/Input';
 
 import PlusIcon from 'icons/PlusIcon';
 
 import { useTaskStore } from 'src/stores/taskStore';
 import { capitalize, formatDuration } from 'src/helpers/utils';
-import { getAllTasks } from 'src/services/tasks';
+import { createTask, deleteTask, getAllTasks } from 'src/services/tasks';
 
 type TaskType = {
   id: number;
@@ -22,13 +25,18 @@ const Tasks = () => {
 
   const tasks = useTaskStore((state) => state.tasks);
   const addTask = useTaskStore((state) => state.addTask);
-  const deleteTask = useTaskStore((state) => state.deleteTask);
+  const deleteTaskFromStore = useTaskStore((state) => state.deleteTask);
   const updateRecentTask = useTaskStore((state) => state.updateRecentTask);
 
-  const taskInputRef = useRef<HTMLInputElement>(null);
   const shouldFetchTasks = useRef(true);
 
   const navigate = useNavigate();
+
+  const methods = useForm({
+    defaultValues: { title: '' },
+  });
+
+  const { handleSubmit, setValue } = methods;
 
   const handleCreateTask = () => {
     setOpenForm(true);
@@ -38,17 +46,30 @@ const Tasks = () => {
     setOpenForm(false);
   };
 
-  const handleSaveTask = () => {
-    const element = taskInputRef.current;
-
-    if (element?.value) {
-      addTask({ id: tasks.length + 1, title: element?.value || '', status: 'incomplete' as const, timeSpend: 707330 });
-      element.value = '';
+  const handleSaveTask = (formData: { title: string; }) => {
+    if (formData?.title) {
+      const payload = {
+        title: formData.title,
+        status: 'incomplete' as const,
+        time_spend: 0,
+      };
+      createTask(payload).then((res) => {
+        toast.success(res?.message || 'Successfully created task');
+        addTask({ id: res?.data?.id, title: formData?.title || '', status: 'incomplete' as const, timeSpend: 0 });
+        setValue('title', '');
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to create task');
+      });
     }
   };
 
   const handleDeleteTask = (id: number) => {
-    deleteTask(id);
+    deleteTask(id).then((res) => {
+      toast.success(res.message || 'Task deleted successfully');
+      deleteTaskFromStore(id);
+    }).catch((err) => {
+      toast.error(err.error || 'Failed to delete task!');
+    });
   };
 
   const handleStartTask = (id: number) => {
@@ -126,11 +147,13 @@ const Tasks = () => {
           </div>
         ))}
         {openForm ? (
-          <div className='w-full flex justify-between mt-3'>
-            <input placeholder='Enter Task Name' className='h-10 w-full border-1' ref={taskInputRef} />
-            <button onClick={handleSaveTask} className='rounded-l h-10 w-32 border-1'>Save</button>
-            <button onClick={handleCancel} className='rounded-l h-10 w-32 border-1 ms-2'>Cancel</button>
-          </div>
+          <FormProvider {...methods}>
+            <div className='w-full flex justify-between mt-3'>
+              <Input name='title' label='' placeholder='Enter Task Title' className='h-10 w-full border-1' />
+              <button onClick={handleSubmit(handleSaveTask)} className='rounded-l h-10 w-32 border-1'>Save</button>
+              <button onClick={handleCancel} className='rounded-l h-10 w-32 border-1 ms-2'>Cancel</button>
+            </div>
+          </FormProvider>
         ) : null}
       </div>
     </div>
