@@ -43,7 +43,7 @@ const Navbar = () => {
               <span className='profile-name'>{`${firstName} ${lastName}`}</span>
               <div className='profile-avatar'>
                 <div className='avatar-inner'>
-                  <span className='avatar-text'>{firstName[0] || '' + lastName[0] || ''}</span>
+                  <span className='avatar-text'>{(firstName[0] || '') + (lastName[0] || '')}</span>
                 </div>
               </div>
             </Link>

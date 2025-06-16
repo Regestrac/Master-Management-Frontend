@@ -10,7 +10,7 @@ type PropsType = {
 };
 
 const Input = ({ name, label, type = 'text', ...props }: PropsType) => {
-  const { field } = useController({ name });
+  const { field, formState: { errors } } = useController({ name });
 
   return (
     <div className='mb-6'>
@@ -23,6 +23,11 @@ const Input = ({ name, label, type = 'text', ...props }: PropsType) => {
         type={type}
         className={`w-full px-4 py-3 rounded-lg border border-gray-300 text-base outline-none transition focus:border-blue-500 bg-primary-bg ${props.className}`}
       />
+      {errors?.[name] ? (
+        <span className='p-1 text-red-500'>
+          {Array.isArray(errors[name]?.message) ? errors[name]?.message[0] : errors[name]?.message}
+        </span>
+      ) : null}
     </div>
   );
 };

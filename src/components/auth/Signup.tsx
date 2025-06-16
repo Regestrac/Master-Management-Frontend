@@ -1,111 +1,95 @@
 import React, { useState } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
+import { z } from 'zod';
+import { FormProvider, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'react-toastify';
+import { useProfileStore } from 'stores/profileStore';
+
+import Input from 'components/shared/Input';
 
 import { signup } from 'src/services/auth';
+import { getProfile } from 'src/services/profile';
 
-interface SignupFormData {
+type SignupFormDataType = {
   first_name: string;
   last_name: string;
   email: string;
   password: string;
-}
+};
+
+const schema = z.object({
+  first_name: z.string().nonempty('First Name is required!'),
+  last_name: z.string().nonempty('Last Name is required!'),
+  email: z.string().nonempty('Email is required!').email('Invalid email address!'),
+  password: z.string().nonempty('Password is required!').min(6, 'Password must be at least 6 characters!'),
+});
 
 const Signup: React.FC = () => {
-  const [form, setForm] = useState<SignupFormData>({
-    first_name: '',
-    last_name: '',
-    email: '',
-    password: '',
-  });
+  const [error, setError] = useState<string | null>(null);
+
+  const updateProfile = useProfileStore((state) => state.updateProfile);
 
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const methods = useForm<SignupFormDataType>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: '',
+    },
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const { handleSubmit } = methods;
 
-    signup(form).then(() => {
+  const onSignUpSubmit = (formData: SignupFormDataType) => {
+    setError(null);
+    signup(formData).then(() => {
       navigate('/', { replace: true });
+      getProfile().then((profile) => {
+        updateProfile({
+          firstName: profile?.data?.first_name || '',
+          lastName: profile?.data?.last_name || '',
+          email: profile?.data?.email || '',
+        });
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to fetch profile. Please try again.');
+      });
     }).catch((err) => {
-      console.log('err?.message: ', err?.message);
+      setError(err?.message || 'Failed to signup!');
     });
   };
 
   return (
-    <div className='max-w-md mx-auto mt-8 p-8 border border-gray-200 rounded-lg shadow bg-secondary-bg'>
-      <h2 className='text-2xl font-semibold mb-6 text-center'>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
-        <div className='mb-4'>
-          <label className='block mb-1 font-medium'>
-            First Name
-            <input
-              type='text'
-              name='first_name'
-              value={form.first_name}
-              onChange={handleChange}
-              required
-              className='mt-2 w-full px-3 py-2 border border-gray-300 rounded bg-primary-bg focus:outline-none focus:ring-2 focus:ring-blue-400'
-            />
-          </label>
-        </div>
-        <div className='mb-4'>
-          <label className='block mb-1 font-medium'>
-            Last Name
-            <input
-              type='text'
-              name='last_name'
-              value={form.last_name}
-              onChange={handleChange}
-              required
-              className='mt-2 w-full px-3 py-2 border border-gray-300 bg-primary-bg rounded focus:outline-none focus:ring-2 focus:ring-blue-400'
-            />
-          </label>
-        </div>
-        <div className='mb-4'>
-          <label className='block mb-1 font-medium'>
-            Email
-            <input
-              type='email'
-              name='email'
-              value={form.email}
-              onChange={handleChange}
-              required
-              className='mt-2 w-full px-3 py-2 border border-gray-300 bg-primary-bg rounded focus:outline-none focus:ring-2 focus:ring-blue-400'
-            />
-          </label>
-        </div>
-        <div className='mb-6'>
-          <label className='block mb-1 font-medium'>
-            Password
-            <input
-              type='password'
-              name='password'
-              value={form.password}
-              onChange={handleChange}
-              required
-              className='mt-2 w-full px-3 py-2 border border-gray-300 bg-primary-bg rounded focus:outline-none focus:ring-2 focus:ring-blue-400'
-            />
-          </label>
-        </div>
-        <button
-          type='submit'
-          className='w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition'
-        >
-          Sign Up
-        </button>
-        <p className='mt-4 text-center text-sm text-text-light'>
-          Already have an account?&nbsp;
-          <Link to='/login' className='text-blue-500 hover:underline'>Login</Link>
-        </p>
-      </form>
-    </div>
+    <FormProvider {...methods}>
+      <div className='max-w-md mx-auto mt-8 p-8 border border-gray-200 rounded-lg shadow bg-secondary-bg'>
+        <h2 className='text-2xl font-semibold mb-6 text-center'>Sign Up</h2>
+        <form onSubmit={handleSubmit(onSignUpSubmit)}>
+          <Input name='first_name' label='First Name' />
+          <Input name='last_name' label='Last Name' />
+          <Input name='email' label='Email' />
+          <Input name='password' label='Password' type='password' />
+          {error && (
+            <div className='text-red-600 bg-red-50 border border-red-200 rounded-md py-2 px-4 mb-5 text-center text-sm'>
+              {error}
+            </div>
+          )}
+          <button
+            type='submit'
+            className='w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition'
+          >
+            Sign Up
+          </button>
+          <p className='mt-4 text-center text-sm text-text-light'>
+            Already have an account?&nbsp;
+            <Link to='/login' className='text-blue-500 hover:underline'>Login</Link>
+          </p>
+        </form>
+      </div>
+    </FormProvider>
   );
 };
 
