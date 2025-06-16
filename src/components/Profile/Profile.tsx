@@ -70,7 +70,7 @@ const Profile = () => {
       });
       setIsEditing(false);
     }).catch((err) => {
-      toast.error(err?.message || 'Failed to update profile!');
+      toast.error(err?.error || 'Failed to update profile!');
     });
   };
 

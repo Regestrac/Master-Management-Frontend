@@ -59,7 +59,7 @@ const Signup: React.FC = () => {
         toast.error(err?.error || 'Failed to fetch profile. Please try again.');
       });
     }).catch((err) => {
-      setError(err?.message || 'Failed to signup!');
+      setError(err?.error || 'Failed to signup!');
     });
   };
 

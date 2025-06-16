@@ -1,9 +1,8 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 
 type TaskType = {
   id: number;
-  task: string;
+  title: string;
   status: 'completed' | 'incomplete';
   timeSpend: number;
 };
@@ -11,33 +10,35 @@ type TaskType = {
 type TasksStateType = {
   tasks: TaskType[];
   recentTasks: TaskType[];
-  addTask: (_newTask: TaskType) => void;
+  addTask: (_newTask: TaskType | TaskType[]) => void;
   updateTask: (_task: TaskType) => void;
   deleteTask: (_id: number) => void;
   updateRecentTask: (_task: TaskType) => void;
 };
 
-export const useTaskStore = create<TasksStateType>()(persist(
-  (set, get) => ({
-    tasks: [],
-    recentTasks: [],
-    addTask: (newTask) => set({ tasks: [...get().tasks, newTask] }),
-    updateTask: (updatedTask) =>
-      set({
-        tasks: get().tasks.map((task) =>
-          task.id === updatedTask.id ? { ...task, ...updatedTask } : task,
-        ),
-      }),
-    deleteTask: (id) =>
-      set({ tasks: get().tasks?.filter((task) => task?.id !== id) }),
-    updateRecentTask: (updatedTask) => {
-      const filtered = get().recentTasks.filter((task) => task.id !== updatedTask.id);
-      const updatedRecents = [updatedTask, ...filtered].slice(0, 5);
-      set({ recentTasks: updatedRecents });
-    },
+export const useTaskStore = create<TasksStateType>()((set) => ({
+  tasks: [],
+  recentTasks: [],
+  addTask: (newTask) => set((state) => {
+    const incoming = Array.isArray(newTask) ? newTask : [newTask];
+    const mergedMap = new Map<number, TaskType>();
+    // Add existing tasks to the map
+    state.tasks.forEach((task) => mergedMap.set(task.id, task));
+    // Overwrite or add new tasks from incoming
+    incoming.forEach((task) => mergedMap.set(task.id, task));
+    return { tasks: Array.from(mergedMap.values()) };
   }),
-  {
-    name: 'tasks-storage',
-    storage: createJSONStorage(() => sessionStorage),
-  },
-));
+  updateTask: (updatedTask) => set((state) => ({
+    tasks: state.tasks.map((task) =>
+      task.id === updatedTask.id ? { ...task, ...updatedTask } : task,
+    ),
+  })),
+  deleteTask: (id) => set((state) => ({
+    tasks: state.tasks.filter((task) => task.id !== id),
+  })),
+  updateRecentTask: (updatedTask) => set((state) => {
+    const filtered = state.recentTasks.filter((task: TaskType) => task.id !== updatedTask.id);
+    const updatedRecentTasks = [updatedTask, ...filtered].slice(0, 5);
+    return { recentTasks: updatedRecentTasks };
+  }),
+}));

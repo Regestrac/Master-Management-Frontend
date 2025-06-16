@@ -1,15 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import PlusIcon from 'icons/PlusIcon';
 
 import { useTaskStore } from 'src/stores/taskStore';
 import { capitalize, formatDuration } from 'src/helpers/utils';
+import { getAllTasks } from 'src/services/tasks';
 
 type TaskType = {
   id: number;
-  task: string;
+  title: string;
   status: 'incomplete' | 'completed';
   timeSpend: number,
 };
@@ -24,6 +26,7 @@ const Tasks = () => {
   const updateRecentTask = useTaskStore((state) => state.updateRecentTask);
 
   const taskInputRef = useRef<HTMLInputElement>(null);
+  const shouldFetchTasks = useRef(true);
 
   const navigate = useNavigate();
 
@@ -39,7 +42,7 @@ const Tasks = () => {
     const element = taskInputRef.current;
 
     if (element?.value) {
-      addTask({ id: tasks.length + 1, task: element?.value || '', status: 'incomplete' as const, timeSpend: 707330 });
+      addTask({ id: tasks.length + 1, title: element?.value || '', status: 'incomplete' as const, timeSpend: 707330 });
       element.value = '';
     }
   };
@@ -56,9 +59,9 @@ const Tasks = () => {
     }
   };
 
-  const onSearch = (e:  React.ChangeEvent<HTMLInputElement>) => {
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) {
-      setFilteredTasks(tasks?.filter((item) => item.task?.toLowerCase().includes(e?.target?.value?.toLowerCase())));
+      setFilteredTasks(tasks?.filter((item) => item.title?.toLowerCase().includes(e?.target?.value?.toLowerCase())));
     } else {
       setFilteredTasks(tasks);
     }
@@ -71,6 +74,22 @@ const Tasks = () => {
       setFilteredTasks(tasks);
     }
   }, [tasks]);
+
+  useEffect(() => {
+    if (shouldFetchTasks.current) {
+      getAllTasks().then((res) => {
+        addTask(res.data.map((item: any) => ({
+          id: item.id,
+          status: item.status,
+          timeSpend: item.time_spend,
+          title: item.title,
+        })));
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to get tasks');
+      });
+      shouldFetchTasks.current = false;
+    }
+  }, [addTask]);
 
   return (
     <div className='tasks'>
@@ -97,7 +116,7 @@ const Tasks = () => {
           <div key={task?.id} className='flex justify-between mb-1'>
             <div className='flex'>
               <span className={`${task.status} me-3`}>{capitalize(task?.status)}</span>
-              {task?.task}
+              {task?.title}
             </div>
             <div className='flex items-center'>
               <div>{formatDuration(task?.timeSpend)}</div>

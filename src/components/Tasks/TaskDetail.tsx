@@ -15,12 +15,12 @@ const TaskDetail = () => {
   const task = useTaskStore((state) => state.tasks?.find((item) => item?.id === Number(id)));
   const updateTask = useTaskStore((state) => state.updateTask);
 
-  const [taskName, setTaskName] = useState(task?.task || '');
+  const [taskName, setTaskName] = useState(task?.title || '');
   const [description, setDescription] = useState('This task is about doing this, that and the other thing also');
   const [activeTab, setActiveTab] = useState<'history' | 'subtasks'>('history');
 
   const debounceUpdateTaskName = useMemo(() => debounce((value) => {
-    updateTask({ ...task!, task: value });
+    updateTask({ ...task!, title: value });
     // setTaskName(taskName); // Add logic to update to api.
   }, 250), [task, updateTask]);
 
