@@ -4,6 +4,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useProfileStore } from 'stores/profileStore';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Input from 'components/shared/Input';
 
@@ -15,6 +17,11 @@ type LoginType = {
   password: string;
 };
 
+const schema = z.object({
+  email: z.string().nonempty('Email is required!').email('Invalid email address!'),
+  password: z.string().nonempty('Password is required!').min(6, 'Password must be at least 6 characters!'),
+});
+
 const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
@@ -23,7 +30,8 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const methods = useForm<LoginType>({
-    defaultValues: { email:'', password:'' },
+    defaultValues: { email: '', password: '' },
+    resolver: zodResolver(schema),
   });
 
   const { handleSubmit } = methods;
