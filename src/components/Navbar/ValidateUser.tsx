@@ -23,6 +23,9 @@ const ValidateUser = () => {
         navigate('/login', { replace: true });
       }
     }
+    return () => {
+      setIsAuthenticated(null);
+    };
   }, [isAuthenticated, navigate, pathname]);
 
   return null;

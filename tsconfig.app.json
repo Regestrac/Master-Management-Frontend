@@ -32,7 +32,7 @@
       "styles/*": ["styles/*"],
       "context/*": ["context/*"],
       "icons/*": ["icons/*"],
-      "zustandStore/*": ["zustandStore/*"],
+      "stores/*": ["stores/*"],
       "src/*": ["*"],
       "services/*": ["services/*"],
       "helpers/*": ["helpers/*"],

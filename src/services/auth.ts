@@ -29,3 +29,8 @@ export const signup = (payload: SignupPayload) => postHandler({
 export const validate = () => getHandler({
   path: 'validate',
 });
+
+// Logout request
+export const logout = () => postHandler({
+  path: 'logout',
+});

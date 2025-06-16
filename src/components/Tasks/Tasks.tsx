@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import PlusIcon from 'icons/PlusIcon';
 
-import { useTaskStore } from 'src/zustandStore/taskStore';
+import { useTaskStore } from 'src/stores/taskStore';
 import { capitalize, formatDuration } from 'src/helpers/utils';
 
 type TaskType = {

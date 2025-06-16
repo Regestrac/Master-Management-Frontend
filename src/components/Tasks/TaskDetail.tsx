@@ -2,12 +2,11 @@ import { useMemo, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
 
-import { useTaskStore } from 'zustandStore/taskStore';
-
 import TaskTimer from 'components/Tasks/TaskTimer';
 import TaskHistory from 'components/Tasks/TaskHistory';
 import SubTasks from 'components/Tasks/SubTasks';
 
+import { useTaskStore } from 'src/stores/taskStore';
 import { debounce } from 'src/helpers/utils';
 
 const TaskDetail = () => {

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useProfileStore } from 'stores/profileStore';
 
 import MobileMenu from 'components/Navbar/MobileMenu';
 import ValidateUser from 'components/Navbar/ValidateUser';
@@ -6,6 +7,9 @@ import ValidateUser from 'components/Navbar/ValidateUser';
 import { NAVBAR_LINKS } from 'src/helpers/configs';
 
 const Navbar = () => {
+  const firstName = useProfileStore((state) => state?.firstName);
+  const lastName = useProfileStore((state) => state?.lastName);
+
   return (
     <nav className='navbar'>
       <ValidateUser />
@@ -36,10 +40,10 @@ const Navbar = () => {
           {/* Profile Section */}
           <div className='profile-section'>
             <Link to='/profile' className='profile-link'>
-              <span className='profile-name'>Anitta Joshy</span>
+              <span className='profile-name'>{`${firstName} ${lastName}`}</span>
               <div className='profile-avatar'>
                 <div className='avatar-inner'>
-                  <span className='avatar-text'>JD</span>
+                  <span className='avatar-text'>{firstName[0] || '' + lastName[0] || ''}</span>
                 </div>
               </div>
             </Link>

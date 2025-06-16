@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 
-import { useTaskStore } from 'zustandStore/taskStore';
-
 import ResumeIcon from 'icons/ResumeIcon';
+
+import { useTaskStore } from 'src/stores/taskStore';
 
 const RecentTasks = () => {
   const recentTasks = useTaskStore((state) => state.recentTasks);

@@ -1,4 +1,16 @@
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useProfileStore } from 'stores/profileStore';
+
+import { logout } from 'src/services/auth';
+
 const Profile = () => {
+  const navigate = useNavigate();
+
+  const firstName = useProfileStore((state) => state?.firstName);
+  const lastName = useProfileStore((state) => state?.lastName);
+  const email = useProfileStore((state) => state?.email);
+
   const handleEditProfile = () => {
     // eslint-disable-next-line no-console
     console.log('Edit Profile clicked');
@@ -6,9 +18,12 @@ const Profile = () => {
   };
 
   const handleLogout = () => {
-    // eslint-disable-next-line no-console
-    console.log('Logout clicked');
-    // Add logic to handle user logout
+    logout().then((res) => {
+      toast.success(res?.message || 'Logout successful! See you soon!');
+      navigate('/login');
+    }).catch((err) => {
+      toast.error(err?.error || 'Logout failed. Please try again.');
+    });
   };
 
   return (
@@ -26,13 +41,11 @@ const Profile = () => {
         {/* Basic Details */}
         <p className='mb-2'>
           <strong>Name:</strong>
-          {' '}
-          Anitta Joshy
+          {` ${firstName || 'User'} ${lastName}`}
         </p>
         <p className='mb-2'>
-          <strong>Email:</strong>
-          {' '}
-          anittajoshy@example.com
+          <strong>Email:&nbsp;</strong>
+          {email}
         </p>
         {/* Max Streak */}
         <p className='mb-2'>

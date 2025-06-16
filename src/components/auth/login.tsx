@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useProfileStore } from 'stores/profileStore';
 
 import Input from 'components/shared/Input';
 
 import { login } from 'src/services/auth';
+import { getProfile } from 'src/services/profile';
 
 type LoginType = {
   email: string;
@@ -16,9 +18,13 @@ type LoginType = {
 const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
+  const updateProfile = useProfileStore((state) => state.updateProfile);
+
   const navigate = useNavigate();
 
-  const methods = useForm<LoginType>();
+  const methods = useForm<LoginType>({
+    defaultValues: { email:'', password:'' },
+  });
 
   const { handleSubmit } = methods;
 
@@ -26,7 +32,16 @@ const Login: React.FC = () => {
     setError(null); // Reset error state before login attempt
     login(formData).then((res) => {
       navigate('/', { replace: true });
-      toast.success(res?.message || 'Login successful! Welcome back!');
+      toast.success(res?.message || 'Login successful! Welcome!');
+      getProfile().then((profile) => {
+        updateProfile({
+          firstName: profile?.data?.first_name || '',
+          lastName: profile?.data?.last_name || '',
+          email: profile?.data?.email || '',
+        });
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to fetch profile. Please try again.');
+      });
     }).catch((err) => {
       setError(err.error || 'Login failed. Please try again.');
     });
