@@ -9,7 +9,7 @@ import Input from 'components/shared/Input';
 import PlusIcon from 'icons/PlusIcon';
 
 import { useTaskStore } from 'src/stores/taskStore';
-import { capitalize, formatDuration } from 'src/helpers/utils';
+import { capitalize, formatTimeElapsed } from 'src/helpers/utils';
 import { createTask, deleteTask, getAllTasks } from 'src/services/tasks';
 
 type TaskType = {
@@ -140,7 +140,7 @@ const Tasks = () => {
               {task?.title}
             </div>
             <div className='flex items-center'>
-              <div>{formatDuration(task?.timeSpend)}</div>
+              <div>{formatTimeElapsed(task?.timeSpend)}</div>
               <button className='bg-blue-500 ms-2 p-1 rounded-sm' onClick={() => handleStartTask(task?.id)}>Start</button>
               <button className='bg-red-500 ms-2 p-1 rounded-sm' onClick={() => handleDeleteTask(task?.id)}>Delete</button>
             </div>

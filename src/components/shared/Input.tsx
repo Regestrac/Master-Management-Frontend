@@ -7,6 +7,7 @@ type PropsType = {
   placeholder?: string;
   className?: string;
   type?: 'text' | 'email' | 'password' | 'textarea';
+  rows?: number;
 };
 
 const Input = ({ name, label, type = 'text', ...props }: PropsType) => {
@@ -19,12 +20,21 @@ const Input = ({ name, label, type = 'text', ...props }: PropsType) => {
           {label}
         </label>
       ) : null}
-      <input
-        {...field}
-        {...props}
-        type={type}
-        className={`w-full px-4 py-3 rounded-lg border border-gray-300 text-base outline-none transition focus:border-blue-500 bg-primary-bg ${props.className}`}
-      />
+      {type === 'textarea' ? (
+        <textarea
+          {...field}
+          {...props}
+          rows={props.rows || 4}
+          className={`w-full px-4 py-3 rounded-lg border border-gray-300 text-base outline-none transition focus:border-blue-500 bg-primary-bg ${props.className}`}
+        />
+      ) : (
+        <input
+          {...field}
+          {...props}
+          type={type}
+          className={`w-full px-4 py-3 rounded-lg border border-gray-300 text-base outline-none transition focus:border-blue-500 bg-primary-bg ${props.className}`}
+        />
+      )}
       {errors?.[name] ? (
         <span className='p-1 text-red-500'>
           {Array.isArray(errors[name]?.message) ? errors[name]?.message[0] : errors[name]?.message}
