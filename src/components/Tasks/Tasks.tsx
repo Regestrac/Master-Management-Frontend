@@ -27,6 +27,7 @@ const Tasks = () => {
   const addTask = useTaskStore((state) => state.addTask);
   const deleteTaskFromStore = useTaskStore((state) => state.deleteTask);
   const updateRecentTask = useTaskStore((state) => state.updateRecentTask);
+  const updateStartTimer = useTaskStore((state) => state.updateStartTimer);
 
   const shouldFetchTasks = useRef(true);
 
@@ -74,10 +75,15 @@ const Tasks = () => {
 
   const handleStartTask = (id: number) => {
     navigate(`/tasks/${id}`);
+    updateStartTimer(true);
     const currentTask = tasks?.find((task) => task?.id === id);
     if (currentTask) {
       updateRecentTask(currentTask);
     }
+  };
+
+  const handleTaskClick = (id: number) => {
+    navigate(`/tasks/${id}`);
   };
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +143,7 @@ const Tasks = () => {
           <div key={task?.id} className='flex justify-between mb-1'>
             <div className='flex'>
               <span className={`${task.status} me-3`}>{capitalize(task?.status)}</span>
-              {task?.title}
+              <div className='cursor-pointer' onClick={() => handleTaskClick(task?.id)}>{task?.title}</div>
             </div>
             <div className='flex items-center'>
               <div>{formatTimeElapsed(task?.timeSpend)}</div>

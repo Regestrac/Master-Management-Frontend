@@ -7,18 +7,31 @@ type TaskType = {
   timeSpend: number;
 };
 
+type TaskDetailsType = TaskType & {
+  startedAt: string;
+  description: string;
+};
+
 type TasksStateType = {
   tasks: TaskType[];
   recentTasks: TaskType[];
+  shouldStartTimer: boolean;
+  currentTaskDetails: TaskDetailsType;
+  updateCurrentTaskDetails: (_task: TaskDetailsType) => void;
   addTask: (_newTask: TaskType | TaskType[]) => void;
   updateTask: (_task: TaskType) => void;
   deleteTask: (_id: number) => void;
   updateRecentTask: (_task: TaskType) => void;
+  updateStartTimer: (_value: boolean) => void;
+  updateStartedAt: (_time: string) => void;
 };
 
 export const useTaskStore = create<TasksStateType>()((set) => ({
   tasks: [],
   recentTasks: [],
+  shouldStartTimer: false,
+  currentTaskDetails: {} as TaskDetailsType,
+  updateCurrentTaskDetails: (task) => set({ currentTaskDetails: task }),
   addTask: (newTask) => set((state) => {
     const incoming = Array.isArray(newTask) ? newTask : [newTask];
     const mergedMap = new Map<number, TaskType>();
@@ -41,4 +54,6 @@ export const useTaskStore = create<TasksStateType>()((set) => ({
     const updatedRecentTasks = [updatedTask, ...filtered].slice(0, 5);
     return { recentTasks: updatedRecentTasks };
   }),
+  updateStartTimer: (value) => set({ shouldStartTimer: value }),
+  updateStartedAt: (value) => set((state) => ({ currentTaskDetails: { ...state.currentTaskDetails, startedAt: value } })),
 }));
