@@ -1,76 +1,36 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
-import { useParams } from 'react-router-dom';
-
-import TaskTimer from 'components/Tasks/TaskTimer';
 import TaskHistory from 'components/Tasks/TaskHistory';
 import SubTasks from 'components/Tasks/SubTasks';
+import TaskForm from 'components/Tasks/TaskForm';
 
-import { useTaskStore } from 'src/stores/taskStore';
-import { debounce } from 'src/helpers/utils';
+type TabsType = 'history' | 'subtasks';
 
 const TaskDetail = () => {
-  const { id } = useParams();
+  const [activeTab, setActiveTab] = useState<TabsType>('subtasks');
 
-  const task = useTaskStore((state) => state.tasks?.find((item) => item?.id === Number(id)));
-  const updateTask = useTaskStore((state) => state.updateTask);
-
-  const [taskName, setTaskName] = useState(task?.title || '');
-  const [description, setDescription] = useState('This task is about doing this, that and the other thing also');
-  const [activeTab, setActiveTab] = useState<'history' | 'subtasks'>('history');
-
-  const debounceUpdateTaskName = useMemo(() => debounce((value) => {
-    updateTask({ ...task!, title: value });
-    // setTaskName(taskName); // Add logic to update to api.
-  }, 250), [task, updateTask]);
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    debounceUpdateTaskName(e.target.value);
-    setTaskName(e.target.value);
-  };
-
-  const getTabClassName = (tab: 'history' | 'subtasks') => `px-3 py-2 font-medium text-sm ${activeTab === tab
+  const getTabClassName = (tab: TabsType) => `px-3 py-2 font-medium text-sm ${activeTab === tab
     ? 'border-indigo-500 text-indigo-600'
     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`;
 
   return (
     <div className='p-8'>
       <div className='max-w-4xl mx-auto rounded-xl shadow-md p-6 space-y-6'>
-        <div className='flex gap-3'>
-          <div className='w-full'>
-            <label className='block text-sm font-medium'>Task Name</label>
-            <input
-              type='text'
-              value={taskName}
-              onChange={handleNameChange}
-              className='mt-1 block w-full rounded-md border-amber-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-            />
-          </div>
-          <TaskTimer />
-        </div>
-        <div>
-          <label className='block text-sm font-medium'>Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={6}
-            className='mt-1 block w-full rounded-md border-amber-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-          />
-        </div>
+        <TaskForm />
         <div>
           <div className='border-b border-gray-200'>
             <nav className='-mb-px flex space-x-4' aria-label='Tabs'>
-              <button className={getTabClassName('history')} onClick={() => setActiveTab('history')}>
-                HISTORY
-              </button>
               <button className={getTabClassName('subtasks')} onClick={() => setActiveTab('subtasks')}>
                 SUBTASKS
+              </button>
+              <button className={getTabClassName('history')} onClick={() => setActiveTab('history')}>
+                HISTORY
               </button>
             </nav>
           </div>
           <div className='mt-4'>
-            {activeTab === 'history' && <TaskHistory />}
             {activeTab === 'subtasks' && <SubTasks />}
+            {activeTab === 'history' && <TaskHistory />}
           </div>
         </div>
       </div>

@@ -8,10 +8,17 @@ type PropsType = {
   className?: string;
   type?: 'text' | 'email' | 'password' | 'textarea';
   rows?: number;
+  onBlur?: (_value: string) => void;
 };
 
-const Input = ({ name, label, type = 'text', ...props }: PropsType) => {
+const Input = ({ name, label, type = 'text', onBlur, ...props }: PropsType) => {
   const { field, formState: { errors } } = useController({ name });
+
+  const handleOnBlur = () => {
+    if (onBlur) {
+      onBlur(field.value);
+    }
+  };
 
   return (
     <div className='mb-6 w-full'>
@@ -26,6 +33,7 @@ const Input = ({ name, label, type = 'text', ...props }: PropsType) => {
           {...props}
           rows={props.rows || 4}
           className={`w-full px-4 py-3 rounded-lg border border-gray-300 text-base outline-none transition focus:border-blue-500 bg-primary-bg ${props.className}`}
+          onBlur={handleOnBlur}
         />
       ) : (
         <input
@@ -33,6 +41,7 @@ const Input = ({ name, label, type = 'text', ...props }: PropsType) => {
           {...props}
           type={type}
           className={`w-full px-4 py-3 rounded-lg border border-gray-300 text-base outline-none transition focus:border-blue-500 bg-primary-bg ${props.className}`}
+          onBlur={handleOnBlur}
         />
       )}
       {errors?.[name] ? (
