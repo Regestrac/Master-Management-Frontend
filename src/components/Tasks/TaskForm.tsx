@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 import { useTaskStore } from 'stores/taskStore';
 
-import Input from 'components/shared/Input';
+import Input from 'components/Shared/Input';
 import TaskTimer from 'components/Tasks/TaskTimer';
 
 import { getTask, updateTask } from 'src/services/tasks';

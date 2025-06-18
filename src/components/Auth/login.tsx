@@ -1,54 +1,46 @@
 import React, { useState } from 'react';
 
-import { Link, useNavigate } from 'react-router-dom';
-import { z } from 'zod';
 import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useProfileStore } from 'stores/profileStore';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import Input from 'components/shared/Input';
+import Input from 'components/Shared/Input';
 
-import { signup } from 'src/services/auth';
+import { login } from 'src/services/auth';
 import { getProfile } from 'src/services/profile';
 
-type SignupFormDataType = {
-  first_name: string;
-  last_name: string;
+type LoginType = {
   email: string;
   password: string;
 };
 
 const schema = z.object({
-  first_name: z.string().nonempty('First Name is required!'),
-  last_name: z.string().nonempty('Last Name is required!'),
   email: z.string().nonempty('Email is required!').email('Invalid email address!'),
   password: z.string().nonempty('Password is required!').min(6, 'Password must be at least 6 characters!'),
 });
 
-const Signup: React.FC = () => {
+const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const updateProfile = useProfileStore((state) => state.updateProfile);
 
   const navigate = useNavigate();
 
-  const methods = useForm<SignupFormDataType>({
+  const methods = useForm<LoginType>({
+    defaultValues: { email: '', password: '' },
     resolver: zodResolver(schema),
-    defaultValues: {
-      first_name: '',
-      last_name: '',
-      email: '',
-      password: '',
-    },
   });
 
   const { handleSubmit } = methods;
 
-  const onSignUpSubmit = (formData: SignupFormDataType) => {
-    setError(null);
-    signup(formData).then(() => {
+  const onLoginSubmit = (formData: LoginType) => {
+    setError(null); // Reset error state before login attempt
+    login(formData).then((res) => {
       navigate('/', { replace: true });
+      toast.success(res?.message || 'Login successful! Welcome!');
       getProfile().then((profile) => {
         updateProfile({
           firstName: profile?.data?.first_name || '',
@@ -59,17 +51,15 @@ const Signup: React.FC = () => {
         toast.error(err?.error || 'Failed to fetch profile. Please try again.');
       });
     }).catch((err) => {
-      setError(err?.error || 'Failed to signup!');
+      setError(err.error || 'Login failed. Please try again.');
     });
   };
 
   return (
     <FormProvider {...methods}>
-      <div className='max-w-md mx-auto mt-8 p-8 border border-gray-200 rounded-lg shadow bg-secondary-bg'>
-        <h2 className='text-2xl font-semibold mb-6 text-center'>Sign Up</h2>
-        <form onSubmit={handleSubmit(onSignUpSubmit)}>
-          <Input name='first_name' label='First Name' />
-          <Input name='last_name' label='Last Name' />
+      <div className='max-w-md mx-auto mt-16 p-8 rounded-2xl bg-secondary-bg shadow-xl border border-white/20 backdrop-blur-sm'>
+        <h2 className='text-2xl font-bold text-center mb-8 tracking-wide text-text'>Login</h2>
+        <form onSubmit={handleSubmit(onLoginSubmit)}>
           <Input name='email' label='Email' />
           <Input name='password' label='Password' type='password' />
           {error && (
@@ -79,13 +69,15 @@ const Signup: React.FC = () => {
           )}
           <button
             type='submit'
-            className='w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition'
+            className='w-full py-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white border-none rounded-lg font-semibold text-lg tracking-wide cursor-pointer shadow-md transition hover:from-blue-700 hover:to-blue-900'
           >
-            Sign Up
+            Login
           </button>
-          <p className='mt-4 text-center text-sm text-text-light'>
-            Already have an account?&nbsp;
-            <Link to='/login' className='text-blue-500 hover:underline'>Login</Link>
+          <p className='mt-6 text-center text-sm text-text-light'>
+            Don't have an account?&nbsp;
+            <Link to='/signup' className='text-blue-500 hover:underline'>
+              Sign up
+            </Link>
           </p>
         </form>
       </div>
@@ -93,4 +85,4 @@ const Signup: React.FC = () => {
   );
 };
 
-export default Signup;
+export default Login;

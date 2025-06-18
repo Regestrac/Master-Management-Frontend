@@ -7,7 +7,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import Input from 'components/shared/Input';
+import Input from 'components/Shared/Input';
 
 import { logout } from 'src/services/auth';
 import { updateProfile } from 'src/services/profile';

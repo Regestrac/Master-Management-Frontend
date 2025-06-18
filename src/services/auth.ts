@@ -1,4 +1,4 @@
-import { getHandler, postHandler } from 'services/api';
+import { getHandler, postHandler } from 'src/helpers/api';
 
 // Define types for login and signup payloads and responses
 type LoginPayload = {

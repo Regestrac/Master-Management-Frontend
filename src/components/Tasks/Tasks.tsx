@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import Input from 'components/shared/Input';
+import Input from 'components/Shared/Input';
 
 import PlusIcon from 'icons/PlusIcon';
 

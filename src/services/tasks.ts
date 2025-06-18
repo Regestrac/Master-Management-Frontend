@@ -1,4 +1,4 @@
-import { getHandler, postHandler } from 'services/api';
+import { getHandler, postHandler } from 'src/helpers/api';
 
 export const getAllTasks = () => getHandler({
   path: 'tasks',
