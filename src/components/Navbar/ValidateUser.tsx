@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
-import { useLocation, useNavigate } from 'react-router-dom';
+// import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useProfileStore } from 'stores/profileStore';
 
@@ -8,15 +8,15 @@ import { validate } from 'src/services/auth';
 import { getProfile } from 'src/services/profile';
 
 const ValidateUser = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  // const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   const updateProfile = useProfileStore((state) => state.updateProfile);
 
   const isValidated = useRef(false);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
 
   const getProfileInfo = useCallback(() => {
     getProfile().then((profile) => {
@@ -24,6 +24,7 @@ const ValidateUser = () => {
         firstName: profile?.data?.first_name || '',
         lastName: profile?.data?.last_name || '',
         email: profile?.data?.email || '',
+        userId: profile?.data?.id || 0,
       });
     }).catch((err) => {
       toast.error(err?.error || 'Failed to fetch profile. Please try again.');
@@ -34,24 +35,24 @@ const ValidateUser = () => {
     if (!isValidated.current) {
       validate().then(() => {
         getProfileInfo();
-        setIsAuthenticated(true);
-      }).catch(() => setIsAuthenticated(false));
+        // setIsAuthenticated(true);
+      }).catch(() => null);
       isValidated.current = true;
     }
   }, [getProfileInfo]);
 
-  useEffect(() => {
-    if (isAuthenticated !== null) {
-      if (isAuthenticated && (pathname.includes('login') || pathname.includes('signup'))) {
-        navigate('/', { replace: true });
-      } else if (!isAuthenticated && (!pathname.includes('login') && !pathname.includes('signup'))) {
-        navigate('/login', { replace: true });
-      }
-    }
-    return () => {
-      setIsAuthenticated(null);
-    };
-  }, [isAuthenticated, navigate, pathname]);
+  // useEffect(() => {
+  //   if (isAuthenticated !== null) {
+  //     if (isAuthenticated && (pathname.includes('login') || pathname.includes('signup'))) {
+  //       navigate('/', { replace: true });
+  //     } else if (!isAuthenticated && (!pathname.includes('login') && !pathname.includes('signup'))) {
+  //       navigate('/login', { replace: true });
+  //     }
+  //   }
+  //   return () => {
+  //     setIsAuthenticated(null);
+  //   };
+  // }, [isAuthenticated, navigate, pathname]);
 
   return null;
 };

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface CustomNavigationEventType extends Event {
-  details: {
+  detail: {
     url: string;
     replace?: boolean;
   }
@@ -16,7 +16,7 @@ const useCustomNavigation = () => {
   useEffect(() => {
     const handleCustomNavigation = (event: Event) => {
       const customEvent = event as CustomNavigationEventType;
-      const { url, replace } = customEvent.details;
+      const { url, replace } = customEvent.detail;
 
       navigate(url, { replace });
     };

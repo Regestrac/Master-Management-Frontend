@@ -46,6 +46,7 @@ const Login: React.FC = () => {
           firstName: profile?.data?.first_name || '',
           lastName: profile?.data?.last_name || '',
           email: profile?.data?.email || '',
+          userId: profile?.data?.id || 0,
         });
       }).catch((err) => {
         toast.error(err?.error || 'Failed to fetch profile. Please try again.');

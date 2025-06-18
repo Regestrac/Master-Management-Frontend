@@ -28,6 +28,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const updateProfileInfo = useProfileStore((state) => state.updateProfile);
+  const clearProfile = useProfileStore((state) => state.clearProfile);
   const firstName = useProfileStore((state) => state?.firstName);
   const lastName = useProfileStore((state) => state?.lastName);
   const email = useProfileStore((state) => state?.email);
@@ -55,6 +56,7 @@ const Profile = () => {
     logout().then((res) => {
       toast.success(res?.message || 'Logout successful! See you soon!');
       navigate('/login');
+      clearProfile();
     }).catch((err) => {
       toast.error(err?.error || 'Logout failed. Please try again.');
     });
@@ -67,6 +69,7 @@ const Profile = () => {
         firstName: res?.data?.first_name || '',
         lastName: res?.data?.last_name || '',
         email: res?.data?.email || '',
+        userId: res?.data?.id || 0,
       });
       setIsEditing(false);
     }).catch((err) => {
