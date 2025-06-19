@@ -23,3 +23,8 @@ export const updateTask = (taskId: string, data: object) => postHandler({
   method: 'PATCH',
   body: JSON.stringify(data),
 });
+
+export const generateDescription = (taskId: string, data: object) => postHandler({
+  path: `task/${taskId}/generate-description`,
+  body: JSON.stringify(data),
+});
