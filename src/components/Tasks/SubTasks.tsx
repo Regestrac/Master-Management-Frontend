@@ -18,10 +18,7 @@ const SubTasks = (_props: Props) => {
       <h3 className='text-lg font-semibold'>Subtasks</h3>
       <ul className='space-y-2'>
         {subtasks.map((subtask, index) => (
-          <li
-            key={index}
-            className='flex justify-between items-center p-2 rounded-md'
-          >
+          <li key={index} className='flex justify-between items-center p-2 rounded-md'>
             <span>{subtask}</span>
           </li>
         ))}
