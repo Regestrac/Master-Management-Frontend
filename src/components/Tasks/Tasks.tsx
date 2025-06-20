@@ -7,6 +7,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import Input from 'components/Shared/Input';
 
 import PlusIcon from 'icons/PlusIcon';
+import DeleteIcon from 'icons/DeleteIcon';
+import ResumeIcon from 'icons/ResumeIcon';
 
 import { useTaskStore } from 'src/stores/taskStore';
 import { capitalize, formatTimeElapsed } from 'src/helpers/utils';
@@ -123,7 +125,7 @@ const Tasks = () => {
       <div className='flex flex-wrap justify-between items-end gap-4'>
         <input
           placeholder='Search Task'
-          className='border-1 flex-grow md:flex-grow-0 md:order-2 md:mx-auto'
+          className='border border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 bg-secondary-bg text-text flex-grow min-w-[220px] sm:min-w-[300px] md:min-w-[400px] lg:min-w-[500px] max-w-full md:flex-grow-0 md:order-2 md:mx-auto'
           onChange={onSearch}
         />
         <h3 className='order-2 md:order-1'>
@@ -147,8 +149,12 @@ const Tasks = () => {
             </div>
             <div className='flex items-center'>
               <div>{formatTimeElapsed(task?.timeSpend)}</div>
-              <button className='bg-blue-500 ms-2 p-1 rounded-sm' onClick={() => handleStartTask(task?.id)}>Start</button>
-              <button className='bg-red-500 ms-2 p-1 rounded-sm' onClick={() => handleDeleteTask(task?.id)}>Delete</button>
+              <button className='bg-blue-500 ms-2 p-1 rounded-sm' onClick={() => handleStartTask(task?.id)}>
+                <ResumeIcon />
+              </button>
+              <button className='bg-red-500 ms-2 p-1 rounded-sm' onClick={() => handleDeleteTask(task?.id)}>
+                <DeleteIcon />
+              </button>
             </div>
           </div>
         ))}

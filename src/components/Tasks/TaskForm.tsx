@@ -78,6 +78,7 @@ const TaskForm = () => {
             status: fetchedTask?.data?.status,
             timeSpend: fetchedTask?.data?.time_spend,
             title: fetchedTask?.data?.title,
+            parent_id: fetchedTask?.data?.parent_id || 0,
           });
         }
         setIsLoading(false);
@@ -87,6 +88,10 @@ const TaskForm = () => {
       });
       shouldFetchTask.current = false;
     }
+
+    return () => {
+      shouldFetchTask.current = true;
+    };
   }, [id, reset, updateCurrentTaskDetails]);
 
   return (

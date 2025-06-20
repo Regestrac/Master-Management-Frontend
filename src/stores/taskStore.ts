@@ -10,6 +10,7 @@ type TaskType = {
 type TaskDetailsType = TaskType & {
   startedAt: string;
   description: string;
+  parent_id: number;
 };
 
 type TasksStateType = {
