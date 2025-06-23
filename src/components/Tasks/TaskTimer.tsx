@@ -94,7 +94,7 @@ const TaskTimer: React.FC<TaskTimerProps> = ({ initialTime = 0 }) => {
         <p className='text-2xl font-mono mt-1'>{formatTime(time)}</p>
         <button
           onClick={toggleTimer}
-          className={`px-2 py-1 ms-3 rounded-md text-white font-medium ${isRunning ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}
+          className='p-1 ms-3 rounded outline-1 font-medium cursor-pointer'
         >
           {isRunning ? <PauseIcon /> : <ResumeIcon />}
         </button>

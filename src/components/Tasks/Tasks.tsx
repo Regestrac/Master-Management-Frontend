@@ -149,10 +149,10 @@ const Tasks = () => {
             </div>
             <div className='flex items-center'>
               <div>{formatTimeElapsed(task?.timeSpend)}</div>
-              <button className='bg-blue-500 ms-2 p-1 rounded-sm' onClick={() => handleStartTask(task?.id)}>
+              <button className='cursor-pointer ms-3 me-1 rounded outline-1 p-1' onClick={() => handleStartTask(task?.id)}>
                 <ResumeIcon />
               </button>
-              <button className='bg-red-500 ms-2 p-1 rounded-sm' onClick={() => handleDeleteTask(task?.id)}>
+              <button className='cursor-pointer m-1' onClick={() => handleDeleteTask(task?.id)}>
                 <DeleteIcon />
               </button>
             </div>
