@@ -22,7 +22,7 @@ type TasksStateType = {
   addTask: (_newTask: TaskType | TaskType[]) => void;
   updateTask: (_task: TaskType) => void;
   deleteTask: (_id: number) => void;
-  updateRecentTask: (_task: TaskType) => void;
+  updateRecentTask: (_task: TaskType | TaskType[]) => void;
   updateStartTimer: (_value: boolean) => void;
   updateStartedAt: (_time: string) => void;
 };
@@ -51,9 +51,9 @@ export const useTaskStore = create<TasksStateType>()((set) => ({
     tasks: state.tasks.filter((task) => task.id !== id),
   })),
   updateRecentTask: (updatedTask) => set((state) => {
-    const filtered = state.recentTasks.filter((task: TaskType) => task.id !== updatedTask.id);
-    const updatedRecentTasks = [updatedTask, ...filtered].slice(0, 5);
-    return { recentTasks: updatedRecentTasks };
+    const filtered = !Array.isArray(updatedTask) ? state.recentTasks.filter((task: TaskType) => task.id !== updatedTask.id) : [];
+    const updatedRecentTasks = !Array.isArray(updatedTask) ? [updatedTask, ...filtered].slice(0, 5) : [];
+    return { recentTasks: Array.isArray(updatedTask) ? updatedTask : updatedRecentTasks };
   }),
   updateStartTimer: (value) => set({ shouldStartTimer: value }),
   updateStartedAt: (value) => set((state) => ({ currentTaskDetails: { ...state.currentTaskDetails, startedAt: value } })),

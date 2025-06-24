@@ -28,7 +28,6 @@ const Tasks = () => {
   const tasks = useTaskStore((state) => state.tasks);
   const addTask = useTaskStore((state) => state.addTask);
   const deleteTaskFromStore = useTaskStore((state) => state.deleteTask);
-  const updateRecentTask = useTaskStore((state) => state.updateRecentTask);
   const updateStartTimer = useTaskStore((state) => state.updateStartTimer);
 
   const shouldFetchTasks = useRef(true);
@@ -78,10 +77,6 @@ const Tasks = () => {
   const handleStartTask = (id: number) => {
     navigate(`/tasks/${id}`);
     updateStartTimer(true);
-    const currentTask = tasks?.find((task) => task?.id === id);
-    if (currentTask) {
-      updateRecentTask(currentTask);
-    }
   };
 
   const handleTaskClick = (id: number) => {
