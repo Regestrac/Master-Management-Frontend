@@ -88,10 +88,10 @@ const TaskTimer: React.FC<TaskTimerProps> = ({ initialTime = 0 }) => {
   }, [startedAt]);
 
   return (
-    <div className='flex flex-col p-1 rounded-lg shadow-md w-fit'>
-      <h3 className='block mb-2 font-medium text-text-light tracking-wide whitespace-nowrap'>Time Spent:&nbsp;</h3>
-      <div className='flex items-center justify-center mt-1'>
-        <p className='text-2xl font-mono mt-1'>{formatTime(time)}</p>
+    <div className='flex p-1 rounded-lg shadow-md w-fit'>
+      <h3 className='block font-medium text-text-light tracking-wide whitespace-nowrap'>Time Spent:&nbsp;</h3>
+      <div className='flex items-center justify-center'>
+        <p className='text-2xl font-mono'>{formatTime(time)}</p>
         <button
           onClick={toggleTimer}
           className='p-1 ms-3 rounded outline-1 font-medium cursor-pointer'

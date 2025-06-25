@@ -7,14 +7,17 @@ import { useTaskStore } from 'stores/taskStore';
 
 import Input from 'components/Shared/Input';
 import TaskTimer from 'components/Tasks/TaskTimer';
+import Select from 'components/Shared/Select';
 
 import { getTask, updateTask } from 'src/services/tasks';
+import { capitalize } from 'src/helpers/utils';
 
 import GenerateDescriptionButtons from './GenerateDescriptionButtons';
 
 type FormDataType = {
   title: string;
   description: string;
+  status: { label: string; value: string; };
 };
 
 type TaskDetailsType = {
@@ -25,6 +28,13 @@ type TaskDetailsType = {
   time_spend: number;
   title: string;
 };
+
+const statusOptions = [
+  { label: 'To Do', value: 'todo' },
+  { label: 'Incomplete', value: 'incomplete' },
+  { label: 'In Progress', value: 'inprogress' },
+  { label: 'Complete', value: 'complete' },
+];
 
 const TaskForm = () => {
   const [taskDetails, setTaskDetails] = useState({} as TaskDetailsType);
@@ -62,6 +72,12 @@ const TaskForm = () => {
     }
   };
 
+  const handleStatusChange = (value: { label: string; value: string | number; }) => {
+    if ('status' in dirtyFields) {
+      handleUpdateTask({ status: value?.value });
+    }
+  };
+
   useEffect(() => {
     if (id && shouldFetchTask.current) {
       getTask(id).then((fetchedTask) => {
@@ -70,6 +86,7 @@ const TaskForm = () => {
           reset({
             title: fetchedTask?.data?.title,
             description: fetchedTask?.data?.description,
+            status: { label: capitalize(fetchedTask?.data?.status), value: fetchedTask?.data?.status },
           });
           updateCurrentTaskDetails({
             description: fetchedTask?.data?.description,
@@ -99,6 +116,18 @@ const TaskForm = () => {
       <FormProvider {...methods}>
         <div className='flex flex-col gap-3 sm:flex-row'>
           <Input name='title' label='Task Name' className='flex-1' onBlur={handleTitleBlur} />
+          <div className='flex flex-col p-1 rounded-lg shadow-md w-fit'>
+            <h3 className='block mb-2 font-medium text-text-light tracking-wide whitespace-nowrap'>Streak:</h3>
+            <div className='flex items-center justify-center mt-1'>
+              <p className='text-2xl font-mono mt-1'>{taskDetails?.streak}</p>
+            </div>
+          </div>
+        </div>
+        <div className='flex gap-10'>
+          <div className='flex gap-2'>
+            <h3 className='block font-medium text-text-light tracking-wide whitespace-nowrap'>Status:</h3>
+            <Select name='status' options={statusOptions} onChange={handleStatusChange} />
+          </div>
           <TaskTimer initialTime={taskDetails?.time_spend} />
         </div>
         <GenerateDescriptionButtons />
