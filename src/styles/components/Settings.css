@@ -1,0 +1,102 @@
+.settings-container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 5rem auto 0;
+}
+
+.settings-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: var(--color-text);
+}
+
+.settings-section {
+  background: var(--color-secondary-bg);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--color-border);
+}
+
+.settings-section-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.theme-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.theme-option:hover {
+  background: var(--color-hover-secondary);
+}
+
+.theme-option.active {
+  border-color: var(--color-primary);
+  background: var(--color-active-bg);
+}
+
+.theme-preview {
+  width: 64px;
+  height: 64px;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.theme-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* Theme Preview Styles */
+.theme-preview-dark {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+.theme-preview-black {
+  background: linear-gradient(135deg, #000000 0%, #121212 100%);
+}
+
+.theme-preview-red {
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+}
+
+.theme-preview-green {
+  background: linear-gradient(135deg, #059669 0%, #065f46 100%);
+}
+
+.theme-preview-blue {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+.theme-preview-purple {
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+}
+
+.theme-preview-cyan {
+  background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+}
+
+.theme-preview-white {
+  background: linear-gradient(135deg, #ffffff 0%, #c9c9c9 100%);
+}

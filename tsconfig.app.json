@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "incremental": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -20,7 +21,22 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Imports */
+    "baseUrl": "src",
+    "paths": {
+      "components/*": ["components/*"],
+      "pages/*": ["pages/*"],
+      "utils/*": ["utils/*"],
+      "styles/*": ["styles/*"],
+      "context/*": ["context/*"],
+      "icons/*": ["icons/*"],
+      "stores/*": ["stores/*"],
+      "src/*": ["*"],
+      "services/*": ["services/*"],
+      "helpers/*": ["helpers/*"],
+    }
   },
   "include": ["src"]
 }
