@@ -51,9 +51,29 @@ export function formatDuration(totalSeconds: number) {
   }
 }
 
+/**
+ * Formats a given time duration in seconds into a human-readable string.
+ *
+ * The function returns a string representing the largest appropriate time unit:
+ * - "Not started" if seconds is 0
+ * - "Less than 1 min" if less than 60 seconds
+ * - "X min(s)" if less than 60 minutes
+ * - "X hour(s)" if less than 24 hours
+ * - "X day(s)" if less than 7 days
+ * - "X week(s)" if less than 4 weeks
+ * - "X month(s)" if less than 12 months
+ * - "X year(s)" otherwise
+ *
+ * @param seconds - The elapsed time in seconds.
+ * @returns A human-readable string representing the elapsed time.
+ */
 export const formatTimeElapsed = (seconds: number) => {
+  if (seconds === 0) {
+    return 'Not started';
+  }
+
   if (seconds < 60) {
-    return 'less than 1 min';
+    return 'Less than 1 min';
   }
 
   const minutes = Math.floor(seconds / 60);
