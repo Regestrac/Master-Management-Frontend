@@ -17,6 +17,7 @@ export default defineConfig({
       src: '/src',
       services: '/src/services',
       helpers: '/src/helpers',
+      hooks: '/src/hooks',
     },
   },
 });

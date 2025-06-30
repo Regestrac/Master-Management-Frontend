@@ -36,6 +36,7 @@
       "src/*": ["*"],
       "services/*": ["services/*"],
       "helpers/*": ["helpers/*"],
+      "hooks/*": ["hooks/*"],
     }
   },
   "include": ["src"]

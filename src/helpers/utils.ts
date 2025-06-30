@@ -123,3 +123,16 @@ export function debounce<T extends (..._args: any[]) => void>(func: T, wait: num
     }, wait);
   };
 }
+
+export const copyToClipboard = (text: string) => {
+  try {
+    navigator.clipboard.writeText(text);
+  } catch {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+  }
+};

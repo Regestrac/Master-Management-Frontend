@@ -119,7 +119,10 @@ const TaskForm = () => {
           <div className='flex flex-col p-1 rounded-lg shadow-md w-fit'>
             <h3 className='block mb-2 font-medium text-text-light tracking-wide whitespace-nowrap'>Streak:</h3>
             <div className='flex items-center justify-center mt-1'>
-              <p className='text-2xl font-mono mt-1'>{taskDetails?.streak}</p>
+              <p className='text-2xl font-mono mt-1'>
+                {taskDetails?.streak}
+                🔥
+              </p>
             </div>
           </div>
         </div>

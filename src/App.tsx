@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
+import useCustomNavigation from 'hooks/useCustomNavigation';
+
 import { ThemeProvider } from 'context/ThemeContext';
 
 import Navbar from 'components/Navbar/Navbar';
@@ -13,8 +15,7 @@ import TaskDetail from 'components/Tasks/TaskDetail';
 import Login from 'components/Auth/login';
 import Signup from 'components/Auth/Signup';
 import NotFound from 'components/Shared/NotFound';
-
-import useCustomNavigation from './hooks/useCustomNavigation';
+import StyleGuide from 'components/StyleGuide';
 
 function App() {
   useCustomNavigation();
@@ -46,6 +47,7 @@ function App() {
             <Route path='/login' element={<Login />} />
             <Route path='/signup' element={<Signup />} />
             <Route path='/not-found' element={<NotFound />} />
+            <Route path='/style-guide' element={<StyleGuide />} />
           </Routes>
         </main>
       </div>
