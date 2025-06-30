@@ -1,8 +1,8 @@
 import { RouteObject } from 'react-router-dom';
 
-import Authentication from 'components/Auth';
-import Login from 'components/Auth/login';
-import Signup from 'components/Auth/Signup';
+import Authentication from 'components/Authentication';
+import Login from 'components/Authentication/login';
+import Signup from 'components/Authentication/Signup';
 import Dashboard from 'components/Dashboard/Dashboard';
 import Home from 'components/Home/Home';
 import RootLayout from 'components/Layout/RootLayout';

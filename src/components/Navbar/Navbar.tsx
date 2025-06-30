@@ -59,13 +59,13 @@ const Navbar = () => {
             <div className='profile-section'>
               <div className='flex gap-4'>
                 <Link
-                  to='/login'
+                  to='/auth/login'
                   className='px-4 py-2 rounded-md text-sm font-medium text-text hover:bg-primary-bg hover:outline-1 transition'
                 >
                   Login
                 </Link>
                 <Link
-                  to='/signup'
+                  to='/auth/signup'
                   className='px-4 py-2 rounded-md text-sm font-medium text-white bg-primary hover:bg-blue-700 transition'
                 >
                   Sign Up

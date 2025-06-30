@@ -55,7 +55,7 @@ const Profile = () => {
   const handleLogout = () => {
     logout().then((res) => {
       toast.success(res?.message || 'Logout successful! See you soon!');
-      navigate('/login');
+      navigate('/auth/login');
       clearProfile();
     }).catch((err) => {
       toast.error(err?.error || 'Logout failed. Please try again.');
