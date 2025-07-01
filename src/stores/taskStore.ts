@@ -5,6 +5,8 @@ type TaskType = {
   title: string;
   status: 'completed' | 'incomplete';
   timeSpend: number;
+  priority: 'high' | 'normal' | 'low';
+  streak: number;
 };
 
 type TaskDetailsType = TaskType & {

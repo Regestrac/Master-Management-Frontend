@@ -11,6 +11,7 @@ import Settings from 'components/Settings/Settings';
 import NotFound from 'components/Shared/NotFound';
 import StyleGuide from 'components/StyleGuide';
 import Tasks from 'components/Tasks/Tasks';
+import TaskDetail from 'components/Tasks/TaskDetail';
 
 const routes: RouteObject[] = [
   {
@@ -41,6 +42,10 @@ const routes: RouteObject[] = [
       {
         path: '/tasks',
         element: <Tasks />,
+      },
+      {
+        path: '/tasks/:id',
+        element: <TaskDetail />,
       },
       {
         path: '/goals',
