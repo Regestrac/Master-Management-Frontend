@@ -10,7 +10,7 @@ import { getRecentTasks } from 'src/services/tasks';
 type RecentTaskType = {
   id: number;
   last_accessed_at: string;
-  status: 'completed' | 'active' | 'inprogress' | 'pending' | 'paused';
+  status: 'completed' | 'todo' | 'inprogress' | 'pending' | 'paused';
   time_spend: number;
   title: string;
   streak: number;
@@ -34,7 +34,7 @@ const getStatusColor = (status: RecentTaskType['status']) => {
   switch (status) {
     case 'completed':
       return 'text-green-400 bg-green-400/10';
-    case 'active':
+    case 'todo':
       return 'text-blue-400 bg-blue-400/10';
     case 'inprogress':
       return 'text-blue-400 bg-blue-400/10';

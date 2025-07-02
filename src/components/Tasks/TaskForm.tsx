@@ -93,9 +93,14 @@ const TaskForm = () => {
             id: fetchedTask?.data?.id,
             startedAt: fetchedTask?.data?.started_at,
             status: fetchedTask?.data?.status,
-            timeSpend: fetchedTask?.data?.time_spend,
+            time_spend: fetchedTask?.data?.time_spend,
             title: fetchedTask?.data?.title,
             parent_id: fetchedTask?.data?.parent_id || 0,
+            category: '',
+            due_date: '',
+            priority: 'normal',
+            streak: 0,
+            type: 'task',
           });
         }
         setIsLoading(false);
