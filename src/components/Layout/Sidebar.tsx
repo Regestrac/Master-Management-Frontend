@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { BarChart3, Calendar, CheckSquare, Home, Settings, Target, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useThemeStore } from 'stores/themeStore';
+import { useNavbarStore } from 'stores/navbarStore';
 
 const navbarItems = [
   { id: 'dashboard', icon: Home, label: 'Dashboard' },
@@ -18,6 +19,7 @@ const Sidebar = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
 
   const darkMode = useThemeStore((state) => state.theme) === 'dark';
+  const showNavbar = useNavbarStore((state) => state.showNavbar);
 
   const navigate = useNavigate();
 
@@ -27,7 +29,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`fixed left-0 top-0 h-full w-64 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-r transition-colors duration-300`}>
+    <div className={`${showNavbar ? 'translate transition-transform duration-700' : '-translate-x-full transition-transform duration-700'} fixed left-0 top-0 h-full w-70 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-r transition-colors duration-300 z-20`}>
       <div className='p-6'>
         <div className='flex items-center space-x-3 mb-8'>
           <div className='w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center'>
@@ -41,7 +43,7 @@ const Sidebar = () => {
             <button
               key={id}
               onClick={() => handleNavLinkClick(id)}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${activeTab === id
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors cursor-pointer ${activeTab === id
                 ? 'bg-purple-500 text-white'
                 : darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}
             >
