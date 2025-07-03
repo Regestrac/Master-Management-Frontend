@@ -8,122 +8,11 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 import Dropdown from 'components/Shared/Dropdown';
+import Outline from 'components/Shared/Outline';
 
 import { formatTimeElapsed } from 'src/helpers/utils';
 import { updateTask } from 'src/services/tasks';
 import { TaskType } from 'src/helpers/sharedTypes';
-
-// const allTasks2 = [
-//   {
-//     id: 1,
-//     title: 'Design new landing page',
-//     status: 'in-progress',
-//     time: '2h 15m',
-//     priority: 'high',
-//     streak: 5,
-//     dueDate: '2025-06-28',
-//     category: 'Design',
-//     description: 'Create a modern, responsive landing page for the new product launch',
-//     subtasks: [
-//       { id: 11, title: 'Create wireframes', completed: true },
-//       { id: 12, title: 'Design mockups', completed: true },
-//       { id: 13, title: 'Code HTML/CSS', completed: false },
-//     ],
-//     checklist: [
-//       { id: 101, text: 'Research competitor designs', completed: true },
-//       { id: 102, text: 'Gather brand assets', completed: true },
-//       { id: 103, text: 'Test on mobile devices', completed: false },
-//     ],
-//     notes: 'Focus on mobile-first design approach. Use the new brand colors.',
-//     tags: ['urgent', 'design', 'frontend'],
-//   },
-//   {
-//     id: 2,
-//     title: 'Review code submissions',
-//     status: 'completed',
-//     time: '45m',
-//     priority: 'normal',
-//     streak: 3,
-//     dueDate: '2025-06-27',
-//     category: 'Development',
-//     description: 'Review and provide feedback on team code submissions',
-//     subtasks: [
-//       { id: 21, title: 'Review PR #123', completed: true },
-//       { id: 22, title: 'Review PR #124', completed: true },
-//     ],
-//     checklist: [
-//       { id: 201, text: 'Check code quality', completed: true },
-//       { id: 202, text: 'Test functionality', completed: true },
-//       { id: 203, text: 'Provide feedback', completed: true },
-//     ],
-//     notes: 'All submissions look good. Approved both PRs.',
-//     tags: ['review', 'development'],
-//   },
-//   {
-//     id: 3,
-//     title: 'Team standup meeting',
-//     status: 'pending',
-//     time: '0m',
-//     priority: 'low',
-//     streak: 0,
-//     dueDate: '2025-06-27',
-//     category: 'Meeting',
-//     description: 'Daily standup with the development team',
-//     subtasks: [],
-//     checklist: [
-//       { id: 301, text: 'Prepare updates', completed: false },
-//       { id: 302, text: 'Review blockers', completed: false },
-//     ],
-//     notes: 'Discuss the new feature roadmap',
-//     tags: ['meeting', 'daily'],
-//   },
-//   {
-//     id: 4,
-//     title: 'Update documentation',
-//     status: 'in-progress',
-//     time: '1h 30m',
-//     priority: 'normal',
-//     streak: 2,
-//     dueDate: '2025-06-29',
-//     category: 'Documentation',
-//     description: 'Update API documentation with new endpoints',
-//     subtasks: [
-//       { id: 41, title: 'Document new endpoints', completed: false },
-//       { id: 42, title: 'Update examples', completed: false },
-//       { id: 43, title: 'Review with team', completed: false },
-//     ],
-//     checklist: [
-//       { id: 401, text: 'Gather endpoint specs', completed: true },
-//       { id: 402, text: 'Write documentation', completed: false },
-//       { id: 403, text: 'Add code examples', completed: false },
-//     ],
-//     notes: 'Include authentication examples for all new endpoints',
-//     tags: ['documentation', 'api'],
-//   },
-//   {
-//     id: 5,
-//     title: 'Prepare quarterly presentation',
-//     status: 'pending',
-//     time: '0m',
-//     priority: 'high',
-//     streak: 0,
-//     dueDate: '2025-07-01',
-//     category: 'Presentation',
-//     description: 'Create Q2 results presentation for stakeholders',
-//     subtasks: [
-//       { id: 51, title: 'Gather metrics', completed: false },
-//       { id: 52, title: 'Create slides', completed: false },
-//       { id: 53, title: 'Practice presentation', completed: false },
-//     ],
-//     checklist: [
-//       { id: 501, text: 'Collect performance data', completed: false },
-//       { id: 502, text: 'Prepare visual charts', completed: false },
-//       { id: 503, text: 'Schedule rehearsal', completed: false },
-//     ],
-//     notes: 'Include comparison with Q1 results. Highlight key achievements.',
-//     tags: ['presentation', 'quarterly', 'important'],
-//   },
-// ];
 
 const priorityOptions = [
   { label: 'High', value: 'high', color: '#fb2c36' },
@@ -187,7 +76,7 @@ const TaskList = () => {
   const [viewMode, setViewMode] = useState('list');
   const [_showCreateTask, setShowCreateTask] = useState(false);
   const [expandedTask, setExpandedTask] = useState<number | null>(null);
-  const [activeTimer, setActiveTimer] = useState<number | null>(null);
+  const [activeTask, setActiveTask] = useState<number | null>(null);
 
   const darkMode = useThemeStore((state) => state.theme) === 'dark';
   const allTasks = useTaskStore((state) => state.tasks);
@@ -233,7 +122,7 @@ const TaskList = () => {
   };
 
   const toggleTimer = (taskId: number) => {
-    setActiveTimer(activeTimer === taskId ? null : taskId);
+    setActiveTask(activeTask === taskId ? null : taskId);
   };
 
   return (
@@ -327,60 +216,61 @@ const TaskList = () => {
           };
 
           return (
-            <div
-              key={task.id}
-              className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer`}
-              onClick={handleTaskClick}
-            >
-              <div className='p-6'>
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center space-x-4 flex-1'>
-                    {/* <input
+            <Outline colors={['bg-primary-500', 'bg-secondary-500']} width='3px' variant='rotate' key={task.id} disabled={activeTask !== task?.id}>
+              <div
+                key={task.id}
+                className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer`}
+                onClick={handleTaskClick}
+              >
+                <div className='p-6'>
+                  <div className='flex items-center justify-between'>
+                    <div className='flex items-center space-x-4 flex-1'>
+                      {/* <input
                       type='checkbox'
                       checked={selectedTasks.includes(task.id)}
                       onChange={() => toggleTaskSelection(task.id)}
                       className='w-4 h-4 text-purple-600 rounded focus:ring-purple-500'
                     /> */}
-                    <Dropdown options={priorityOptions} onSelect={handlePrioritySelect} value={task.priority}>
-                      <div className={`w-3 h-3 rounded-full cursor-pointer hover:scale-120 ${getPriorityColor(task.priority)}`} />
-                    </Dropdown>
-                    <div className='flex-1'>
-                      <div className='flex items-center gap-3 mb-2'>
-                        <h4 className='font-semibold text-lg cursor-text'>{task.title}</h4>
-                        {task.category && (
-                          <span className={`px-2 py-1 rounded text-xs font-medium cursor-default ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
-                            {task.category}
-                          </span>
-                        )}
-                      </div>
-                      {/* <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm mb-3`}>
+                      <Dropdown options={priorityOptions} onSelect={handlePrioritySelect} value={task.priority}>
+                        <div className={`w-3 h-3 rounded-full cursor-pointer hover:scale-120 ${getPriorityColor(task.priority)}`} />
+                      </Dropdown>
+                      <div className='flex-1'>
+                        <div className='flex items-center gap-3 mb-2'>
+                          <h4 className='font-semibold text-lg cursor-text'>{task.title}</h4>
+                          {task.category && (
+                            <span className={`px-2 py-1 rounded text-xs font-medium cursor-default ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
+                              {task.category}
+                            </span>
+                          )}
+                        </div>
+                        {/* <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm mb-3`}>
                         {task.description}
                       </p> */}
-                      <div className='flex flex-wrap items-center gap-4 text-sm'>
-                        <Dropdown options={statusOptions} onSelect={handleStatusSelect} value={task.status} hideClear>
-                          <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(task.status)}`}>
-                            {task?.status?.toUpperCase()}
-                          </span>
-                        </Dropdown>
-                        <span className={` cursor-default ${darkMode ? 'text-gray-400' : 'text-gray-600'} flex items-center`}>
-                          <Clock className='w-4 h-4 mr-1' />
-                          {formatTimeElapsed(task.time_spend)}
-                        </span>
-                        {task.due_date && (
+                        <div className='flex flex-wrap items-center gap-4 text-sm'>
+                          <Dropdown options={statusOptions} onSelect={handleStatusSelect} value={task.status} hideClear>
+                            <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(task.status)}`}>
+                              {task?.status?.toUpperCase()}
+                            </span>
+                          </Dropdown>
                           <span className={` cursor-default ${darkMode ? 'text-gray-400' : 'text-gray-600'} flex items-center`}>
-                            <Calendar className='w-4 h-4 mr-1' />
-                            {formatDate(task.due_date)}
+                            <Clock className='w-4 h-4 mr-1' />
+                            {formatTimeElapsed(task.time_spend)}
                           </span>
-                        )}
-                        {task.streak > 0 && (
-                          <span className='text-orange-500 flex items-center cursor-default'>
-                            <Flame className='w-4 h-4 mr-1' />
-                            {task.streak}
-                            {' '}
-                            day streak
-                          </span>
-                        )}
-                        {/* <div className='flex gap-1'>
+                          {task.due_date && (
+                            <span className={` cursor-default ${darkMode ? 'text-gray-400' : 'text-gray-600'} flex items-center`}>
+                              <Calendar className='w-4 h-4 mr-1' />
+                              {formatDate(task.due_date)}
+                            </span>
+                          )}
+                          {task.streak > 0 && (
+                            <span className='text-orange-500 flex items-center cursor-default'>
+                              <Flame className='w-4 h-4 mr-1' />
+                              {task.streak}
+                              {' '}
+                              day streak
+                            </span>
+                          )}
+                          {/* <div className='flex gap-1'>
                           {task.tags.map((tag, index) => (
                             <span key={index} className='px-2 py-1 bg-purple-100 text-purple-600 rounded text-xs'>
                               #
@@ -388,39 +278,42 @@ const TaskList = () => {
                             </span>
                           ))}
                         </div> */}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className='flex items-center space-x-2'>
-                    {('notes' in task && task?.notes) || ('checklist' in task && task.checklist) || ('sub_tasks' in task && task.sub_tasks) ? (
+                    <div className='flex items-center space-x-2'>
+                      {('notes' in task && task?.notes) || ('checklist' in task && task.checklist) || ('sub_tasks' in task && task.sub_tasks) ? (
+                        <button
+                          onClick={() => toggleTaskExpanded(task.id)}
+                          className={`p-2 rounded-lg ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} transition-colors`}
+                        >
+                          <svg className={`w-5 h-5 transform transition-transform ${expandedTask === task.id ? 'rotate-180' : ''}`} fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 9l-7 7-7-7' />
+                          </svg>
+                        </button>
+                      ) : null}
                       <button
-                        onClick={() => toggleTaskExpanded(task.id)}
-                        className={`p-2 rounded-lg ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} transition-colors`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleTimer(task.id);
+                        }}
+                        className={`p-3 rounded-lg transition-colors ${activeTask === task.id
+                          ? 'bg-red-500 hover:bg-red-600 text-white'
+                          : 'bg-green-500 hover:bg-green-600 text-white'}`}
                       >
-                        <svg className={`w-5 h-5 transform transition-transform ${expandedTask === task.id ? 'rotate-180' : ''}`} fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                          <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 9l-7 7-7-7' />
-                        </svg>
+                        {activeTask === task.id ? <Pause className='w-5 h-5' /> : <Play className='w-5 h-5' />}
                       </button>
-                    ) : null}
-                    <button
-                      onClick={() => toggleTimer(task.id)}
-                      className={`p-3 rounded-lg transition-colors ${activeTimer === task.id
-                        ? 'bg-red-500 hover:bg-red-600 text-white'
-                        : 'bg-green-500 hover:bg-green-600 text-white'}`}
-                    >
-                      {activeTimer === task.id ? <Pause className='w-5 h-5' /> : <Play className='w-5 h-5' />}
-                    </button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Expanded Task Details */}
-              {expandedTask === task.id && (
-                <div className={`border-t px-6 py-4 ${darkMode ? 'border-gray-700 bg-gray-750' : 'border-gray-200 bg-gray-50'}`}>
-                  <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-                    {/* Subtasks */}
-                    {/* <div>
+                {/* Expanded Task Details */}
+                {expandedTask === task.id && (
+                  <div className={`border-t px-6 py-4 ${darkMode ? 'border-gray-700 bg-gray-750' : 'border-gray-200 bg-gray-50'}`}>
+                    <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+                      {/* Subtasks */}
+                      {/* <div>
                     <h5 className='font-semibold mb-3 flex items-center'>
                       <CheckSquare className='w-4 h-4 mr-2' />
                       Subtasks (
@@ -449,8 +342,8 @@ const TaskList = () => {
                     </div>
                   </div> */}
 
-                    {/* Checklist */}
-                    {/* <div>
+                      {/* Checklist */}
+                      {/* <div>
                     <h5 className='font-semibold mb-3 flex items-center'>
                       <Trophy className='w-4 h-4 mr-2' />
                       Checklist (
@@ -475,10 +368,10 @@ const TaskList = () => {
                       ))}
                     </div>
                   </div> */}
-                  </div>
+                    </div>
 
-                  {/* Notes */}
-                  {/* {task.notes && (
+                    {/* Notes */}
+                    {/* {task.notes && (
                   <div className='mt-4'>
                     <h5 className='font-semibold mb-2'>Notes</h5>
                     <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} bg-gradient-to-r from-purple-50 to-pink-50 ${darkMode ? 'from-purple-900/20 to-pink-900/20' : ''} p-3 rounded-lg`}>
@@ -486,9 +379,10 @@ const TaskList = () => {
                     </p>
                   </div>
                 )} */}
-                </div>
-              )}
-            </div>
+                  </div>
+                )}
+              </div>
+            </Outline>
           );
         })}
       </div>

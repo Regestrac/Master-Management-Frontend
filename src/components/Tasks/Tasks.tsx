@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -9,26 +8,17 @@ import TaskStats from 'components/Tasks/TaskStats';
 import TaskList from 'components/Tasks/TaskList';
 
 import PlusIcon from 'icons/PlusIcon';
-import DeleteIcon from 'icons/DeleteIcon';
-import ResumeIcon from 'icons/ResumeIcon';
 
 import { useTaskStore } from 'src/stores/taskStore';
-import { capitalize, formatTimeElapsed } from 'src/helpers/utils';
-import { createTask, deleteTask, getAllTasks } from 'src/services/tasks';
-import { TaskType } from 'src/helpers/sharedTypes';
+import { createTask, getAllTasks } from 'src/services/tasks';
 
 const Tasks = () => {
   const [openForm, setOpenForm] = useState(false);
-  const [filteredTasks, setFilteredTasks] = useState<TaskType[]>([]);
 
   const tasks = useTaskStore((state) => state.tasks);
   const addTask = useTaskStore((state) => state.addTask);
-  const deleteTaskFromStore = useTaskStore((state) => state.deleteTask);
-  const updateStartTimer = useTaskStore((state) => state.updateStartTimer);
 
   const shouldFetchTasks = useRef(true);
-
-  const navigate = useNavigate();
 
   const methods = useForm({
     defaultValues: { title: '' },
@@ -61,39 +51,7 @@ const Tasks = () => {
     }
   };
 
-  const handleDeleteTask = (id: number) => {
-    deleteTask(id).then((res) => {
-      toast.success(res.message || 'Task deleted successfully');
-      deleteTaskFromStore(id);
-    }).catch((err) => {
-      toast.error(err.error || 'Failed to delete task!');
-    });
-  };
-
-  const handleStartTask = (id: number) => {
-    navigate(`/tasks/${id}`);
-    updateStartTimer(true);
-  };
-
-  const handleTaskClick = (id: number) => {
-    navigate(`/tasks/${id}`);
-  };
-
-  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value) {
-      setFilteredTasks(tasks?.filter((item) => item.title?.toLowerCase().includes(e?.target?.value?.toLowerCase())));
-    } else {
-      setFilteredTasks(tasks);
-    }
-  };
-
   const totalTasks = tasks.length || 0;
-
-  useEffect(() => {
-    if (tasks.length > 0) {
-      setFilteredTasks(tasks);
-    }
-  }, [tasks]);
 
   useEffect(() => {
     if (shouldFetchTasks.current) {
@@ -110,13 +68,8 @@ const Tasks = () => {
     <>
       <TaskStats />
       <TaskList />
-      <div className='tasks'>
+      <div className='tasks mt-10'>
         <div className='flex flex-wrap justify-between items-end gap-4'>
-          <input
-            placeholder='Search Task'
-            className='border border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 bg-secondary-bg text-text flex-grow min-w-[220px] sm:min-w-[300px] md:min-w-[400px] lg:min-w-[500px] max-w-full md:flex-grow-0 md:order-2 md:mx-auto'
-            onChange={onSearch}
-          />
           <h3 className='order-2 md:order-1'>
             {totalTasks}
             {` ${totalTasks === 1 ? 'Task' : 'Tasks'} Available`}
@@ -129,24 +82,7 @@ const Tasks = () => {
             Create New Task
           </button>
         </div>
-        <div className='border-1 rounded-2xl p-2 mt-5'>
-          {filteredTasks.map((task) => (
-            <div key={task?.id} className='flex justify-between mb-1'>
-              <div className='flex'>
-                <span className={`${task.status} me-3`}>{capitalize(task?.status)}</span>
-                <div className='cursor-pointer' onClick={() => handleTaskClick(task?.id)}>{task?.title}</div>
-              </div>
-              <div className='flex items-center'>
-                <div>{formatTimeElapsed(task?.time_spend)}</div>
-                <button className='cursor-pointer ms-3 me-1 rounded outline-1 p-1' onClick={() => handleStartTask(task?.id)}>
-                  <ResumeIcon />
-                </button>
-                <button className='cursor-pointer m-1' onClick={() => handleDeleteTask(task?.id)}>
-                  <DeleteIcon />
-                </button>
-              </div>
-            </div>
-          ))}
+        <div className='mt-5'>
           {openForm ? (
             <FormProvider {...methods}>
               <div className='w-full flex justify-between mt-3'>
