@@ -1,13 +1,6 @@
 import { create } from 'zustand';
 
-type TaskType = {
-  id: number;
-  title: string;
-  status: 'completed' | 'incomplete';
-  timeSpend: number;
-  priority: 'high' | 'normal' | 'low';
-  streak: number;
-};
+import { TaskType } from 'src/helpers/sharedTypes';
 
 type TaskDetailsType = TaskType & {
   startedAt: string;
@@ -22,7 +15,7 @@ type TasksStateType = {
   currentTaskDetails: TaskDetailsType;
   updateCurrentTaskDetails: (_task: TaskDetailsType) => void;
   addTask: (_newTask: TaskType | TaskType[]) => void;
-  updateTask: (_task: TaskType) => void;
+  updateTask: (_task: Partial<TaskType> & { id: number; }) => void;
   deleteTask: (_id: number) => void;
   updateRecentTask: (_task: TaskType | TaskType[]) => void;
   updateStartTimer: (_value: boolean) => void;
