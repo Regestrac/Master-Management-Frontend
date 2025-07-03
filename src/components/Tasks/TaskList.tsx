@@ -13,6 +13,7 @@ import Outline from 'components/Shared/Outline';
 import { formatTimeElapsed } from 'src/helpers/utils';
 import { updateTask } from 'src/services/tasks';
 import { TaskType } from 'src/helpers/sharedTypes';
+import { updateActiveTask } from 'src/services/profile';
 
 const priorityOptions = [
   { label: 'High', value: 'high', color: '#fb2c36' },
@@ -122,7 +123,12 @@ const TaskList = () => {
   };
 
   const toggleTimer = (taskId: number) => {
-    setActiveTask(activeTask === taskId ? null : taskId);
+    updateActiveTask({ active_task: activeTask === taskId ? null : taskId }).then((res) => {
+      toast.success(res?.message);
+      setActiveTask(activeTask === taskId ? null : taskId);
+    }).catch((err) => {
+      toast.error(err?.error);
+    });
   };
 
   return (

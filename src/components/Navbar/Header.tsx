@@ -1,6 +1,9 @@
 import { Bell, Moon, Search, Sun, Menu, X } from 'lucide-react';
 import { useThemeStore } from 'stores/themeStore';
 import { useNavbarStore } from 'stores/navbarStore';
+import { toast } from 'react-toastify';
+
+import { updateTheme } from 'src/services/profile';
 
 const Header = () => {
   const darkMode = useThemeStore((state) => state.theme) === 'dark';
@@ -9,8 +12,13 @@ const Header = () => {
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
   const showNavbar = useNavbarStore((state) => state.showNavbar);
 
-  const UpdateTheme = () => {
-    updateThemeState(darkMode ? 'light' : 'dark');
+  const updateColorTheme = () => {
+    updateTheme({ theme: darkMode ? 'light' : 'dark' }).then((res) => {
+      toast.success(res?.message);
+      updateThemeState(darkMode ? 'light' : 'dark');
+    }).catch((err) => {
+      toast.error(err?.error);
+    });
   };
 
   const handleSidebarToggle = () => {
@@ -53,7 +61,7 @@ const Header = () => {
           <Bell className='w-5 h-5' />
         </button>
         <button
-          onClick={UpdateTheme}
+          onClick={updateColorTheme}
           className={`p-2 rounded-lg ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
         >
           {darkMode ? <Sun className='w-5 h-5' /> : <Moon className='w-5 h-5' />}
