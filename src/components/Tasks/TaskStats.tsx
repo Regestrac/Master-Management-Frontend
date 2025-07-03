@@ -1,4 +1,4 @@
-import { useThemeStore } from 'stores/themeStore';
+import { useProfileStore } from 'stores/profileStore';
 
 const allTasks = [
   {
@@ -123,7 +123,7 @@ const getTaskStats = () => {
 };
 
 const TaskStats = () => {
-  const darkMode = useThemeStore((state) => state.theme) === 'dark';
+  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
 
   return (
     <div className='grid grid-cols-2 md:grid-cols-5 gap-4 mb-8'>

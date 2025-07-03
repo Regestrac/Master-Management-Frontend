@@ -20,12 +20,7 @@ const ValidateUser = () => {
 
   const getProfileInfo = useCallback(() => {
     getProfile().then((profile) => {
-      updateProfile({
-        firstName: profile?.data?.first_name || '',
-        lastName: profile?.data?.last_name || '',
-        email: profile?.data?.email || '',
-        userId: profile?.data?.id || 0,
-      });
+      updateProfile(profile?.data);
     }).catch((err) => {
       toast.error(err?.error || 'Failed to fetch profile. Please try again.');
     });

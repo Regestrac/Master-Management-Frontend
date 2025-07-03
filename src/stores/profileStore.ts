@@ -1,29 +1,38 @@
 import { create } from 'zustand';
 
-type ProfileStateType = {
-  firstName: string;
-  lastName: string;
+type ProfileDataType = {
+  id: number;
+  first_name: string;
+  last_name: string;
   email: string;
-  userId: number;
-  updateProfile: (_profile: { firstName?: string; lastName?: string; email?: string; userId: number; }) => void;
+  theme: 'dark' | 'light';
+  active_task: number | null;
+};
+
+type ProfileStateType = {
+  data: ProfileDataType;
+  updateProfile: (_profile: Partial<ProfileDataType>) => void;
   clearProfile: () => void;
 };
 
 export const useProfileStore = create<ProfileStateType>((set) => ({
-  firstName: '',
-  lastName: '',
-  email: '',
-  userId: 0,
-  updateProfile: (profile) => set((state) => ({
-    firstName: profile.firstName ?? state.firstName,
-    lastName: profile.lastName ?? state.lastName,
-    email: profile.email ?? state.email,
-    userId: profile.userId ?? state.userId,
-  })),
-  clearProfile: () => set(() => ({
-    firstName: '',
-    lastName: '',
+  data: {
+    first_name: '',
+    last_name: '',
     email: '',
-    userId: 0,
+    theme: 'dark',
+    active_task: null,
+  } as ProfileDataType,
+  updateProfile: (profile) => set((state) => ({
+    data: {
+      ...state.data,
+      first_name: profile.first_name ?? state.data.first_name,
+      last_name: profile.last_name ?? state.data.last_name,
+      email: profile.email ?? state.data.email,
+      active_task: profile.active_task !== undefined ? profile.active_task : state?.data?.active_task,
+      id: profile.id ?? state?.data?.id,
+      theme: profile?.theme ?? state?.data?.theme,
+    },
   })),
+  clearProfile: () => set(() => ({ data: {} as ProfileDataType })),
 }));

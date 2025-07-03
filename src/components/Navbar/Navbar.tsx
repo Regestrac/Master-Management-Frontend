@@ -7,9 +7,9 @@ import ValidateUser from 'components/Navbar/ValidateUser';
 import { NAVBAR_LINKS } from 'src/helpers/configs';
 
 const Navbar = () => {
-  const firstName = useProfileStore((state) => state?.firstName);
-  const lastName = useProfileStore((state) => state?.lastName);
-  const userId = useProfileStore((state) => state?.userId);
+  const firstName = useProfileStore((state) => state?.data?.first_name);
+  const lastName = useProfileStore((state) => state?.data?.last_name);
+  const userId = useProfileStore((state) => state?.data?.id);
 
   return (
     <nav className='navbar'>

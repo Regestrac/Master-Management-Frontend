@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { useThemeStore } from 'stores/themeStore';
+import { useProfileStore } from 'stores/profileStore';
 
 type DropdownOption<T> = {
   label: string;
@@ -26,7 +26,7 @@ function DropDown<T>({
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const darkMode = useThemeStore((state) => state.theme) === 'dark';
+  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
 
   // const selected = options.find((opt) => opt.value === value);
 

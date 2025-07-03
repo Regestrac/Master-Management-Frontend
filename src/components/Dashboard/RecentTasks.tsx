@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Clock, Flame, Plus } from 'lucide-react';
-import { useThemeStore } from 'stores/themeStore';
+import { useProfileStore } from 'stores/profileStore';
 
 import { getRecentTasks } from 'src/services/tasks';
 
@@ -53,7 +53,7 @@ const RecentTasks = () => {
   // const recentTasks = useTaskStore((state) => state.recentTasks);
   // const updateRecentTask = useTaskStore((state) => state.updateRecentTask);
   // const updateStartTimer = useTaskStore((state) => state.updateStartTimer);
-  const darkMode = useThemeStore((state) => state.theme) === 'dark';
+  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
 
   const navigate = useNavigate();
 

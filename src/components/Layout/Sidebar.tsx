@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { BarChart3, Calendar, CheckSquare, Home, Settings, Target, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useThemeStore } from 'stores/themeStore';
 import { useNavbarStore } from 'stores/navbarStore';
+import { useProfileStore } from 'stores/profileStore';
 
 const navbarItems = [
   { id: 'dashboard', icon: Home, label: 'Dashboard' },
@@ -18,7 +18,7 @@ const navbarItems = [
 const Sidebar = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
 
-  const darkMode = useThemeStore((state) => state.theme) === 'dark';
+  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
   const showNavbar = useNavbarStore((state) => state.showNavbar);
 
   const navigate = useNavigate();

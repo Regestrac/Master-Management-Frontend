@@ -1,21 +1,22 @@
 import { Bell, Moon, Search, Sun, Menu, X } from 'lucide-react';
-import { useThemeStore } from 'stores/themeStore';
 import { useNavbarStore } from 'stores/navbarStore';
 import { toast } from 'react-toastify';
+import { useProfileStore } from 'stores/profileStore';
+
+import ValidateUser from 'components/Navbar/ValidateUser';
 
 import { updateTheme } from 'src/services/profile';
 
 const Header = () => {
-  const darkMode = useThemeStore((state) => state.theme) === 'dark';
-  const updateThemeState = useThemeStore((state) => state.updateTheme);
-
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
   const showNavbar = useNavbarStore((state) => state.showNavbar);
+  const updateProfile = useProfileStore((state) => state.updateProfile);
+  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
 
   const updateColorTheme = () => {
     updateTheme({ theme: darkMode ? 'light' : 'dark' }).then((res) => {
       toast.success(res?.message);
-      updateThemeState(darkMode ? 'light' : 'dark');
+      updateProfile({ theme: res?.theme });
     }).catch((err) => {
       toast.error(err?.error);
     });
@@ -67,6 +68,7 @@ const Header = () => {
           {darkMode ? <Sun className='w-5 h-5' /> : <Moon className='w-5 h-5' />}
         </button>
       </div>
+      <ValidateUser />
     </div>
   );
 };

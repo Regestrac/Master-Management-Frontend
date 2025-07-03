@@ -1,11 +1,11 @@
 import { useState } from 'react';
 
 import { BarChart3, Calendar, CheckSquare, Clock, Flame, Pause, Play, Plus } from 'lucide-react';
-import { useThemeStore } from 'stores/themeStore';
 import { useTaskStore } from 'stores/taskStore';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useProfileStore } from 'stores/profileStore';
 
 import Dropdown from 'components/Shared/Dropdown';
 import Outline from 'components/Shared/Outline';
@@ -77,11 +77,12 @@ const TaskList = () => {
   const [viewMode, setViewMode] = useState('list');
   const [_showCreateTask, setShowCreateTask] = useState(false);
   const [expandedTask, setExpandedTask] = useState<number | null>(null);
-  const [activeTask, setActiveTask] = useState<number | null>(null);
 
-  const darkMode = useThemeStore((state) => state.theme) === 'dark';
+  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
   const allTasks = useTaskStore((state) => state.tasks);
   const updateTaskState = useTaskStore((state) => state.updateTask);
+  const activeTask = useProfileStore((state) => state.data.active_task);
+  const updateProfile = useProfileStore((state) => state.updateProfile);
 
   const navigate = useNavigate();
 
@@ -111,7 +112,6 @@ const TaskList = () => {
 
   const handleUpdateTask = (id: string, payload: object) => {
     updateTask(id, payload).then((res) => {
-      // reset(getValues());
       toast.success(res?.message || 'Updated successfully');
     }).catch((err) => {
       toast.error(err?.error || 'Failed to update task');
@@ -125,7 +125,7 @@ const TaskList = () => {
   const toggleTimer = (taskId: number) => {
     updateActiveTask({ active_task: activeTask === taskId ? null : taskId }).then((res) => {
       toast.success(res?.message);
-      setActiveTask(activeTask === taskId ? null : taskId);
+      updateProfile({ active_task: res?.active_task });
     }).catch((err) => {
       toast.error(err?.error);
     });

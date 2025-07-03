@@ -1,5 +1,5 @@
 import { BarChart3, Calendar, Clock, Flame, Plus } from 'lucide-react';
-import { useThemeStore } from 'stores/themeStore';
+import { useProfileStore } from 'stores/profileStore';
 
 const goals = [
   {
@@ -150,7 +150,7 @@ const goals = [
 ];
 
 const ActiveGoals = () => {
-  const darkMode = useThemeStore((state) => state.theme) === 'dark';
+  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
 
   return (
     <div>
