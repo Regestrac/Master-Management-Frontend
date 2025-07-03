@@ -6,6 +6,7 @@
 @import './components/Settings.css';
 @import './components/Home.css';
 @import './components/Tasks.css';
+@import './components//shared/Outline.css';
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
