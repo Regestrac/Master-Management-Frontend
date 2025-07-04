@@ -12,6 +12,7 @@ import TaskHeader from './TaskHeader';
 import TaskProgress from './TaskProgress';
 import TaskOverview from './Overview/TaskOverview';
 import RestOfTaskDetails from './RestOfTaskDetails';
+import TaskActivity from './Activity/TaskActivity';
 
 const TaskDetailsPage = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -58,6 +59,7 @@ const TaskDetailsPage = () => {
           {/* Main Content */}
           <div className='lg:col-span-2'>
             {activeTab === 'overview' && <TaskOverview />}
+            {activeTab === 'activity' && <TaskActivity />}
           </div>
 
           <RestOfTaskDetails activeTab={activeTab} />
