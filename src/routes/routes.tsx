@@ -44,10 +44,6 @@ const routes: RouteObject[] = [
         element: <Tasks />,
       },
       {
-        path: '/tasks/:id',
-        element: <TaskDetail />,
-      },
-      {
         path: '/goals',
         element: <Tasks />,
       },
@@ -66,6 +62,10 @@ const routes: RouteObject[] = [
         element: <Settings />,
       },
     ],
+  },
+  {
+    path: '/tasks/:id',
+    element: <TaskDetail />,
   },
   {
     path: '/not-found',

@@ -1,3 +1,5 @@
+import { PriorityType, StatusType } from 'helpers/sharedTypes';
+
 /**
  * Capitalizes the first character of a string and converts the rest to lowercase.
  *
@@ -134,5 +136,35 @@ export const copyToClipboard = (text: string) => {
     textArea.select();
     document.execCommand('copy');
     document.body.removeChild(textArea);
+  }
+};
+
+export const getPriorityColor = (priority: PriorityType) => {
+  switch (priority) {
+    case 'high':
+      return 'bg-red-500';
+    case 'normal':
+      return 'bg-yellow-500';
+    case 'low':
+      return 'bg-green-500';
+    default:
+      return 'bg-gray-500';
+  }
+};
+
+export const getStatusColor = (status: StatusType) => {
+  switch (status) {
+    case 'completed':
+      return 'text-green-400 bg-green-400/10';
+    case 'todo':
+      return 'text-blue-400 bg-blue-400/10';
+    case 'inprogress':
+      return 'text-blue-400 bg-blue-400/10';
+    case 'pending':
+      return 'text-gray-400 bg-gray-400/10';
+    case 'paused':
+      return 'text-yellow-400 bg-yellow-400/10';
+    default:
+      return 'text-gray-400 bg-gray-400/10';
   }
 };

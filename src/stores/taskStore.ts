@@ -2,10 +2,29 @@ import { create } from 'zustand';
 
 import { TaskType } from 'src/helpers/sharedTypes';
 
+type ChecklistType = {
+  id: number;
+  title: string;
+  completed: boolean;
+  created_at: string;
+  completed_at: string;
+};
+
+type StickyNotesType = {
+  id: number;
+  created_at: string;
+  text: string;
+  bg_color: string;
+  text_color: string;
+};
+
 type TaskDetailsType = TaskType & {
   startedAt: string;
   description: string;
   parent_id: number;
+  checklist: ChecklistType[];
+  stickyNotes: StickyNotesType[]
+  tags: string[];
 };
 
 type TasksStateType = {

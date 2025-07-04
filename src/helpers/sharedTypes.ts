@@ -1,11 +1,15 @@
 export type ThemeType = 'dark' | 'black' | 'red' | 'green' | 'blue' | 'purple' | 'cyan' | 'white';
 
+export type StatusType = 'completed' | 'todo' | 'inprogress' | 'pending' | 'paused';
+
+export type PriorityType = 'high' | 'normal' | 'low';
+
 export type TaskType = {
   id: number;
   title: string;
-  status: 'completed' | 'todo' | 'inprogress' | 'pending' | 'paused';
+  status: StatusType;
   time_spend: number;
-  priority: 'high' | 'normal' | 'low';
+  priority: PriorityType;
   streak: number;
   due_date: string;
   category: string;

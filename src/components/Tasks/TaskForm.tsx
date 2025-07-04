@@ -101,6 +101,9 @@ const TaskForm = () => {
             priority: 'normal',
             streak: 0,
             type: 'task',
+            checklist: [],
+            stickyNotes: [],
+            tags: [],
           });
         }
         setIsLoading(false);

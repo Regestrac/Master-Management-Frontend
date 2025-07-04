@@ -6,6 +6,8 @@ import TaskHistory from 'components/Tasks/TaskHistory';
 import SubTasks from 'components/Tasks/SubTasks';
 import TaskForm from 'components/Tasks/TaskForm';
 
+import TaskDetailsPage from './Details/TaskDetails';
+
 type TabsType = 'history' | 'subtasks';
 
 const TaskDetail = () => {
@@ -24,29 +26,32 @@ const TaskDetail = () => {
   }, [parentTaskId]);
 
   return (
-    <div className='p-8'>
-      <div className='max-w-4xl mx-auto rounded-xl shadow-md p-6 space-y-6'>
-        <TaskForm />
-        <div>
-          <div className='border-b border-gray-200'>
-            <nav className='-mb-px flex space-x-4' aria-label='Tabs'>
-              {!parentTaskId ? (
-                <button className={getTabClassName('subtasks')} onClick={() => setActiveTab('subtasks')}>
-                  SUBTASKS
+    <>
+      <TaskDetailsPage />
+      <div className='p-8'>
+        <div className='max-w-4xl mx-auto rounded-xl shadow-md p-6 space-y-6'>
+          <TaskForm />
+          <div>
+            <div className='border-b border-gray-200'>
+              <nav className='-mb-px flex space-x-4' aria-label='Tabs'>
+                {!parentTaskId ? (
+                  <button className={getTabClassName('subtasks')} onClick={() => setActiveTab('subtasks')}>
+                    SUBTASKS
+                  </button>
+                ) : null}
+                <button className={getTabClassName('history')} onClick={() => setActiveTab('history')}>
+                  HISTORY
                 </button>
-              ) : null}
-              <button className={getTabClassName('history')} onClick={() => setActiveTab('history')}>
-                HISTORY
-              </button>
-            </nav>
-          </div>
-          <div className='mt-4'>
-            {activeTab === 'subtasks' && !parentTaskId && <SubTasks />}
-            {activeTab === 'history' && <TaskHistory />}
+              </nav>
+            </div>
+            <div className='mt-4'>
+              {activeTab === 'subtasks' && !parentTaskId && <SubTasks />}
+              {activeTab === 'history' && <TaskHistory />}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
