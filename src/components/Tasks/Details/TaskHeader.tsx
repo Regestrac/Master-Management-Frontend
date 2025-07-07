@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import dayjs from 'dayjs';
-import { ArrowLeft, Check, CheckSquare, MoreVertical, Pause, Play, Settings, X } from 'lucide-react';
+import { Archive, ArrowLeft, Check, CheckSquare, Copy, Eraser, MoreVertical, MoveRight, Pause, Play, Star, Trash2, X } from 'lucide-react';
 import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -9,11 +9,22 @@ import { toast } from 'react-toastify';
 
 import DropDown from 'components/Shared/Dropdown';
 
-import { getPriorityColor, getStatusColor } from 'src/helpers/utils';
+import { capitalize, getPriorityColor, getStatusColor } from 'src/helpers/utils';
 import { updateActiveTask, updateProfile } from 'src/services/profile';
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'src/helpers/configs';
 import { updateTask } from 'src/services/tasks';
 import { TaskType } from 'src/helpers/sharedTypes';
+
+const moreOptions = [
+  { label: 'Mark As Completed', value: 'mark_completed', bgColor: 'text-green-600 bg-green-500/20', icon: <Check className='w-4 h-4' /> },
+  { label: 'Clear stats', value: 'clear_stats', bgColor: 'text-white', icon: <Eraser className='w-4 h-4' /> },
+  { label: 'Move Task', value: 'move_task', bgColor: 'text-white', icon: <MoveRight className='w-4 h-4' /> },
+  { label: 'Duplicate Task', value: 'duplicate_task', bgColor: 'text-white', icon: <CheckSquare className='w-4 h-4' /> },
+  { label: 'Copy Link', value: 'copy_link', bgColor: 'text-white', icon: <Copy className='w-4 h-4' /> },
+  { label: 'Add to Favorites', value: 'add_favorite', bgColor: 'text-white', icon: <Star className='w-4 h-4' /> },
+  { label: 'Archive', value: 'archive_task', bgColor: 'text-white', icon: <Archive className='w-4 h-4' /> },
+  { label: 'Delete Task', value: 'delete_task', bgColor: 'text-red-600 bg-red-500/20', icon: <Trash2 className='w-4 h-4' /> },
+];
 
 const TaskHeader = () => {
   const [editingField, setEditingField] = useState<any>(null);
@@ -81,6 +92,10 @@ const TaskHeader = () => {
     setTempValues({});
   };
 
+  const handleMoreOptionSelect = (option: any) => {
+    console.log('option: ', option);
+  };
+
   return (
     <div className='flex items-center justify-between'>
       <div className='flex items-center space-x-4'>
@@ -101,7 +116,7 @@ const TaskHeader = () => {
               </DropDown>
               <DropDown options={PRIORITY_OPTIONS} onSelect={handlePriorityChange} value={taskDetails?.priority}>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(taskDetails.priority)}`}>
-                  {taskDetails.priority || 'No'}
+                  {capitalize(taskDetails.priority) || 'No'}
                   {' '}
                   priority
                 </span>
@@ -116,7 +131,7 @@ const TaskHeader = () => {
 
               {/* Due Date Editable */}
               <div className='flex justify-between items-center'>
-                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Due Date</span>
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Due Date:&nbsp;</span>
                 {editingField === 'dueDate' ? (
                   <div className='flex items-center space-x-2'>
                     <input
@@ -147,6 +162,10 @@ const TaskHeader = () => {
       </div>
 
       <div className='flex items-center space-x-3'>
+        <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          Created on&nbsp;
+          {taskDetails?.created_at ? dayjs(taskDetails.created_at).format('MMM DD, YYYY') : null}
+        </span>
         <button
           onClick={() => toggleTimer(taskDetails.id)}
           className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${activeTask === Number(id) ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'} text-white`}
@@ -158,12 +177,11 @@ const TaskHeader = () => {
             Timer
           </span>
         </button>
-        <button className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}>
-          <Settings className='w-5 h-5' />
-        </button>
-        <button className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}>
-          <MoreVertical className='w-5 h-5' />
-        </button>
+        <DropDown options={moreOptions} onSelect={handleMoreOptionSelect} hideClear value={null}>
+          <div className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}>
+            <MoreVertical className='w-5 h-5' />
+          </div>
+        </DropDown>
       </div>
     </div>
   );

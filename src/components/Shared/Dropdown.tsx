@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { useProfileStore } from 'stores/profileStore';
 
@@ -50,7 +50,9 @@ function DropDown<T>({
   hideClear,
 }: DropdownSelectorWrapperProps<T>) {
   const [open, setOpen] = useState(false);
+
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
 
@@ -71,6 +73,38 @@ function DropDown<T>({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useLayoutEffect(() => {
+    if (open && dropdownRef.current) {
+      const dropdownRect = dropdownRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+
+      // If dropdown is wider than viewport, stick to left
+      if (dropdownRect.width > viewportWidth) {
+        dropdownRef.current.style.left = '0px';
+        dropdownRef.current.style.right = 'auto';
+        return;
+      }
+
+      // If overflows right, align left
+      if (dropdownRect.right > viewportWidth) {
+        dropdownRef.current.style.left = 'auto';
+        dropdownRef.current.style.right = '0px';
+        return;
+      }
+
+      // If overflows left, align right and stick to left
+      if (dropdownRect.left < 0) {
+        dropdownRef.current.style.left = '0px';
+        dropdownRef.current.style.right = 'auto';
+        return;
+      }
+
+      // Reset inline styles if not overflowing
+      dropdownRef.current.style.left = 'auto';
+      dropdownRef.current.style.right = 'auto';
+    }
+  }, [open]);
+
   return (
     <div className='relative inline-block text-left' ref={wrapperRef}>
       <div onClick={handleChildrenClick} className='cursor-pointer'>
@@ -78,7 +112,14 @@ function DropDown<T>({
       </div>
 
       {open && (
-        <div className={`absolute z-50 mt-2 w-40 origin-top-right rounded-md ${darkMode ? 'bg-neutral-900 ring-1 ring-neutral-600 ring-opacity-5' : 'bg-neutral-50 ring-1 ring-neutral-300 ring-opacity-5'} shadow-lg focus:outline-none`}>
+        <div
+          ref={dropdownRef}
+          className={`
+            absolute z-50 mt-2 w-max origin-top-right rounded-md
+            ${darkMode ? 'bg-neutral-900 ring-1 ring-neutral-600 ring-opacity-5' : 'bg-neutral-50 ring-1 ring-neutral-300 ring-opacity-5'}
+            shadow-lg focus:outline-none`
+          }
+        >
           <ul className='py-1 text-sm text-gray-700'>
             {options.map((option) => {
               return (
@@ -95,19 +136,12 @@ function DropDown<T>({
                     ${option.disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}
                     ${value === option.value ? (darkMode ? 'bg-primary-900' : 'bg-neutral-100') : ''}
                     ${!option.disabled && !option.bgColor ? (darkMode ? 'hover:bg-primary-900' : 'hover:bg-neutral-100') : ''}
-                    ${option.bgColor && !isHexColor(option.bgColor) ? option.bgColor : ''}
+                    ${option.bgColor && !isHexColor(option.bgColor) ? `${option.bgColor} hover:opacity-80` : ''}
                     group
                   `}
                   aria-disabled={option.disabled}
                   style={option.bgColor && isHexColor(option.bgColor) ? { backgroundColor: option.bgColor, position: 'relative', overflow: 'hidden' } : undefined}
                 >
-                  {/* Custom hover overlay for options with bgColor */}
-                  {option.bgColor && (
-                    <span
-                      className='absolute inset-0 rounded-md pointer-events-none transition-opacity duration-150 opacity-0 group-hover:opacity-20'
-                      style={{ background: '#000' }}
-                    />
-                  )}
                   {option.color && (
                     <span className={`w-2.5 h-2.5 rounded-full mr-2 ${!isHexColor(option.color) ? option.color : ''}`} style={isHexColor(option.color) ? { backgroundColor: option.color } : undefined} />
                   )}

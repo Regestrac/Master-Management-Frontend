@@ -10,6 +10,7 @@ export type TaskType = {
   status: StatusType;
   time_spend: number;
   priority: PriorityType;
+  created_at: string;
   streak: number;
   due_date: string;
   category: string;
