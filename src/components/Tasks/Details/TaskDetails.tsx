@@ -13,6 +13,8 @@ import TaskProgress from './TaskProgress';
 import TaskOverview from './Overview/TaskOverview';
 import RestOfTaskDetails from './RestOfTaskDetails';
 import TaskActivity from './Activity/TaskActivity';
+import TaskNotes from './Notes/TaskNotes';
+import TaskComments from './Comments/TaskComments';
 
 const TaskDetailsPage = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -60,9 +62,11 @@ const TaskDetailsPage = () => {
           <div className='lg:col-span-2'>
             {activeTab === 'overview' && <TaskOverview />}
             {activeTab === 'activity' && <TaskActivity />}
+            {activeTab === 'notes' && <TaskNotes />}
+            {activeTab === 'comments' && <TaskComments />}
           </div>
 
-          <RestOfTaskDetails activeTab={activeTab} />
+          <RestOfTaskDetails />
 
         </div>
       </div>

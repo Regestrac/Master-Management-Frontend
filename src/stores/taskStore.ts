@@ -18,6 +18,16 @@ type StickyNotesType = {
   text_color: string;
 };
 
+type CommentsType = {
+  id: number;
+  user: string;
+  content: string;
+  timestamp: string;
+  edited?: boolean;
+  color?: string;
+  avatar?: string;
+};
+
 type TaskDetailsType = TaskType & {
   startedAt: string;
   description: string;
@@ -25,6 +35,7 @@ type TaskDetailsType = TaskType & {
   checklist: ChecklistType[];
   stickyNotes: StickyNotesType[]
   tags: string[];
+  comments: CommentsType[];
 };
 
 type TasksStateType = {
