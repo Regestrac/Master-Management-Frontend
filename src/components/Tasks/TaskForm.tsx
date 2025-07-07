@@ -88,23 +88,7 @@ const TaskForm = () => {
             description: fetchedTask?.data?.description,
             status: { label: capitalize(fetchedTask?.data?.status), value: fetchedTask?.data?.status },
           });
-          updateCurrentTaskDetails({
-            description: fetchedTask?.data?.description,
-            id: fetchedTask?.data?.id,
-            startedAt: fetchedTask?.data?.started_at,
-            status: fetchedTask?.data?.status,
-            time_spend: fetchedTask?.data?.time_spend,
-            title: fetchedTask?.data?.title,
-            parent_id: fetchedTask?.data?.parent_id || 0,
-            category: '',
-            due_date: '',
-            priority: 'normal',
-            streak: 0,
-            type: 'task',
-            checklist: [],
-            stickyNotes: [],
-            tags: [],
-          });
+          updateCurrentTaskDetails(fetchedTask?.data);
         }
         setIsLoading(false);
       }).catch((err) => {

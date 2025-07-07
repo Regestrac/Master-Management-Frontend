@@ -6,6 +6,7 @@ import { Clock, Flame, Plus } from 'lucide-react';
 import { useProfileStore } from 'stores/profileStore';
 
 import { getRecentTasks } from 'src/services/tasks';
+import { getPriorityColor, getStatusColor } from 'src/helpers/utils';
 
 type RecentTaskType = {
   id: number;
@@ -15,36 +16,6 @@ type RecentTaskType = {
   title: string;
   streak: number;
   priority: 'high' | 'normal' | 'low';
-};
-
-const getPriorityColor = (priority: RecentTaskType['priority']) => {
-  switch (priority) {
-    case 'high':
-      return 'bg-red-500';
-    case 'normal':
-      return 'bg-yellow-500';
-    case 'low':
-      return 'bg-green-500';
-    default:
-      return 'bg-gray-500';
-  }
-};
-
-const getStatusColor = (status: RecentTaskType['status']) => {
-  switch (status) {
-    case 'completed':
-      return 'text-green-400 bg-green-400/10';
-    case 'todo':
-      return 'text-blue-400 bg-blue-400/10';
-    case 'inprogress':
-      return 'text-blue-400 bg-blue-400/10';
-    case 'pending':
-      return 'text-gray-400 bg-gray-400/10';
-    case 'paused':
-      return 'text-yellow-400 bg-yellow-400/10';
-    default:
-      return 'text-gray-400 bg-gray-400/10';
-  }
 };
 
 const RecentTasks = () => {

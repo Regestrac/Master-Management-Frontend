@@ -67,11 +67,14 @@ export const useTaskStore = create<TasksStateType>()((set) => ({
     incoming.forEach((task) => mergedMap.set(task.id, task));
     return { tasks: Array.from(mergedMap.values()) };
   }),
-  updateTask: (updatedTask) => set((state) => ({
-    tasks: state.tasks.map((task) =>
-      task.id === updatedTask.id ? { ...task, ...updatedTask } : task,
-    ),
-  })),
+  updateTask: (updatedTask) => set((state) => {
+    console.log('updatedTask: ', updatedTask);
+    return ({
+      tasks: state.tasks.map((task) =>
+        task.id === updatedTask.id ? { ...task, ...updatedTask } : task,
+      ),
+    });
+  }),
   deleteTask: (id) => set((state) => ({
     tasks: state.tasks.filter((task) => task.id !== id),
   })),
