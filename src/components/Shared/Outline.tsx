@@ -1,5 +1,7 @@
 import React, { CSSProperties, HTMLAttributes, useEffect, useRef, useState } from 'react';
 
+import { isHexColor } from 'src/helpers/utils';
+
 type OutlineProps = {
   /**
    *  @param colors
@@ -20,10 +22,6 @@ type OutlineProps = {
   variant?: 'solid' | 'rotate' | 'push-pull';
   animationDuration?: CSSProperties['animationDuration'];
   disabled?: boolean;
-};
-
-const isHexColor = (color: string): boolean => {
-  return /^#([0-9A-F]{3}){1,2}$/i.test(color);
 };
 
 const makeClassVar = (color: string) => {

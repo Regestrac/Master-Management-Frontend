@@ -168,3 +168,7 @@ export const getStatusColor = (status: StatusType) => {
       return 'text-gray-400 bg-gray-400/10';
   }
 };
+
+export const isHexColor = (color: string): boolean => {
+  return /^#([0-9A-F]{3}){1,2}$/i.test(color);
+};

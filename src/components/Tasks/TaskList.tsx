@@ -14,20 +14,7 @@ import { formatTimeElapsed } from 'src/helpers/utils';
 import { updateTask } from 'src/services/tasks';
 import { TaskType } from 'src/helpers/sharedTypes';
 import { updateActiveTask } from 'src/services/profile';
-
-const priorityOptions = [
-  { label: 'High', value: 'high', color: '#fb2c36' },
-  { label: 'Normal', value: 'normal', color: '#efb100' },
-  { label: 'Low', value: 'low', color: '#00c951' },
-];
-
-const statusOptions = [
-  { label: 'To Do', value: 'todo', color: '#3b82f6' },
-  { label: 'In Progress', value: 'inprogress', color: '#f59e0b' },
-  { label: 'Pending', value: 'pending', color: '#a855f7' },
-  { label: 'Paused', value: 'paused', color: '#6b7280' },
-  { label: 'Completed', value: 'completed', color: '#22c55e' },
-];
+import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'src/helpers/configs';
 
 const getPriorityColor = (priority: string) => {
   switch (priority) {
@@ -237,7 +224,7 @@ const TaskList = () => {
                       onChange={() => toggleTaskSelection(task.id)}
                       className='w-4 h-4 text-purple-600 rounded focus:ring-purple-500'
                     /> */}
-                      <Dropdown options={priorityOptions} onSelect={handlePrioritySelect} value={task.priority}>
+                      <Dropdown options={PRIORITY_OPTIONS} onSelect={handlePrioritySelect} value={task.priority}>
                         <div className={`w-3 h-3 rounded-full cursor-pointer hover:scale-120 ${getPriorityColor(task.priority)}`} />
                       </Dropdown>
                       <div className='flex-1'>
@@ -253,7 +240,7 @@ const TaskList = () => {
                         {task.description}
                       </p> */}
                         <div className='flex flex-wrap items-center gap-4 text-sm'>
-                          <Dropdown options={statusOptions} onSelect={handleStatusSelect} value={task.status} hideClear>
+                          <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={task.status} hideClear>
                             <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(task.status)}`}>
                               {task?.status?.toUpperCase()}
                             </span>
