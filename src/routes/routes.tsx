@@ -12,6 +12,8 @@ import NotFound from 'components/Shared/NotFound';
 import StyleGuide from 'components/StyleGuide';
 import Tasks from 'components/Tasks/Tasks';
 import TaskDetail from 'components/Tasks/TaskDetail';
+import TaskManagementAppDesign from 'components/Tasks/TaskManagementAppDesign';
+import Goals from 'components/Goals/Goals';
 
 const routes: RouteObject[] = [
   {
@@ -45,7 +47,7 @@ const routes: RouteObject[] = [
       },
       {
         path: '/goals',
-        element: <Tasks />,
+        element: <Goals />,
       },
       {
         path: '/analytics',
@@ -74,6 +76,10 @@ const routes: RouteObject[] = [
   {
     path: '/style-guide',
     element: <StyleGuide />,
+  },
+  {
+    path: '/app-design',
+    element: <TaskManagementAppDesign />,
   },
 ];
 
