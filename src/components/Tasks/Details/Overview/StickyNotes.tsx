@@ -4,27 +4,46 @@ import { Plus, StickyNote, X } from 'lucide-react';
 import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
 import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
+
+import { createNote } from 'src/services/note';
 
 const stickyNoteColors = [
-  { bg: '#FFE066', text: '#000000', name: 'Yellow' },
-  { bg: '#FF9AA2', text: '#000000', name: 'Pink' },
-  { bg: '#B5EAD7', text: '#000000', name: 'Mint' },
-  { bg: '#C7CEEA', text: '#000000', name: 'Lavender' },
-  { bg: '#FFDAC1', text: '#000000', name: 'Peach' },
-  { bg: '#E2F0CB', text: '#000000', name: 'Lime' },
-  { bg: '#F0C4C4', text: '#000000', name: 'Rose' },
-  { bg: '#D4E4F7', text: '#000000', name: 'Sky Blue' },
+  { id: 1, bg: '#FF9AA2', text: '#000000', name: 'Pink' },
+  { id: 2, bg: '#FFE066', text: '#000000', name: 'Yellow' },
+  { id: 3, bg: '#B5EAD7', text: '#000000', name: 'Mint' },
+  { id: 4, bg: '#C7CEEA', text: '#000000', name: 'Lavender' },
+  { id: 5, bg: '#FFDAC1', text: '#000000', name: 'Peach' },
+  { id: 6, bg: '#E2F0CB', text: '#000000', name: 'Lime' },
+  { id: 7, bg: '#F0C4C4', text: '#000000', name: 'Rose' },
+  { id: 8, bg: '#D4E4F7', text: '#000000', name: 'Sky Blue' },
 ];
 
 const StickyNotes = () => {
   const [showStickyNoteForm, setShowStickyNoteForm] = useState(false);
-  const [stickyNoteData, setStickyNoteData] = useState({} as any);
+  const [stickyNoteData, setStickyNoteData] = useState({ bg_color: stickyNoteColors[0].bg, text_color: stickyNoteColors[0].text } as any);
 
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
+  const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
+
+  const { id } = useParams();
 
   const addStickyNote = () => {
+    if (id) {
+      const payload = {
+        task_id: Number(id),
+        ...stickyNoteData,
+      };
 
+      createNote(payload).then((res) => {
+        toast.success(res?.message);
+        updateCurrentTaskDetails({ ...taskDetails, notes: [...taskDetails.notes, res?.data] });
+      }).catch((err) => {
+        toast.error(err?.error);
+      });
+    }
   };
 
   const removeStickyNote = (_noteId: number) => {
@@ -38,7 +57,7 @@ const StickyNotes = () => {
           <h3 className='text-lg font-semibold flex items-center'>
             <StickyNote className='w-5 h-5 mr-2' />
             Sticky Notes (
-            {taskDetails.stickyNotes?.length}
+            {taskDetails.notes?.length || 0}
             )
           </h3>
           <button
@@ -78,9 +97,9 @@ const StickyNotes = () => {
                         bg_color: color.bg,
                         text_color: color.text,
                       }))}
-                      className={`w-6 h-6 rounded-full border-2 transition-all ${stickyNoteData.bgColor === color.bg
-                        ? 'border-gray-800 scale-110'
-                        : 'border-gray-300'}`}
+                      className={`w-6 h-6 rounded-full transition-all cursor-pointer ${stickyNoteData.bg_color === color.bg
+                        ? 'border-2 border-neutral-500 outline-primary-500 outline-2'
+                        : 'border-none'}`}
                       style={{ backgroundColor: color.bg }}
                       title={color.name}
                     />
@@ -113,7 +132,7 @@ const StickyNotes = () => {
 
         {/* Sticky Notes Grid */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-          {taskDetails.stickyNotes?.map((note) => (
+          {taskDetails.notes?.map((note) => (
             <div
               key={note.id}
               className='relative p-4 rounded-lg shadow-md transform rotate-1 hover:rotate-0 transition-transform duration-200 group'

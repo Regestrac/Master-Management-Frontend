@@ -12,7 +12,7 @@ const TaskNotes = () => {
 
   const [editData, setEditData] = useState({
     description: taskDetails.description,
-    notes: taskDetails.stickyNotes,
+    notes: taskDetails.notes,
   });
 
   const saveNotes = () => {
@@ -45,7 +45,7 @@ const TaskNotes = () => {
                 saveNotes();
               } else {
                 setIsEditingNotes(true);
-                setEditData((prev) => ({ ...prev, notes: taskDetails.stickyNotes }));
+                setEditData((prev) => ({ ...prev, notes: taskDetails.notes }));
               }
             }}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${isEditingNotes
@@ -143,7 +143,7 @@ const TaskNotes = () => {
               <button
                 onClick={() => {
                   setIsEditingNotes(false);
-                  setEditData((prev) => ({ ...prev, notes: taskDetails.stickyNotes }));
+                  setEditData((prev) => ({ ...prev, notes: taskDetails.notes }));
                 }}
                 className={`px-4 py-2 rounded-lg border transition-colors ${darkMode
                   ? 'border-gray-600 hover:bg-gray-700'
@@ -156,7 +156,7 @@ const TaskNotes = () => {
         ) : (
           <div
             className={`prose max-w-none ${darkMode ? 'prose-invert' : ''}`}
-            dangerouslySetInnerHTML={{ __html: taskDetails.stickyNotes }}
+            dangerouslySetInnerHTML={{ __html: taskDetails.notes }}
           />
         )}
       </div>
