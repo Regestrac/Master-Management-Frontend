@@ -1,29 +1,46 @@
-import { Flame, Clock, Play, Pause, Settings, Calendar, BarChart3 } from 'lucide-react';
+import { Flame, Clock, Play, Pause, Settings, Calendar, BarChart3, Trophy } from 'lucide-react';
 import clsx from 'clsx';
+import { useTaskStore } from 'stores/taskStore';
+import { toast } from 'react-toastify';
+
+import DropDown from 'components/Shared/Dropdown';
+
+import { STATUS_OPTIONS } from 'src/helpers/configs';
+import { getStatusColor } from 'src/helpers/utils';
+import { TaskType } from 'src/helpers/sharedTypes';
+import { updateTask } from 'src/services/tasks';
+
+import ProgressCircle from './ProgressCircle';
 
 export default function GoalCard({
   goal,
   view,
   darkMode,
-  isSelected,
   isExpanded,
   isActive,
-  onToggleSelection,
   onToggleExpanded,
   onToggleTimer,
 }: {
   goal: any
-  view: 'grid' | 'list'
+  view: 'card' | 'list'
   darkMode: boolean
-  isSelected: boolean
   isExpanded: boolean
   isActive: boolean
-  onToggleSelection: () => void
   onToggleExpanded?: () => void
   onToggleTimer: () => void
 }) {
   const bgColor = darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200';
   const textColor = darkMode ? 'text-gray-400' : 'text-gray-600';
+
+  const updateTaskState = useTaskStore((state) => state.updateTask);
+
+  const handleUpdateTask = (id: string, payload: object) => {
+    updateTask(id, payload).then((res) => {
+      toast.success(res?.message || 'Updated successfully');
+    }).catch((err) => {
+      toast.error(err?.error || 'Failed to update task');
+    });
+  };
 
   const getWeeklyProgress = () => ((goal.currentWeekHours / goal.weeklyTarget) * 100) > 100 ? 100 : ((goal.currentWeekHours / goal.weeklyTarget) * 100);
 
@@ -71,29 +88,45 @@ export default function GoalCard({
     </div>
   );
 
-  const renderHeader = () => (
-    <div className='flex items-center space-x-3'>
-      <input
-        type='checkbox'
-        checked={isSelected}
-        onChange={onToggleSelection}
-        className='w-4 h-4 text-purple-600 rounded focus:ring-purple-500'
-      />
-      <div className={`w-3 h-3 rounded-full ${goal.categoryColor}`} />
-    </div>
-  );
+  const renderHeader = () => {
+    const handleStatusSelect = (value: string | null) => {
+      if (goal?.status !== value) {
+        handleUpdateTask(goal?.id?.toString(), { status: value });
+        updateTaskState({ id: goal?.id, status: value as TaskType['status'] });
+      }
+    };
 
-  const renderTitle = () => (
-    <div className='flex items-center gap-3 mb-2 flex-wrap'>
-      <h4 className='font-semibold text-lg'>{goal.title}</h4>
-      <span className={clsx('px-2 py-1 rounded text-xs font-medium', darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600')}>
-        {goal.category}
-      </span>
-      <span className={`px-2 py-1 rounded text-xs font-medium ${goal.statusColor}`}>
-        {goal.status}
-      </span>
-    </div>
-  );
+    return (
+      <DropDown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={goal.status} hideClear>
+        <span className={`px-3 py-1 rounded-full text-sm font-medium cursor-grab ${getStatusColor(goal.status)}`}>
+          {goal?.status?.toUpperCase()}
+        </span>
+      </DropDown>
+    );
+  };
+
+  const renderTitle = () => {
+    const handleStatusSelect = (value: string | null) => {
+      if (goal?.status !== value) {
+        handleUpdateTask(goal?.id?.toString(), { status: value });
+        updateTaskState({ id: goal?.id, status: value as TaskType['status'] });
+      }
+    };
+
+    return (
+      <div className='flex items-center gap-3 mb-2 flex-wrap'>
+        <h4 className='font-semibold text-lg'>{goal.title}</h4>
+        <span className={clsx('px-2 py-1 rounded text-xs font-medium', darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600')}>
+          {goal.category}
+        </span>
+        <DropDown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={goal.status} hideClear>
+          <span className={`px-3 py-1 rounded-full text-xs font-medium cursor-grab ${getStatusColor(goal.status)}`}>
+            {goal?.status?.toUpperCase()}
+          </span>
+        </DropDown>
+      </div>
+    );
+  };
 
   const renderTimerControls = () => (
     <button
@@ -156,11 +189,7 @@ export default function GoalCard({
         {renderTitle()}
         <p className={`text-sm mb-3 ${textColor}`}>{goal.description}</p>
 
-        {/* Progress Circle */}
-        <div className='flex justify-center my-4'>
-          {/* SVG progress */}
-          {/* Replace with component if needed */}
-        </div>
+        <ProgressCircle progress={goal.progress} />
 
         {/* Stats */}
         <div className='grid grid-cols-2 gap-4 mb-4 text-center'>
@@ -194,6 +223,40 @@ export default function GoalCard({
           </div>
           {renderProgressBar()}
         </div>
+
+        {/* Tags */}
+        <div className='flex flex-wrap gap-1 mb-4'>
+          {goal.tags.slice(0, 3).map((tag: string, index: number) => (
+            <span key={index} className='px-2 py-1 bg-purple-100 text-purple-600 rounded text-xs'>
+              #
+              {tag}
+            </span>
+          ))}
+          {goal.tags.length > 3 && (
+            <span className={`px-2 py-1 rounded text-xs ${darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-600'}`}>
+              +
+              {goal.tags.length - 3}
+            </span>
+          )}
+        </div>
+
+        {/* Achievements */}
+        {goal.achievements.length > 0 && (
+          <div className='flex flex-wrap gap-1'>
+            {goal.achievements.slice(0, 2).map((achievement: string, index: number) => (
+              <span key={index} className='inline-flex items-center px-2 py-1 bg-yellow-100 text-yellow-600 rounded text-xs'>
+                <Trophy className='w-3 h-3 mr-1' />
+                {achievement}
+              </span>
+            ))}
+            {goal.achievements.length > 2 && (
+              <span className={`px-2 py-1 rounded text-xs ${darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-600'}`}>
+                +
+                {goal.achievements.length - 2}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className='flex gap-2 mt-4'>

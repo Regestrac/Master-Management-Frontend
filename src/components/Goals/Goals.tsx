@@ -1,5 +1,8 @@
+import { useState } from 'react';
+
 import GoalCard from './GoalsListing';
 import GoalStats from './GoalStats';
+import GoalFilters from './GoalFilters';
 
 const allGoals = [
   {
@@ -150,30 +153,34 @@ const allGoals = [
 ];
 
 const Goals = () => {
-  const onToggleSelection = () => {
-
-  };
+  const [goalViewMode, setGoalViewMode] = useState<'card' | 'list'>('card');
+  const [GoalFilter, setGoalFilter] = useState('all');
+  const [GoalSort, setGoalSort] = useState('progress');
 
   const onToggleTimer = () => {
 
   };
 
-  const view: 'list' | 'grid' = 'grid' as 'list' | 'grid';
-
   return (
     <div>
       <GoalStats />
-      <div className={view === 'list' ? 'space-y-4' : 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6'}>
+      <GoalFilters
+        goalViewMode={goalViewMode}
+        setGoalViewMode={setGoalViewMode}
+        goalFilter={GoalFilter}
+        setGoalFilter={setGoalFilter}
+        goalSort={GoalSort}
+        setGoalSort={setGoalSort}
+      />
+      <div className={goalViewMode === 'list' ? 'space-y-4' : 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6'}>
         {allGoals.map((goal) => (
           <GoalCard
             key={goal.id}
             darkMode
             isActive={false}
             goal={goal}
-            view={view}
+            view={goalViewMode}
             isExpanded={false}
-            isSelected={false}
-            onToggleSelection={onToggleSelection}
             onToggleTimer={onToggleTimer}
           />
         ))}
