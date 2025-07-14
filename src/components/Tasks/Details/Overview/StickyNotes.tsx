@@ -1,13 +1,23 @@
 import { useState } from 'react';
 
-import { Plus, StickyNote, X } from 'lucide-react';
+import { Edit, Plus, StickyNote, X } from 'lucide-react';
 import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import { createNote } from 'src/services/note';
+import Input from 'components/Shared/Input';
+
+import { createNote, deleteNote, updateNote } from 'src/services/note';
+
+type StickyNoteFormType = {
+  text: string;
+  bg_color: string;
+  text_color: string;
+  id?: number;
+};
 
 const stickyNoteColors = [
   { id: 1, bg: '#FF9AA2', text: '#000000', name: 'Pink' },
@@ -22,7 +32,6 @@ const stickyNoteColors = [
 
 const StickyNotes = () => {
   const [showStickyNoteForm, setShowStickyNoteForm] = useState(false);
-  const [stickyNoteData, setStickyNoteData] = useState({ bg_color: stickyNoteColors[0].bg, text_color: stickyNoteColors[0].text } as any);
 
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
@@ -30,24 +39,74 @@ const StickyNotes = () => {
 
   const { id } = useParams();
 
-  const addStickyNote = () => {
-    if (id) {
+  const methods = useForm<StickyNoteFormType>({
+    defaultValues: {
+      text: '',
+      bg_color: stickyNoteColors[0].bg,
+      text_color: stickyNoteColors[0].text,
+    },
+  });
+
+  const { handleSubmit, setValue, control, reset } = methods;
+
+  const { bg_color } = useWatch({ control });
+
+  const handleCancelNote = () => {
+    setShowStickyNoteForm(false);
+    reset({
+      text: '',
+      bg_color: stickyNoteColors[0].bg,
+      text_color: stickyNoteColors[0].text,
+    });
+  };
+
+  const addStickyNote = (formData: StickyNoteFormType) => {
+    if (id && formData.text) {
       const payload = {
         task_id: Number(id),
-        ...stickyNoteData,
+        ...formData,
       };
 
-      createNote(payload).then((res) => {
-        toast.success(res?.message);
-        updateCurrentTaskDetails({ ...taskDetails, notes: [...taskDetails.notes, res?.data] });
-      }).catch((err) => {
-        toast.error(err?.error);
-      });
+      if (formData?.id) {
+        updateNote(formData.id, payload).then((res) => {
+          toast.success(res?.message);
+          const finalNotesData = taskDetails.notes.map((item) => item.id === formData.id ? res?.data : item);
+          updateCurrentTaskDetails({ ...taskDetails, notes: finalNotesData });
+          handleCancelNote();
+        }).catch((err) => {
+          toast.error(err?.error);
+        });
+      } else {
+        createNote(payload).then((res) => {
+          toast.success(res?.message);
+          updateCurrentTaskDetails({ ...taskDetails, notes: [...taskDetails.notes, res?.data] });
+          handleCancelNote();
+        }).catch((err) => {
+          toast.error(err?.error);
+        });
+      }
     }
   };
 
-  const removeStickyNote = (_noteId: number) => {
+  const handleEditNote = (noteId: number) => {
+    const noteInfo = taskDetails.notes.find((item) => item.id === noteId);
+    reset({
+      id: noteId,
+      bg_color: noteInfo?.bg_color,
+      text: noteInfo?.text,
+      text_color: noteInfo?.text_color,
+    });
+    setShowStickyNoteForm(true);
+  };
 
+  const removeStickyNote = (noteId: number) => {
+    // TODO: Need to add confirmation
+    deleteNote(noteId).then((res) => {
+      toast.success(res?.message);
+      updateCurrentTaskDetails({ ...taskDetails, notes: taskDetails.notes.filter((item) => item.id !== noteId) });
+    }).catch((err) => {
+      toast.error(err?.error);
+    });
   };
 
   return (
@@ -72,87 +131,92 @@ const StickyNotes = () => {
       <div className='p-6'>
         {/* Add Sticky Note Form */}
         {showStickyNoteForm && (
-          <div className='mb-6 p-4 border rounded-lg border-gray-300 dark:border-gray-600'>
-            <div className='space-y-4'>
-              <textarea
-                value={stickyNoteData.text}
-                onChange={(e) => setStickyNoteData((prev: any) => ({ ...prev, text: e.target.value }))}
-                placeholder='Write your note here...'
-                className={`w-full h-24 p-3 rounded-lg border resize-none focus:outline-none focus:ring-2 focus:ring-purple-500 ${darkMode
-                  ? 'bg-gray-700 border-gray-600 text-white'
-                  : 'bg-white border-gray-300'}`}
-              />
+          <FormProvider {...methods}>
+            <div className='mb-6 p-4 border rounded-lg border-gray-300 dark:border-gray-600'>
+              <div className='space-y-4'>
+                <Input
+                  name='text'
+                  label=''
+                  type='textarea'
+                  placeholder='Write your note here...'
+                  className={`w-full h-24 p-3 rounded-lg border resize-none focus:outline-none focus:ring-2 focus:ring-purple-500 ${darkMode
+                    ? 'bg-gray-700 border-gray-600 text-white'
+                    : 'bg-white border-gray-300'}`}
+                />
 
-              {/* Color Picker */}
-              <div className='flex items-center space-x-4'>
-                <span className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Color:
-                </span>
+                {/* Color Picker */}
+                <div className='flex items-center space-x-4'>
+                  <span className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Color:
+                  </span>
+                  <div className='flex space-x-2'>
+                    {stickyNoteColors.map((color, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          setValue('bg_color', color.bg);
+                          setValue('text_color', color.text);
+                        }}
+                        className={`w-6 h-6 rounded-full transition-all cursor-pointer ${bg_color === color.bg
+                          ? 'border-2 border-neutral-500 outline-primary-500 outline-2'
+                          : 'border-none'}`}
+                        style={{ backgroundColor: color.bg }}
+                        title={color.name}
+                      />
+                    ))}
+                  </div>
+                </div>
+
                 <div className='flex space-x-2'>
-                  {stickyNoteColors.map((color, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setStickyNoteData((prev: any) => ({
-                        ...prev,
-                        bg_color: color.bg,
-                        text_color: color.text,
-                      }))}
-                      className={`w-6 h-6 rounded-full transition-all cursor-pointer ${stickyNoteData.bg_color === color.bg
-                        ? 'border-2 border-neutral-500 outline-primary-500 outline-2'
-                        : 'border-none'}`}
-                      style={{ backgroundColor: color.bg }}
-                      title={color.name}
-                    />
-                  ))}
+                  <button
+                    onClick={handleSubmit(addStickyNote)}
+                    className='px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors'
+                  >
+                    Add Note
+                  </button>
+                  <button
+                    onClick={handleCancelNote}
+                    className={`px-4 py-2 rounded-lg border transition-colors ${darkMode
+                      ? 'border-gray-600 hover:bg-gray-700'
+                      : 'border-gray-300 hover:bg-gray-50'}`}
+                  >
+                    Cancel
+                  </button>
                 </div>
               </div>
-
-              <div className='flex space-x-2'>
-                <button
-                  onClick={addStickyNote}
-                  className='px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors'
-                >
-                  Add Note
-                </button>
-                <button
-                  onClick={() => {
-                    setShowStickyNoteForm(false);
-                    setStickyNoteData({ text: '', bgColor: '#FFE066', textColor: '#000000' });
-                  }}
-                  className={`px-4 py-2 rounded-lg border transition-colors ${darkMode
-                    ? 'border-gray-600 hover:bg-gray-700'
-                    : 'border-gray-300 hover:bg-gray-50'}`}
-                >
-                  Cancel
-                </button>
-              </div>
             </div>
-          </div>
+          </FormProvider>
         )}
 
         {/* Sticky Notes Grid */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
           {taskDetails.notes?.map((note) => (
             <div
-              key={note.id}
-              className='relative p-4 rounded-lg shadow-md transform rotate-1 hover:rotate-0 transition-transform duration-200 group'
+              key={note?.id}
+              className='relative p-4 rounded-lg shadow-md transform rotate-1 hover:rotate-0 transition-transform duration-200 group h-fit'
               style={{
-                backgroundColor: note.bg_color,
-                color: note.text_color,
-                minHeight: '120px',
+                backgroundColor: note?.bg_color,
+                color: note?.text_color,
+                minHeight: '200px',
               }}
             >
               <button
-                onClick={() => removeStickyNote(note.id)}
-                className='absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600'
+                onClick={() => handleEditNote(note?.id)}
+                className='absolute cursor-pointer top-2 right-10 w-6 h-6 bg-primary-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-primary-600'
+              >
+                <Edit className='w-3 h-3' />
+              </button>
+              <button
+                onClick={() => removeStickyNote(note?.id)}
+                className='absolute cursor-pointer top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600'
               >
                 <X className='w-3 h-3' />
               </button>
-              <p className='text-sm leading-relaxed mb-3' style={{ color: note.text_color }}>
-                {note.text}
+              <p className='text-sm leading-relaxed mb-3 mt-4' style={{ color: note?.text_color }}>
+                {note?.text}
               </p>
-              <div className='text-xs opacity-70' style={{ color: note.text_color }}>
-                {dayjs(note.created_at || new Date()).format('MMM DD, hh:mm A')}
+              <div className='text-xs opacity-70' style={{ color: note?.text_color }}>
+                {dayjs(note?.created_at || new Date()).format('MMM DD, hh:mm A')}
               </div>
             </div>
           ))}
