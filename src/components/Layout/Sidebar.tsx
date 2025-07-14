@@ -1,7 +1,5 @@
-import { useState } from 'react';
-
 import { BarChart3, Calendar, CheckSquare, Home, Settings, Target, User } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useNavbarStore } from 'stores/navbarStore';
 import { useProfileStore } from 'stores/profileStore';
 
@@ -16,15 +14,20 @@ const navbarItems = [
 ];
 
 const Sidebar = () => {
-  const [activeTab, setActiveTab] = useState('dashboard');
-
   const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
   const showNavbar = useNavbarStore((state) => state.showNavbar);
 
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  const getCurrentMenuStatus = (menuItem: string) => {
+    if (pathname.includes(menuItem)) {
+      return 'bg-purple-500 text-white';
+    }
+    return darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100';
+  };
 
   const handleNavLinkClick = (id: string) => {
-    setActiveTab(id);
     navigate(`/${id}`);
   };
 
@@ -43,9 +46,7 @@ const Sidebar = () => {
             <button
               key={id}
               onClick={() => handleNavLinkClick(id)}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors cursor-pointer ${activeTab === id
-                ? 'bg-purple-500 text-white'
-                : darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors cursor-pointer ${getCurrentMenuStatus(id)}`}
             >
               <Icon className='w-5 h-5' />
               <span>{label}</span>

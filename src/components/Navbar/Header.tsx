@@ -12,6 +12,7 @@ const Header = () => {
   const showNavbar = useNavbarStore((state) => state.showNavbar);
   const updateProfile = useProfileStore((state) => state.updateProfile);
   const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const firstName = useProfileStore((state) => state?.data?.first_name);
 
   const updateColorTheme = () => {
     updateTheme({ theme: darkMode ? 'light' : 'dark' }).then((res) => {
@@ -31,7 +32,9 @@ const Header = () => {
       <div className='w-full md:w-auto flex items-center justify-between'>
         <div>
           <h2 className='text-2xl md:text-3xl font-bold mb-1 md:mb-2 lg:whitespace-nowrap'>
-            Good Morning, Paul! 👋
+            Good Morning,&nbsp;
+            {firstName}
+            ! 👋
           </h2>
           <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm md:text-base w-full md:w-auto`}>
             You have 5 tasks scheduled for today
