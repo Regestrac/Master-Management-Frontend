@@ -14,6 +14,7 @@ import Tasks from 'components/Tasks/Tasks';
 import TaskDetail from 'components/Tasks/TaskDetail';
 import TaskManagementAppDesign from 'components/Tasks/TaskManagementAppDesign';
 import Goals from 'components/Goals/Goals';
+import CreateTaskForm from 'components/Tasks/CreateTaskForm';
 
 const routes: RouteObject[] = [
   {
@@ -68,6 +69,10 @@ const routes: RouteObject[] = [
   {
     path: '/tasks/:id',
     element: <TaskDetail />,
+  },
+  {
+    path: 'task/create',
+    element: <CreateTaskForm />,
   },
   {
     path: '/not-found',

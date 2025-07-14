@@ -118,6 +118,11 @@ const TaskList = () => {
     });
   };
 
+  const handleCreateTask = () => {
+    setShowCreateTask(true);
+    navigate('/task/create');
+  };
+
   return (
     <>
       <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6'>
@@ -180,7 +185,7 @@ const TaskList = () => {
             </div>
           )} */}
           <button
-            onClick={() => setShowCreateTask(true)}
+            onClick={handleCreateTask}
             className='flex items-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors'
           >
             <Plus className='w-4 h-4' />
