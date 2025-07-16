@@ -16,3 +16,8 @@ export type TaskType = {
   category: string;
   type: 'goal' | 'task';
 };
+
+export type SelectOptionType = {
+  label: string;
+  value: string | number;
+};

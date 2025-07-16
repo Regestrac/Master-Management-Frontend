@@ -1,21 +1,21 @@
-import { FieldValues, Path, useController } from 'react-hook-form';
-import Select from 'react-select';
+import { useController } from 'react-hook-form';
+import Select, { MultiValue } from 'react-select';
 import { useProfileStore } from 'stores/profileStore';
 
-import { SelectOptionType, SelectValueType } from 'src/helpers/sharedTypes';
+import { SelectOptionType } from 'src/helpers/sharedTypes';
 
-type SelectProps<T extends FieldValues> = {
-  name: Path<T>;
+type SelectProps<T extends boolean> = {
+  name: string;
   options: SelectOptionType[];
   label?: string;
   placeholder?: string;
   disabled?: boolean;
   className?: string;
-  isMulti?: boolean;
-  onChange?: (_value: SelectValueType) => void;
+  isMulti: T;
+  onChange?: (_value: T extends false ? SelectOptionType : MultiValue<SelectOptionType | null>) => void;
 };
 
-function SelectField<T extends FieldValues>({
+function SelectField<T extends boolean>({
   name,
   options,
   label,

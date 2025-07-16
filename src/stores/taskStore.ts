@@ -44,7 +44,7 @@ type TasksStateType = {
   shouldStartTimer: boolean;
   currentTaskDetails: TaskDetailsType;
   updateCurrentTaskDetails: (_task: TaskDetailsType) => void;
-  addTask: (_newTask: TaskType | TaskType[]) => void;
+  addTask: (_newTask: TaskType | TaskType[], _type?: 'merge' | 'replace') => void;
   updateTask: (_task: Partial<TaskType> & { id: number; }) => void;
   deleteTask: (_id: number) => void;
   updateRecentTask: (_task: TaskType | TaskType[]) => void;
@@ -58,14 +58,18 @@ export const useTaskStore = create<TasksStateType>()((set) => ({
   shouldStartTimer: false,
   currentTaskDetails: {} as TaskDetailsType,
   updateCurrentTaskDetails: (task) => set({ currentTaskDetails: task }),
-  addTask: (newTask) => set((state) => {
-    const incoming = Array.isArray(newTask) ? newTask : [newTask];
-    const mergedMap = new Map<number, TaskType>();
-    // Add existing tasks to the map
-    state.tasks.forEach((task) => mergedMap.set(task.id, task));
-    // Overwrite or add new tasks from incoming
-    incoming.forEach((task) => mergedMap.set(task.id, task));
-    return { tasks: Array.from(mergedMap.values()) };
+  addTask: (newTask, type) => set((state) => {
+    if (type === 'replace') {
+      return { tasks: Array.isArray(newTask) ? newTask : [newTask] };
+    } else {
+      const incoming = Array.isArray(newTask) ? newTask : [newTask];
+      const mergedMap = new Map<number, TaskType>();
+      // Add existing tasks to the map
+      state.tasks.forEach((task) => mergedMap.set(task.id, task));
+      // Overwrite or add new tasks from incoming
+      incoming.forEach((task) => mergedMap.set(task.id, task));
+      return { tasks: Array.from(mergedMap.values()) };
+    }
   }),
   updateTask: (updatedTask) => set((state) => ({
     tasks: state.tasks.map((task) =>

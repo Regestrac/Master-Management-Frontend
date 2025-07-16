@@ -1,11 +1,15 @@
+import { useMemo, useState } from 'react';
+
 import { Bell, Moon, Search, Sun, Menu, X } from 'lucide-react';
 import { useNavbarStore } from 'stores/navbarStore';
 import { toast } from 'react-toastify';
 import { useProfileStore } from 'stores/profileStore';
+import { useSearchParams } from 'react-router-dom';
 
 import ValidateUser from 'components/Navbar/ValidateUser';
 
 import { updateTheme } from 'src/services/profile';
+import { debounce } from 'src/helpers/utils';
 
 const Header = () => {
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
@@ -13,6 +17,12 @@ const Header = () => {
   const updateProfile = useProfileStore((state) => state.updateProfile);
   const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
   const firstName = useProfileStore((state) => state?.data?.first_name);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const searchKey = searchParams.get('searchKey');
+
+  const [searchKeyValue, setSearchKeyValue] = useState(searchKey || '');
 
   const updateColorTheme = () => {
     updateTheme({ theme: darkMode ? 'light' : 'dark' }).then((res) => {
@@ -25,6 +35,27 @@ const Header = () => {
 
   const handleSidebarToggle = () => {
     setShowNavbar(!showNavbar);
+  };
+
+  const urlFilterParams = useMemo(() => {
+    let filterObject: { [key: string]: string | string[] } = {};
+    Array.from(searchParams.entries()).forEach(([key, value]) => {
+      if (key === 'status' || key === 'priority') {
+        filterObject = { ...filterObject, [key]: searchParams.getAll(key) };
+      } else {
+        filterObject = { ...filterObject, [key]: value };
+      }
+    });
+    return filterObject;
+  }, [searchParams]);
+
+  const debouncedSearch = useMemo(() => debounce((value: string) => {
+    setSearchParams({ ...urlFilterParams, searchKey: value });
+  }, 200), [urlFilterParams, setSearchParams]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyValue(e.target.value);
+    debouncedSearch(e.target.value);
   };
 
   return (
@@ -55,7 +86,9 @@ const Header = () => {
           <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400' />
           <input
             type='text'
-            placeholder='Search tasks...'
+            value={searchKeyValue}
+            placeholder='Search...'
+            onChange={handleSearchChange}
             className={`pl-10 pr-4 py-2 w-full rounded-lg border ${darkMode
               ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400'
               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'} focus:outline-none focus:ring-2 focus:ring-purple-500`}

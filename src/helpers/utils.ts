@@ -159,10 +159,10 @@ export const getStatusColor = (status: StatusType) => {
     case 'todo':
       return 'text-blue-400 bg-blue-400/10';
     case 'inprogress':
-      return 'text-blue-400 bg-blue-400/10';
-    case 'pending':
-      return 'text-gray-400 bg-gray-400/10';
+      return 'text-primary-600 bg-primary-600/20';
     case 'paused':
+      return 'text-gray-400 bg-gray-400/10';
+    case 'pending':
       return 'text-yellow-400 bg-yellow-400/10';
     default:
       return 'text-gray-400 bg-gray-400/10';
@@ -171,4 +171,20 @@ export const getStatusColor = (status: StatusType) => {
 
 export const isHexColor = (color: string): boolean => {
   return /^#([0-9A-F]{3}){1,2}$/i.test(color);
+};
+
+export const isEmpty = (value: any): boolean => {
+  if (value === null || value === undefined) {
+    return true;
+  }
+  if (typeof value === 'string' && value.trim() === '') {
+    return true;
+  }
+  if (Array.isArray(value) && value.length === 0) {
+    return true;
+  }
+  if (typeof value === 'object' && Object.keys(value).length === 0) {
+    return true;
+  }
+  return false;
 };

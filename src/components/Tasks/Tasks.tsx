@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -10,15 +10,13 @@ import TaskList from 'components/Tasks/TaskList';
 import PlusIcon from 'icons/PlusIcon';
 
 import { useTaskStore } from 'src/stores/taskStore';
-import { createTask, getAllTasks } from 'src/services/tasks';
+import { createTask } from 'src/services/tasks';
 
 const Tasks = () => {
   const [openForm, setOpenForm] = useState(false);
 
   const tasks = useTaskStore((state) => state.tasks);
   const addTask = useTaskStore((state) => state.addTask);
-
-  const shouldFetchTasks = useRef(true);
 
   const methods = useForm({
     defaultValues: { title: '' },
@@ -52,17 +50,6 @@ const Tasks = () => {
   };
 
   const totalTasks = tasks.length || 0;
-
-  useEffect(() => {
-    if (shouldFetchTasks.current) {
-      getAllTasks().then((res) => {
-        addTask(res.data);
-      }).catch((err) => {
-        toast.error(err?.error || 'Failed to get tasks');
-      });
-      shouldFetchTasks.current = false;
-    }
-  }, [addTask]);
 
   return (
     <>
