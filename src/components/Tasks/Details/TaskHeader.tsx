@@ -92,8 +92,7 @@ const TaskHeader = () => {
     setTempValues({});
   };
 
-  const handleMoreOptionSelect = (option: any) => {
-    console.log('option: ', option);
+  const handleMoreOptionSelect = (_option: any) => {
   };
 
   return (
@@ -156,6 +155,15 @@ const TaskHeader = () => {
                   </button>
                 )}
               </div>
+
+              <div className='flex justify-between items-center'>
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Streak:&nbsp;</span>
+                <span className='text-sm font-medium hover:text-purple-500 transition-colors'>
+                  {taskDetails.streak}
+                  🔥
+                </span>
+              </div>
+
             </div>
           </div>
         </div>

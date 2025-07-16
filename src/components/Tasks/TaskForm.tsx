@@ -7,10 +7,11 @@ import { useTaskStore } from 'stores/taskStore';
 
 import Input from 'components/Shared/Input';
 import TaskTimer from 'components/Tasks/TaskTimer';
-import Select from 'components/Shared/Select';
+import SelectField from 'components/Shared/SelectField';
 
 import { getTask, updateTask } from 'src/services/tasks';
 import { capitalize } from 'src/helpers/utils';
+import { SelectOptionType } from 'src/helpers/sharedTypes';
 
 import GenerateDescriptionButtons from './GenerateDescriptionButtons';
 
@@ -72,7 +73,7 @@ const TaskForm = () => {
     }
   };
 
-  const handleStatusChange = (value: { label: string; value: string | number; }) => {
+  const handleStatusChange = (value: SelectOptionType) => {
     if ('status' in dirtyFields) {
       handleUpdateTask({ status: value?.value });
     }
@@ -121,7 +122,7 @@ const TaskForm = () => {
         <div className='flex gap-10'>
           <div className='flex gap-2'>
             <h3 className='block font-medium text-text-light tracking-wide whitespace-nowrap'>Status:</h3>
-            <Select name='status' options={statusOptions} onChange={handleStatusChange} />
+            <SelectField name='status' options={statusOptions} isMulti={false} onChange={handleStatusChange} />
           </div>
           <TaskTimer initialTime={taskDetails?.time_spend} />
         </div>

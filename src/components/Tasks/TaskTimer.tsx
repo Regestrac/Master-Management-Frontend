@@ -20,7 +20,7 @@ const TaskTimer: React.FC<TaskTimerProps> = ({ initialTime = 0 }) => {
   const shouldStartTimer = useTaskStore((state) => state.shouldStartTimer);
   const updateStartTimer = useTaskStore((state) => state.updateStartTimer);
   const startedAt = useTaskStore((state) => state.currentTaskDetails.startedAt);
-  const timeSpend = useTaskStore((state) => state.currentTaskDetails.timeSpend);
+  const timeSpend = useTaskStore((state) => state.currentTaskDetails.time_spend);
   const updateStartedAtState = useTaskStore((state) => state.updateStartedAt);
 
   const { id } = useParams();

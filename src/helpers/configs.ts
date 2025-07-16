@@ -12,8 +12,8 @@ export const PRIORITY_OPTIONS = [
 
 export const STATUS_OPTIONS = [
   { label: 'To Do', value: 'todo', color: '#3b82f6' },
-  { label: 'In Progress', value: 'inprogress', color: '#f59e0b' },
-  { label: 'Pending', value: 'pending', color: '#a855f7' },
+  { label: 'In Progress', value: 'inprogress', color: '#a855f7' },
+  { label: 'Pending', value: 'pending', color: '#f59e0b' },
   { label: 'Paused', value: 'paused', color: '#6b7280' },
   { label: 'Completed', value: 'completed', color: '#22c55e' },
 ];
