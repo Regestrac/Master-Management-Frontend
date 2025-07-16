@@ -188,3 +188,34 @@ export const isEmpty = (value: any): boolean => {
   }
   return false;
 };
+
+/**
+ * Converts a string to title case, inserting spaces between camelCase, PascalCase,
+ * and separating words by non-alphanumeric characters.
+ *
+ * This function is useful for formatting identifiers or labels for display purposes.
+ *
+ * @param str - The input string to convert.
+ * @returns The title-cased string with words separated by spaces.
+ *
+ * @example
+ * titleCase('helloWorld'); // "Hello World"
+ * titleCase('ThisIsATest'); // "This Is A Test"
+ * titleCase('already title case'); // "Already Title Case"
+ * titleCase('snake_case_example'); // "Snake Case Example"
+ * titleCase('kebab-case-example'); // "Kebab Case Example"
+ * titleCase('XMLHttpRequest'); // "Xml Http Request"
+ */
+export const titleCase = (str: string) => {
+  return str
+    .replace(/([a-z\d])([A-Z])/g, '$1 $2')
+    .replace(/([A-Z]+)([A-Z][a-z\d]+)/g, '$1 $2')
+    // Replace all non-alphabetic word boundaries with space
+    .replace(/[^A-Za-z0-9]+/g, ' ')
+    // Trim and convert to title case
+    .trim()
+    .replace(/\s+/g, ' ')
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};

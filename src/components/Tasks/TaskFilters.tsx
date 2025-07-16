@@ -68,7 +68,7 @@ const TaskFilters = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className='flex flex-wrap items-center gap-4'>
+      <div className='flex flex-1 flex-wrap items-center gap-4'>
         <SelectField
           label='Filter Tasks by Status:'
           name='status'

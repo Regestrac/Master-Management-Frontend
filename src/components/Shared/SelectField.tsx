@@ -67,7 +67,7 @@ function SelectField<T extends boolean>({
           placeholder: () => 'text-gray-600!',
           input: () => 'text-gray-800!',
         }}
-        className={`min-w-[150px] transition ${className}`}
+        className={`min-w-[200px] transition ${className}`}
         components={{ IndicatorSeparator: null }}
         classNamePrefix='react-select'
         {...selectProps}
