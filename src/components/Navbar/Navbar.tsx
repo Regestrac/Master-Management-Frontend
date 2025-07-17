@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import { useProfileStore } from 'stores/profileStore';
 
 import MobileMenu from 'components/Navbar/MobileMenu';
-import ValidateUser from 'components/Navbar/ValidateUser';
 
 import { NAVBAR_LINKS } from 'src/helpers/configs';
 
@@ -13,7 +12,6 @@ const Navbar = () => {
 
   return (
     <nav className='navbar'>
-      <ValidateUser />
       <div className='navbar-container'>
         <div className='navbar-content'>
           {/* Logo Section */}

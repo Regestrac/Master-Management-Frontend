@@ -6,8 +6,6 @@ import { toast } from 'react-toastify';
 import { useProfileStore } from 'stores/profileStore';
 import { useSearchParams } from 'react-router-dom';
 
-import ValidateUser from 'components/Navbar/ValidateUser';
-
 import { updateTheme } from 'src/services/profile';
 import { debounce } from 'src/helpers/utils';
 
@@ -25,8 +23,8 @@ const Header = () => {
   const [searchKeyValue, setSearchKeyValue] = useState(searchKey || '');
 
   const updateColorTheme = () => {
+    updateProfile({ theme: darkMode ? 'light' : 'dark' });
     updateTheme({ theme: darkMode ? 'light' : 'dark' }).then((res) => {
-      toast.success(res?.message);
       updateProfile({ theme: res?.theme });
     }).catch((err) => {
       toast.error(err?.error);
@@ -104,7 +102,6 @@ const Header = () => {
           {darkMode ? <Sun className='w-5 h-5' /> : <Moon className='w-5 h-5' />}
         </button>
       </div>
-      <ValidateUser />
     </div>
   );
 };

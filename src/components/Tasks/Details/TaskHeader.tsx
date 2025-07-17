@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import DropDown from 'components/Shared/Dropdown';
 
 import { capitalize, getPriorityColor, getStatusColor } from 'src/helpers/utils';
-import { updateActiveTask, updateProfile } from 'src/services/profile';
+import { updateActiveTask } from 'src/services/profile';
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'src/helpers/configs';
 import { updateTask } from 'src/services/tasks';
 import { TaskType } from 'src/helpers/sharedTypes';
@@ -35,6 +35,7 @@ const TaskHeader = () => {
   const activeTask = useProfileStore((state) => state.data.active_task);
   const updateTaskState = useTaskStore((state) => state.updateTask);
   const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
+  const updateProfile = useProfileStore((state) => state.updateProfile);
 
   const navigate = useNavigate();
 
@@ -42,7 +43,6 @@ const TaskHeader = () => {
 
   const toggleTimer = (taskId: number) => {
     updateActiveTask({ active_task: activeTask === taskId ? null : taskId }).then((res) => {
-      toast.success(res?.message);
       updateProfile({ active_task: res?.active_task });
     }).catch((err) => {
       toast.error(err?.error);
