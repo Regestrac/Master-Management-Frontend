@@ -32,8 +32,9 @@ type TaskDetailsType = {
 
 const statusOptions = [
   { label: 'To Do', value: 'todo' },
-  { label: 'Incomplete', value: 'incomplete' },
   { label: 'In Progress', value: 'inprogress' },
+  { label: 'Pending', value: 'pending' },
+  { label: 'Paused', value: 'paused' },
   { label: 'Complete', value: 'complete' },
 ];
 

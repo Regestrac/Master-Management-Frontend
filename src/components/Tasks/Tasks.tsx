@@ -36,7 +36,7 @@ const Tasks = () => {
     if (formData?.title) {
       const payload = {
         title: formData.title,
-        status: 'incomplete' as const,
+        status: 'todo' as const,
         time_spend: 0,
       };
       createTask(payload).then((res) => {

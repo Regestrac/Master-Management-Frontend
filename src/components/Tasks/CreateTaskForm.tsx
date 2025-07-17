@@ -5,7 +5,7 @@ import { z } from 'zod';
 const taskFormSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
   description: z.string().optional(),
-  status: z.enum(['incomplete', 'complete']),
+  status: z.enum(['todo', 'inprogress', 'pending', 'paused', 'complete']),
   deadline: z.string().optional(),
   frequency: z.enum(['daily', 'alternate', 'weekly', 'monthly']).optional(),
   daysPerWeek: z.number().min(1).max(7).optional(),
@@ -27,7 +27,7 @@ const CreateTaskForm = () => {
     resolver: zodResolver(taskFormSchema),
     defaultValues: {
       title: '',
-      status: 'incomplete',
+      status: 'todo',
       subtasks: [{ title: '', done: false }],
     },
 
