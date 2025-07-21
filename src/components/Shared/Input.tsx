@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { InputHTMLAttributes, ReactNode, useState } from 'react';
 
 import { Eye, EyeOff } from 'lucide-react';
 import { useController } from 'react-hook-form';
@@ -13,6 +13,9 @@ type PropsType = {
   rows?: number;
   onBlur?: (_value: string) => void;
   icon?: ReactNode;
+  onClick?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['onClick'];
+  style?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['style'];
+  autoFocus?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['autoFocus'];
 };
 
 const Input = ({ name, label, icon, type = 'text', onBlur, ...props }: PropsType) => {
@@ -27,7 +30,7 @@ const Input = ({ name, label, icon, type = 'text', onBlur, ...props }: PropsType
   };
 
   return (
-    <div className='mb-6 w-full'>
+    <div className='w-full'>
       {label ? (
         <label htmlFor={props?.id || name} className='block text-sm font-medium text-gray-700 mb-2'>
           {label}

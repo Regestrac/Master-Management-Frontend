@@ -42,7 +42,7 @@ type DropdownSelectorWrapperProps<T> = {
   hideClear?: boolean;
 };
 
-function DropDown<T>({
+function Dropdown<T>({
   options,
   value,
   onSelect,
@@ -170,4 +170,4 @@ function DropDown<T>({
   );
 }
 
-export default DropDown;
+export default Dropdown;
