@@ -91,7 +91,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
         className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer`}
         onClick={handleTaskClick}
       >
-        <div className='p-6'>
+        <div className='py-4 px-6'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center space-x-4 flex-1'>
               {/* <input
@@ -109,7 +109,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
                     <Input
                       name='title'
                       label=''
-                      className='font-semibold text-lg cursor-text outline-none p-0! text-white border-none focus:ring-0!'
+                      className='font-semibold text-lg cursor-text outline-none p-0! border-none focus:ring-0!'
                       onClick={(e) => e.stopPropagation()}
                       onBlur={(value) => {
                         if (value !== task?.title) {

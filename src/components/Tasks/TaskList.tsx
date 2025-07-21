@@ -50,21 +50,6 @@ const TaskList = () => {
         <TaskFilters />
 
         <div className='flex items-center gap-4'>
-          {/* {selectedTasks.length > 0 && (
-            <div className='flex items-center gap-2'>
-              <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                {selectedTasks.length}
-                {' '}
-                selected
-              </span>
-              <button className='px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600'>
-                Delete
-              </button>
-              <button className='px-3 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600'>
-                Complete
-              </button>
-            </div>
-          )} */}
           <button
             onClick={handleCreateTask}
             className='flex items-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors'

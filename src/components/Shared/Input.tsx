@@ -47,7 +47,7 @@ const Input = ({ name, label, icon, type = 'text', onBlur, ...props }: PropsType
             {...field}
             {...props}
             rows={props.rows || 4}
-            className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors text-black ${errors?.[name]
+            className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors?.[name]
               ? 'border-red-300 focus:ring-red-500'
               : 'border-gray-300 focus:ring-purple-500'} ${props.className || ''}`}
             onBlur={handleOnBlur}
@@ -57,7 +57,7 @@ const Input = ({ name, label, icon, type = 'text', onBlur, ...props }: PropsType
             {...field}
             {...props}
             type={showPassword ? 'text' : type}
-            className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors text-black ${errors?.[name]
+            className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors?.[name]
               ? 'border-red-300 focus:ring-red-500'
               : 'border-gray-300 focus:ring-purple-500'} ${props.className || ''}`}
             onBlur={handleOnBlur}

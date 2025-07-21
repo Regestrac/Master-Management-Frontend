@@ -63,7 +63,7 @@ const CreateTaskCard = ({ handleCancel }: { handleCancel: () => void }) => {
 
   return (
     <div
-      className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer p-6`}
+      className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer py-4 px-6`}
     >
       <div className='flex flex-row justify-between'>
         <FormProvider {...methods}>
