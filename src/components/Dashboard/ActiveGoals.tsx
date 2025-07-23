@@ -1,4 +1,5 @@
 import { BarChart3, Calendar, Clock, Flame, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useProfileStore } from 'stores/profileStore';
 
 const goals = [
@@ -152,11 +153,17 @@ const goals = [
 const ActiveGoals = () => {
   const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
 
+  const navigate = useNavigate();
+
+  const handleViewAllGoals = () => {
+    navigate('/goals');
+  };
+
   return (
     <div>
       <div className='flex items-center justify-between mb-6'>
         <h3 className='text-xl font-bold'>Active Goals</h3>
-        <button className='text-purple-500 hover:text-purple-600 text-sm font-medium'>View All</button>
+        <button className='text-purple-500 hover:text-purple-600 text-sm font-medium' onClick={handleViewAllGoals}>View All</button>
       </div>
 
       <div className='space-y-4'>
