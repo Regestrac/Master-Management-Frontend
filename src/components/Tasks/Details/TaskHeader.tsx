@@ -96,7 +96,7 @@ const TaskHeader = () => {
   };
 
   return (
-    <div className='flex items-center justify-between'>
+    <div className='flex items-center justify-between 2xl:me-12'>
       <div className='flex items-center space-x-4'>
         <button className={`p-2 rounded-lg transition-colors cursor-pointer ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`} onClick={handleBackClick}>
           <ArrowLeft className='w-5 h-5' />

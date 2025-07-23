@@ -2,11 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Clock, Flame, Plus } from 'lucide-react';
-import { useProfileStore } from 'stores/profileStore';
+
+import TaskCard from 'components/Tasks/TaskCard';
 
 import { getRecentTasks } from 'src/services/tasks';
-import { getPriorityColor, getStatusColor } from 'src/helpers/utils';
 
 type RecentTaskType = {
   id: number;
@@ -20,24 +19,13 @@ type RecentTaskType = {
 
 const RecentTasks = () => {
   const [recentTasks, setRecentTasks] = useState<RecentTaskType[]>([]);
-
-  // const recentTasks = useTaskStore((state) => state.recentTasks);
-  // const updateRecentTask = useTaskStore((state) => state.updateRecentTask);
-  // const updateStartTimer = useTaskStore((state) => state.updateStartTimer);
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
-
   const navigate = useNavigate();
 
   const shouldFetchRecentTasksRef = useRef(true);
 
-  const handleOnTaskClick = (taskId: number) => {
-    navigate(`/tasks/${taskId}`);
+  const handleViewAllTask = () => {
+    navigate('/tasks');
   };
-
-  // const onResumeTaskClick = (taskId: number) => {
-  //   handleOnTaskClick(taskId);
-  //   updateStartTimer(true);
-  // };
 
   useEffect(() => {
     if (shouldFetchRecentTasksRef.current) {
@@ -54,54 +42,16 @@ const RecentTasks = () => {
     <div className='lg:col-span-2 mb-8'>
       <div className='flex items-center justify-between mb-6'>
         <h3 className='text-xl font-bold'>Recent Tasks</h3>
-        <button className='flex items-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors'>
+        {/* <button className='flex items-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors'>
           <Plus className='w-4 h-4' />
           <span>Add Task</span>
-        </button>
+        </button> */}
+        <button className='text-purple-500 hover:text-purple-600 text-sm font-medium' onClick={handleViewAllTask}>View All</button>
       </div>
 
       <div className='space-y-4'>
         {recentTasks.map((task) => (
-          <div
-            key={task.id}
-            onClick={() => handleOnTaskClick(task.id)}
-            className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm hover:shadow-md transition-shadow`}
-          >
-            <div className='flex items-center justify-between'>
-              <div className='flex items-center space-x-4'>
-                <div className={`w-3 h-3 rounded-full ${getPriorityColor(task.priority)}`} />
-                <div>
-                  <h4 className='font-semibold'>{task.title}</h4>
-                  <div className='flex items-center space-x-4 mt-2'>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
-                      {task.status}
-                    </span>
-                    <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm flex items-center`}>
-                      <Clock className='w-4 h-4 mr-1' />
-                      {task.time_spend > 0 ? task.time_spend : 'Not Started'}
-                    </span>
-                    {task.streak > 0 && (
-                      <span className='text-orange-500 text-sm flex items-center'>
-                        <Flame className='w-4 h-4 mr-1' />
-                        {task.streak}
-                        {' '}
-                        day streak
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* <button
-                onClick={() => toggleTimer(task.id)}
-                className={`p-3 rounded-lg transition-colors ${activeTimer === task.id
-                  ? 'bg-red-500 hover:bg-red-600 text-white'
-                  : 'bg-green-500 hover:bg-green-600 text-white'}`}
-              >
-                {activeTimer === task.id ? <Pause className='w-5 h-5' /> : <Play className='w-5 h-5' />}
-              </button> */}
-            </div>
-          </div>
+          <TaskCard key={task.id} task={task as any} />
         ))}
       </div>
     </div>

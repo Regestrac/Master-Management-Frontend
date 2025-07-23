@@ -24,13 +24,13 @@ const TaskDetailsPage = () => {
     <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
       {/* Header */}
       <div className={`sticky top-0 z-40 border-b transition-colors ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-        <div className='max-w-7xl mx-auto px-6 py-4'>
+        <div className='mx-auto px-6 py-4'>
 
           <TaskHeader />
           <TaskProgress />
 
           {/* Tabs */}
-          <div className='flex space-x-6 mt-6'>
+          <div className='flex space-x-6 mt-6 2xl:mx-12'>
             {[
               { id: 'overview', label: 'Overview', icon: Target },
               { id: 'notes', label: 'Notes', icon: Edit3 },
@@ -55,7 +55,7 @@ const TaskDetailsPage = () => {
         </div>
       </div>
 
-      <div className='mx-auto px-6 py-8'>
+      <div className='px-6 py-8 2xl:mx-12'>
         {activeTab === 'overview' && <TaskOverview />}
         {activeTab === 'activity' && <TaskActivity />}
         {activeTab === 'notes' && <TaskNotes />}
