@@ -1,4 +1,11 @@
+import { useEffect } from 'react';
+
 import { useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+import { useGoalStore } from 'stores/goalsStore';
+
+import { getAllGoals } from 'services/goals';
 
 import GoalCard from 'components/Goals/GoalCard';
 
@@ -9,9 +16,9 @@ const allGoals = [
     progress: 75,
     streak: 15,
     totalTime: '24h',
-    status: 'active',
+    status: 'todo' as const,
     category: 'Learning',
-    priority: 'high',
+    priority: 'high' as const,
     startDate: '2025-05-01',
     targetDate: '2025-08-01',
     description: 'Master advanced React concepts including hooks, context, and performance optimization',
@@ -33,9 +40,9 @@ const allGoals = [
     progress: 40,
     streak: 8,
     totalTime: '18h',
-    status: 'active',
+    status: 'todo' as const,
     category: 'Career',
-    priority: 'high',
+    priority: 'high' as const,
     startDate: '2025-06-01',
     targetDate: '2025-07-15',
     description: 'Create a stunning portfolio website to showcase my projects and skills',
@@ -58,9 +65,9 @@ const allGoals = [
     progress: 60,
     streak: 22,
     totalTime: '45h',
-    status: 'active',
+    status: 'todo' as const,
     category: 'Personal',
-    priority: 'medium',
+    priority: 'normal' as const,
     startDate: '2025-01-01',
     targetDate: '2025-12-31',
     description: 'Expand knowledge and improve focus through consistent reading habit',
@@ -82,9 +89,9 @@ const allGoals = [
     progress: 25,
     streak: 5,
     totalTime: '12h',
-    status: 'active',
+    status: 'todo' as const,
     category: 'Learning',
-    priority: 'medium',
+    priority: 'normal' as const,
     startDate: '2025-06-15',
     targetDate: '2025-09-15',
     description: 'Become proficient in TypeScript for better code quality and development experience',
@@ -106,9 +113,9 @@ const allGoals = [
     progress: 85,
     streak: 30,
     totalTime: '60h',
-    status: 'active',
+    status: 'todo' as const,
     category: 'Health',
-    priority: 'high',
+    priority: 'high' as const,
     startDate: '2025-05-01',
     targetDate: '2025-12-31',
     description: 'Establish a consistent fitness routine and healthy lifestyle habits',
@@ -130,9 +137,9 @@ const allGoals = [
     progress: 15,
     streak: 0,
     totalTime: '8h',
-    status: 'paused',
+    status: 'todo' as const,
     category: 'Business',
-    priority: 'low',
+    priority: 'low' as const,
     startDate: '2025-06-01',
     targetDate: '2025-12-01',
     description: 'Start a profitable side business to generate additional income',
@@ -151,19 +158,27 @@ const allGoals = [
 ];
 
 const GoalsListing = () => {
+  const goals = useGoalStore((state) => state.goals);
+  const addGoal = useGoalStore((state) => state.addGoal);
+
   const [searchParams] = useSearchParams();
 
   const view = searchParams.get('view') as 'list' | 'grid' || 'list';
 
+  useEffect(() => {
+    getAllGoals(searchParams.toString()).then((res) => {
+      addGoal([...allGoals, ...(res?.data || [])], 'replace');
+    }).catch((err) => {
+      toast.error(err?.error || 'Failed to get goals');
+      // Fallback to mock data if API fails
+      addGoal(allGoals, 'replace');
+    });
+  }, [searchParams, addGoal]);
+
   return (
     <div className={view === 'list' ? 'space-y-4' : 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6'}>
-      {allGoals.map((goal) => (
-        <GoalCard
-          key={goal.id}
-          isActive={false}
-          goal={goal}
-          view={view}
-        />
+      {goals.map((goal) => (
+        <GoalCard key={goal.id} goal={goal} view={view} isActive={false} />
       ))}
     </div>
   );

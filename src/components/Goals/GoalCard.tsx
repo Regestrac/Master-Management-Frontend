@@ -14,8 +14,24 @@ import { updateTask } from 'services/tasks';
 import DropDown from 'components/Shared/Dropdown';
 import ProgressCircle from 'components/Goals/ProgressCircle';
 
+type GoalType = {
+  id: number;
+  title: string;
+  description: string;
+  status: TaskType['status'];
+  category: string;
+  progress: number;
+  streak: number;
+  totalTime: string;
+  targetDate: string;
+  currentWeekHours: number;
+  weeklyTarget: number;
+  tags: string[];
+  achievements: string[];
+};
+
 type GoalCardPropsType = {
-  goal: any;
+  goal: GoalType;
   view: 'grid' | 'list';
   isActive: boolean;
 };
@@ -40,7 +56,7 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
 
   };
 
-  const getWeeklyProgress = () => ((goal.currentWeekHours / goal.weeklyTarget) * 100) > 100 ? 100 : ((goal.currentWeekHours / goal.weeklyTarget) * 100);
+  const getWeeklyProgress = () => ((goal?.currentWeekHours / goal?.weeklyTarget) * 100) > 100 ? 100 : ((goal?.currentWeekHours / goal?.weeklyTarget) * 100);
 
   const renderProgressBar = () => (
     <div className={clsx('w-full rounded-full h-2', darkMode ? 'bg-gray-700' : 'bg-gray-200')}>
@@ -56,14 +72,14 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
       <div className='flex items-center'>
         <BarChart3 className='w-4 h-4 mr-1' />
         <span>
-          {goal.progress}
+          {goal?.progress}
           % complete
         </span>
       </div>
       <div className='flex items-center text-orange-500'>
         <Flame className='w-4 h-4 mr-1' />
         <span>
-          {goal.streak}
+          {goal?.streak}
           {' '}
           day streak
         </span>
@@ -71,7 +87,7 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
       <div className='flex items-center'>
         <Clock className='w-4 h-4 mr-1' />
         <span>
-          {goal.totalTime}
+          {goal?.totalTime}
           {' '}
           total
         </span>
@@ -80,7 +96,7 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
         <Calendar className='w-4 h-4 mr-1' />
         <span>
           Due
-          {new Date(goal.targetDate).toLocaleDateString()}
+          {new Date(goal?.targetDate).toLocaleDateString()}
         </span>
       </div>
     </div>
@@ -95,8 +111,8 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
     };
 
     return (
-      <DropDown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={goal.status} hideClear>
-        <span className={`px-3 py-1 rounded-full text-sm font-medium cursor-grab ${getStatusColor(goal.status)}`}>
+      <DropDown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={goal?.status} hideClear>
+        <span className={`px-3 py-1 rounded-full text-sm font-medium cursor-grab ${getStatusColor(goal?.status)}`}>
           {goal?.status?.toUpperCase()}
         </span>
       </DropDown>
@@ -113,12 +129,12 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
 
     return (
       <div className='flex items-center gap-3 mb-2 flex-wrap'>
-        <h4 className='font-semibold text-lg'>{goal.title}</h4>
+        <h4 className='font-semibold text-lg'>{goal?.title}</h4>
         <span className={clsx('px-2 py-1 rounded text-xs font-medium', darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600')}>
-          {goal.category}
+          {goal?.category}
         </span>
-        <DropDown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={goal.status} hideClear>
-          <span className={`px-3 py-1 rounded-full text-xs font-medium cursor-grab ${getStatusColor(goal.status)}`}>
+        <DropDown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={goal?.status} hideClear>
+          <span className={`px-3 py-1 rounded-full text-xs font-medium cursor-grab ${getStatusColor(goal?.status)}`}>
             {goal?.status?.toUpperCase()}
           </span>
         </DropDown>
@@ -148,7 +164,7 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
             {renderHeader()}
             <div className='flex-1'>
               {renderTitle()}
-              <p className={`text-sm mb-3 ${textColor}`}>{goal.description}</p>
+              <p className={`text-sm mb-3 ${textColor}`}>{goal?.description}</p>
               {renderStats()}
             </div>
           </div>
@@ -156,11 +172,11 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
             <div className='w-20 h-2 bg-gray-200 rounded-full overflow-hidden'>
               <div
                 className='h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500'
-                style={{ width: `${goal.progress > 100 ? 100 : goal.progress}%` }}
+                style={{ width: `${goal?.progress > 100 ? 100 : goal?.progress}%` }}
               />
             </div>
             <span className='text-sm font-medium w-12 text-right'>
-              {goal.progress}
+              {goal?.progress}
               %
             </span>
             {renderTimerControls()}
@@ -185,23 +201,23 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
         </div> */}
 
         {renderTitle()}
-        <p className={`text-sm mb-3 ${textColor}`}>{goal.description}</p>
+        <p className={`text-sm mb-3 ${textColor}`}>{goal?.description}</p>
 
-        <ProgressCircle progress={goal.progress} />
+        <ProgressCircle progress={goal?.progress} />
 
         {/* Stats */}
         <div className='grid grid-cols-2 gap-4 mb-4 text-center'>
           <div>
             <div className='flex justify-center items-center text-orange-500 mb-1'>
               <Flame className='w-4 h-4 mr-1' />
-              <span className='font-semibold'>{goal.streak}</span>
+              <span className='font-semibold'>{goal?.streak}</span>
             </div>
             <p className={`text-xs ${textColor}`}>Day Streak</p>
           </div>
           <div>
             <div className='flex justify-center items-center mb-1'>
               <Clock className='w-4 h-4 mr-1' />
-              <span className='font-semibold'>{goal.totalTime}</span>
+              <span className='font-semibold'>{goal?.totalTime}</span>
             </div>
             <p className={`text-xs ${textColor}`}>Total Time</p>
           </div>
@@ -212,10 +228,10 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
           <div className='flex justify-between text-sm mb-1'>
             <span>This Week</span>
             <span>
-              {goal.currentWeekHours}
+              {goal?.currentWeekHours}
               h /
               {' '}
-              {goal.weeklyTarget}
+              {goal?.weeklyTarget}
               h
             </span>
           </div>
@@ -224,33 +240,33 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
 
         {/* Tags */}
         <div className='flex flex-wrap gap-1 mb-4'>
-          {goal.tags.slice(0, 3).map((tag: string, index: number) => (
+          {goal?.tags?.slice(0, 3).map((tag: string, index: number) => (
             <span key={index} className='px-2 py-1 bg-purple-100 text-purple-600 rounded text-xs'>
               #
               {tag}
             </span>
           ))}
-          {goal.tags.length > 3 && (
+          {goal?.tags?.length > 3 && (
             <span className={`px-2 py-1 rounded text-xs ${darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-600'}`}>
               +
-              {goal.tags.length - 3}
+              {goal?.tags?.length - 3}
             </span>
           )}
         </div>
 
         {/* Achievements */}
-        {goal.achievements.length > 0 && (
+        {goal?.achievements?.length > 0 && (
           <div className='flex flex-wrap gap-1'>
-            {goal.achievements.slice(0, 2).map((achievement: string, index: number) => (
+            {goal?.achievements?.slice(0, 2).map((achievement: string, index: number) => (
               <span key={index} className='inline-flex items-center px-2 py-1 bg-yellow-100 text-yellow-600 rounded text-xs'>
                 <Trophy className='w-3 h-3 mr-1' />
                 {achievement}
               </span>
             ))}
-            {goal.achievements.length > 2 && (
+            {goal?.achievements?.length > 2 && (
               <span className={`px-2 py-1 rounded text-xs ${darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-600'}`}>
                 +
-                {goal.achievements.length - 2}
+                {goal?.achievements?.length - 2}
               </span>
             )}
           </div>

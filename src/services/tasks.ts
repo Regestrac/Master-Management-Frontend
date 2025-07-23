@@ -1,7 +1,7 @@
 import { getHandler, postHandler } from 'src/helpers/api';
 
 export const getAllTasks = (params: string) => getHandler({
-  path: `tasks${params ? `?${params}` : ''}`,
+  path: `tasks?type=task${params ? `&${params}` : ''}`,
 });
 
 export const createTask = (data: object) => postHandler({
