@@ -11,7 +11,6 @@ import { useProfileStore } from 'stores/profileStore';
 import TaskHeader from './TaskHeader';
 import TaskProgress from './TaskProgress';
 import TaskOverview from './Overview/TaskOverview';
-import RestOfTaskDetails from './RestOfTaskDetails';
 import TaskActivity from './Activity/TaskActivity';
 import TaskNotes from './Notes/TaskNotes';
 import TaskComments from './Comments/TaskComments';
@@ -56,19 +55,11 @@ const TaskDetailsPage = () => {
         </div>
       </div>
 
-      <div className='max-w-7xl mx-auto px-6 py-8'>
-        <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-          {/* Main Content */}
-          <div className='lg:col-span-2'>
-            {activeTab === 'overview' && <TaskOverview />}
-            {activeTab === 'activity' && <TaskActivity />}
-            {activeTab === 'notes' && <TaskNotes />}
-            {activeTab === 'comments' && <TaskComments />}
-          </div>
-
-          <RestOfTaskDetails />
-
-        </div>
+      <div className='mx-auto px-6 py-8'>
+        {activeTab === 'overview' && <TaskOverview />}
+        {activeTab === 'activity' && <TaskActivity />}
+        {activeTab === 'notes' && <TaskNotes />}
+        {activeTab === 'comments' && <TaskComments />}
       </div>
     </div>
   );

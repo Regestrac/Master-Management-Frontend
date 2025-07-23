@@ -1,17 +1,20 @@
 import TaskDescription from './TaskDescription';
 import Checklist from './Checklist';
-import StickyNotes from './StickyNotes';
 import Tags from './Tags';
 import SubTasks from '../SubTasks/SubTasks';
 
 const TaskOverview = () => {
   return (
-    <div className='space-y-6'>
-      <TaskDescription />
-      <Checklist />
-      <SubTasks />
-      <StickyNotes />
-      <Tags />
+    <div className='grid lg:grid-cols-5 gap-4 space-y-6'>
+      <div className='lg:col-span-3 overflow-auto max-h-[70vh] flex flex-col space-y-6 pr-2'>
+        <TaskDescription />
+        <SubTasks />
+      </div>
+      <div className='lg:col-span-2 overflow-auto max-h-[70vh] flex flex-col space-y-6 pr-2'>
+        <Checklist />
+        {/* <StickyNotes /> */}
+        <Tags />
+      </div>
 
       {/* Attachments */}
       {/* <div className={`rounded-xl border transition-colors ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
