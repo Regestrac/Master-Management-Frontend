@@ -2,10 +2,11 @@ import { useCallback, useEffect, useRef } from 'react';
 
 // import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 import { useProfileStore } from 'stores/profileStore';
 
-import { validate } from 'src/services/auth';
-import { getProfile } from 'src/services/profile';
+import { validate } from 'services/auth';
+import { getProfile } from 'services/profile';
 
 const ValidateUser = () => {
   // const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);

@@ -1,5 +1,6 @@
 import { BarChart3, Calendar, CheckSquare, Home, Settings, Target, User } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+
 import { useNavbarStore } from 'stores/navbarStore';
 import { useProfileStore } from 'stores/profileStore';
 

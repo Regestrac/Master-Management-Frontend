@@ -3,17 +3,18 @@ import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
+
+import { capitalize } from 'helpers/utils';
+import { SelectOptionType } from 'helpers/sharedTypes';
+
 import { useTaskStore } from 'stores/taskStore';
+
+import { getTask, updateTask } from 'services/tasks';
 
 import Input from 'components/Shared/Input';
 import TaskTimer from 'components/Tasks/TaskTimer';
 import SelectField from 'components/Shared/SelectField';
-
-import { getTask, updateTask } from 'src/services/tasks';
-import { capitalize } from 'src/helpers/utils';
-import { SelectOptionType } from 'src/helpers/sharedTypes';
-
-import GenerateDescriptionButtons from './GenerateDescriptionButtons';
+import GenerateDescriptionButtons from 'components/Tasks/GenerateDescriptionButtons';
 
 type FormDataType = {
   title: string;

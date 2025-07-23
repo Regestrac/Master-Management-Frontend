@@ -1,12 +1,13 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
-import { useTaskStore } from 'stores/taskStore';
 import { toast } from 'react-toastify';
 
-import FadingCircles from 'icons/FadingCircles';
+import { useTaskStore } from 'stores/taskStore';
 
-import { generateSubTasks, saveSubTasks } from 'src/services/tasks';
+import { generateSubTasks, saveSubTasks } from 'services/tasks';
+
+import FadingCircles from 'icons/FadingCircles';
 
 type PropsType = {
   generatedTasks: { title: string; description: string; }[];

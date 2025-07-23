@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+
 import { useProfileStore } from 'stores/profileStore';
 
 import Header from 'components/Navbar/Header';

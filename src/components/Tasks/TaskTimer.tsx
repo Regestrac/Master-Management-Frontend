@@ -2,12 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 import { useTaskStore } from 'stores/taskStore';
+
+import { updateTask } from 'services/tasks';
 
 import PauseIcon from 'icons/PauseIcon';
 import ResumeIcon from 'icons/ResumeIcon';
-
-import { updateTask } from 'src/services/tasks';
 
 type TaskTimerProps = {
   initialTime?: number; // in seconds

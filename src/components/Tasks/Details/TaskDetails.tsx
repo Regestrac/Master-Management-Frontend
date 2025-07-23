@@ -6,14 +6,15 @@ import {
   History,
   Target,
 } from 'lucide-react';
+
 import { useProfileStore } from 'stores/profileStore';
 
-import TaskHeader from './TaskHeader';
-import TaskProgress from './TaskProgress';
-import TaskOverview from './Overview/TaskOverview';
-import TaskActivity from './Activity/TaskActivity';
-import TaskNotes from './Notes/TaskNotes';
-import TaskComments from './Comments/TaskComments';
+import TaskHeader from 'components/Tasks/Details/TaskHeader';
+import TaskProgress from 'components/Tasks/Details/TaskProgress';
+import TaskOverview from 'components/Tasks/Details/Overview/TaskOverview';
+import TaskActivity from 'components/Tasks/Details/Activity/TaskActivity';
+import TaskNotes from 'components/Tasks/Details/Notes/TaskNotes';
+import TaskComments from 'components/Tasks/Details/Comments/TaskComments';
 
 const TaskDetailsPage = () => {
   const [activeTab, setActiveTab] = useState('overview');

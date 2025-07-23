@@ -3,15 +3,16 @@ import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useProfileStore } from 'stores/profileStore';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Lock, Mail } from 'lucide-react';
 
-import Input from 'components/Shared/Input';
+import { useProfileStore } from 'stores/profileStore';
 
-import { login } from 'src/services/auth';
-import { getProfile } from 'src/services/profile';
+import { login } from 'services/auth';
+import { getProfile } from 'services/profile';
+
+import Input from 'components/Shared/Input';
 
 type LoginType = {
   email: string;

@@ -1,16 +1,17 @@
 import { useState } from 'react';
 
 import { Edit, Plus, StickyNote, X } from 'lucide-react';
-import { useProfileStore } from 'stores/profileStore';
-import { useTaskStore } from 'stores/taskStore';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import Input from 'components/Shared/Input';
+import { useTaskStore } from 'stores/taskStore';
+import { useProfileStore } from 'stores/profileStore';
 
-import { createNote, deleteNote, updateNote } from 'src/services/note';
+import { createNote, deleteNote, updateNote } from 'services/note';
+
+import Input from 'components/Shared/Input';
 
 type StickyNoteFormType = {
   text: string;

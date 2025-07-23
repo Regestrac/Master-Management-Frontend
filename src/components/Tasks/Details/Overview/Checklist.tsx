@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { Check, List, Plus, Trash2 } from 'lucide-react';
+
 import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
 

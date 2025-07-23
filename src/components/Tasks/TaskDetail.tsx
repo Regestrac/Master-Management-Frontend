@@ -5,8 +5,7 @@ import { useTaskStore } from 'stores/taskStore';
 import TaskHistory from 'components/Tasks/TaskHistory';
 import SubTasks from 'components/Tasks/SubTasks';
 import TaskForm from 'components/Tasks/TaskForm';
-
-import TaskDetailsPage from './Details/TaskDetails';
+import TaskDetailsPage from 'components/Tasks/Details/TaskDetails';
 
 type TabsType = 'history' | 'subtasks';
 

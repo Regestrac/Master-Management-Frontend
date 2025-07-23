@@ -1,13 +1,15 @@
 import { Flame, Clock, Play, Pause, Settings, Calendar, BarChart3, Trophy } from 'lucide-react';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
-import { useTaskStore } from 'stores/taskStore';
-import { useProfileStore } from 'stores/profileStore';
-import { updateTask } from 'services/tasks';
 
 import { STATUS_OPTIONS } from 'helpers/configs';
 import { getStatusColor } from 'helpers/utils';
 import { TaskType } from 'helpers/sharedTypes';
+
+import { useTaskStore } from 'stores/taskStore';
+import { useProfileStore } from 'stores/profileStore';
+
+import { updateTask } from 'services/tasks';
 
 import DropDown from 'components/Shared/Dropdown';
 import ProgressCircle from 'components/Goals/ProgressCircle';

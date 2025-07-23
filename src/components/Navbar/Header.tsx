@@ -1,13 +1,15 @@
 import { useMemo, useState } from 'react';
 
 import { Bell, Moon, Search, Sun, Menu, X } from 'lucide-react';
-import { useNavbarStore } from 'stores/navbarStore';
 import { toast } from 'react-toastify';
-import { useProfileStore } from 'stores/profileStore';
 import { useSearchParams } from 'react-router-dom';
 
-import { updateTheme } from 'src/services/profile';
-import { debounce } from 'src/helpers/utils';
+import { debounce } from 'helpers/utils';
+
+import { useNavbarStore } from 'stores/navbarStore';
+import { useProfileStore } from 'stores/profileStore';
+
+import { updateTheme } from 'services/profile';
 
 const Header = () => {
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);

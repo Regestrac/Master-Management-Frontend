@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { AlignLeft, Bold, Edit3, Italic, Link2, List, Save, Type, Underline } from 'lucide-react';
+
 import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
 

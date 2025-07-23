@@ -2,10 +2,11 @@ import { useEffect } from 'react';
 
 import { Grid2X2, List, Plus } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
-import { useProfileStore } from 'stores/profileStore';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { isEmpty } from 'helpers/utils';
+
+import { useProfileStore } from 'stores/profileStore';
 
 import SelectField from 'components/Shared/SelectField';
 

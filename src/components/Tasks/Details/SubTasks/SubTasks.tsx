@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Check, CheckSquare, Edit3, Plus, Trash2 } from 'lucide-react';
-import { useProfileStore } from 'stores/profileStore';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { getSubTasks } from 'src/services/tasks';
+import { useProfileStore } from 'stores/profileStore';
+
+import { getSubTasks } from 'services/tasks';
 
 type SubTaskType = {
   title: string;

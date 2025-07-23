@@ -1,20 +1,22 @@
 import { Calendar, Clock, Flame, Pause, Play } from 'lucide-react';
 import dayjs from 'dayjs';
-import { useProfileStore } from 'stores/profileStore';
-import { useTaskStore } from 'stores/taskStore';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import Outline from 'components/Shared/Outline';
-import Dropdown from 'components/Shared/Dropdown';
-import Input from 'components/Shared/Input';
+import { TaskType } from 'helpers/sharedTypes';
+import { formatTimeElapsed, getPriorityColor, getStatusColor } from 'helpers/utils';
+import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
 
-import { TaskType } from 'src/helpers/sharedTypes';
-import { formatTimeElapsed, getPriorityColor, getStatusColor } from 'src/helpers/utils';
-import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'src/helpers/configs';
-import { updateTask } from 'src/services/tasks';
-import { updateActiveTask } from 'src/services/profile';
+import { useTaskStore } from 'stores/taskStore';
+import { useProfileStore } from 'stores/profileStore';
+
+import { updateTask } from 'services/tasks';
+import { updateActiveTask } from 'services/profile';
+
+import Input from 'components/Shared/Input';
+import Dropdown from 'components/Shared/Dropdown';
+import Outline from 'components/Shared/Outline';
 
 type TaskCardPropsType = {
   task: TaskType

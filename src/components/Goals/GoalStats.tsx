@@ -1,4 +1,5 @@
 import { BarChart3, Flame, Pause, Play, Target, Trophy } from 'lucide-react';
+
 import { useProfileStore } from 'stores/profileStore';
 
 const allGoals = [

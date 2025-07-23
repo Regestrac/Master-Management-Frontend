@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { toast } from 'react-toastify';
+
+import { titleCase } from 'helpers/utils';
+
 import { useProfileStore } from 'stores/profileStore';
 
-import { getTasksStats } from 'src/services/tasks';
-import { titleCase } from 'src/helpers/utils';
+import { getTasksStats } from 'services/tasks';
 
 const getStatsGradients = (item: string) => {
   switch (item) {
