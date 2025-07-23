@@ -12,7 +12,7 @@ import NotFound from 'components/Shared/NotFound';
 import StyleGuide from 'components/StyleGuide';
 import Tasks from 'components/Tasks/Tasks';
 import TaskDetail from 'components/Tasks/TaskDetail';
-import TaskManagementAppDesign from 'components/Tasks/TaskManagementAppDesign';
+import TaskManagementAppDesign from 'components/StyleGuide/TaskManagementAppDesign';
 import Goals from 'components/Goals/Goals';
 import CreateTaskForm from 'components/Tasks/CreateTaskForm';
 import RootLayoutWrapper from 'components/Layout/RootLayoutWrapper';
