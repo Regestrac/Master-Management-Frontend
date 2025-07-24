@@ -17,7 +17,7 @@ const handleNotFound = () => {
 
 const handleUnauthenticated = () => {
   const event = new CustomEvent('custom-navigation', {
-    detail: { url: '/login', replace: false },
+    detail: { url: '/auth/login', replace: false },
   });
   window.dispatchEvent(event);
 };

@@ -1,16 +1,41 @@
 import { create } from 'zustand';
 
-type TaskType = {
+import { TaskType } from 'src/helpers/sharedTypes';
+
+type ChecklistType = {
   id: number;
   title: string;
-  status: 'completed' | 'incomplete';
-  timeSpend: number;
+  completed: boolean;
+  created_at: string;
+  completed_at: string;
+};
+
+type StickyNotesType = {
+  id: number;
+  created_at: string;
+  text: string;
+  bg_color: string;
+  text_color: string;
+};
+
+type CommentsType = {
+  id: number;
+  user: string;
+  content: string;
+  timestamp: string;
+  edited?: boolean;
+  color?: string;
+  avatar?: string;
 };
 
 type TaskDetailsType = TaskType & {
   startedAt: string;
   description: string;
   parent_id: number;
+  checklist: ChecklistType[];
+  notes: StickyNotesType[]
+  tags: string[];
+  comments: CommentsType[];
 };
 
 type TasksStateType = {
@@ -19,8 +44,8 @@ type TasksStateType = {
   shouldStartTimer: boolean;
   currentTaskDetails: TaskDetailsType;
   updateCurrentTaskDetails: (_task: TaskDetailsType) => void;
-  addTask: (_newTask: TaskType | TaskType[]) => void;
-  updateTask: (_task: TaskType) => void;
+  addTask: (_newTask: TaskType | TaskType[], _type?: 'merge' | 'replace') => void;
+  updateTask: (_task: Partial<TaskType> & { id: number; }) => void;
   deleteTask: (_id: number) => void;
   updateRecentTask: (_task: TaskType | TaskType[]) => void;
   updateStartTimer: (_value: boolean) => void;
@@ -33,14 +58,18 @@ export const useTaskStore = create<TasksStateType>()((set) => ({
   shouldStartTimer: false,
   currentTaskDetails: {} as TaskDetailsType,
   updateCurrentTaskDetails: (task) => set({ currentTaskDetails: task }),
-  addTask: (newTask) => set((state) => {
-    const incoming = Array.isArray(newTask) ? newTask : [newTask];
-    const mergedMap = new Map<number, TaskType>();
-    // Add existing tasks to the map
-    state.tasks.forEach((task) => mergedMap.set(task.id, task));
-    // Overwrite or add new tasks from incoming
-    incoming.forEach((task) => mergedMap.set(task.id, task));
-    return { tasks: Array.from(mergedMap.values()) };
+  addTask: (newTask, type) => set((state) => {
+    if (type === 'replace') {
+      return { tasks: Array.isArray(newTask) ? newTask : [newTask] };
+    } else {
+      const incoming = Array.isArray(newTask) ? newTask : [newTask];
+      const mergedMap = new Map<number, TaskType>();
+      // Add existing tasks to the map
+      state.tasks.forEach((task) => mergedMap.set(task.id, task));
+      // Overwrite or add new tasks from incoming
+      incoming.forEach((task) => mergedMap.set(task.id, task));
+      return { tasks: Array.from(mergedMap.values()) };
+    }
   }),
   updateTask: (updatedTask) => set((state) => ({
     tasks: state.tasks.map((task) =>

@@ -2,10 +2,11 @@ import { useCallback, useEffect, useRef } from 'react';
 
 // import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 import { useProfileStore } from 'stores/profileStore';
 
-import { validate } from 'src/services/auth';
-import { getProfile } from 'src/services/profile';
+import { validate } from 'services/auth';
+import { getProfile } from 'services/profile';
 
 const ValidateUser = () => {
   // const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -20,12 +21,7 @@ const ValidateUser = () => {
 
   const getProfileInfo = useCallback(() => {
     getProfile().then((profile) => {
-      updateProfile({
-        firstName: profile?.data?.first_name || '',
-        lastName: profile?.data?.last_name || '',
-        email: profile?.data?.email || '',
-        userId: profile?.data?.id || 0,
-      });
+      updateProfile(profile?.data);
     }).catch((err) => {
       toast.error(err?.error || 'Failed to fetch profile. Please try again.');
     });

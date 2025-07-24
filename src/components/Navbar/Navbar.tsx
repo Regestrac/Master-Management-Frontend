@@ -1,19 +1,18 @@
 import { Link } from 'react-router-dom';
+
+import { NAVBAR_LINKS } from 'helpers/configs';
+
 import { useProfileStore } from 'stores/profileStore';
 
 import MobileMenu from 'components/Navbar/MobileMenu';
-import ValidateUser from 'components/Navbar/ValidateUser';
-
-import { NAVBAR_LINKS } from 'src/helpers/configs';
 
 const Navbar = () => {
-  const firstName = useProfileStore((state) => state?.firstName);
-  const lastName = useProfileStore((state) => state?.lastName);
-  const userId = useProfileStore((state) => state?.userId);
+  const firstName = useProfileStore((state) => state?.data?.first_name);
+  const lastName = useProfileStore((state) => state?.data?.last_name);
+  const userId = useProfileStore((state) => state?.data?.id);
 
   return (
     <nav className='navbar'>
-      <ValidateUser />
       <div className='navbar-container'>
         <div className='navbar-content'>
           {/* Logo Section */}
@@ -59,13 +58,13 @@ const Navbar = () => {
             <div className='profile-section'>
               <div className='flex gap-4'>
                 <Link
-                  to='/login'
+                  to='/auth/login'
                   className='px-4 py-2 rounded-md text-sm font-medium text-text hover:bg-primary-bg hover:outline-1 transition'
                 >
                   Login
                 </Link>
                 <Link
-                  to='/signup'
+                  to='/auth/signup'
                   className='px-4 py-2 rounded-md text-sm font-medium text-white bg-primary hover:bg-blue-700 transition'
                 >
                   Sign Up

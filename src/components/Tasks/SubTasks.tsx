@@ -35,14 +35,14 @@ const SubTasks = (_props: Props) => {
     if (formData?.title && id) {
       const payload = {
         title: formData.title,
-        status: 'incomplete' as const,
+        status: 'todo' as const,
         time_spend: 0,
         parent_id: Number(id),
       };
       createTask(payload).then((res) => {
         toast.success(res?.message || 'Successfully created task');
         setSubtasks([...subtasks, { ...payload, id: res?.data?.id }]);
-        // addTask({ id: res?.data?.id, title: formData?.title || '', status: 'incomplete' as const, timeSpend: 0 });
+        // addTask({ id: res?.data?.id, title: formData?.title || '', status: 'todo' as const, timeSpend: 0 });
         setValue('title', '');
       }).catch((err) => {
         toast.error(err?.error || 'Failed to create task');

@@ -1,3 +1,5 @@
+import { PriorityType, StatusType } from 'helpers/sharedTypes';
+
 /**
  * Capitalizes the first character of a string and converts the rest to lowercase.
  *
@@ -123,3 +125,97 @@ export function debounce<T extends (..._args: any[]) => void>(func: T, wait: num
     }, wait);
   };
 }
+
+export const copyToClipboard = (text: string) => {
+  try {
+    navigator.clipboard.writeText(text);
+  } catch {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+  }
+};
+
+export const getPriorityColor = (priority: PriorityType) => {
+  switch (priority) {
+    case 'high':
+      return 'bg-red-500';
+    case 'normal':
+      return 'bg-yellow-500';
+    case 'low':
+      return 'bg-green-500';
+    default:
+      return 'bg-gray-500';
+  }
+};
+
+export const getStatusColor = (status: StatusType) => {
+  switch (status) {
+    case 'completed':
+      return 'text-green-400 bg-green-400/10';
+    case 'todo':
+      return 'text-blue-400 bg-blue-400/10';
+    case 'inprogress':
+      return 'text-primary-600 bg-primary-600/20';
+    case 'paused':
+      return 'text-gray-400 bg-gray-400/10';
+    case 'pending':
+      return 'text-yellow-400 bg-yellow-400/10';
+    default:
+      return 'text-gray-400 bg-gray-400/10';
+  }
+};
+
+export const isHexColor = (color: string): boolean => {
+  return /^#([0-9A-F]{3}){1,2}$/i.test(color);
+};
+
+export const isEmpty = (value: any): boolean => {
+  if (value === null || value === undefined) {
+    return true;
+  }
+  if (typeof value === 'string' && value.trim() === '') {
+    return true;
+  }
+  if (Array.isArray(value) && value.length === 0) {
+    return true;
+  }
+  if (typeof value === 'object' && Object.keys(value).length === 0) {
+    return true;
+  }
+  return false;
+};
+
+/**
+ * Converts a string to title case, inserting spaces between camelCase, PascalCase,
+ * and separating words by non-alphanumeric characters.
+ *
+ * This function is useful for formatting identifiers or labels for display purposes.
+ *
+ * @param str - The input string to convert.
+ * @returns The title-cased string with words separated by spaces.
+ *
+ * @example
+ * titleCase('helloWorld'); // "Hello World"
+ * titleCase('ThisIsATest'); // "This Is A Test"
+ * titleCase('already title case'); // "Already Title Case"
+ * titleCase('snake_case_example'); // "Snake Case Example"
+ * titleCase('kebab-case-example'); // "Kebab Case Example"
+ * titleCase('XMLHttpRequest'); // "Xml Http Request"
+ */
+export const titleCase = (str: string) => {
+  return str
+    .replace(/([a-z\d])([A-Z])/g, '$1 $2')
+    .replace(/([A-Z]+)([A-Z][a-z\d]+)/g, '$1 $2')
+    // Replace all non-alphabetic word boundaries with space
+    .replace(/[^A-Za-z0-9]+/g, ' ')
+    // Trim and convert to title case
+    .trim()
+    .replace(/\s+/g, ' ')
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};

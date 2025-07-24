@@ -33,10 +33,11 @@
       "context/*": ["context/*"],
       "icons/*": ["icons/*"],
       "stores/*": ["stores/*"],
-      "src/*": ["*"],
       "services/*": ["services/*"],
       "helpers/*": ["helpers/*"],
+      "hooks/*": ["hooks/*"],
+      "src/*": ["*"],
     }
   },
-  "include": ["src"]
+  "include": ["src", "vite-env.d.ts"]
 }

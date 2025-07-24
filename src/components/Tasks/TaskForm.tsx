@@ -3,18 +3,23 @@ import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
+
+import { capitalize } from 'helpers/utils';
+import { SelectOptionType } from 'helpers/sharedTypes';
+
 import { useTaskStore } from 'stores/taskStore';
+
+import { getTask, updateTask } from 'services/tasks';
 
 import Input from 'components/Shared/Input';
 import TaskTimer from 'components/Tasks/TaskTimer';
-
-import { getTask, updateTask } from 'src/services/tasks';
-
-import GenerateDescriptionButtons from './GenerateDescriptionButtons';
+import SelectField from 'components/Shared/SelectField';
+import GenerateDescriptionButtons from 'components/Tasks/GenerateDescriptionButtons';
 
 type FormDataType = {
   title: string;
   description: string;
+  status: { label: string; value: string; };
 };
 
 type TaskDetailsType = {
@@ -25,6 +30,14 @@ type TaskDetailsType = {
   time_spend: number;
   title: string;
 };
+
+const statusOptions = [
+  { label: 'To Do', value: 'todo' },
+  { label: 'In Progress', value: 'inprogress' },
+  { label: 'Pending', value: 'pending' },
+  { label: 'Paused', value: 'paused' },
+  { label: 'Complete', value: 'complete' },
+];
 
 const TaskForm = () => {
   const [taskDetails, setTaskDetails] = useState({} as TaskDetailsType);
@@ -62,6 +75,12 @@ const TaskForm = () => {
     }
   };
 
+  const handleStatusChange = (value: SelectOptionType) => {
+    if ('status' in dirtyFields) {
+      handleUpdateTask({ status: value?.value });
+    }
+  };
+
   useEffect(() => {
     if (id && shouldFetchTask.current) {
       getTask(id).then((fetchedTask) => {
@@ -70,16 +89,9 @@ const TaskForm = () => {
           reset({
             title: fetchedTask?.data?.title,
             description: fetchedTask?.data?.description,
+            status: { label: capitalize(fetchedTask?.data?.status), value: fetchedTask?.data?.status },
           });
-          updateCurrentTaskDetails({
-            description: fetchedTask?.data?.description,
-            id: fetchedTask?.data?.id,
-            startedAt: fetchedTask?.data?.started_at,
-            status: fetchedTask?.data?.status,
-            timeSpend: fetchedTask?.data?.time_spend,
-            title: fetchedTask?.data?.title,
-            parent_id: fetchedTask?.data?.parent_id || 0,
-          });
+          updateCurrentTaskDetails(fetchedTask?.data);
         }
         setIsLoading(false);
       }).catch((err) => {
@@ -99,6 +111,21 @@ const TaskForm = () => {
       <FormProvider {...methods}>
         <div className='flex flex-col gap-3 sm:flex-row'>
           <Input name='title' label='Task Name' className='flex-1' onBlur={handleTitleBlur} />
+          <div className='flex flex-col p-1 rounded-lg shadow-md w-fit'>
+            <h3 className='block mb-2 font-medium text-text-light tracking-wide whitespace-nowrap'>Streak:</h3>
+            <div className='flex items-center justify-center mt-1'>
+              <p className='text-2xl font-mono mt-1'>
+                {taskDetails?.streak}
+                🔥
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className='flex gap-10'>
+          <div className='flex gap-2'>
+            <h3 className='block font-medium text-text-light tracking-wide whitespace-nowrap'>Status:</h3>
+            <SelectField name='status' options={statusOptions} isMulti={false} onChange={handleStatusChange} />
+          </div>
           <TaskTimer initialTime={taskDetails?.time_spend} />
         </div>
         <GenerateDescriptionButtons />

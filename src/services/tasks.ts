@@ -1,7 +1,7 @@
 import { getHandler, postHandler } from 'src/helpers/api';
 
-export const getAllTasks = () => getHandler({
-  path: 'tasks',
+export const getAllTasks = (params: string) => getHandler({
+  path: `tasks?type=task${params ? `&${params}` : ''}`,
 });
 
 export const createTask = (data: object) => postHandler({
@@ -45,4 +45,8 @@ export const saveSubTasks = (taskId: string, data: object) => postHandler({
 
 export const getRecentTasks = () => getHandler({
   path: 'recent-tasks',
+});
+
+export const getTasksStats = () => getHandler({
+  path: 'tasks/stats',
 });

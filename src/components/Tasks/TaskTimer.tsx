@@ -2,12 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 import { useTaskStore } from 'stores/taskStore';
+
+import { updateTask } from 'services/tasks';
 
 import PauseIcon from 'icons/PauseIcon';
 import ResumeIcon from 'icons/ResumeIcon';
-
-import { updateTask } from 'src/services/tasks';
 
 type TaskTimerProps = {
   initialTime?: number; // in seconds
@@ -20,7 +21,7 @@ const TaskTimer: React.FC<TaskTimerProps> = ({ initialTime = 0 }) => {
   const shouldStartTimer = useTaskStore((state) => state.shouldStartTimer);
   const updateStartTimer = useTaskStore((state) => state.updateStartTimer);
   const startedAt = useTaskStore((state) => state.currentTaskDetails.startedAt);
-  const timeSpend = useTaskStore((state) => state.currentTaskDetails.timeSpend);
+  const timeSpend = useTaskStore((state) => state.currentTaskDetails.time_spend);
   const updateStartedAtState = useTaskStore((state) => state.updateStartedAt);
 
   const { id } = useParams();
@@ -88,10 +89,10 @@ const TaskTimer: React.FC<TaskTimerProps> = ({ initialTime = 0 }) => {
   }, [startedAt]);
 
   return (
-    <div className='flex flex-col p-1 rounded-lg shadow-md w-fit'>
-      <h3 className='block mb-2 font-medium text-text-light tracking-wide whitespace-nowrap'>Time Spent:&nbsp;</h3>
-      <div className='flex items-center justify-center mt-1'>
-        <p className='text-2xl font-mono mt-1'>{formatTime(time)}</p>
+    <div className='flex p-1 rounded-lg shadow-md w-fit'>
+      <h3 className='block font-medium text-text-light tracking-wide whitespace-nowrap'>Time Spent:&nbsp;</h3>
+      <div className='flex items-center justify-center'>
+        <p className='text-2xl font-mono'>{formatTime(time)}</p>
         <button
           onClick={toggleTimer}
           className='p-1 ms-3 rounded outline-1 font-medium cursor-pointer'
