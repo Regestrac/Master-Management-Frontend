@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { Grid2X2, List, Plus } from 'lucide-react';
+import { Grid2X2, List } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
@@ -64,59 +64,43 @@ const GoalFilters = () => {
     setSearchParams((prev) => ({ ...prev, view }));
   };
 
-  const handleCreateGoal = () => {
-
-  };
-
   return (
     <FormProvider {...methods}>
-      <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6'>
-        <div className='flex flex-wrap gap-4 items-end'>
+      <div className='flex flex-wrap gap-4 items-end'>
 
-          <SelectField
-            label='Filter Goals by Status:'
-            name='status'
-            options={statusFilterOptions}
-            isMulti
-          />
+        <SelectField
+          label='Filter Goals by Status:'
+          name='status'
+          options={statusFilterOptions}
+          isMulti
+        />
 
-          <SelectField
-            label='Filter Goals by Category:'
-            name='category'
-            options={categoryFilterOptions}
-            isMulti
-          />
+        <SelectField
+          label='Filter Goals by Category:'
+          name='category'
+          options={categoryFilterOptions}
+          isMulti
+        />
 
-          <SelectField
-            label='Sort Goals By:'
-            name='sortBy'
-            options={goalSortOptions}
-            isMulti={false}
-          />
+        <SelectField
+          label='Sort Goals By:'
+          name='sortBy'
+          options={goalSortOptions}
+          isMulti={false}
+        />
 
-          <div className='flex rounded-lg border border-gray-300 overflow-hidden'>
-            <button
-              onClick={() => handleUpdateView('grid')}
-              className={`p-2 ${searchParams.get('view') === 'grid' ? 'bg-purple-500 text-white' : darkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-600'}`}
-            >
-              <Grid2X2 className='w-4 h-4' />
-            </button>
-            <button
-              onClick={() => handleUpdateView('list')}
-              className={`p-2 ${searchParams.get('view') === 'list' ? 'bg-purple-500 text-white' : darkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-600'}`}
-            >
-              <List className='w-4 h-4' />
-            </button>
-          </div>
-        </div>
-
-        <div className='flex items-center gap-4'>
+        <div className='flex rounded-lg border border-gray-300 overflow-hidden'>
           <button
-            onClick={handleCreateGoal}
-            className='flex items-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors'
+            onClick={() => handleUpdateView('grid')}
+            className={`p-2 ${searchParams.get('view') === 'grid' ? 'bg-purple-500 text-white' : darkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-600'}`}
           >
-            <Plus className='w-4 h-4' />
-            <span>New Goal</span>
+            <Grid2X2 className='w-4 h-4' />
+          </button>
+          <button
+            onClick={() => handleUpdateView('list')}
+            className={`p-2 ${searchParams.get('view') === 'list' ? 'bg-purple-500 text-white' : darkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-600'}`}
+          >
+            <List className='w-4 h-4' />
           </button>
         </div>
       </div>
