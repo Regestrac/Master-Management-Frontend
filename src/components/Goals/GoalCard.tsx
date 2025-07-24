@@ -1,18 +1,22 @@
-import { Flame, Clock, Play, Pause, Settings, Calendar, BarChart3, Trophy } from 'lucide-react';
+import { useState } from 'react';
+
+import { Flame, Clock, Play, Pause, Calendar } from 'lucide-react';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { STATUS_OPTIONS } from 'helpers/configs';
-import { getStatusColor } from 'helpers/utils';
+import { formatTimeElapsed, getStatusColor } from 'helpers/utils';
 import { TaskType } from 'helpers/sharedTypes';
 
-import { useTaskStore } from 'stores/taskStore';
 import { useProfileStore } from 'stores/profileStore';
+import { useGoalStore } from 'stores/goalsStore';
 
 import { updateTask } from 'services/tasks';
 
 import DropDown from 'components/Shared/Dropdown';
 import ProgressCircle from 'components/Goals/ProgressCircle';
+import Input from 'components/Shared/Input';
 
 type GoalType = {
   id: number;
@@ -22,12 +26,13 @@ type GoalType = {
   category: string;
   progress: number;
   streak: number;
-  totalTime: string;
-  targetDate: string;
+  time_spend: number;
+  due_date: string;
   currentWeekHours: number;
   weeklyTarget: number;
   tags: string[];
   achievements: string[];
+  type: 'goal' | 'task';
 };
 
 type GoalCardPropsType = {
@@ -37,12 +42,20 @@ type GoalCardPropsType = {
 };
 
 const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
+  const [editName, setEditName] = useState(false);
+
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
 
   const bgColor = darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200';
   const textColor = darkMode ? 'text-gray-400' : 'text-gray-600';
 
-  const updateTaskState = useTaskStore((state) => state.updateTask);
+  const updateGoalState = useGoalStore((state) => state.updateGoal);
+
+  const methods = useForm({
+    defaultValues: {
+      title: goal?.title,
+    },
+  });
 
   const handleUpdateTask = (id: string, payload: object) => {
     updateTask(id, payload).then((res) => {
@@ -62,51 +75,16 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
     <div className={clsx('w-full rounded-full h-2', darkMode ? 'bg-gray-700' : 'bg-gray-200')}>
       <div
         className='bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500'
-        style={{ width: `${getWeeklyProgress()}%` }}
+        style={{ width: `${getWeeklyProgress() || 0}%` }}
       />
     </div>
   );
 
-  const renderStats = () => (
-    <div className='flex items-center gap-6 text-sm flex-wrap'>
-      <div className='flex items-center'>
-        <BarChart3 className='w-4 h-4 mr-1' />
-        <span>
-          {goal?.progress}
-          % complete
-        </span>
-      </div>
-      <div className='flex items-center text-orange-500'>
-        <Flame className='w-4 h-4 mr-1' />
-        <span>
-          {goal?.streak}
-          {' '}
-          day streak
-        </span>
-      </div>
-      <div className='flex items-center'>
-        <Clock className='w-4 h-4 mr-1' />
-        <span>
-          {goal?.totalTime}
-          {' '}
-          total
-        </span>
-      </div>
-      <div className='flex items-center'>
-        <Calendar className='w-4 h-4 mr-1' />
-        <span>
-          Due
-          {new Date(goal?.targetDate).toLocaleDateString()}
-        </span>
-      </div>
-    </div>
-  );
-
-  const renderHeader = () => {
+  const renderStatusPill = () => {
     const handleStatusSelect = (value: string | null) => {
       if (goal?.status !== value) {
         handleUpdateTask(goal?.id?.toString(), { status: value });
-        updateTaskState({ id: goal?.id, status: value as TaskType['status'] });
+        updateGoalState({ id: goal?.id, status: value as TaskType['status'] });
       }
     };
 
@@ -119,25 +97,75 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
     );
   };
 
-  const renderTitle = () => {
-    const handleStatusSelect = (value: string | null) => {
-      if (goal?.status !== value) {
-        handleUpdateTask(goal?.id?.toString(), { status: value });
-        updateTaskState({ id: goal?.id, status: value as TaskType['status'] });
-      }
-    };
-
-    return (
-      <div className='flex items-center gap-3 mb-2 flex-wrap'>
-        <h4 className='font-semibold text-lg'>{goal?.title}</h4>
+  const renderStats = () => (
+    <div className='flex items-center gap-6 text-sm flex-wrap'>
+      {renderStatusPill()}
+      {goal?.category ? (
         <span className={clsx('px-2 py-1 rounded text-xs font-medium', darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600')}>
           {goal?.category}
         </span>
-        <DropDown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={goal?.status} hideClear>
-          <span className={`px-3 py-1 rounded-full text-xs font-medium cursor-grab ${getStatusColor(goal?.status)}`}>
-            {goal?.status?.toUpperCase()}
-          </span>
-        </DropDown>
+      ) : null}
+      <div className='flex items-center text-orange-500'>
+        <Flame className='w-4 h-4 mr-1' />
+        <span>
+          {goal?.streak}
+          {' '}
+          day streak
+        </span>
+      </div>
+      <div className='flex items-center'>
+        <Clock className='w-4 h-4 mr-1' />
+        <span>
+          {formatTimeElapsed(goal?.time_spend)}
+          {' '}
+          total
+        </span>
+      </div>
+      <div className='flex items-center'>
+        <Calendar className='w-4 h-4 mr-1' />
+        <span>
+          Due
+          {new Date(goal?.due_date).toLocaleDateString()}
+        </span>
+      </div>
+    </div>
+  );
+
+  const renderTitle = () => {
+    return (
+      <div className='flex items-center mb-2 flex-wrap'>
+        <FormProvider {...methods}>
+          <div className='flex items-center gap-3 mb-2 w-full'>
+            {editName ? (
+              <Input
+                name='title'
+                label=''
+                type='textarea'
+                hideResizeIndicator
+                className='font-semibold text-lg cursor-text outline-none p-0! border-none focus:ring-0!'
+                onClick={(e) => e.stopPropagation()}
+                autoFocus
+                onBlur={(value) => {
+                  if (value !== goal?.title) {
+                    // handleUpdateTask(goal?.id?.toString(), { title: value });
+                    updateGoalState({ id: goal?.id, title: value });
+                  }
+                  setEditName(false);
+                }}
+              />
+            ) : (
+              <h4
+                className='font-semibold text-lg cursor-text outline-none p-0! border-none focus:ring-0!'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setEditName(true);
+                }}
+              >
+                {goal?.title}
+              </h4>
+            )}
+          </div>
+        </FormProvider>
       </div>
     );
   };
@@ -161,10 +189,8 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
       <div className={clsx('rounded-xl border shadow-sm hover:shadow-md transition-all duration-200', bgColor)}>
         <div className='p-6 flex justify-between items-start'>
           <div className='flex items-center space-x-4 flex-1'>
-            {renderHeader()}
             <div className='flex-1'>
               {renderTitle()}
-              <p className={`text-sm mb-3 ${textColor}`}>{goal?.description}</p>
               {renderStats()}
             </div>
           </div>
@@ -191,33 +217,32 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
   return (
     <div className={clsx('rounded-xl border shadow-sm hover:shadow-md transition-all duration-200', bgColor)}>
       <div className='p-6'>
-        {/* <div className='flex items-start justify-between mb-4'>
-          {renderHeader()}
-          <button onClick={onToggleExpanded} className={`p-1 rounded ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}>
-            <svg className={`w-4 h-4 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`} fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 9l-7 7-7-7' />
-            </svg>
-          </button>
-        </div> */}
 
         {renderTitle()}
-        <p className={`text-sm mb-3 ${textColor}`}>{goal?.description}</p>
+        <div className='flex justify-between items-center'>
+          {renderStatusPill()}
+          {goal?.category ? (
+            <span className={clsx('px-2 py-1 rounded text-xs font-medium', darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600')}>
+              {goal?.category}
+            </span>
+          ) : null}
+        </div>
 
-        <ProgressCircle progress={goal?.progress} />
+        <ProgressCircle progress={goal?.progress || 0} />
 
         {/* Stats */}
-        <div className='grid grid-cols-2 gap-4 mb-4 text-center'>
-          <div>
+        <div className='flex justify-between items-center mb-4 mx-6'>
+          <div className='text-center'>
             <div className='flex justify-center items-center text-orange-500 mb-1'>
               <Flame className='w-4 h-4 mr-1' />
               <span className='font-semibold'>{goal?.streak}</span>
             </div>
             <p className={`text-xs ${textColor}`}>Day Streak</p>
           </div>
-          <div>
+          <div className='text-center'>
             <div className='flex justify-center items-center mb-1'>
               <Clock className='w-4 h-4 mr-1' />
-              <span className='font-semibold'>{goal?.totalTime}</span>
+              <span className='font-semibold'>{formatTimeElapsed(goal?.time_spend)}</span>
             </div>
             <p className={`text-xs ${textColor}`}>Total Time</p>
           </div>
@@ -228,10 +253,10 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
           <div className='flex justify-between text-sm mb-1'>
             <span>This Week</span>
             <span>
-              {goal?.currentWeekHours}
+              {goal?.currentWeekHours || 0}
               h /
               {' '}
-              {goal?.weeklyTarget}
+              {goal?.weeklyTarget || 0}
               h
             </span>
           </div>
@@ -255,7 +280,7 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
         </div>
 
         {/* Achievements */}
-        {goal?.achievements?.length > 0 && (
+        {/* {goal?.achievements?.length > 0 && (
           <div className='flex flex-wrap gap-1'>
             {goal?.achievements?.slice(0, 2).map((achievement: string, index: number) => (
               <span key={index} className='inline-flex items-center px-2 py-1 bg-yellow-100 text-yellow-600 rounded text-xs'>
@@ -270,7 +295,7 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
               </span>
             )}
           </div>
-        )}
+        )} */}
 
         {/* Action Buttons */}
         <div className='flex gap-2 mt-4'>
@@ -283,9 +308,9 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
             {isActive ? <Pause className='w-4 h-4' /> : <Play className='w-4 h-4' />}
             {isActive ? 'Stop' : 'Start'}
           </button>
-          <button className={clsx('px-3 py-2 rounded-lg border transition-colors', darkMode ? 'border-gray-600 hover:bg-gray-700' : 'border-gray-300 hover:bg-gray-50')}>
+          {/* <button className={clsx('px-3 py-2 rounded-lg border transition-colors', darkMode ? 'border-gray-600 hover:bg-gray-700' : 'border-gray-300 hover:bg-gray-50')}>
             <Settings className='w-4 h-4' />
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
