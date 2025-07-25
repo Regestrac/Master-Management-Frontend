@@ -21,3 +21,14 @@ export type SelectOptionType = {
   label: string;
   value: string | number;
 };
+
+export type StickyNoteDataType = {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  content: string;
+  color: string;
+  border: string;
+};
