@@ -29,6 +29,7 @@ export type StickyNoteDataType = {
   width: number;
   height: number;
   content: string;
-  color: string;
-  border: string;
+  bgColor: string;
+  textColor: string;
+  borderColor: string;
 };

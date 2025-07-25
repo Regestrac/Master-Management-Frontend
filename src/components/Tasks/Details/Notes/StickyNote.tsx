@@ -10,6 +10,7 @@ type StickyNotePropsType = {
   onDelete: (_id: string) => void;
   scale: number;
   isDarkMode: boolean;
+  onBlur?: (_note: StickyNoteDataType) => void;
 };
 
 const colorOptions = [
@@ -21,7 +22,7 @@ const colorOptions = [
   { name: 'Orange', value: '#fed7aa', border: '#f97316' },
 ];
 
-const StickyNote = ({ note, onUpdate, onDelete, scale, isDarkMode }: StickyNotePropsType) => {
+const StickyNote = ({ note, onUpdate, onDelete, scale, isDarkMode, onBlur }: StickyNotePropsType) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -126,6 +127,9 @@ const StickyNote = ({ note, onUpdate, onDelete, scale, isDarkMode }: StickyNoteP
 
   const handleTextareaBlur = () => {
     setIsEditing(false);
+    if (onBlur) {
+      onBlur(note);
+    }
   };
 
   const handleTextareaKeyDown = (e: React.KeyboardEvent) => {
@@ -140,7 +144,7 @@ const StickyNote = ({ note, onUpdate, onDelete, scale, isDarkMode }: StickyNoteP
   };
 
   const handleColorChange = (color: string, border: string) => {
-    onUpdate(note.id, { color, border });
+    onUpdate(note.id, { bgColor: color, borderColor: border });
     setShowColorPicker(false);
   };
 
@@ -154,10 +158,10 @@ const StickyNote = ({ note, onUpdate, onDelete, scale, isDarkMode }: StickyNoteP
           top: note.y * scale,
           width: note.width,
           height: note.height,
-          backgroundColor: note.color,
+          backgroundColor: note.bgColor,
           transform: `scale(${scale})`,
           transformOrigin: 'top left',
-          border: `1px solid ${note.border}`,
+          border: `1px solid ${note.borderColor}`,
         }}
         onMouseDown={handleMouseDown}
         onDoubleClick={handleDoubleClick}

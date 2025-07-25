@@ -1,10 +1,15 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 import { Plus, RotateCcw, ZoomIn, ZoomOut } from 'lucide-react';
+import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
 
 import { StickyNoteDataType } from 'helpers/sharedTypes';
+import { omit } from 'helpers/utils';
 
 import { useProfileStore } from 'stores/profileStore';
+
+import { createNote, deleteNote, getAllNotes, updateNote } from 'services/note';
 
 import StickyNote from 'components/Tasks/Details/Notes/StickyNote';
 
@@ -18,8 +23,11 @@ const StickyNotesCanvas = () => {
 
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
 
+  const { id } = useParams();
+
   const canvasRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const shouldFetchNotesRef = useRef(true);
 
   // Generate unique ID for new notes
   const generateId = () => `note_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -48,8 +56,9 @@ const StickyNotesCanvas = () => {
         width: 150,
         height: 100,
         content: '',
-        color: '#fef3c7', // Default yellow
-        border: '#f59e0b',
+        bgColor: '#fef3c7', // Default yellow
+        textColor: '#000000',
+        borderColor: '#f59e0b',
       };
 
       setNotes((prev) => [...prev, newNote]);
@@ -102,15 +111,24 @@ const StickyNotesCanvas = () => {
   }, [handleWheel, handleMouseMove, handleMouseUp, isPanning]);
 
   // Update note
-  const updateNote = useCallback((id: string, updates: Partial<StickyNoteDataType>) => {
+  const handleUpdateNote = useCallback((id: string, updates: Partial<StickyNoteDataType>) => {
     setNotes((prev) => prev.map((note) =>
       note.id === id ? { ...note, ...updates } : note,
     ));
   }, []);
 
   // Delete note
-  const deleteNote = useCallback((id: string) => {
-    setNotes((prev) => prev.filter((note) => note.id !== id));
+  const handleDeleteNote = useCallback((id: string) => {
+    if (typeof id === 'string' && id.includes('note_')) {
+      setNotes((prev) => prev.filter((note) => note.id !== id));
+    } else {
+      deleteNote(Number(id)).then((res) => {
+        setNotes((prev) => prev.filter((note) => note.id !== id));
+        toast.success(res?.message || 'Deleted successfully');
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to delete note');
+      });
+    }
   }, []);
 
   // Reset view
@@ -132,11 +150,58 @@ const StickyNotesCanvas = () => {
       width: 150,
       height: 100,
       content: 'Sample note\nDouble-click to edit!',
-      color: '#fce7f3', // Pink
-      border: '#ec4899',
+      bgColor: '#fce7f3', // Pink
+      textColor: '#000000',
+      borderColor: '#ec4899',
     };
     setNotes((prev) => [...prev, newNote]);
   };
+
+  const handleTextareaBlur = (noteData: StickyNoteDataType) => {
+    const payload = {
+      task_id: Number(id),
+      ...omit(noteData, ['bgColor', 'textColor', 'borderColor', 'id']),
+      bg_color: noteData.bgColor,
+      text_color: noteData.textColor,
+      border_color: noteData.borderColor,
+    };
+    if (typeof noteData.id === 'string' && noteData.id.includes('note_')) {
+      createNote(payload).then((res) => {
+        toast.success(res?.message || 'Created successfully');
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to create note');
+      });
+    } else {
+      updateNote(Number(noteData.id), payload).then((res) => {
+        toast.success(res?.message || 'Updated successfully');
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to update note');
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (id && shouldFetchNotesRef.current) {
+      getAllNotes(id).then((res) => {
+        setNotes(res.data.map((note: any) => ({
+          id: note.id,
+          x: note.x,
+          y: note.y,
+          width: note.width,
+          height: note.height,
+          content: note.content,
+          bgColor: note.bg_color,
+          textColor: note.text_color,
+          borderColor: note.border_color,
+          variant: note.variant,
+          createdAt: note.created_at,
+        })));
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to get notes');
+      });
+      shouldFetchNotesRef.current = false;
+    }
+  }, [id]);
 
   return (
     <div className='relative w-full h-full overflow-hidden' ref={containerRef}>
@@ -239,10 +304,11 @@ const StickyNotesCanvas = () => {
             <StickyNote
               key={note.id}
               note={note}
-              onUpdate={updateNote}
-              onDelete={deleteNote}
+              onUpdate={handleUpdateNote}
+              onDelete={handleDeleteNote}
               scale={scale}
               isDarkMode={darkMode}
+              onBlur={handleTextareaBlur}
             />
           ))}
         </div>
