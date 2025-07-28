@@ -11,7 +11,7 @@ import { useTaskStore } from 'stores/taskStore';
 import { updateTask } from 'services/tasks';
 
 import Input from 'components/Shared/Input';
-import GenerateDescriptionButtons from 'components/Tasks/GenerateDescriptionButtons';
+import GenerateDescriptionButtons from 'components/Tasks/ai/GenerateDescriptionButtons';
 
 const TaskDescription = () => {
   const [isEditingDescription, setIsEditingDescription] = useState(false);

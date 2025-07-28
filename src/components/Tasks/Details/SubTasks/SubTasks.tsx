@@ -15,7 +15,7 @@ import { useTaskStore } from 'stores/taskStore';
 import { createTask, deleteTask, getSubTasks } from 'services/tasks';
 
 import Input from 'components/Shared/Input';
-import GenerateSubtasksButtons from 'components/Tasks/GenerateSubtasksButtons';
+import GenerateSubtasksButtons from 'components/Tasks/ai/GenerateSubtasksButtons';
 
 type SubTaskType = {
   title: string;

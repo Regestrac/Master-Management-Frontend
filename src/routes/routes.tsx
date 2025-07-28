@@ -11,7 +11,7 @@ import Settings from 'components/Settings/Settings';
 import NotFound from 'components/Shared/NotFound';
 import StyleGuide from 'components/StyleGuide';
 import Tasks from 'components/Tasks/Tasks';
-import TaskDetail from 'components/Tasks/TaskDetail';
+import TaskDetail from 'components/Tasks/Details/TaskDetails';
 import TaskManagementAppDesign from 'components/Tasks/TaskManagementAppDesign';
 import Goals from 'components/Goals/Goals';
 import CreateTaskForm from 'components/Tasks/CreateTaskForm';

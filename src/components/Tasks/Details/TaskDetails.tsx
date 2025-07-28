@@ -16,7 +16,7 @@ import TaskActivity from 'components/Tasks/Details/Activity/TaskActivity';
 import TaskNotes from 'components/Tasks/Details/Notes/TaskNotes';
 import TaskComments from 'components/Tasks/Details/Comments/TaskComments';
 
-const TaskDetailsPage = () => {
+const TaskDetails = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
@@ -66,4 +66,4 @@ const TaskDetailsPage = () => {
   );
 };
 
-export default TaskDetailsPage;
+export default TaskDetails;
