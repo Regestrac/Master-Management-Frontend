@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
+
+import { NAVBAR_LINKS } from 'helpers/configs';
+
 import { useProfileStore } from 'stores/profileStore';
 
 import MobileMenu from 'components/Navbar/MobileMenu';
-
-import { NAVBAR_LINKS } from 'src/helpers/configs';
 
 const Navbar = () => {
   const firstName = useProfileStore((state) => state?.data?.first_name);

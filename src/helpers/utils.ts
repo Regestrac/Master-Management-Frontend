@@ -219,3 +219,39 @@ export const titleCase = (str: string) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
 };
+
+/**
+ * Removes one or more specified keys from an object.
+ *
+ * - For a single key, it uses the spread method for optimal performance.
+ * - For multiple keys, it uses a more generalized approach with `Object.fromEntries` for flexibility.
+ *
+ * @param {T} obj - The source object to omit keys from.
+ * @param {K | K[]} keys - The key or array of keys to omit.
+ * @returns {Omit<T, K>} A new object without the specified keys.
+ *
+ * @example
+ * // Single key removal
+ * const user = { id: 1, name: "Alice", role: "admin" };
+ * const result = omit(user, "role");
+ * console.log(result); // { id: 1, name: "Alice" }
+ *
+ * @example
+ * // Multiple keys removal
+ * const data = { id: 1, name: "Alice", role: "admin", active: true };
+ * const result = omit(data, ["role", "active"]);
+ * console.log(result); // { id: 1, name: "Alice" }
+ */
+export const omit = <T extends object, K extends keyof T>(obj: T, keys: K | K[]): Omit<T, K> => {
+  if (!Array.isArray(keys)) {
+    // Use the spread method for single key removal
+    const { [keys]: _, ...rest } = obj;
+    return rest as Omit<T, K>;
+  }
+
+  // Use Object.entries for multiple keys
+  const keysToOmit = new Set(keys);
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key]) => !keysToOmit.has(key as K)),
+  ) as Omit<T, K>;
+};

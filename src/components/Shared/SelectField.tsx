@@ -1,8 +1,9 @@
 import { useController } from 'react-hook-form';
 import Select, { MultiValue } from 'react-select';
-import { useProfileStore } from 'stores/profileStore';
 
-import { SelectOptionType } from 'src/helpers/sharedTypes';
+import { SelectOptionType } from 'helpers/sharedTypes';
+
+import { useProfileStore } from 'stores/profileStore';
 
 type SelectProps<T extends boolean> = {
   name: string;

@@ -1,16 +1,17 @@
 import { useState } from 'react';
 
 import { Edit3, Save } from 'lucide-react';
-import { useProfileStore } from 'stores/profileStore';
-import { useTaskStore } from 'stores/taskStore';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import Input from 'components/Shared/Input';
-import GenerateDescriptionButtons from 'components/Tasks/GenerateDescriptionButtons';
+import { useProfileStore } from 'stores/profileStore';
+import { useTaskStore } from 'stores/taskStore';
 
-import { updateTask } from 'src/services/tasks';
+import { updateTask } from 'services/tasks';
+
+import Input from 'components/Shared/Input';
+import GenerateDescriptionButtons from 'components/Tasks/ai/GenerateDescriptionButtons';
 
 const TaskDescription = () => {
   const [isEditingDescription, setIsEditingDescription] = useState(false);

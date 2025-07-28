@@ -1,16 +1,18 @@
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { useProfileStore } from 'stores/profileStore';
 import { Save, X } from 'lucide-react';
 import { toast } from 'react-toastify';
+
+import { PriorityType, StatusType } from 'helpers/sharedTypes';
+import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
+import { getPriorityColor, getStatusColor } from 'helpers/utils';
+
 import { useTaskStore } from 'stores/taskStore';
+import { useProfileStore } from 'stores/profileStore';
 
-import Input from 'components/Shared/Input';
+import { createTask } from 'services/tasks';
+
 import Dropdown from 'components/Shared/Dropdown';
-
-import { createTask } from 'src/services/tasks';
-import { PriorityType, StatusType } from 'src/helpers/sharedTypes';
-import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'src/helpers/configs';
-import { getPriorityColor, getStatusColor } from 'src/helpers/utils';
+import Input from 'components/Shared/Input';
 
 type CreateTaskFormDataType = {
   new_task_title: string;

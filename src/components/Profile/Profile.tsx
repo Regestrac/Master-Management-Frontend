@@ -2,15 +2,16 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useProfileStore } from 'stores/profileStore';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import Input from 'components/Shared/Input';
+import { useProfileStore } from 'stores/profileStore';
 
-import { logout } from 'src/services/auth';
-import { updateProfile } from 'src/services/profile';
+import { logout } from 'services/auth';
+import { updateProfile } from 'services/profile';
+
+import Input from 'components/Shared/Input';
 
 type ProfileFormType = {
   first_name: string;
@@ -29,9 +30,9 @@ const Profile = () => {
 
   const updateProfileInfo = useProfileStore((state) => state.updateProfile);
   const clearProfile = useProfileStore((state) => state.clearProfile);
-  const firstName = useProfileStore((state) => state?.firstName);
-  const lastName = useProfileStore((state) => state?.lastName);
-  const email = useProfileStore((state) => state?.email);
+  const firstName = useProfileStore((state) => state?.data?.first_name);
+  const lastName = useProfileStore((state) => state?.data?.last_name);
+  const email = useProfileStore((state) => state?.data?.email);
 
   const shouldResetForm = useRef(true);
 
@@ -65,12 +66,7 @@ const Profile = () => {
   const handleSaveProfile = (formData: ProfileFormType) => {
     updateProfile(formData).then((res) => {
       toast.success(res?.message || 'Profile Updated Successfully.');
-      updateProfileInfo({
-        firstName: res?.data?.first_name || '',
-        lastName: res?.data?.last_name || '',
-        email: res?.data?.email || '',
-        userId: res?.data?.id || 0,
-      });
+      updateProfileInfo(res?.data);
       setIsEditing(false);
     }).catch((err) => {
       toast.error(err?.error || 'Failed to update profile!');

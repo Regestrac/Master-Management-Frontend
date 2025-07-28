@@ -1,4 +1,5 @@
 import { CheckSquare, Clock, Flame, Trophy } from 'lucide-react';
+
 import { useProfileStore } from 'stores/profileStore';
 
 const userStats = {

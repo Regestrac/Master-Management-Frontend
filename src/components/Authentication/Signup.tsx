@@ -5,13 +5,14 @@ import { z } from 'zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
-import { useProfileStore } from 'stores/profileStore';
 import { ArrowRight, Check, Lock, Mail, Target, User, X } from 'lucide-react';
 
-import Input from 'components/Shared/Input';
+import { useProfileStore } from 'stores/profileStore';
 
-import { signup } from 'src/services/auth';
-import { getProfile } from 'src/services/profile';
+import { signup } from 'services/auth';
+import { getProfile } from 'services/profile';
+
+import Input from 'components/Shared/Input';
 
 type SignupFormDataType = {
   first_name: string;

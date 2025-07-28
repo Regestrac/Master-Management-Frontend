@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-import { useProfileStore } from 'stores/profileStore';
+import { isHexColor } from 'helpers/utils';
 
-import { isHexColor } from 'src/helpers/utils';
+import { useProfileStore } from 'stores/profileStore';
 
 type DropdownOption<T> = {
   label: string;

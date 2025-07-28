@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 
 import { Plus, Tag } from 'lucide-react';
+
 import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
 

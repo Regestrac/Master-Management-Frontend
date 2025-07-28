@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, ReactNode, useState } from 'react';
+import { InputHTMLAttributes, ReactNode, useState, useEffect, useRef } from 'react';
 
 import { Eye, EyeOff } from 'lucide-react';
 import { useController } from 'react-hook-form';
@@ -16,12 +16,28 @@ type PropsType = {
   onClick?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['onClick'];
   style?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['style'];
   autoFocus?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['autoFocus'];
+  onKeyDown?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['onKeyDown'];
+  hideResizeIndicator?: boolean;
 };
 
-const Input = ({ name, label, icon, type = 'text', onBlur, ...props }: PropsType) => {
+const Input = ({ name, label, icon, type = 'text', onBlur, hideResizeIndicator = false, ...props }: PropsType) => {
   const [showPassword, setShowPassword] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const { field, formState: { errors } } = useController({ name });
+
+  useEffect(() => {
+    if (props.autoFocus && field.value) {
+      const element = type === 'textarea' ? textareaRef.current : inputRef.current;
+      if (element) {
+        // Set cursor to end of text
+        const length = field.value.length;
+        element.setSelectionRange(length, length);
+        element.focus();
+      }
+    }
+  }, [props.autoFocus, field.value, type]);
 
   const handleOnBlur = () => {
     if (onBlur) {
@@ -46,11 +62,28 @@ const Input = ({ name, label, icon, type = 'text', onBlur, ...props }: PropsType
           <textarea
             {...field}
             {...props}
-            rows={props.rows || 4}
+            rows={hideResizeIndicator ? 1 : props.rows || 4}
             className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors?.[name]
               ? 'border-red-300 focus:ring-red-500'
               : 'border-gray-300 focus:ring-purple-500'} ${props.className || ''}`}
+            style={{
+              ...props.style,
+              ...(hideResizeIndicator ? { resize: 'none', minHeight: 'auto', overflow: 'hidden' } : {}),
+            }}
             onBlur={handleOnBlur}
+            onInput={hideResizeIndicator ? (e) => {
+              const target = e.target as HTMLTextAreaElement;
+              target.style.height = 'auto';
+              target.style.height = Math.max(target.scrollHeight, 24) + 'px';
+            } : undefined}
+            ref={(ref) => {
+              textareaRef.current = ref;
+              if (ref && hideResizeIndicator) {
+                // Set initial height on mount
+                ref.style.height = 'auto';
+                ref.style.height = Math.max(ref.scrollHeight, 24) + 'px';
+              }
+            }}
           />
         ) : (
           <input
@@ -61,6 +94,7 @@ const Input = ({ name, label, icon, type = 'text', onBlur, ...props }: PropsType
               ? 'border-red-300 focus:ring-red-500'
               : 'border-gray-300 focus:ring-purple-500'} ${props.className || ''}`}
             onBlur={handleOnBlur}
+            ref={inputRef}
           />
         )}
         {type === 'password' && (

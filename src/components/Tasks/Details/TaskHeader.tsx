@@ -2,18 +2,20 @@ import { useState } from 'react';
 
 import dayjs from 'dayjs';
 import { Archive, ArrowLeft, Check, CheckSquare, Copy, Eraser, MoreVertical, MoveRight, Pause, Play, Star, Trash2, X } from 'lucide-react';
-import { useProfileStore } from 'stores/profileStore';
-import { useTaskStore } from 'stores/taskStore';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import DropDown from 'components/Shared/Dropdown';
+import { capitalize, getPriorityColor, getStatusColor } from 'helpers/utils';
+import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
+import { TaskType } from 'helpers/sharedTypes';
 
-import { capitalize, getPriorityColor, getStatusColor } from 'src/helpers/utils';
-import { updateActiveTask } from 'src/services/profile';
-import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'src/helpers/configs';
-import { updateTask } from 'src/services/tasks';
-import { TaskType } from 'src/helpers/sharedTypes';
+import { useTaskStore } from 'stores/taskStore';
+import { useProfileStore } from 'stores/profileStore';
+
+import { updateTask } from 'services/tasks';
+import { updateActiveTask } from 'services/profile';
+
+import DropDown from 'components/Shared/Dropdown';
 
 const moreOptions = [
   { label: 'Mark As Completed', value: 'mark_completed', bgColor: 'text-green-600 bg-green-500/20', icon: <Check className='w-4 h-4' /> },
@@ -96,7 +98,7 @@ const TaskHeader = () => {
   };
 
   return (
-    <div className='flex items-center justify-between'>
+    <div className='flex items-center justify-between 2xl:me-12'>
       <div className='flex items-center space-x-4'>
         <button className={`p-2 rounded-lg transition-colors cursor-pointer ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`} onClick={handleBackClick}>
           <ArrowLeft className='w-5 h-5' />

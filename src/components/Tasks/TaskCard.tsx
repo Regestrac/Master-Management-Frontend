@@ -1,20 +1,24 @@
+import { useState } from 'react';
+
 import { Calendar, Clock, Flame, Pause, Play } from 'lucide-react';
 import dayjs from 'dayjs';
-import { useProfileStore } from 'stores/profileStore';
-import { useTaskStore } from 'stores/taskStore';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import Outline from 'components/Shared/Outline';
-import Dropdown from 'components/Shared/Dropdown';
-import Input from 'components/Shared/Input';
+import { TaskType } from 'helpers/sharedTypes';
+import { formatTimeElapsed, getPriorityColor, getStatusColor } from 'helpers/utils';
+import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
 
-import { TaskType } from 'src/helpers/sharedTypes';
-import { formatTimeElapsed, getPriorityColor, getStatusColor } from 'src/helpers/utils';
-import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'src/helpers/configs';
-import { updateTask } from 'src/services/tasks';
-import { updateActiveTask } from 'src/services/profile';
+import { useTaskStore } from 'stores/taskStore';
+import { useProfileStore } from 'stores/profileStore';
+
+import { updateTask } from 'services/tasks';
+import { updateActiveTask } from 'services/profile';
+
+import Input from 'components/Shared/Input';
+import Dropdown from 'components/Shared/Dropdown';
+import Outline from 'components/Shared/Outline';
 
 type TaskCardPropsType = {
   task: TaskType
@@ -85,6 +89,8 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
     navigate(`/tasks/${task?.id}`);
   };
 
+  const [editName, setEditName] = useState(false);
+
   return (
     <Outline colors={['bg-primary-500', 'bg-secondary-500']} width='3px' variant='rotate' disabled={activeTask !== task?.id}>
       <div
@@ -106,18 +112,32 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
               <div className='flex-1'>
                 <FormProvider {...methods}>
                   <div className='flex items-center gap-3 mb-2'>
-                    <Input
-                      name='title'
-                      label=''
-                      className='font-semibold text-lg cursor-text outline-none p-0! border-none focus:ring-0!'
-                      onClick={(e) => e.stopPropagation()}
-                      onBlur={(value) => {
-                        if (value !== task?.title) {
-                          handleUpdateTask(task?.id?.toString(), { title: value });
-                          updateTaskState({ id: task?.id, title: value });
-                        }
-                      }}
-                    />
+                    {editName ? (
+                      <Input
+                        name='title'
+                        label=''
+                        className='font-semibold text-lg cursor-text outline-none p-0! border-none focus:ring-0!'
+                        onClick={(e) => e.stopPropagation()}
+                        autoFocus
+                        onBlur={(value) => {
+                          if (value !== task?.title) {
+                            handleUpdateTask(task?.id?.toString(), { title: value });
+                            updateTaskState({ id: task?.id, title: value });
+                          }
+                          setEditName(false);
+                        }}
+                      />
+                    ) : (
+                      <h4
+                        className='font-semibold text-lg cursor-text outline-none p-0! border-none focus:ring-0!'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditName(true);
+                        }}
+                      >
+                        {task?.title}
+                      </h4>
+                    )}
                   </div>
                 </FormProvider>
                 {/* <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm mb-3`}>

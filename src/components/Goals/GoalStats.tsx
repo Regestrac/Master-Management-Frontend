@@ -1,4 +1,5 @@
 import { BarChart3, Flame, Pause, Play, Target, Trophy } from 'lucide-react';
+
 import { useProfileStore } from 'stores/profileStore';
 
 const allGoals = [
@@ -160,6 +161,44 @@ const getGoalStats = () => {
   return { total, active, completed, paused, highPriority, averageProgress };
 };
 
+const getStatsColor = (stat: string) => {
+  switch (stat) {
+    case 'total':
+      return 'from-blue-500 to-blue-600';
+    case 'active':
+      return 'from-green-500 to-green-600';
+    case 'completed':
+      return 'from-purple-500 to-purple-600';
+    case 'paused':
+      return 'from-yellow-500 to-yellow-600';
+    case 'highPriority':
+      return 'from-red-500 to-red-600';
+    case 'averageProgress':
+      return 'from-indigo-500 to-indigo-600';
+    default:
+      return '';
+  }
+};
+
+const getStatsIcons = (stat: string) => {
+  switch (stat) {
+    case 'total':
+      return Target;
+    case 'active':
+      return Play;
+    case 'completed':
+      return Trophy;
+    case 'paused':
+      return Pause;
+    case 'highPriority':
+      return Flame;
+    case 'averageProgress':
+      return BarChart3;
+    default:
+      return null;
+  }
+};
+
 const GoalStats = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
 
@@ -168,21 +207,24 @@ const GoalStats = () => {
       {(() => {
         const stats = getGoalStats();
         return [
-          { label: 'Total Goals', value: stats.total, color: 'from-blue-500 to-blue-600', icon: Target },
-          { label: 'Active', value: stats.active, color: 'from-green-500 to-green-600', icon: Play },
-          { label: 'Completed', value: stats.completed, color: 'from-purple-500 to-purple-600', icon: Trophy },
-          { label: 'Paused', value: stats.paused, color: 'from-yellow-500 to-yellow-600', icon: Pause },
-          { label: 'High Priority', value: stats.highPriority, color: 'from-red-500 to-red-600', icon: Flame },
-          { label: 'Avg Progress', value: `${stats.averageProgress}%`, color: 'from-indigo-500 to-indigo-600', icon: BarChart3 },
-        ].map(({ label, value, color, icon: Icon }, index) => (
-          <div key={index} className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg p-4 shadow-sm border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-            <div className={`w-8 h-8 bg-gradient-to-r ${color} rounded-lg mb-2 flex items-center justify-center`}>
-              <Icon className='w-4 h-4 text-white' />
+          { key: 'total', label: 'Total Goals', value: stats.total },
+          { key: 'active', label: 'Active', value: stats.active },
+          { key: 'completed', label: 'Completed', value: stats.completed },
+          { key: 'paused', label: 'Paused', value: stats.paused },
+          { key: 'highPriority', label: 'High Priority', value: stats.highPriority },
+          { key: 'averageProgress', label: 'Avg Progress', value: `${stats.averageProgress}%` },
+        ].map(({ key, label, value }) => {
+          const Icon = getStatsIcons(key);
+          return (
+            <div key={key} className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg p-4 shadow-sm border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+              <div className={`w-8 h-8 bg-gradient-to-r ${getStatsColor(key)} rounded-lg mb-2 flex items-center justify-center`}>
+                {Icon && <Icon className='w-4 h-4 text-white' />}
+              </div>
+              <p className='text-xl font-bold'>{value}</p>
+              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{label}</p>
             </div>
-            <p className='text-xl font-bold'>{value}</p>
-            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{label}</p>
-          </div>
-        ));
+          );
+        });
       })()}
     </div>
   );

@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Plus } from 'lucide-react';
-import { useTaskStore } from 'stores/taskStore';
 import { toast } from 'react-toastify';
 import { useSearchParams } from 'react-router-dom';
 
-import { getAllTasks } from 'src/services/tasks';
+import { useTaskStore } from 'stores/taskStore';
 
-import TaskFilters from './TaskFilters';
-import TaskCard from './TaskCard';
-import CreateTaskCard from './CreateTaskCard';
+import { getAllTasks } from 'services/tasks';
+
+import TaskFilters from 'components/Tasks/TaskFilters';
+import TaskCard from 'components/Tasks/TaskCard';
+import CreateTaskCard from 'components/Tasks/CreateTaskCard';
 
 const TaskList = () => {
   const [createTask, setCreateTask] = useState(false);

@@ -44,18 +44,11 @@ export const postHandler = async ({ path, ...options }: PostHandlerParamsType) =
 
   const responseData = await response.json().catch(() => null);
 
-  if (!response.ok) {
-    const errorMessage =
-      responseData?.error ||
-      responseData?.message ||
-      responseData?.errors?.[0]?.message ||
-      `Error ${response.status}: ${response.statusText}` ||
-      'Something went wrong';
-
-    throw new Error(errorMessage);
+  if (response.ok) {
+    return responseData;
   }
 
-  return responseData;
+  return Promise.reject(responseData);
 };
 
 export const getHandler = async ({ path }: GetHandlerParamsType) => {
@@ -78,13 +71,7 @@ export const getHandler = async ({ path }: GetHandlerParamsType) => {
   const responseData = await response.json().catch(() => null);
 
   if (!response.ok) {
-    const errorMessage =
-      responseData?.error ||
-      responseData?.message ||
-      responseData?.errors?.[0]?.message ||
-      `Error ${response.status}: ${response.statusText}` ||
-      'Something went wrong';
-    throw new Error(errorMessage);
+    return Promise.reject(responseData);
   }
 
   return responseData;
