@@ -50,11 +50,6 @@ const TaskDescription = () => {
   return (
     <FormProvider {...methods}>
       <div className='space-y-3'>
-        {/* <div className={`rounded-xl border transition-colors ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-          <div className='p-6 border-b border-gray-200 dark:border-gray-700'>
-            <EditorField name='description' />
-          </div>
-        </div> */}
         <div className={`rounded-xl border transition-colors ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           <div className='p-6 border-b border-gray-200 dark:border-gray-700'>
             <div className='flex items-center justify-between'>
