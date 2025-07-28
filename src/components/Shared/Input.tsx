@@ -16,6 +16,7 @@ type PropsType = {
   onClick?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['onClick'];
   style?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['style'];
   autoFocus?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['autoFocus'];
+  onKeyDown?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['onKeyDown'];
   hideResizeIndicator?: boolean;
 };
 
