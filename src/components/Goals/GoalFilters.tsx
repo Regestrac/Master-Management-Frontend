@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { Grid2X2, List } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
@@ -54,11 +54,23 @@ const GoalFilters = () => {
 
   const { status, category, sortBy } = useWatch({ control });
 
+  const urlFilterParams = useMemo(() => {
+    let filterObject: { [key: string]: string | string[] } = {};
+    Array.from(searchParams.entries()).forEach(([key, value]) => {
+      if (key === 'status' || key === 'category') {
+        filterObject = { ...filterObject, [key]: searchParams.getAll(key) };
+      } else {
+        filterObject = { ...filterObject, [key]: value };
+      }
+    });
+    return filterObject;
+  }, [searchParams]);
+
   useEffect(() => {
     const statuses = status?.map((option) => option?.value || '');
     const priorities = category?.map((option) => option?.value || '');
-    setSearchParams((prev) => ({ ...prev, status: statuses || [], sortBy: sortBy?.value || '', priority: priorities || [], view: prev.get('view') || 'grid' }));
-  }, [status, sortBy, setSearchParams, category]);
+    setSearchParams({ ...urlFilterParams, status: statuses || [], sortBy: sortBy?.value || '', priority: priorities || [], view: searchParams.get('view') || 'grid' });
+  }, [status, sortBy, setSearchParams, category, urlFilterParams, searchParams]);
 
   const handleUpdateView = (view: 'list' | 'grid') => {
     setSearchParams((prev) => ({ ...prev, view }));

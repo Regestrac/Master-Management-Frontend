@@ -198,11 +198,11 @@ const GoalCard = ({ goal, view, isActive }: GoalCardPropsType) => {
             <div className='w-20 h-2 bg-gray-200 rounded-full overflow-hidden'>
               <div
                 className='h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500'
-                style={{ width: `${goal?.progress > 100 ? 100 : goal?.progress}%` }}
+                style={{ width: `${goal?.progress > 100 ? 100 : goal?.progress || 0}%` }}
               />
             </div>
             <span className='text-sm font-medium w-12 text-right'>
-              {goal?.progress}
+              {goal?.progress || 0}
               %
             </span>
             {renderTimerControls()}
