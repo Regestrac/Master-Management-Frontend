@@ -33,3 +33,23 @@ export type StickyNoteDataType = {
   textColor: string;
   borderColor: string;
 };
+
+export type ModalPropsType = {
+  id?: string;
+  title?: string;
+  modalData?: any;
+  cancelText?: string;
+  description?: string;
+  successText?: string;
+  onCancel?: () => void;
+  onSuccess?: () => void;
+  hideCloseButton?: boolean;
+  disableOutsideClick?: boolean;
+};
+
+export type ModalTypes = {
+  isVisible: boolean;
+  extraProps?: ModalPropsType;
+};
+
+export type ModalNamesType = 'switchTaskModal';
