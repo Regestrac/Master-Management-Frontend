@@ -5,6 +5,8 @@ import useCustomNavigation from 'hooks/useCustomNavigation';
 
 import { ThemeProvider } from 'context/ThemeContext';
 
+import Modals from 'components/Modals';
+
 import routes from './routes/routes';
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
         pauseOnHover
         theme='dark'
       />
+
+      <Modals />
 
     </ThemeProvider>
   );

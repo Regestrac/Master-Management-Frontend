@@ -56,7 +56,7 @@ const ModalWrapper = ({ modalType, children, className }: ModalWrapperPropsType)
     >
       <div
         className={clsx(
-          'relative rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all p-6',
+          'relative rounded-2xl shadow-xl max-w-md w-full mx-4 transform transition-all p-6',
           darkMode ? 'bg-gray-800' : 'bg-white',
         )}
         onClick={(e) => e.stopPropagation()}
