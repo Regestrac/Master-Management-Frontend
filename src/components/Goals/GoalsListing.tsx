@@ -56,7 +56,7 @@ const GoalsListing = () => {
 
       <div className={view === 'list' ? 'space-y-4' : 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6'}>
         {createGoal && <CreateGoalCard handleCancel={handleCancelCreateGoal} view={view} />}
-        {goals.map((goal) => (
+        {goals?.map((goal) => (
           <GoalCard key={goal.id} goal={goal} view={view} isActive={false} />
         ))}
       </div>

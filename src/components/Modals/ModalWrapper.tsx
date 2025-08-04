@@ -26,23 +26,30 @@ const ModalWrapper = ({ modalType, children, className }: ModalWrapperPropsType)
   }, [modalType, updateVisibility]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Escape' && !disableOutsideClick) {
-      e.preventDefault();
+    if (e.key === 'Escape') {
       handleClose();
     }
-  }, [disableOutsideClick, handleClose]);
+  }, [handleClose]);
 
-  const handleOutsideClick = useCallback((e: React.MouseEvent) => {
-    if (!disableOutsideClick && e.target === e.currentTarget) {
+  const handleOutsideClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
       handleClose();
     }
-  }, [disableOutsideClick, handleClose]);
+  }, [handleClose]);
 
   useEffect(() => {
+    // Prevent background scrolling when modal is open
+    // document.body.style.overflow = 'hidden';
+
     if (!disableOutsideClick) {
       document.addEventListener('keydown', handleKeyDown);
     }
-    return () => document.removeEventListener('keydown', handleKeyDown);
+
+    return () => {
+      // Re-enable background scrolling when modal is closed
+      // document.body.style.overflow = '';
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, [disableOutsideClick, handleKeyDown]);
 
   return (

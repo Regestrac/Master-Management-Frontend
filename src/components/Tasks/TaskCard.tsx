@@ -12,6 +12,7 @@ import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
 
 import { useTaskStore } from 'stores/taskStore';
 import { useProfileStore } from 'stores/profileStore';
+import useModalStore from 'stores/modalStore';
 
 import { updateTask } from 'services/tasks';
 import { updateActiveTask } from 'services/profile';
@@ -41,6 +42,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
   const updateTaskState = useTaskStore((state) => state.updateTask);
   const activeTask = useProfileStore((state) => state.data.active_task);
   const updateProfile = useProfileStore((state) => state.updateProfile);
+  const updateVisibility = useModalStore((state) => state.updateVisibility);
 
   const navigate = useNavigate();
 
@@ -62,13 +64,22 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
   //   setExpandedTask(expandedTask === taskId ? null : taskId);
   // };
 
-  const toggleTimer = (taskId: number) => {
-    updateActiveTask({ active_task: activeTask === taskId ? null : taskId }).then((res) => {
-      toast.success(res?.message);
-      updateProfile({ active_task: res?.active_task });
-    }).catch((err) => {
-      toast.error(err?.error);
-    });
+  const handleToggleTimer = (taskId: number) => {
+    const toggleTimer = () => {
+      updateActiveTask({ active_task: activeTask === taskId ? null : taskId }).then((res) => {
+        updateVisibility({ modalType: 'switchTaskModal', isVisible: false });
+        toast.success(res?.message);
+        updateProfile({ active_task: res?.active_task });
+      }).catch((err) => {
+        toast.error(err?.error);
+      });
+    };
+
+    if (activeTask !== taskId) {
+      updateVisibility({ modalType: 'switchTaskModal', isVisible: true, extraProps: { onSuccess: toggleTimer } });
+    } else {
+      toggleTimer();
+    }
   };
 
   const handlePrioritySelect = (value: string | null) => {
@@ -96,6 +107,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
       <div
         className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer`}
         onClick={handleTaskClick}
+        key={task?.id}
       >
         <div className='py-4 px-6'>
           <div className='flex items-center justify-between'>
@@ -198,7 +210,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  toggleTimer(task?.id);
+                  handleToggleTimer(task?.id);
                 }}
                 className={`p-3 rounded-lg transition-colors ${activeTask === task?.id
                   ? 'bg-red-500 hover:bg-red-600 text-white'

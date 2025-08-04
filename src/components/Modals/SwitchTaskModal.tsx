@@ -14,12 +14,15 @@ const SwitchTaskModal = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
   const taskType = useModalStore((state) => state.modals.switchTaskModal.extraProps?.modalData?.taskType);
   const taskName = useModalStore((state) => state.modals.switchTaskModal.extraProps?.modalData?.taskName);
+  const onSuccess = useModalStore((state) => state.modals.switchTaskModal.extraProps?.onSuccess);
 
   const updateVisibility = useModalStore((state) => state.updateVisibility);
 
   const handleConfirm = () => {
     setIsLoading(true);
-    // handle actual switch logic here
+    if (onSuccess) {
+      onSuccess();
+    }
   };
 
   const handleCancel = () => {

@@ -68,7 +68,7 @@ const GoalStats = () => {
   return (
     <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8'>
       {(() => {
-        return stats.map(({ status, count }) => {
+        return stats?.map(({ status, count }) => {
           const Icon = getStatsIcons(status);
           return (
             <div key={status} className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg p-4 shadow-sm border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>

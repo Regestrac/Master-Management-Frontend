@@ -31,6 +31,9 @@ const makeClassVar = (color: string) => {
   return color;
 };
 
+/**
+ * 'key' is required for children.
+ */
 const Outline = ({
   colors,
   width = '1px',
@@ -46,9 +49,11 @@ const Outline = ({
   useEffect(() => {
     if (childRef.current) {
       const computedStyle = window.getComputedStyle(childRef.current);
-      setBorderRadius(computedStyle.borderRadius || '0');
+      if (borderRadius === '0') {
+        setBorderRadius(computedStyle.borderRadius || '0');
+      }
     }
-  }, [children]);
+  }, [borderRadius, children]);
 
   if (disabled) {
     return children;
@@ -76,13 +81,12 @@ const Outline = ({
   } as CSSProperties;
 
   const innerStyle = {
-    borderRadius: `calc(${borderRadius} - ${width})`,
+    borderRadius: borderRadius.includes(' ') ? borderRadius : `calc(${borderRadius} - ${width})`,
   };
 
   return (
     <div style={gradientStyle} className={`${variant}-outline ${className}`}>
       <div style={innerStyle} className='w-full h-full bg-white dark:bg-gray-900'>
-        {/* {children} */}
         {React.cloneElement(child, {
           ref: childRef,
           style: {
