@@ -11,6 +11,7 @@ import { TaskType } from 'helpers/sharedTypes';
 
 import { useTaskStore } from 'stores/taskStore';
 import { useProfileStore } from 'stores/profileStore';
+import { useNavbarStore } from 'stores/navbarStore';
 
 import { updateTask } from 'services/tasks';
 import { updateActiveTask } from 'services/profile';
@@ -38,6 +39,8 @@ const TaskHeader = () => {
   const updateTaskState = useTaskStore((state) => state.updateTask);
   const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
   const updateProfile = useProfileStore((state) => state.updateProfile);
+  const prevPath = useNavbarStore((state) => state.prevPath);
+  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const navigate = useNavigate();
 
@@ -52,7 +55,10 @@ const TaskHeader = () => {
   };
 
   const handleBackClick = () => {
-    navigate('/tasks');
+    if (prevPath) {
+      navigate(prevPath);
+      updatePrevPath('');
+    }
   };
 
   const handleUpdateTask = (id: string, payload: object) => {

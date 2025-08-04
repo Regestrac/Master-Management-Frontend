@@ -75,6 +75,10 @@ const routes: RouteObject[] = [
         element: <TaskDetail />,
       },
       {
+        path: '/goals/:id',
+        element: <TaskDetail />,
+      },
+      {
         path: 'task/create',
         element: <CreateTaskForm />,
       },

@@ -11,6 +11,7 @@ import { StatusType } from 'helpers/sharedTypes';
 
 import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
+import { useNavbarStore } from 'stores/navbarStore';
 
 import { createTask, deleteTask, getSubTasks } from 'services/tasks';
 
@@ -37,6 +38,7 @@ const SubTasks = () => {
 
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
   const parentTaskId = useTaskStore((state) => state.currentTaskDetails?.parent_id);
+  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const subtasksFetchedRef = useRef(false);
 
@@ -79,8 +81,9 @@ const SubTasks = () => {
     });
   };
 
-  const handleSubtaskClick = (id: number) => {
-    navigate(`/tasks/${id}`);
+  const handleSubtaskClick = (subtaskId: number) => {
+    updatePrevPath(`/tasks${id}`);
+    navigate(`/tasks/${subtaskId}`);
   };
 
   useEffect(() => {

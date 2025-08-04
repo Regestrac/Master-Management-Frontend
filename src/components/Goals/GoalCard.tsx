@@ -4,6 +4,7 @@ import { Flame, Clock, Play, Pause, Calendar } from 'lucide-react';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { STATUS_OPTIONS } from 'helpers/configs';
 import { formatTimeElapsed, getStatusColor } from 'helpers/utils';
@@ -12,6 +13,7 @@ import { TaskType } from 'helpers/sharedTypes';
 import { useProfileStore } from 'stores/profileStore';
 import { useGoalStore } from 'stores/goalsStore';
 import useModalStore from 'stores/modalStore';
+import { useNavbarStore } from 'stores/navbarStore';
 
 import { updateTask } from 'services/tasks';
 import { updateActiveTask } from 'services/profile';
@@ -53,6 +55,9 @@ const GoalCard = ({ goal, view }: GoalCardPropsType) => {
   const updateVisibility = useModalStore((state) => state.updateVisibility);
   const activeTask = useProfileStore((state) => state.data.active_task);
   const updateProfile = useProfileStore((state) => state.updateProfile);
+  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
+
+  const navigate = useNavigate();
 
   const bgColor = darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200';
   const textColor = darkMode ? 'text-gray-400' : 'text-gray-600';
@@ -88,6 +93,11 @@ const GoalCard = ({ goal, view }: GoalCardPropsType) => {
     } else {
       toggleTimer();
     }
+  };
+
+  const handleTaskClick = () => {
+    updatePrevPath('/goals');
+    navigate(`/goals/${goal?.id}`);
   };
 
   const getWeeklyProgress = () => ((goal?.currentWeekHours / goal?.weeklyTarget) * 100) > 100 ? 100 : ((goal?.currentWeekHours / goal?.weeklyTarget) * 100);
@@ -208,7 +218,11 @@ const GoalCard = ({ goal, view }: GoalCardPropsType) => {
   if (view === 'list') {
     return (
       <Outline colors={['bg-primary-500', 'bg-secondary-500']} width='3px' variant='rotate' disabled={!isActive}>
-        <div className={clsx('rounded-xl border shadow-sm hover:shadow-md transition-all duration-200', bgColor)} key={`list-${goal?.id}`}>
+        <div
+          className={clsx('rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer', bgColor)}
+          key={`list-${goal?.id}`}
+          onClick={handleTaskClick}
+        >
           <div className='p-6 flex justify-between items-start'>
             <div className='flex items-center space-x-4 flex-1'>
               <div className='flex-1'>
@@ -239,7 +253,11 @@ const GoalCard = ({ goal, view }: GoalCardPropsType) => {
   // Grid View Layout
   return (
     <Outline colors={['bg-primary-500', 'bg-secondary-500']} width='3px' variant='rotate' disabled={!isActive}>
-      <div className={clsx('rounded-xl border shadow-sm hover:shadow-md transition-all duration-200', bgColor)} key={`grid-${goal?.id}`}>
+      <div
+        className={clsx('rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer', bgColor)}
+        key={`grid-${goal?.id}`}
+        onClick={handleTaskClick}
+      >
         <div className='p-6'>
 
           {renderTitle()}
