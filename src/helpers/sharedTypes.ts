@@ -52,4 +52,4 @@ export type ModalTypes = {
   extraProps?: ModalPropsType;
 };
 
-export type ModalNamesType = 'switchTaskModal';
+export type ModalNamesType = 'switchTaskModal' | 'confirmDeleteModal';
