@@ -1,27 +1,87 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Check, List, Plus, Trash2 } from 'lucide-react';
 
+import useModalStore from 'stores/modalStore';
 import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
+
+import {
+  getChecklists,
+  saveChecklist,
+  updateChecklist,
+  deleteChecklist as deleteChecklistApi,
+} from 'src/services/checklist';
 
 const Checklist = () => {
   const [newChecklistItem, setNewChecklistItem] = useState('');
 
+  const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
+  const updateVisibility = useModalStore((state) => state.updateVisibility);
 
-  const toggleChecklistItem = (_id: number) => {
+  const { id } = useParams();
 
+  const shouldFetchChecklist = useRef(true);
+
+  const toggleChecklistItem = (cid: number) => {
+    const item = taskDetails.checklist.find((c) => c.id === cid);
+    if (!item) {
+      return;
+    }
+    updateChecklist(cid, { completed: !item.completed }).then((updated) => {
+      updateTaskDetails({ ...taskDetails, checklist: taskDetails.checklist.map((c) => (c.id === cid ? { ...c, ...updated?.data } : c)) });
+    }).catch((err) => {
+      toast.error(err?.error || 'Could not update checklist item');
+    });
   };
 
-  const removeChecklistItem = (_id: number) => {
-
+  const removeChecklistItem = (cid: number) => {
+    const deleteChecklist = () => {
+      deleteChecklistApi(cid).then((res) => {
+        toast.success(res?.message || 'Checklist item deleted successfully');
+        updateTaskDetails({ ...taskDetails, checklist: taskDetails.checklist.filter((c) => c.id !== cid) });
+      }).catch((err) => {
+        toast.error(err?.error || 'Could not delete checklist item');
+      });
+    };
+    updateVisibility({
+      modalType: 'confirmDeleteModal',
+      isVisible: true,
+      extraProps: {
+        title: 'Delete Checklist Item',
+        description: 'Are you sure you want to delete this checklist item?',
+        onSuccess: deleteChecklist,
+      },
+    });
   };
 
   const addChecklistItem = () => {
-
+    const title = newChecklistItem.trim();
+    if (!title) {
+      return;
+    }
+    saveChecklist({ task_id: taskDetails.id, title }).then((created) => {
+      updateTaskDetails({ ...taskDetails, checklist: [...taskDetails.checklist, created?.data] });
+      setNewChecklistItem('');
+    }).catch((err) => {
+      toast.error(err?.error || 'Could not add checklist item');
+    });
   };
+
+  useEffect(() => {
+    if (id && shouldFetchChecklist.current && taskDetails.id) {
+      getChecklists(`task_id=${id}`).then((res) => {
+        updateTaskDetails({ ...taskDetails, checklist: res?.data });
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to load checklist');
+      });
+      shouldFetchChecklist.current = false;
+    }
+  }, [id, taskDetails, updateTaskDetails]);
 
   return (
     <div className={`rounded-xl border transition-colors ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
@@ -30,14 +90,14 @@ const Checklist = () => {
           <h3 className='text-lg font-semibold flex items-center'>
             <List className='w-5 h-5 mr-2' />
             Checklist (
-            {taskDetails.checklist?.filter((item) => item.completed).length}
+            {taskDetails.checklist?.filter((item) => item.completed).length || 0}
             /
-            {taskDetails.checklist?.length}
+            {taskDetails.checklist?.length || 0}
             )
           </h3>
           <div className='text-sm'>
             <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              {Math.round((taskDetails.checklist?.filter((item) => item.completed).length / taskDetails.checklist?.length) * 100)}
+              {Math.round((taskDetails.checklist?.filter((item) => item.completed).length / taskDetails.checklist?.length) * 100) || 0}
               % Complete
             </span>
           </div>

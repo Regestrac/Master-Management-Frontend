@@ -77,7 +77,8 @@ const GoalCard = ({ goal, view }: GoalCardPropsType) => {
     });
   };
 
-  const onToggleTimer = () => {
+  const onToggleTimer = (e: React.MouseEvent) => {
+    e.stopPropagation();
     const toggleTimer = () => {
       updateActiveTask({ active_task: activeTask === goal?.id ? null : goal?.id }).then((res) => {
         updateVisibility({ modalType: 'switchTaskModal', isVisible: false });
