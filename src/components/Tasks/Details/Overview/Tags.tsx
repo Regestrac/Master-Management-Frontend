@@ -7,61 +7,51 @@ import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
 
 import GenerateTagsButton from 'components/Tasks/ai/GenerateTagsButton';
+import Outline from 'components/Shared/Outline';
 
 const Tags = () => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
-  const taskDetails = useTaskStore((state) => state.currentTaskDetails);
-  const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
-
   const [adding, setAdding] = useState(false);
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
+  const [generatedTags, setGeneratedTags] = useState<string[]>([]);
+
+  const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
+  const taskDetails = useTaskStore((s) => s.currentTaskDetails);
+  const updateTaskDetails = useTaskStore((s) => s.updateCurrentTaskDetails);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const tags = taskDetails.tags || [];
 
-  const handleAddClick = () => {
-    setAdding(true);
-    setError('');
-    setTimeout(() => inputRef.current?.focus(), 0);
-  };
+  const focusInput = () => setTimeout(() => inputRef.current?.focus(), 0);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-    setError(''); // Clear error on input
-  };
+  const normalise = (tag: string) => tag.trim().toLowerCase();
 
   const addTag = (newTag: string) => {
-    const trimmed = newTag.trim().toLowerCase();
-    if (!trimmed) {
-      return;
-    }
-
-    if (tags.some((tag) => tag.toLowerCase() === trimmed)) {
+    const trimmed = normalise(newTag);
+    if (!trimmed) { return; }
+    if (tags.some((t) => normalise(t) === trimmed)) {
       setError('Tag already exists');
       return;
     }
-
     const updatedTags = [...tags, newTag.trim()];
     updateTaskDetails({ ...taskDetails, tags: updatedTags });
     setInput('');
-    // keep adding mode active for next tag
-    setTimeout(() => inputRef.current?.focus(), 0);
+    focusInput();
     setError('');
   };
 
   const removeTag = (tagToRemove: string) => {
-    const updatedTags = tags.filter((tag) => tag !== tagToRemove);
-    updateTaskDetails({ ...taskDetails, tags: updatedTags });
+    updateTaskDetails({ ...taskDetails, tags: tags.filter((t) => t !== tagToRemove) });
   };
 
-  const handleInputBlur = () => {
-    if (!input.trim()) {
-      setAdding(false);
-    }
+  const startAdding = () => {
+    setAdding(true);
+    setError('');
+    focusInput();
   };
 
-  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleInputKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       addTag(input);
@@ -72,8 +62,17 @@ const Tags = () => {
     }
   };
 
+  const handleInputBlur = () => {
+    if (!input.trim()) {
+      setAdding(false);
+      setInput('');
+      setError('');
+    }
+  };
+
   return (
-    <div className={clsx('rounded-xl border transition-all duration-200', darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200')}>
+    <div className={clsx('rounded-xl border transition-all', darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200')}>
+      {/* Header */}
       <div className={clsx('p-6 border-b', darkMode ? 'border-gray-700' : 'border-gray-200')}>
         <div className='flex items-center justify-between'>
           <h3 className={clsx('text-lg font-semibold flex items-center', darkMode ? 'text-white' : 'text-gray-900')}>
@@ -81,7 +80,7 @@ const Tags = () => {
             Tags
           </h3>
           <div className='flex items-center gap-3'>
-            <GenerateTagsButton />
+            <GenerateTagsButton generatedTags={generatedTags} setGeneratedTags={setGeneratedTags} />
             <span className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-500')}>
               {tags.length}
               {' '}
@@ -92,138 +91,122 @@ const Tags = () => {
         </div>
       </div>
 
-      <div className='p-6 min-h-56'>
-        {tags.length === 0 && !adding ? (
-          <div className='flex flex-col items-center gap-4 py-8'>
-            <div className={clsx('text-center', darkMode ? 'text-gray-500' : 'text-gray-400')}>
-              <Tag className='w-8 h-8 mx-auto mb-2 opacity-50' />
-              <p className='text-sm'>No tags yet. Add your first tag to get started.</p>
-            </div>
-            {adding ? (
-              <input
-                ref={inputRef}
-                type='text'
-                className={clsx(
-                  'px-3 py-1.5 border-2 border-dashed rounded-full text-sm font-medium outline-none transition-all duration-200 min-w-[120px]',
-                  error
-                    ? darkMode
-                      ? 'border-red-600 bg-red-900/20 text-red-400 placeholder-red-500'
-                      : 'border-red-400 bg-red-50 text-red-700 placeholder-red-400'
-                    : darkMode
-                      ? 'border-purple-600 bg-gray-800 text-purple-300 placeholder-gray-500 focus:border-purple-500'
-                      : 'border-purple-400 bg-white text-purple-700 placeholder-gray-400 focus:border-purple-500',
-                )}
-                placeholder='Enter tag name'
-                value={input}
-                onChange={handleInputChange}
-                onBlur={handleInputBlur}
-                onKeyDown={handleInputKeyDown}
-                maxLength={24}
-              />
-            ) : (
-              <button
-                type='button'
-                className={clsx(
-                  'inline-flex items-center px-3 py-1.5 border-2 border-dashed rounded-full text-sm font-medium transition-all duration-200 hover:scale-105',
-                  darkMode
-                    ? 'border-gray-600 text-gray-400 hover:border-purple-500 hover:text-purple-400 hover:bg-purple-900/20'
-                    : 'border-gray-300 text-gray-500 hover:border-purple-500 hover:text-purple-600 hover:bg-purple-50',
-                )}
-                onClick={handleAddClick}
-              >
-                <Plus className='w-3 h-3 mr-1' />
-                Add tag
-              </button>
-            )}
+      {/* Body */}
+      <div className='p-6 space-y-4 min-h-56'>
+        {/* --- Empty state ---------------------------------------------------- */}
+        {tags.length === 0 && generatedTags.length === 0 && !adding && (
+          <div className='flex flex-col items-center gap-4 pt-8 pb-2'>
+            <Tag className='w-8 h-8 opacity-50' />
+            <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-500')}>No tags yet. Add your first tag to get started.</p>
           </div>
-        ) : (
+        )}
+        {/* --- Pending AI generated tags -------------------------------------- */}
+        {generatedTags.length > 0 && (
+          <Outline colors={['bg-primary', 'bg-primary-500']} width='2px' variant='rotate'>
+            <div className='flex flex-wrap gap-2 p-3 rounded-2xl'>
+              {generatedTags.map((tag) => (
+                <span
+                  key={`generated-${tag}`}
+                  className={clsx(
+                    'group inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-all',
+                    darkMode
+                      ? 'bg-gradient-to-r from-purple-900/40 to-blue-900/40 text-purple-300 border border-purple-700/50 hover:border-purple-600'
+                      : 'bg-gradient-to-r from-purple-50 to-blue-50 text-purple-700 border border-purple-200 hover:border-purple-300',
+                  )}
+                >
+                  #
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </Outline>
+        )}
+
+        {/* --- Existing tags --------------------------------------------------- */}
+        {tags.length > 0 && (
           <div className='flex flex-wrap gap-2'>
-            {tags.map((tag, index) => (
-              <div
-                key={`${tag}-${index}`}
+            {tags.map((tag) => (
+              <span
+                key={tag}
                 className={clsx(
-                  'group inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105',
+                  'group inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-all',
                   darkMode
                     ? 'bg-gradient-to-r from-purple-900/40 to-blue-900/40 text-purple-300 border border-purple-700/50 hover:border-purple-600'
                     : 'bg-gradient-to-r from-purple-50 to-blue-50 text-purple-700 border border-purple-200 hover:border-purple-300',
                 )}
               >
-                <span className='mr-1 opacity-75'>#</span>
+                #
                 {tag}
                 <button
                   type='button'
                   onClick={() => removeTag(tag)}
                   className={clsx(
-                    'ml-1.5 p-0.5 rounded-full opacity-60 hover:opacity-100 transition-all duration-200 hover:scale-110',
-                    darkMode
-                      ? 'hover:bg-red-900/50 text-red-400'
-                      : 'hover:bg-red-100 text-red-600',
+                    'ml-1.5 p-0.5 rounded-full opacity-60 hover:opacity-100 transition-all hover:scale-110',
+                    darkMode ? 'hover:bg-red-900/50 text-red-400' : 'hover:bg-red-100 text-red-600',
                   )}
                 >
                   <X className='w-3 h-3' />
                 </button>
-              </div>
+              </span>
             ))}
-            {adding ? (
-              <div className='relative'>
-                <div className='flex items-center'>
-                  <input
-                    ref={inputRef}
-                    type='text'
-                    className={clsx(
-                      'px-3 py-1.5 pr-10 border-2 border-dashed rounded-full text-sm font-medium outline-none transition-all duration-200 min-w-[120px]',
-                      error
-                        ? darkMode
-                          ? 'border-red-600 bg-red-900/20 text-red-400 placeholder-red-500'
-                          : 'border-red-400 bg-red-50 text-red-700 placeholder-red-400'
-                        : darkMode
-                          ? 'border-purple-600 bg-gray-800 text-purple-300 placeholder-gray-500 focus:border-purple-500'
-                          : 'border-purple-400 bg-white text-purple-700 placeholder-gray-400 focus:border-purple-500',
-                    )}
-                    placeholder='Enter tag name'
-                    value={input}
-                    onChange={handleInputChange}
-                    onBlur={handleInputBlur}
-                    onKeyDown={handleInputKeyDown}
-                    maxLength={24}
-                  />
-                  <button
-                    type='button'
-                    disabled={!input.trim()}
-                    onClick={() => addTag(input)}
-                    className={clsx(
-                      'absolute right-2 p-1 rounded-full transition-transform hover:scale-110',
-                      darkMode ? 'text-green-400 hover:bg-green-900/30' : 'text-green-600 hover:bg-green-100',
-                    )}
-                  >
-                    <Check className='w-4 h-4' />
-                  </button>
-                </div>
-                {error && (
-                  <div className={clsx(
-                    'absolute top-full left-0 mt-1 px-2 py-1 text-xs rounded whitespace-nowrap z-10',
-                    darkMode ? 'bg-red-900 text-red-300' : 'bg-red-100 text-red-700',
-                  )}
-                  >
-                    {error}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button
-                type='button'
-                className={clsx(
-                  'inline-flex items-center px-3 py-1.5 border-2 border-dashed rounded-full text-sm font-medium transition-all duration-200 hover:scale-105',
-                  darkMode
-                    ? 'border-gray-600 text-gray-400 hover:border-purple-500 hover:text-purple-400 hover:bg-purple-900/20'
-                    : 'border-gray-300 text-gray-500 hover:border-purple-500 hover:text-purple-600 hover:bg-purple-50',
-                )}
-                onClick={handleAddClick}
-              >
-                <Plus className='w-3 h-3 mr-1' />
-                Add tag
-              </button>
+          </div>
+        )}
+
+        {/* --- Add tag flow ---------------------------------------------------- */}
+        {adding ? (
+          <div className='relative w-fit'>
+            <input
+              ref={inputRef}
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                setError('');
+              }}
+              onBlur={handleInputBlur}
+              onKeyDown={handleInputKey}
+              placeholder='Enter tag'
+              maxLength={24}
+              className={clsx(
+                'pl-3 pr-10 py-1.5 min-w-[120px] rounded-full text-sm font-medium outline-none border-2 border-dashed',
+                error
+                  ? darkMode
+                    ? 'border-red-600 bg-red-900/20 text-red-400 placeholder-red-500'
+                    : 'border-red-400 bg-red-50 text-red-700 placeholder-red-400'
+                  : darkMode
+                    ? 'border-purple-600 bg-gray-800 text-purple-300 placeholder-gray-500 focus:border-purple-500'
+                    : 'border-purple-400 bg-white text-purple-700 placeholder-gray-400 focus:border-purple-500',
+              )}
+            />
+            <button
+              type='button'
+              disabled={!input.trim()}
+              onClick={() => addTag(input)}
+              className={clsx(
+                'absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full transition-transform hover:scale-110',
+                darkMode ? 'text-green-400 hover:bg-green-900/30' : 'text-green-600 hover:bg-green-100',
+              )}
+            >
+              <Check className='w-4 h-4' />
+            </button>
+            {error && (
+              <p className={clsx('absolute top-full mt-1 text-xs', darkMode ? 'text-red-300' : 'text-red-600')}>{error}</p>
             )}
+          </div>
+        ) : (
+          <div className='flex justify-center'>
+            <button
+              type='button'
+              onClick={startAdding}
+              className={clsx(
+                'inline-flex items-center px-3 py-1.5 border-2 border-dashed rounded-full text-sm font-medium transition-all hover:scale-105',
+                darkMode
+                  ? 'border-gray-600 text-gray-400 hover:border-purple-500 hover:text-purple-400 hover:bg-purple-900/20'
+                  : 'border-gray-300 text-gray-500 hover:border-purple-500 hover:text-purple-600 hover:bg-purple-50',
+              )}
+            >
+              <Plus className='w-3 h-3 mr-1' />
+              Add tag
+            </button>
           </div>
         )}
       </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -9,16 +9,20 @@ import { generateTags, updateTask } from 'services/tasks';
 
 import FadingCircles from 'icons/FadingCircles';
 
+type GenerateTagsButtonProps = {
+  generatedTags: string[];
+  setGeneratedTags: Dispatch<SetStateAction<string[]>>;
+}
+
 /**
  * GenerateTagsButton
  *
  * Button group for AI-generating tag suggestions. Mirrors the UX pattern of
  * the other AI buttons (Checklist, Subtasks, Description).
  */
-const GenerateTagsButton = () => {
+const GenerateTagsButton = ({ generatedTags, setGeneratedTags }: GenerateTagsButtonProps) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [generatedTags, setGeneratedTags] = useState<string[]>([]);
 
   const { id } = useParams();
 
@@ -27,26 +31,39 @@ const GenerateTagsButton = () => {
 
   const handleGenerateTags = () => {
     if (!id) { return; }
+
+    const payload = {
+      title: taskDetails?.title,
+      existing: taskDetails?.tags || [],
+      description: taskDetails?.description,
+      checklist: (taskDetails?.checklist || []).map((item) => item.title),
+    };
     setIsLoading(true);
-    generateTags(id, { title: taskDetails?.title, existing: taskDetails?.tags || [] })
-      .then((res) => {
-        if (Array.isArray(res?.data)) {
-          setGeneratedTags(res.data as string[]);
-        }
-        setShowConfirmation(true);
-        toast.success(res?.message || 'Tags generated');
-      })
-      .catch((err) => {
-        toast.error(err?.error || 'Failed to generate tags');
-      })
-      .finally(() => setIsLoading(false));
+    generateTags(id, payload).then((res) => {
+      if (Array.isArray(res?.data)) {
+        setGeneratedTags(res.data as string[]);
+      }
+      setShowConfirmation(true);
+      toast.success(res?.message || 'Tags generated');
+    }).catch((err) => {
+      toast.error(err?.error || 'Failed to generate tags');
+    }).finally(() => setIsLoading(false));
   };
 
   const handleAcceptGeneration = () => {
     if (!id || generatedTags.length === 0) { return; }
-    // persist to backend
-    updateTask(id, { tags: generatedTags }).then(() => {
-      updateTaskDetails({ ...taskDetails, tags: generatedTags });
+
+    const payload = {
+      tags: [
+        ...new Set([
+          ...(taskDetails?.tags || []),
+          ...generatedTags,
+        ]),
+      ],
+    };
+
+    updateTask(id, payload).then(() => {
+      updateTaskDetails({ ...taskDetails, tags: payload.tags });
       toast.success('Tags saved');
     }).catch((err) => {
       toast.error(err?.error || 'Failed to save tags');

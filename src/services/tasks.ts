@@ -50,3 +50,8 @@ export const getRecentTasks = () => getHandler({
 export const getTasksStats = () => getHandler({
   path: 'tasks/stats',
 });
+
+export const generateTags = (taskId: string, data: object) => postHandler({
+  path: `tasks/${taskId}/generate-tags`,
+  body: JSON.stringify(data),
+});

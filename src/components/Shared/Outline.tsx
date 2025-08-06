@@ -1,5 +1,9 @@
 import React, { CSSProperties, HTMLAttributes, useEffect, useRef, useState } from 'react';
 
+import clsx from 'clsx';
+
+import { useProfileStore } from 'stores/profileStore';
+
 import { isHexColor } from 'src/helpers/utils';
 
 type OutlineProps = {
@@ -16,7 +20,7 @@ type OutlineProps = {
    *
    */
   colors: string[];
-  width?: string;
+  width?: CSSProperties['width'];
   children: React.ReactElement;
   className?: string;
   variant?: 'solid' | 'rotate' | 'push-pull';
@@ -45,6 +49,8 @@ const Outline = ({
 }: OutlineProps) => {
   const childRef = useRef<HTMLElement>(null);
   const [borderRadius, setBorderRadius] = useState('0');
+
+  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
 
   useEffect(() => {
     if (childRef.current) {
@@ -86,7 +92,7 @@ const Outline = ({
 
   return (
     <div style={gradientStyle} className={`${variant}-outline ${className}`}>
-      <div style={innerStyle} className='w-full h-full bg-white dark:bg-gray-900'>
+      <div style={innerStyle} className={clsx('w-full h-full', darkMode ? 'bg-primary-bg' : 'bg-white')}>
         {React.cloneElement(child, {
           ref: childRef,
           style: {
