@@ -4,6 +4,7 @@ import { TaskType } from 'src/helpers/sharedTypes';
 
 type ChecklistType = {
   id: number;
+  ID?: number;
   title: string;
   completed: boolean;
   created_at: string;

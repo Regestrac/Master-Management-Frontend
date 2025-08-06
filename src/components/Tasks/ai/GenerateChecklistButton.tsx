@@ -1,11 +1,25 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { parseMarkdownJson } from 'helpers/utils';
+
+import { useTaskStore } from 'stores/taskStore';
+
 import { generateChecklist, saveChecklists } from 'services/checklist';
 
 import FadingCircles from 'icons/FadingCircles';
+
+type GeneratedChecklistType = {
+  id: number;
+  title: string;
+};
+
+type GenerateChecklistPropsType = {
+  generatedChecklist: GeneratedChecklistType[];
+  setGeneratedChecklist: Dispatch<SetStateAction<GeneratedChecklistType[]>>;
+}
 
 /**
  * GenerateChecklistButton
@@ -15,41 +29,45 @@ import FadingCircles from 'icons/FadingCircles';
  * generated checklist to the backend or discard it. Pattern follows the other
  * generators inside `src/components/Tasks/ai`.
  */
-const GenerateChecklistButton = () => {
+const GenerateChecklistButton = ({ generatedChecklist, setGeneratedChecklist }: GenerateChecklistPropsType) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [generatedChecklist, setGeneratedChecklist] = useState<{ title: string }[]>([]);
+
+  const taskDetails = useTaskStore((state) => state.currentTaskDetails);
+  const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
 
   const { id } = useParams();
 
   const handleGenerateChecklist = () => {
+    const payload = {
+      title: taskDetails?.title,
+      existing: taskDetails?.checklist || [],
+      description: taskDetails?.description,
+    };
     if (!id) { return; }
     setIsLoading(true);
-    generateChecklist({ taskId: id })
-      .then((res) => {
-        if (Array.isArray(res?.data)) {
-          setGeneratedChecklist(res.data as { title: string }[]);
-        }
-        setShowConfirmation(true);
-        toast.success(res?.message || 'Checklist generated');
-      })
-      .catch((err) => {
-        toast.error(err?.error || 'Failed to generate checklist');
-      })
-      .finally(() => setIsLoading(false));
+    generateChecklist(id, payload).then((res) => {
+      setGeneratedChecklist(parseMarkdownJson(res.data).checklists);
+      setShowConfirmation(true);
+      toast.success(res?.message || 'Checklist generated');
+    }).catch((err) => {
+      toast.error(err?.error || 'Failed to generate checklist');
+    }).finally(() => {
+      setIsLoading(false);
+    });
   };
 
   const handleAcceptGeneration = () => {
     if (!id || generatedChecklist.length === 0) { return; }
-    saveChecklists(generatedChecklist.map((c) => ({ ...c, taskId: id })))
-      .then((res) => {
-        toast.success(res?.message || 'Checklist saved');
-        setGeneratedChecklist([]);
-        setShowConfirmation(false);
-      })
-      .catch((err) => {
-        toast.error(err?.error || 'Failed to save checklist');
-      });
+    const payload = generatedChecklist.map((c) => ({ title: c.title, task_id: Number(id) }));
+    saveChecklists(payload).then((res) => {
+      toast.success(res?.message || 'Checklist saved');
+      setGeneratedChecklist([]);
+      updateTaskDetails({ ...taskDetails, checklist: [...taskDetails.checklist, ...res.data] });
+      setShowConfirmation(false);
+    }).catch((err) => {
+      toast.error(err?.error || 'Failed to save checklist');
+    });
   };
 
   const handleRejectGeneration = () => {

@@ -4,11 +4,14 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Check, List, Plus, Trash2 } from 'lucide-react';
 
+import { isEmpty } from 'helpers/utils';
+
 import useModalStore from 'stores/modalStore';
 import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
 
 import GenerateChecklistButton from 'components/Tasks/ai/GenerateChecklistButton';
+import Outline from 'components/Shared/Outline';
 
 import {
   getChecklists,
@@ -17,8 +20,14 @@ import {
   deleteChecklist as deleteChecklistApi,
 } from 'src/services/checklist';
 
+type GeneratedChecklistType = {
+  id: number;
+  title: string;
+};
+
 const Checklist = () => {
   const [newChecklistItem, setNewChecklistItem] = useState('');
+  const [generatedChecklist, setGeneratedChecklist] = useState<GeneratedChecklistType[]>([]);
 
   const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
@@ -98,7 +107,7 @@ const Checklist = () => {
             )
           </h3>
           <div className='text-sm flex items-center gap-3'>
-            <GenerateChecklistButton />
+            <GenerateChecklistButton generatedChecklist={generatedChecklist} setGeneratedChecklist={setGeneratedChecklist} />
             <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               {Math.round((taskDetails.checklist?.filter((item) => item.completed).length / taskDetails.checklist?.length) * 100) || 0}
               % Complete
@@ -129,9 +138,27 @@ const Checklist = () => {
 
         {/* Checklist items */}
         <div className='space-y-2'>
+          {!isEmpty(generatedChecklist) && (
+            <Outline colors={['bg-primary', 'bg-primary-500']} width='2px' variant='rotate' animationDuration='2s'>
+              <div className='space-y-2 bg-secondary-bg p-2 rounded-xl'>
+                {Array.isArray(generatedChecklist) && generatedChecklist?.map((item) => (
+                  <div
+                    key={item.id}
+                    className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}
+                  >
+                    <div className='flex items-center space-x-3 flex-1'>
+                      <p>
+                        {item.title}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Outline>
+          )}
           {taskDetails.checklist?.map((item) => (
             <div
-              key={item.id}
+              key={item.id || item.ID}
               className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${darkMode ? 'border-gray-700' : 'border-gray-200'} ${item.completed ? 'opacity-75' : ''}`}
             >
               <div className='flex items-center space-x-3 flex-1'>

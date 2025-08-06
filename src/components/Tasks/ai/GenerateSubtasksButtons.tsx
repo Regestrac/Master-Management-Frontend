@@ -3,6 +3,8 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { parseJsonArray } from 'helpers/utils';
+
 import { useTaskStore } from 'stores/taskStore';
 
 import { generateSubTasks, saveSubTasks } from 'services/tasks';
@@ -13,32 +15,6 @@ type PropsType = {
   generatedTasks: { title: string; description: string; }[];
   setGeneratedTasks: Dispatch<SetStateAction<{ title: string; description: string; }[]>>;
 };
-
-function parseJsonArray(jsonString: string) {
-  let cleanedJsonString = jsonString.trim(); // Trim whitespace from both ends
-
-  // Check if the string starts with '```json' and ends with '```'
-  if (cleanedJsonString.startsWith('```json') && cleanedJsonString.endsWith('```')) {
-    // Remove '```json' from the beginning (and the newline after it)
-    cleanedJsonString = cleanedJsonString.substring('```json\n'.length);
-    // Remove '```' from the end
-    cleanedJsonString = cleanedJsonString.substring(0, cleanedJsonString.length - '```'.length);
-    cleanedJsonString = cleanedJsonString.trim(); // Trim again in case of extra newlines/spaces
-  }
-
-  try {
-    const parsedData = JSON.parse(cleanedJsonString);
-
-    // Ensure the parsed data is indeed an array
-    if (!Array.isArray(parsedData)) {
-      throw new Error('The provided JSON string does not represent an array.');
-    }
-
-    return parsedData;
-  } catch {
-    return [];
-  }
-}
 
 const GenerateSubtasksButtons = ({ generatedTasks, setGeneratedTasks }: PropsType) => {
   const [showConfirmation, setShowConfirmation] = useState(false);

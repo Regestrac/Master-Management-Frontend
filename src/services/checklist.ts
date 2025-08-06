@@ -25,8 +25,8 @@ export const updateChecklist = (checklistId: number | string, data: object) => p
 });
 
 // Generate a checklist with AI-assist
-export const generateChecklist = (data: object) => postHandler({
-  path: 'checklists/generate',
+export const generateChecklist = (taskId: string, data: object) => postHandler({
+  path: `checklists/${taskId}/generate-checklists`,
   body: JSON.stringify(data),
 });
 

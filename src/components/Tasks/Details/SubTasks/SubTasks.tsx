@@ -116,8 +116,9 @@ const SubTasks = () => {
           <div className='flex flex-row gap-4 text-sm'>
             <GenerateSubtasksButtons generatedTasks={generatedTasks} setGeneratedTasks={setGeneratedTasks} />
             <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              {Math.round((subtasks.filter((st) => st.status === 'completed').length / subtasks.length) * 100)}
-              % Complete
+              {subtasks.length ? (
+                Math.round((subtasks.filter((st) => st.status === 'completed').length / subtasks.length) * 100) || 0 + '% Complete'
+              ) : 'No subtasks'}
             </span>
           </div>
         </div>

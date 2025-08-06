@@ -255,3 +255,45 @@ export const omit = <T extends object, K extends keyof T>(obj: T, keys: K | K[])
     Object.entries(obj).filter(([key]) => !keysToOmit.has(key as K)),
   ) as Omit<T, K>;
 };
+
+export function parseJsonArray(jsonString: string) {
+  let cleanedJsonString = jsonString.trim(); // Trim whitespace from both ends
+
+  // Check if the string starts with '```json' and ends with '```'
+  if (cleanedJsonString.startsWith('```json') && cleanedJsonString.endsWith('```')) {
+    // Remove '```json' from the beginning (and the newline after it)
+    cleanedJsonString = cleanedJsonString.substring('```json\n'.length);
+    // Remove '```' from the end
+    cleanedJsonString = cleanedJsonString.substring(0, cleanedJsonString.length - '```'.length);
+    cleanedJsonString = cleanedJsonString.replace(/\n/g, '');
+    cleanedJsonString = cleanedJsonString.trim(); // Trim again in case of extra newlines/spaces
+  }
+  try {
+    const parsedData = JSON.parse(cleanedJsonString);
+
+    // Ensure the parsed data is indeed an array
+    if (!Array.isArray(parsedData)) {
+      throw new Error('The provided JSON string does not represent an array.');
+    }
+
+    return parsedData;
+  } catch {
+    return [];
+  }
+}
+
+export function parseMarkdownJson(markdownString: string) {
+  const regex = /```(?:json)?\n([\s\S]*?)\n```/;
+  const match = markdownString.match(regex);
+
+  if (!match || match.length < 2) {
+    throw new Error('No valid JSON block found in the input string.');
+  }
+
+  try {
+    const jsonStr = match[1];
+    return JSON.parse(jsonStr);
+  } catch (error) {
+    throw new Error('Failed to parse JSON: ' + (error as Error).message);
+  }
+}
