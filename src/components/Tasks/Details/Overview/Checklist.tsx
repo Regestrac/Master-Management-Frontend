@@ -8,6 +8,8 @@ import useModalStore from 'stores/modalStore';
 import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
 
+import GenerateChecklistButton from 'components/Tasks/ai/GenerateChecklistButton';
+
 import {
   getChecklists,
   saveChecklist,
@@ -95,7 +97,8 @@ const Checklist = () => {
             {taskDetails.checklist?.length || 0}
             )
           </h3>
-          <div className='text-sm'>
+          <div className='text-sm flex items-center gap-3'>
+            <GenerateChecklistButton />
             <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               {Math.round((taskDetails.checklist?.filter((item) => item.completed).length / taskDetails.checklist?.length) * 100) || 0}
               % Complete
