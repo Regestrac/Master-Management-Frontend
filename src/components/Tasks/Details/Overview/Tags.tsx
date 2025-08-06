@@ -6,6 +6,8 @@ import clsx from 'clsx';
 import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
 
+import GenerateTagsButton from 'components/Tasks/ai/GenerateTagsButton';
+
 const Tags = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
@@ -79,6 +81,7 @@ const Tags = () => {
             Tags
           </h3>
           <div className='flex items-center gap-3'>
+            <GenerateTagsButton />
             <span className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-500')}>
               {tags.length}
               {' '}
