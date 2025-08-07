@@ -82,7 +82,7 @@ const SubTasks = () => {
   };
 
   const handleSubtaskClick = (subtaskId: number) => {
-    updatePrevPath(`/tasks${id}`);
+    updatePrevPath(`/tasks/${id}`);
     navigate(`/tasks/${subtaskId}`);
   };
 

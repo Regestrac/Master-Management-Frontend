@@ -55,10 +55,8 @@ const TaskHeader = () => {
   };
 
   const handleBackClick = () => {
-    if (prevPath) {
-      navigate(prevPath);
-      updatePrevPath('');
-    }
+    navigate(prevPath || '/dashboard');
+    updatePrevPath('');
   };
 
   const handleUpdateTask = (id: string, payload: object) => {

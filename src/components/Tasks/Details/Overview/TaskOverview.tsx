@@ -44,7 +44,7 @@ const TaskOverview = () => {
         <TaskDescription />
         <SubTasks />
       </div>
-      <div className='lg:col-span-2 overflow-auto max-h-[70vh] flex flex-col space-y-6 pr-2'>
+      <div className='lg:col-span-2 overflow-auto max-h-[70vh] flex flex-col space-y-6 pr-2 scrollbar-sm'>
         <Checklist />
         {/* <StickyNotes /> */}
         <Tags />
