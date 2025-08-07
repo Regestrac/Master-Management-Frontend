@@ -27,6 +27,8 @@ type GeneratedChecklistType = {
 
 const Checklist = () => {
   const [newChecklistItem, setNewChecklistItem] = useState('');
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingValue, setEditingValue] = useState('');
   const [generatedChecklist, setGeneratedChecklist] = useState<GeneratedChecklistType[]>([]);
 
   const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
@@ -37,6 +39,28 @@ const Checklist = () => {
   const { id } = useParams();
 
   const shouldFetchChecklist = useRef(true);
+
+  const startEditing = (cid: number, title: string) => {
+    setEditingId(cid);
+    setEditingValue(title);
+  };
+
+  const saveEdit = (cid: number) => {
+    const title = editingValue.trim();
+    if (!title) {
+      setEditingId(null);
+      return;
+    }
+    updateChecklist(cid, { title }).then((updated) => {
+      updateTaskDetails({
+        ...taskDetails,
+        checklist: taskDetails.checklist.map((c) => (c.id === cid ? { ...c, ...updated?.data } : c)),
+      });
+      setEditingId(null);
+    }).catch((err) => {
+      toast.error(err?.error || 'Could not update checklist title');
+    });
+  };
 
   const toggleChecklistItem = (cid: number) => {
     const item = taskDetails.checklist.find((c) => c.id === cid);
@@ -172,9 +196,31 @@ const Checklist = () => {
                 >
                   {item.completed && <Check className='w-2.5 h-2.5 text-white' />}
                 </button>
-                <p className={`${item.completed ? 'line-through' : ''}`}>
-                  {item.title}
-                </p>
+                {editingId === item.id ? (
+                  <input
+                    value={editingValue}
+                    onChange={(e) => setEditingValue(e.target.value)}
+                    onBlur={() => saveEdit(item.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        saveEdit(item.id);
+                      } else if (e.key === 'Escape') {
+                        setEditingId(null);
+                      }
+                    }}
+                    className={`${item.completed ? 'line-through' : ''} flex-1 bg-transparent outline-none border-none`}
+                  />
+                ) : (
+                  <p
+                    role='button'
+                    tabIndex={0}
+                    onClick={() => !item.completed && startEditing(item.id, item.title)}
+                    className={`${item.completed ? 'line-through' : ''}`}
+                  >
+                    {item.title}
+                  </p>
+                )}
               </div>
               <button
                 onClick={() => removeChecklistItem(item.id)}
