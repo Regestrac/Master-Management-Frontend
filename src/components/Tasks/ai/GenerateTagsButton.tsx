@@ -34,15 +34,13 @@ const GenerateTagsButton = ({ generatedTags, setGeneratedTags }: GenerateTagsBut
 
     const payload = {
       title: taskDetails?.title,
-      existing: taskDetails?.tags || [],
+      existing_tags: taskDetails?.tags || [],
       description: taskDetails?.description,
-      checklist: (taskDetails?.checklist || []).map((item) => item.title),
+      checklists: (taskDetails?.checklist || []).map((item) => item.title),
     };
     setIsLoading(true);
     generateTags(id, payload).then((res) => {
-      if (Array.isArray(res?.data)) {
-        setGeneratedTags(res.data as string[]);
-      }
+      setGeneratedTags(JSON.parse(res.tags).tags);
       setShowConfirmation(true);
       toast.success(res?.message || 'Tags generated');
     }).catch((err) => {
@@ -65,10 +63,11 @@ const GenerateTagsButton = ({ generatedTags, setGeneratedTags }: GenerateTagsBut
     updateTask(id, payload).then(() => {
       updateTaskDetails({ ...taskDetails, tags: payload.tags });
       toast.success('Tags saved');
+      setGeneratedTags([]);
+      setShowConfirmation(false);
     }).catch((err) => {
       toast.error(err?.error || 'Failed to save tags');
     });
-    setShowConfirmation(false);
   };
 
   const handleRejectGeneration = () => {

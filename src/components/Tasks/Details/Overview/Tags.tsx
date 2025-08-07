@@ -1,10 +1,14 @@
-import { useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 import { Plus, Tag, X, Check } from 'lucide-react';
 import clsx from 'clsx';
+import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
 
 import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
+
+import { updateTask } from 'services/tasks';
 
 import GenerateTagsButton from 'components/Tasks/ai/GenerateTagsButton';
 import Outline from 'components/Shared/Outline';
@@ -19,30 +23,44 @@ const Tags = () => {
   const taskDetails = useTaskStore((s) => s.currentTaskDetails);
   const updateTaskDetails = useTaskStore((s) => s.updateCurrentTaskDetails);
 
+  const tags = useMemo(() => taskDetails?.tags || [], [taskDetails?.tags]);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const tags = taskDetails.tags || [];
+  const { id } = useParams();
 
   const focusInput = () => setTimeout(() => inputRef.current?.focus(), 0);
 
   const normalise = (tag: string) => tag.trim().toLowerCase();
 
+  const saveTags = useCallback((type: 'add' | 'remove') => {
+    if (id && taskDetails?.tags?.length > 0) {
+      updateTask(id, { tags: taskDetails?.tags }).then(() => {
+        toast.success(`Tag ${type === 'add' ? 'added' : 'removed'}`);
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to update tags!');
+      });
+    };
+  }, [id, taskDetails?.tags]);
+
   const addTag = (newTag: string) => {
     const trimmed = normalise(newTag);
     if (!trimmed) { return; }
-    if (tags.some((t) => normalise(t) === trimmed)) {
+    if (tags?.some((t) => normalise(t) === trimmed)) {
       setError('Tag already exists');
       return;
     }
     const updatedTags = [...tags, newTag.trim()];
     updateTaskDetails({ ...taskDetails, tags: updatedTags });
+    saveTags('add');
     setInput('');
     focusInput();
     setError('');
   };
 
   const removeTag = (tagToRemove: string) => {
-    updateTaskDetails({ ...taskDetails, tags: tags.filter((t) => t !== tagToRemove) });
+    updateTaskDetails({ ...taskDetails, tags: tags?.filter((t) => t !== tagToRemove) });
+    saveTags('remove');
   };
 
   const startAdding = () => {
@@ -82,10 +100,10 @@ const Tags = () => {
           <div className='flex items-center gap-3'>
             <GenerateTagsButton generatedTags={generatedTags} setGeneratedTags={setGeneratedTags} />
             <span className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-500')}>
-              {tags.length}
+              {tags?.length}
               {' '}
               tag
-              {tags.length !== 1 ? 's' : ''}
+              {tags?.length !== 1 ? 's' : ''}
             </span>
           </div>
         </div>
@@ -94,7 +112,7 @@ const Tags = () => {
       {/* Body */}
       <div className='p-6 space-y-4 min-h-56'>
         {/* --- Empty state ---------------------------------------------------- */}
-        {tags.length === 0 && generatedTags.length === 0 && !adding && (
+        {tags?.length === 0 && generatedTags.length === 0 && !adding && (
           <div className='flex flex-col items-center gap-4 pt-8 pb-2'>
             <Tag className='w-8 h-8 opacity-50' />
             <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-500')}>No tags yet. Add your first tag to get started.</p>
@@ -123,9 +141,9 @@ const Tags = () => {
         )}
 
         {/* --- Existing tags --------------------------------------------------- */}
-        {tags.length > 0 && (
+        {tags?.length > 0 && (
           <div className='flex flex-wrap gap-2'>
-            {tags.map((tag) => (
+            {tags?.map((tag) => (
               <span
                 key={tag}
                 className={clsx(
