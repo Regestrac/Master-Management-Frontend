@@ -36,7 +36,7 @@ const GenerateTagsButton = ({ generatedTags, setGeneratedTags }: GenerateTagsBut
       title: taskDetails?.title,
       existing_tags: taskDetails?.tags || [],
       description: taskDetails?.description,
-      checklists: (taskDetails?.checklist || []).map((item) => item.title),
+      checklists: (taskDetails?.checklists || []).map((item) => item.title),
     };
     setIsLoading(true);
     generateTags(id, payload).then((res) => {

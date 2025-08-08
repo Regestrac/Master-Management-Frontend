@@ -1,9 +1,7 @@
 import { useState } from 'react';
 
-import {
-  Check,
-  X,
-} from 'lucide-react';
+import { Check, X } from 'lucide-react';
+
 import { useProfileStore } from 'stores/profileStore';
 
 const RestOfTaskDetails = () => {

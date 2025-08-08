@@ -33,7 +33,7 @@ type TaskDetailsType = TaskType & {
   startedAt: string;
   description: string;
   parent_id: number;
-  checklist: ChecklistType[];
+  checklists: ChecklistType[];
   notes: StickyNotesType[]
   tags: string[];
   comments: CommentsType[];

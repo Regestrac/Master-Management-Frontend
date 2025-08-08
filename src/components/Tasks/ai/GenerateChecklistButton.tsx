@@ -41,7 +41,7 @@ const GenerateChecklistButton = ({ generatedChecklist, setGeneratedChecklist }: 
   const handleGenerateChecklist = () => {
     const payload = {
       title: taskDetails?.title,
-      existing: taskDetails?.checklist || [],
+      existing: taskDetails?.checklists || [],
       description: taskDetails?.description,
     };
     if (!id) { return; }
@@ -63,7 +63,7 @@ const GenerateChecklistButton = ({ generatedChecklist, setGeneratedChecklist }: 
     saveChecklists(payload).then((res) => {
       toast.success(res?.message || 'Checklist saved');
       setGeneratedChecklist([]);
-      updateTaskDetails({ ...taskDetails, checklist: [...taskDetails.checklist, ...res.data] });
+      updateTaskDetails({ ...taskDetails, checklists: [...taskDetails.checklists, ...res.data] });
       setShowConfirmation(false);
     }).catch((err) => {
       toast.error(err?.error || 'Failed to save checklist');
