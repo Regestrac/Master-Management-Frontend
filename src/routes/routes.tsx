@@ -15,6 +15,7 @@ import TaskManagementAppDesign from 'components/StyleGuide/TaskManagementAppDesi
 import TaskDetail from 'components/Tasks/Details/TaskDetails';
 import Goals from 'components/Goals/Goals';
 import WorkspaceHome from 'components/Workspace/WorkspaceHome';
+import WorkspaceDetail from 'components/Workspace/WorkspaceDetail';
 import CreateTaskForm from 'components/Tasks/CreateTaskForm';
 import RootLayoutWrapper from 'components/Layout/RootLayoutWrapper';
 
@@ -86,6 +87,10 @@ const routes: RouteObject[] = [
       {
         path: 'task/create',
         element: <CreateTaskForm />,
+      },
+      {
+        path: '/workspace/:id',
+        element: <WorkspaceDetail />,
       },
       {
         path: '/not-found',
