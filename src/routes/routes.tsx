@@ -14,6 +14,7 @@ import Tasks from 'components/Tasks/Tasks';
 import TaskManagementAppDesign from 'components/StyleGuide/TaskManagementAppDesign';
 import TaskDetail from 'components/Tasks/Details/TaskDetails';
 import Goals from 'components/Goals/Goals';
+import WorkspaceHome from 'components/Workspace/WorkspaceHome';
 import CreateTaskForm from 'components/Tasks/CreateTaskForm';
 import RootLayoutWrapper from 'components/Layout/RootLayoutWrapper';
 
@@ -53,6 +54,10 @@ const routes: RouteObject[] = [
           {
             path: '/goals',
             element: <Goals />,
+          },
+          {
+            path: '/workspace',
+            element: <WorkspaceHome />,
           },
           {
             path: '/analytics',

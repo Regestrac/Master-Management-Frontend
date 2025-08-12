@@ -1,4 +1,4 @@
-import { BarChart3, Calendar, CheckSquare, Home, Settings, Target, User } from 'lucide-react';
+import { BarChart3, Building2, Calendar, CheckSquare, Home, Settings, Target, User } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useNavbarStore } from 'stores/navbarStore';
@@ -8,6 +8,7 @@ const navbarItems = [
   { id: 'dashboard', icon: Home, label: 'Dashboard' },
   { id: 'tasks', icon: CheckSquare, label: 'Tasks' },
   { id: 'goals', icon: Target, label: 'Goals' },
+  { id: 'workspace', icon: Building2, label: 'Workspace' },
   { id: 'analytics', icon: BarChart3, label: 'Analytics' },
   { id: 'calendar', icon: Calendar, label: 'Calendar' },
   { id: 'profile', icon: User, label: 'Profile' },
