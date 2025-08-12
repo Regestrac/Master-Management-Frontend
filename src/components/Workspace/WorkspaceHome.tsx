@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { PlusCircle, Users, Loader2, AlertCircle } from 'lucide-react';
 
 import { useProfileStore } from 'stores/profileStore';
-
-import WorkspaceModal from './WorkspaceModal';
+import useModalStore from 'stores/modalStore';
 
 // Mock API functions
 const mockApi = {
@@ -32,7 +31,6 @@ const mockApi = {
 const WorkspaceHome = () => {
   const [workspaces, setWorkspaces] = useState<{ id: number; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
@@ -55,39 +53,11 @@ const WorkspaceHome = () => {
     fetchWorkspaces();
   }, []);
 
-  const handleWorkspaceAction = async (data: { name: string; inviteCode?: string }) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      if (data.inviteCode) {
-        const workspace = await mockApi.joinWorkspace(data.inviteCode);
-        setWorkspaces((prev) => [...prev, workspace]);
-      } else {
-        const workspace = await mockApi.createWorkspace(data.name);
-        setWorkspaces((prev) => [...prev, workspace]);
-      }
-
-      setIsModalOpen(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const updateVisibility = useModalStore((s) => s.updateVisibility);
 
   return (
     <div className='p-8 space-y-8 h-[calc(100vh-165px)]'>
-      <WorkspaceModal
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setError(null);
-        }}
-        onSubmit={handleWorkspaceAction}
-        isLoading={isLoading}
-        error={error}
-      />
+      {/* Workspace modal is now handled via global Modals registry */}
 
       <header className='flex items-center justify-between'>
         <h1 className='text-2xl font-bold flex items-center gap-2'>
@@ -97,7 +67,22 @@ const WorkspaceHome = () => {
         <button
           type='button'
           className='flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500 hover:bg-purple-600 text-white transition-colors disabled:opacity-50'
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => updateVisibility({
+            modalType: 'workspaceModal',
+            isVisible: true,
+            extraProps: {
+              onSuccess: async (data?: { name?: string; inviteCode?: string }) => {
+                if (!data) { return; }
+                if (data.inviteCode) {
+                  const workspace = await mockApi.joinWorkspace(data.inviteCode);
+                  setWorkspaces((prev) => [...prev, workspace]);
+                } else if (data.name) {
+                  const workspace = await mockApi.createWorkspace(data.name);
+                  setWorkspaces((prev) => [...prev, workspace]);
+                }
+              },
+            },
+          })}
           disabled={isLoading}
         >
           <PlusCircle className='w-5 h-5' />

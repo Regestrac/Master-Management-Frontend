@@ -42,7 +42,7 @@ export type ModalPropsType = {
   description?: string;
   successText?: string;
   onCancel?: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (_payload?: any) => void;
   hideCloseButton?: boolean;
   disableOutsideClick?: boolean;
 };
@@ -52,4 +52,4 @@ export type ModalTypes = {
   extraProps?: ModalPropsType;
 };
 
-export type ModalNamesType = 'switchTaskModal' | 'confirmDeleteModal';
+export type ModalNamesType = 'switchTaskModal' | 'confirmDeleteModal' | 'workspaceModal';
