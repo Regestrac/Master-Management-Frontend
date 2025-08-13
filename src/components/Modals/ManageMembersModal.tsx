@@ -22,9 +22,21 @@ const getInitials = (fullName: string) => {
 
 const ManageMembersModal = () => {
   const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
-  const { extraProps } = useModalStore((s) => s.modals.manageMembersModal);
-  const data = (extraProps?.modalData as ExtraProps) || ({} as ExtraProps);
+  const { modals } = useModalStore();
+  const data = (modals.manageMembersModal?.extraProps as { modalData?: ExtraProps })?.modalData || {};
   const { members = [], canManage = false, onChangeRole, onRemoveMember } = data;
+
+  // Shared color mapping for member visuals (consistent across app)
+  const colorClasses = [
+    { bg: 'bg-rose-500', ring: 'ring-rose-300 dark:ring-rose-900/40' },
+    { bg: 'bg-orange-500', ring: 'ring-orange-300 dark:ring-orange-900/40' },
+    { bg: 'bg-amber-500', ring: 'ring-amber-300 dark:ring-amber-900/40' },
+    { bg: 'bg-lime-500', ring: 'ring-lime-300 dark:ring-lime-900/40' },
+    { bg: 'bg-emerald-500', ring: 'ring-emerald-300 dark:ring-emerald-900/40' },
+    { bg: 'bg-sky-500', ring: 'ring-sky-300 dark:ring-sky-900/40' },
+    { bg: 'bg-violet-500', ring: 'ring-violet-300 dark:ring-violet-900/40' },
+    { bg: 'bg-pink-500', ring: 'ring-pink-300 dark:ring-pink-900/40' },
+  ];
 
   return (
     <ModalWrapper modalType='manageMembersModal'>
@@ -41,11 +53,13 @@ const ManageMembersModal = () => {
             )}
           >
             <div className='flex items-center gap-3'>
-              <div className='w-8 h-8 rounded-full overflow-hidden border border-gray-300 dark:border-gray-600 flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'>
+              <div className='w-8 h-8 rounded-full overflow-hidden border border-gray-300 dark:border-gray-600 flex items-center justify-center'>
                 {m.avatarUrl ? (
-                  <img src={m.avatarUrl} alt={m.name} className='w-full h-full object-cover' />
+                  <img src={m.avatarUrl} alt={m.name} className={`w-full h-full object-cover ring-2 ${colorClasses[m.id % colorClasses.length].ring}`} />
                 ) : (
-                  <span className='text-xs font-semibold'>{getInitials(m.name)}</span>
+                  <span className={`text-xs font-semibold text-white ${colorClasses[m.id % colorClasses.length].bg} w-full h-full flex items-center justify-center`}>
+                    {getInitials(m.name)}
+                  </span>
                 )}
               </div>
               <div>

@@ -33,10 +33,16 @@ const WorkspaceDetail = () => {
     { id: 5, name: 'Taylor Kim', role: 'Member' },
     { id: 6, name: 'Morgan Lee', role: 'Member' },
   ]);
-  const [tasks] = useState<{ id: number; title: string; status: 'Open' | 'In Progress' | 'Done' }[]>([
-    { id: 101, title: 'Set up workspace rules', status: 'Open' },
-    { id: 102, title: 'Invite teammates', status: 'In Progress' },
-    { id: 103, title: 'Plan sprint backlog', status: 'Done' },
+  const [tasks] = useState<{
+    id: number;
+    title: string;
+    status: 'Open' | 'In Progress' | 'Done';
+    assignees: number[];
+    dueDate: string;
+  }[]>([
+    { id: 101, title: 'Set up workspace rules', status: 'Open', assignees: [1, 2], dueDate: '2025-08-20' },
+    { id: 102, title: 'Invite teammates', status: 'In Progress', assignees: [3], dueDate: '2025-08-22' },
+    { id: 103, title: 'Plan sprint backlog', status: 'Done', assignees: [2, 4, 5], dueDate: '2025-08-18' },
   ]);
   const [goals] = useState<{ id: number; title: string; status: 'Not Started' | 'In Progress' | 'Achieved' }[]>([
     { id: 201, title: 'Ship MVP', status: 'In Progress' },
@@ -172,7 +178,7 @@ const WorkspaceDetail = () => {
                 });
               }
             }}
-            className='flex items-center gap-1 p-2 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-400/40'
+            className='flex items-center -space-x-2 p-2 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-400/40'
           >
             {members.slice(0, 5).map((m, idx) => {
               const isOverflowChip = members.length > 5 && idx === 4;
@@ -192,7 +198,7 @@ const WorkspaceDetail = () => {
                         },
                       },
                     })}
-                    className={`w-10 h-10 rounded-full border flex items-center justify-center shadow-sm ${darkMode ? 'border-gray-700 bg-gray-800 text-gray-300 hover:ring-2 hover:ring-emerald-400/30' : 'border-gray-200 bg-white text-gray-700 hover:ring-2 hover:ring-emerald-500/30'}`}
+                    className={`w-10 h-10 rounded-full border flex items-center justify-center shadow-sm ${darkMode ? 'border-gray-700 bg-gray-800 text-gray-300' : 'border-gray-200 bg-white text-gray-700'}`}
                     title='Manage members'
                   >
                     +
@@ -201,17 +207,43 @@ const WorkspaceDetail = () => {
                 );
               }
 
+              // Assign individual colors per member (stable via index)
+              const colorClasses = [
+                { bg: 'bg-rose-500', ring: 'ring-rose-300 dark:ring-rose-900/40' },
+                { bg: 'bg-orange-500', ring: 'ring-orange-300 dark:ring-orange-900/40' },
+                { bg: 'bg-amber-500', ring: 'ring-amber-300 dark:ring-amber-900/40' },
+                { bg: 'bg-lime-500', ring: 'ring-lime-300 dark:ring-lime-900/40' },
+                { bg: 'bg-emerald-500', ring: 'ring-emerald-300 dark:ring-emerald-900/40' },
+                { bg: 'bg-sky-500', ring: 'ring-sky-300 dark:ring-sky-900/40' },
+                { bg: 'bg-violet-500', ring: 'ring-violet-300 dark:ring-violet-900/40' },
+                { bg: 'bg-pink-500', ring: 'ring-pink-300 dark:ring-pink-900/40' },
+              ];
+              const color = colorClasses[m.id % colorClasses.length];
+
               return (
                 <div
                   key={m.id}
-                  className={`w-9 h-9 rounded-full overflow-hidden border flex items-center justify-center ring-0 hover:ring-2 hover:ring-emerald-400/40 transition ${darkMode ? 'border-gray-600 bg-gray-700 text-gray-200' : 'border-gray-200 bg-white text-gray-700'}`}
-                  title={`${m.name} • ${m.role}`}
+                  className={`relative group w-9 h-9 rounded-full border flex items-center justify-center transition ${darkMode ? 'border-gray-700' : 'border-white'}`}
+                  aria-label={m.name}
                 >
-                  {m.avatarUrl ? (
-                    <img src={m.avatarUrl} alt={m.name} className='w-full h-full object-cover' />
-                  ) : (
-                    <span className='text-xs font-semibold'>{getInitials(m.name)}</span>
-                  )}
+                  <span
+                    className={`pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded px-2 py-1 text-xs ${darkMode ? 'bg-gray-900 text-gray-200' : 'bg-gray-800 text-white'} opacity-0 group-hover:opacity-100 transition z-10 shadow-lg`}
+                  >
+                    {m.name}
+                  </span>
+                  <div className='w-full h-full rounded-full overflow-hidden flex items-center justify-center'>
+                    {m.avatarUrl ? (
+                      <img
+                        src={m.avatarUrl}
+                        alt={m.name}
+                        className={`w-full h-full object-cover ring-2 ${color.ring}`}
+                      />
+                    ) : (
+                      <span className={`text-xs font-semibold text-white ${color.bg} w-full h-full flex items-center justify-center`}>
+                        {getInitials(m.name)}
+                      </span>
+                    )}
+                  </div>
                 </div>
               );
             })}
@@ -320,24 +352,76 @@ const WorkspaceDetail = () => {
                 <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>No tasks yet.</p>
               ) : (
                 <ul className='space-y-3'>
-                  {tasks.map((t) => (
-                    <li key={t.id} className={`group flex items-center justify-between rounded-lg border px-4 py-3 shadow-sm hover:shadow ${darkMode ? 'border-gray-700 bg-gray-800 hover:bg-gray-750' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
-                      <div className='flex items-center gap-3 min-w-0'>
-                        <div className={`${darkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-800'} rounded-full w-7 h-7 flex items-center justify-center shrink-0`}>
-                          <ListChecks className='w-4 h-4' />
-                        </div>
-                        <span className='font-medium truncate'>{t.title}</span>
-                      </div>
-                      <span className={`text-xs px-2 py-1 rounded transition ${t.status === 'Done'
-                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
-                        : t.status === 'In Progress'
-                          ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
-                          : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}
+                  {tasks.map((t) => {
+                    const formatDue = (d: string) => {
+                      const date = new Date(d);
+                      if (Number.isNaN(date.getTime())) { return d; }
+                      return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                    };
+                    return (
+                      <li
+                        key={t.id}
+                        className={`group flex items-center gap-4 rounded-lg border px-4 py-3 shadow-sm hover:shadow ${darkMode ? 'border-gray-700 bg-gray-800 hover:bg-gray-750' : 'border-gray-200 bg-white hover:bg-gray-50'}`}
                       >
-                        {t.status}
-                      </span>
-                    </li>
-                  ))}
+                        {/* Status + Title on the same line as a group */}
+                        <div className='flex items-center gap-3 min-w-0 flex-1'>
+                          <span
+                            className={`whitespace-nowrap text-xs px-2 py-1 rounded transition ${t.status === 'Done'
+                              ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                              : t.status === 'In Progress'
+                                ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
+                                : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}
+                          >
+                            {t.status}
+                          </span>
+                          <span className='font-medium truncate'>{t.title}</span>
+                        </div>
+
+                        {/* Assignees overlapping chips */}
+                        <div className='flex items-center -space-x-2'>
+                          {t.assignees.map((uid, idx) => {
+                            const u = members.find((m) => m.id === uid);
+                            const key = `assignee-${t.id}-${uid}-${idx}`;
+                            if (!u) { return null; }
+                            const colorClasses = [
+                              { bg: 'bg-rose-500', ring: 'ring-rose-300 dark:ring-rose-900/40' },
+                              { bg: 'bg-orange-500', ring: 'ring-orange-300 dark:ring-orange-900/40' },
+                              { bg: 'bg-amber-500', ring: 'ring-amber-300 dark:ring-amber-900/40' },
+                              { bg: 'bg-lime-500', ring: 'ring-lime-300 dark:ring-lime-900/40' },
+                              { bg: 'bg-emerald-500', ring: 'ring-emerald-300 dark:ring-emerald-900/40' },
+                              { bg: 'bg-sky-500', ring: 'ring-sky-300 dark:ring-sky-900/40' },
+                              { bg: 'bg-violet-500', ring: 'ring-violet-300 dark:ring-violet-900/40' },
+                              { bg: 'bg-pink-500', ring: 'ring-pink-300 dark:ring-pink-900/40' },
+                            ];
+                            const color = colorClasses[u.id % colorClasses.length];
+                            return (
+                              <div
+                                key={key}
+                                className={`relative group w-7 h-7 rounded-full overflow-hidden border ${darkMode ? 'border-gray-700' : 'border-white'} flex items-center justify-center`}
+                                aria-label={u.name}
+                              >
+                                <span
+                                  className={`pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded px-2 py-1 text-[10px] ${darkMode ? 'bg-gray-900 text-gray-200' : 'bg-gray-800 text-white'} opacity-0 group-hover:opacity-100 transition z-10 shadow-lg`}
+                                >
+                                  {u.name}
+                                </span>
+                                {u.avatarUrl ? (
+                                  <img src={u.avatarUrl} alt={u.name} className={`w-full h-full object-cover ring-2 ${color.ring}`} />
+                                ) : (
+                                  <span className={`text-[10px] font-semibold text-white ${color.bg} w-full h-full flex items-center justify-center`}>
+                                    {getInitials(u.name)}
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Due date at end */}
+                        <span className={`text-xs whitespace-nowrap ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{formatDue(t.dueDate)}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </div>
