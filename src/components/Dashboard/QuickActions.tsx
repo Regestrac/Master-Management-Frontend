@@ -1,0 +1,29 @@
+import { BarChart3, Calendar, Plus } from 'lucide-react';
+
+import { useProfileStore } from 'stores/profileStore';
+
+const QuickActions = () => {
+  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+
+  return (
+    <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm mt-6`}>
+      <h4 className='font-semibold mb-4'>Quick Actions</h4>
+      <div className='space-y-3'>
+        <button className='w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-500/10 text-purple-500 transition-colors'>
+          <Plus className='w-5 h-5' />
+          <span>Create New Goal</span>
+        </button>
+        <button className='w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-500/10 text-blue-500 transition-colors'>
+          <BarChart3 className='w-5 h-5' />
+          <span>View Analytics</span>
+        </button>
+        <button className='w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-green-500/10 text-green-500 transition-colors'>
+          <Calendar className='w-5 h-5' />
+          <span>Schedule Review</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default QuickActions;

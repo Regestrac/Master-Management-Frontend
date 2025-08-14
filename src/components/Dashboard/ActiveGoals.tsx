@@ -10,6 +10,8 @@ import { useProfileStore } from 'stores/profileStore';
 
 import { getActiveGoals } from 'services/goals';
 
+import QuickActions from './QuickActions';
+
 type ActiveGoalType = {
   id: number;
   title: string;
@@ -90,6 +92,8 @@ const ActiveGoals = () => {
           );
         })}
       </div>
+
+      <QuickActions />
     </div>
   );
 };
