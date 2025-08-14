@@ -1,7 +1,7 @@
 import { useEffect, useState, type KeyboardEvent } from 'react';
 
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, Users, ListChecks, Target } from 'lucide-react';
+import { ArrowLeft, Copy, Users, ListChecks, Target, Plus } from 'lucide-react';
 
 import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
@@ -33,7 +33,7 @@ const WorkspaceDetail = () => {
     { id: 5, name: 'Taylor Kim', role: 'Member' },
     { id: 6, name: 'Morgan Lee', role: 'Member' },
   ]);
-  const [tasks] = useState<{
+  const [tasks, setTasks] = useState<{
     id: number;
     title: string;
     status: 'Open' | 'In Progress' | 'Done';
@@ -44,11 +44,44 @@ const WorkspaceDetail = () => {
     { id: 102, title: 'Invite teammates', status: 'In Progress', assignees: [3], dueDate: '2025-08-22' },
     { id: 103, title: 'Plan sprint backlog', status: 'Done', assignees: [2, 4, 5], dueDate: '2025-08-18' },
   ]);
-  const [goals] = useState<{ id: number; title: string; status: 'Not Started' | 'In Progress' | 'Achieved' }[]>([
+  const [goals, setGoals] = useState<{ id: number; title: string; status: 'Not Started' | 'In Progress' | 'Achieved' }[]>([
     { id: 201, title: 'Ship MVP', status: 'In Progress' },
-    { id: 202, title: 'Reach 1K users', status: 'Not Started' },
-    { id: 203, title: 'Improve onboarding NPS', status: 'Achieved' },
+    { id: 202, title: 'Hit 100 users', status: 'Not Started' },
+    { id: 203, title: 'Collect feedback', status: 'Achieved' },
   ]);
+
+  // Create forms state
+  const [showTaskCreate, setShowTaskCreate] = useState(false);
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [showGoalCreate, setShowGoalCreate] = useState(false);
+  const [newGoalTitle, setNewGoalTitle] = useState('');
+
+  const addTask = () => {
+    const title = newTaskTitle.trim();
+    if (!title) { return; }
+    const id = Date.now();
+    const due = new Date();
+    due.setDate(due.getDate() + 7);
+    setTasks((prev) => [
+      { id, title, status: 'Open', assignees: [], dueDate: due.toISOString().slice(0, 10) },
+      ...prev,
+    ]);
+    setNewTaskTitle('');
+    setShowTaskCreate(false);
+  };
+
+  const addGoal = () => {
+    const title = newGoalTitle.trim();
+    if (!title) { return; }
+    const id = Date.now();
+    setGoals((prev) => [
+      { id, title, status: 'Not Started' },
+      ...prev,
+    ]);
+    setNewGoalTitle('');
+    setShowGoalCreate(false);
+  };
+
   const [inviteCode] = useState<string>('WS-' + (id || '0000'));
   const updateVisibility = useModalStore((s) => s.updateVisibility);
   const [activeTab, setActiveTab] = useState<'tasks' | 'goals'>('tasks');
@@ -346,8 +379,48 @@ const WorkspaceDetail = () => {
               {/* Panel header */}
               <div className='flex items-center justify-between mb-3'>
                 <h3 className='text-sm font-medium opacity-80'>All tasks</h3>
-                <span className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>{tasks.length}</span>
+                <div className='flex items-center gap-2'>
+                  <span className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>{tasks.length}</span>
+                  <button
+                    type='button'
+                    onClick={() => setShowTaskCreate((v) => !v)}
+                    className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded border transition ${darkMode ? 'border-gray-700 text-emerald-300 hover:bg-gray-750' : 'border-gray-200 text-emerald-700 hover:bg-gray-100'}`}
+                    title='Create task'
+                  >
+                    <Plus className='w-3 h-3' />
+                    New
+                  </button>
+                </div>
               </div>
+              {showTaskCreate && (
+                <div className='mb-4 flex items-center gap-2'>
+                  <input
+                    type='text'
+                    value={newTaskTitle}
+                    onChange={(e) => setNewTaskTitle(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') { addTask(); }
+                      if (e.key === 'Escape') { setShowTaskCreate(false); }
+                    }}
+                    placeholder='Task title'
+                    className={`flex-1 text-sm px-3 py-2 rounded border outline-none ${darkMode ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'}`}
+                  />
+                  <button
+                    type='button'
+                    onClick={addTask}
+                    className='text-xs px-3 py-2 rounded bg-emerald-600 hover:bg-emerald-700 text-white'
+                  >
+                    Create
+                  </button>
+                  <button
+                    type='button'
+                    onClick={() => { setShowTaskCreate(false); setNewTaskTitle(''); }}
+                    className={`text-xs px-3 py-2 rounded border ${darkMode ? 'border-gray-700 text-gray-300' : 'border-gray-300 text-gray-700'}`}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
               {tasks.length === 0 ? (
                 <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>No tasks yet.</p>
               ) : (
@@ -365,15 +438,17 @@ const WorkspaceDetail = () => {
                       >
                         {/* Status + Title on the same line as a group */}
                         <div className='flex items-center gap-3 min-w-0 flex-1'>
-                          <span
-                            className={`whitespace-nowrap text-xs px-2 py-1 rounded transition ${t.status === 'Done'
-                              ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
-                              : t.status === 'In Progress'
-                                ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
-                                : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}
-                          >
-                            {t.status}
-                          </span>
+                          <div className='w-32 shrink-0'>
+                            <span
+                              className={`inline-block max-w-full truncate text-xs px-2 py-1 rounded transition ${t.status === 'Done'
+                                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                                : t.status === 'In Progress'
+                                  ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
+                                  : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}
+                            >
+                              {t.status}
+                            </span>
+                          </div>
                           <span className='font-medium truncate'>{t.title}</span>
                         </div>
 
@@ -430,28 +505,72 @@ const WorkspaceDetail = () => {
               {/* Panel header */}
               <div className='flex items-center justify-between mb-3'>
                 <h3 className='text-sm font-medium opacity-80'>All goals</h3>
-                <span className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>{goals.length}</span>
+                <div className='flex items-center gap-2'>
+                  <span className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>{goals.length}</span>
+                  <button
+                    type='button'
+                    onClick={() => setShowGoalCreate((v) => !v)}
+                    className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded border transition ${darkMode ? 'border-gray-700 text-emerald-300 hover:bg-gray-750' : 'border-gray-200 text-emerald-700 hover:bg-gray-100'}`}
+                    title='Create goal'
+                  >
+                    <Plus className='w-3 h-3' />
+                    New
+                  </button>
+                </div>
               </div>
+              {showGoalCreate && (
+                <div className='mb-4 flex items-center gap-2'>
+                  <input
+                    type='text'
+                    value={newGoalTitle}
+                    onChange={(e) => setNewGoalTitle(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') { addGoal(); }
+                      if (e.key === 'Escape') { setShowGoalCreate(false); }
+                    }}
+                    placeholder='Goal title'
+                    className={`flex-1 text-sm px-3 py-2 rounded border outline-none ${darkMode ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'}`}
+                  />
+                  <button
+                    type='button'
+                    onClick={addGoal}
+                    className='text-xs px-3 py-2 rounded bg-emerald-600 hover:bg-emerald-700 text-white'
+                  >
+                    Create
+                  </button>
+                  <button
+                    type='button'
+                    onClick={() => { setShowGoalCreate(false); setNewGoalTitle(''); }}
+                    className={`text-xs px-3 py-2 rounded border ${darkMode ? 'border-gray-700 text-gray-300' : 'border-gray-300 text-gray-700'}`}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
               {goals.length === 0 ? (
                 <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>No goals yet.</p>
               ) : (
                 <ul className='space-y-3'>
                   {goals.map((g) => (
-                    <li key={g.id} className={`group flex items-center justify-between rounded-lg border px-4 py-3 shadow-sm hover:shadow ${darkMode ? 'border-gray-700 bg-gray-800 hover:bg-gray-750' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
-                      <div className='flex items-center gap-3 min-w-0'>
-                        <div className={`${darkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-800'} rounded-full w-7 h-7 flex items-center justify-center shrink-0`}>
-                          <Target className='w-4 h-4' />
+                    <li key={g.id} className={`group flex items-center rounded-lg border px-4 py-3 shadow-sm hover:shadow ${darkMode ? 'border-gray-700 bg-gray-800 hover:bg-gray-750' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
+                      <div className='flex items-center gap-3 min-w-0 flex-1'>
+                        <div className='w-32 shrink-0'>
+                          <span className={`inline-block max-w-full truncate text-xs px-2 py-1 rounded transition ${g.status === 'Achieved'
+                            ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                            : g.status === 'In Progress'
+                              ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
+                              : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}
+                          >
+                            {g.status}
+                          </span>
                         </div>
-                        <span className='font-medium truncate'>{g.title}</span>
+                        <div className='flex items-center gap-3 min-w-0'>
+                          <div className={`${darkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-800'} rounded-full w-7 h-7 flex items-center justify-center shrink-0`}>
+                            <Target className='w-4 h-4' />
+                          </div>
+                          <span className='font-medium truncate'>{g.title}</span>
+                        </div>
                       </div>
-                      <span className={`text-xs px-2 py-1 rounded transition ${g.status === 'Achieved'
-                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
-                        : g.status === 'In Progress'
-                          ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
-                          : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}
-                      >
-                        {g.status}
-                      </span>
                     </li>
                   ))}
                 </ul>
