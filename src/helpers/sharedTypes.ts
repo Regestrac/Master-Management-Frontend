@@ -53,3 +53,45 @@ export type ModalTypes = {
 };
 
 export type ModalNamesType = 'switchTaskModal' | 'confirmDeleteModal' | 'workspaceModal' | 'manageMembersModal';
+
+export type Member = {
+  id: number;
+  name: string;
+  role: 'Owner' | 'Admin' | 'Member';
+  avatarUrl?: string;
+}
+
+export type Task = {
+  id: number;
+  title: string;
+  status: 'Open' | 'In Progress' | 'Done';
+  assignees: number[];
+  dueDate: string;
+}
+
+export type Goal = {
+  id: number;
+  title: string;
+  status: 'Not Started' | 'In Progress' | 'Achieved';
+}
+
+export type Workspace = {
+  id: string;
+  name: string;
+}
+
+export type TabType = 'tasks' | 'goals';
+
+export type WorkspaceDetailProps = {
+  workspace: Workspace | null;
+  members: Member[];
+  tasks: Task[];
+  goals: Goal[];
+  inviteCode: string;
+  currentUserId: number;
+  onWorkspaceRename: (_name: string) => Promise<void>;
+  onMemberRoleChange: (_memberId: number, _role: Member['role']) => void;
+  onMemberRemove: (_memberId: number) => void;
+  onTaskAdd: (_title: string) => void;
+  onGoalAdd: (_title: string) => void;
+}
