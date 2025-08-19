@@ -3,14 +3,14 @@ import { useState, useEffect, useCallback } from 'react';
 import { Goal, Member, Task, Workspace } from 'helpers/sharedTypes';
 
 // Mock API functions - replace with real API calls
-const mockFetchWorkspace = async (id: string): Promise<Workspace> => {
+const mockFetchWorkspace = async (id: number): Promise<Workspace> => {
   await new Promise((res) => setTimeout(res, 300));
-  return { id, name: `Workspace #${id}` };
+  return { id, name: `Workspace #${id}`, manager_id: 1, created_at: new Date().toISOString(), type: 'personal' };
 };
 
-const mockRenameWorkspace = async (id: string, name: string): Promise<Workspace> => {
+const mockRenameWorkspace = async (id: number, name: string): Promise<Workspace> => {
   await new Promise((res) => setTimeout(res, 300));
-  return { id, name };
+  return { id, name, manager_id: 1, created_at: new Date().toISOString(), type: 'personal' };
 };
 
 // Initial mock data
@@ -35,7 +35,7 @@ const initialGoals: Goal[] = [
   { id: 203, title: 'Collect feedback', status: 'Achieved' },
 ];
 
-export const useWorkspaceData = (workspaceId: string | undefined) => {
+export const useWorkspaceData = (workspaceId: number | undefined) => {
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [members, setMembers] = useState<Member[]>(initialMembers);
   const [tasks, setTasks] = useState<Task[]>(initialTasks);

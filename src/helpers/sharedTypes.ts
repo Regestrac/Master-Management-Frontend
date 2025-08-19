@@ -76,8 +76,11 @@ export type Goal = {
 }
 
 export type Workspace = {
-  id: string;
+  id: number;
   name: string;
+  manager_id: number;
+  created_at: string;
+  type: 'personal' | 'team';
 }
 
 export type TabType = 'tasks' | 'goals';

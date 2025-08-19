@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 
 import { Member } from 'helpers/sharedTypes';
 
@@ -7,9 +7,8 @@ import { useProfileStore } from 'stores/profileStore';
 type MemberAvatarProps = {
   member: Member;
   size?: 'sm' | 'md' | 'lg';
-  showTooltip?: boolean;
   className?: string;
-}
+};
 
 const getInitials = (fullName: string) => {
   const parts = fullName.trim().split(/\s+/);
@@ -36,12 +35,9 @@ const sizeClasses = {
   lg: { container: 'w-10 h-10', text: 'text-sm' },
 };
 
-export const MemberAvatar = memo(({
-  member,
-  size = 'md',
-  showTooltip = true,
-  className = '',
-}: MemberAvatarProps) => {
+export const MemberAvatar = memo(({ member, size = 'md', className = '' }: MemberAvatarProps) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+
   const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
   const color = colorClasses[member.id % colorClasses.length];
   const sizeClass = sizeClasses[size];
@@ -56,7 +52,7 @@ export const MemberAvatar = memo(({
           {member.name}
         </span>
       )}
-      <div className='w-full h-full rounded-full overflow-hidden flex items-center justify-center'>
+      <div onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)} className='w-full h-full rounded-full overflow-hidden flex items-center justify-center'>
         {member.avatarUrl ? (
           <img
             src={member.avatarUrl}
@@ -72,5 +68,3 @@ export const MemberAvatar = memo(({
     </div>
   );
 });
-
-MemberAvatar.displayName = 'MemberAvatar';

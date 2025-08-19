@@ -25,7 +25,7 @@ const WorkspaceDetail: React.FC = () => {
     isLoading,
     error,
     actions,
-  } = useWorkspaceData(id);
+  } = useWorkspaceData(Number(id));
 
   const inviteCode = `WS-${id || '0000'}`;
   const currentUserRole = members.find((m) => m.id === currentUserId)?.role || 'Member';
