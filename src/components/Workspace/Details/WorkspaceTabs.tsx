@@ -1,43 +1,31 @@
-import React, { memo, useCallback } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 
 import { ListChecks, Target } from 'lucide-react';
 
-import { TabType, Task, Goal, Member } from 'helpers/sharedTypes';
+import { TabType } from 'helpers/sharedTypes';
 
 import { useProfileStore } from 'stores/profileStore';
 
-import { CreateForm } from 'components/Workspace/Details/CreateForm';
-import { TaskList } from 'components/Workspace/Details/TaskList';
-import { GoalList } from 'components/Workspace/Details/GoalList';
+type WorkspaceTabsProps = {
+  taskList: ReactNode;
+  goalList: ReactNode;
+  taskCount: number;
+  goalCount: number;
+};
 
-interface WorkspaceTabsProps {
-  activeTab: TabType;
-  onTabChange: (_tab: TabType) => void;
-  tasks: Task[];
-  goals: Goal[];
-  members: Member[];
-  onTaskAdd: (_title: string) => void;
-  onGoalAdd: (_title: string) => void;
-}
-
-export const WorkspaceTabs = memo(({
-  activeTab,
-  onTabChange,
-  tasks,
-  goals,
-  members,
-  onTaskAdd,
-  onGoalAdd,
+const WorkspaceTabs = ({
+  taskList,
+  goalList,
+  taskCount,
+  goalCount,
 }: WorkspaceTabsProps) => {
-  const theme = useProfileStore((s) => s.data.theme);
-  const isDark = theme === 'dark';
+  const [activeTab, setActiveTab] = useState<TabType>('tasks');
 
-  const handleTabKeyDown = useCallback((e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-      e.preventDefault();
-      onTabChange(activeTab === 'tasks' ? 'goals' : 'tasks');
-    }
-  }, [activeTab, onTabChange]);
+  const isDark = useProfileStore((s) => s.data.theme) === 'dark';
+
+  const handleTabChange = useCallback((tab: TabType) => {
+    setActiveTab(tab);
+  }, [setActiveTab]);
 
   const getTabClassName = (tab: TabType) => {
     const isActive = activeTab === tab;
@@ -63,15 +51,14 @@ export const WorkspaceTabs = memo(({
           aria-controls='tab-panel-tasks'
           id='tab-tasks'
           type='button'
-          onClick={() => onTabChange('tasks')}
-          onKeyDown={handleTabKeyDown}
+          onClick={() => handleTabChange('tasks')}
           className={getTabClassName('tasks')}
         >
           <span className='inline-flex items-center gap-2'>
             <ListChecks className='w-4 h-4' />
             Tasks
             <span className={getCountBadgeClassName()}>
-              {tasks.length}
+              {taskCount}
             </span>
           </span>
         </button>
@@ -82,15 +69,14 @@ export const WorkspaceTabs = memo(({
           aria-controls='tab-panel-goals'
           id='tab-goals'
           type='button'
-          onClick={() => onTabChange('goals')}
-          onKeyDown={handleTabKeyDown}
+          onClick={() => handleTabChange('goals')}
           className={getTabClassName('goals')}
         >
           <span className='inline-flex items-center gap-2'>
             <Target className='w-4 h-4' />
             Goals
             <span className={getCountBadgeClassName()}>
-              {goals.length}
+              {goalCount}
             </span>
           </span>
         </button>
@@ -98,44 +84,10 @@ export const WorkspaceTabs = memo(({
       </div>
 
       <div className='p-6'>
-        {activeTab === 'tasks' ? (
-          <div id='tab-panel-tasks' role='tabpanel' aria-labelledby='tab-tasks'>
-            <div className='flex items-center justify-between mb-3'>
-              <h3 className='text-sm font-medium opacity-80'>All tasks</h3>
-              <div className='flex items-center gap-2'>
-                <span className={`text-xs px-2 py-1 rounded ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>
-                  {tasks.length}
-                </span>
-                <CreateForm
-                  type='task'
-                  onSubmit={onTaskAdd}
-                  placeholder='Task title'
-                />
-              </div>
-            </div>
-            <TaskList tasks={tasks} members={members} />
-          </div>
-        ) : (
-          <div id='tab-panel-goals' role='tabpanel' aria-labelledby='tab-goals'>
-            <div className='flex items-center justify-between mb-3'>
-              <h3 className='text-sm font-medium opacity-80'>All goals</h3>
-              <div className='flex items-center gap-2'>
-                <span className={`text-xs px-2 py-1 rounded ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>
-                  {goals.length}
-                </span>
-                <CreateForm
-                  type='goal'
-                  onSubmit={onGoalAdd}
-                  placeholder='Goal title'
-                />
-              </div>
-            </div>
-            <GoalList goals={goals} />
-          </div>
-        )}
+        {activeTab === 'tasks' ? taskList : goalList}
       </div>
     </section>
   );
-});
+};
 
-WorkspaceTabs.displayName = 'WorkspaceTabs';
+export default WorkspaceTabs;
