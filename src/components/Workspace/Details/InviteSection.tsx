@@ -1,14 +1,14 @@
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 
 import { Copy } from 'lucide-react';
 import { toast } from 'react-toastify';
 
-interface InviteSectionProps {
+type InviteSectionProps = {
   inviteCode: string;
   onLeaveWorkspace: () => void;
-}
+};
 
-export const InviteSection = memo(({ inviteCode, onLeaveWorkspace }: InviteSectionProps) => {
+const InviteSection = ({ inviteCode, onLeaveWorkspace }: InviteSectionProps) => {
   const handleCopyInvite = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(inviteCode);
@@ -22,22 +22,22 @@ export const InviteSection = memo(({ inviteCode, onLeaveWorkspace }: InviteSecti
     <div className='flex items-center gap-2 shrink-0'>
       <div className='flex items-center gap-2'>
         <label htmlFor='invite' className='sr-only'>Invite code</label>
-        <input
+        <div
           id='invite'
-          readOnly
-          value={inviteCode}
-          className='h-9 w-28 sm:w-36 truncate rounded-lg border px-2 text-sm shadow-sm bg-white border-gray-300 text-gray-700 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300'
+          className='h-9 w-28 sm:w-36 truncate flex items-center justify-between rounded-lg border px-2 text-sm shadow-sm bg-white border-gray-300 text-gray-700 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300'
           aria-label='Invite code'
-        />
-        <button
-          type='button'
-          onClick={handleCopyInvite}
-          className='h-9 px-2 rounded-lg border hover:bg-gray-100 dark:hover:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400/40'
-          title='Copy invite code'
-          aria-label='Copy invite code'
         >
-          <Copy className='w-4 h-4' />
-        </button>
+          {inviteCode}
+          <button
+            type='button'
+            onClick={handleCopyInvite}
+            className='h-9 px-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400/40'
+            title='Copy invite code'
+            aria-label='Copy invite code'
+          >
+            <Copy className='w-4 h-4' />
+          </button>
+        </div>
         <button
           type='button'
           onClick={onLeaveWorkspace}
@@ -48,6 +48,6 @@ export const InviteSection = memo(({ inviteCode, onLeaveWorkspace }: InviteSecti
       </div>
     </div>
   );
-});
+};
 
-InviteSection.displayName = 'InviteSection';
+export default InviteSection;

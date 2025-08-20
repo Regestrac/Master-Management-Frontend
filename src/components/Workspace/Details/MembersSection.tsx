@@ -1,27 +1,37 @@
-import React, { memo, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Users } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { Member } from 'helpers/sharedTypes';
 
 import useModalStore from 'stores/modalStore';
 
+import { getMembers } from 'services/workspace';
+
 import { MemberAvatar } from 'components/Workspace/Details/MemberAvatar';
 
-interface MembersSectionProps {
-  members: Member[];
+type MembersSectionProps = {
+  // members: Member[];
   canManage: boolean;
   onChangeRole: (_memberId: number, _role: Member['role']) => void;
   onRemoveMember: (_memberId: number) => void;
-}
+};
 
-export const MembersSection = memo(({
-  members,
+const MembersSection = ({
+  // members,
   canManage,
   onChangeRole,
   onRemoveMember,
 }: MembersSectionProps) => {
+  const [members, setMembers] = useState<Member[]>([]);
+
   const updateVisibility = useModalStore((s) => s.updateVisibility);
+
+  const shouldFetchMembersRef = useRef(true);
+
+  const { id } = useParams<{ id: string }>();
 
   const handleMembersClick = useCallback(() => {
     updateVisibility({
@@ -33,23 +43,26 @@ export const MembersSection = memo(({
     });
   }, [members, canManage, onChangeRole, onRemoveMember, updateVisibility]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleMembersClick();
+  useEffect(() => {
+    if (id && shouldFetchMembersRef.current) {
+      getMembers(id).then((res) => {
+        setMembers(res?.members);
+      }).catch((err) => {
+        toast.error(err?.error);
+      });
+      shouldFetchMembersRef.current = false;
     }
-  }, [handleMembersClick]);
+  }, [id]);
 
   return (
     <div
       role='button'
       tabIndex={0}
       onClick={handleMembersClick}
-      onKeyDown={handleKeyDown}
       className='flex items-center -space-x-2 p-2 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-400/40'
     >
       <Users className='w-5 h-5 mr-2 hidden sm:block' />
-      {members.slice(0, 5).map((member, idx) => {
+      {members?.slice(0, 5).map((member, idx) => {
         const isOverflowChip = members.length > 5 && idx === 4;
 
         if (isOverflowChip) {
@@ -69,7 +82,8 @@ export const MembersSection = memo(({
 
         return (
           <MemberAvatar
-            key={member.id}
+            color={member.profile_color}
+            key={member.id || member.ID}
             member={member}
             size='md'
             className='border-gray-700 dark:border-white'
@@ -78,6 +92,6 @@ export const MembersSection = memo(({
       })}
     </div>
   );
-});
+};
 
-MembersSection.displayName = 'MembersSection';
+export default MembersSection;
