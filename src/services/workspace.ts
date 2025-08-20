@@ -2,7 +2,7 @@ import { getHandler, postHandler } from 'helpers/api';
 import { Workspace, Member, Task, Goal } from 'helpers/sharedTypes';
 
 // Workspace operations
-export const getWorkspace = (workspaceId: string): Promise<Workspace> =>
+export const getWorkspace = (workspaceId: string): Promise<{ data: Workspace }> =>
   getHandler({ path: `workspaces/${workspaceId}` });
 
 export const getWorkspaces = (): Promise<{ workspaces: Workspace[] }> =>
@@ -17,7 +17,7 @@ export const createWorkspace = (name: string): Promise<Workspace> =>
 export const updateWorkspace = (workspaceId: string, name: string): Promise<Workspace> =>
   postHandler({
     path: `workspaces/${workspaceId}`,
-    method: 'PUT',
+    method: 'PATCH',
     body: JSON.stringify({ name }),
   });
 
@@ -44,10 +44,10 @@ export const generateInviteCode = (workspaceId: string): Promise<{ inviteCode: s
   });
 
 // Member operations
-export const getMembers = (workspaceId: string): Promise<Member[]> =>
+export const getMembers = (workspaceId: string): Promise<{ members: Member[] }> =>
   getHandler({ path: `workspaces/${workspaceId}/members` });
 
-export const addMember = (workspaceId: string, email: string, role: Member['role'] = 'Member'): Promise<Member> =>
+export const addMember = (workspaceId: string, email: string, role: Member['role'] = 'member'): Promise<Member> =>
   postHandler({
     path: `workspaces/${workspaceId}/members`,
     body: JSON.stringify({ email, role }),

@@ -1,5 +1,3 @@
-import { memo } from 'react';
-
 import clsx from 'clsx';
 import { Target } from 'lucide-react';
 
@@ -16,7 +14,7 @@ type GoalListProps = {
   onGoalAdd: (_title: string) => void;
 };
 
-export const GoalList = memo(({ goals, onGoalAdd }: GoalListProps) => {
+const GoalList = ({ goals, onGoalAdd }: GoalListProps) => {
   const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
 
   if (goals.length === 0) {
@@ -65,6 +63,6 @@ export const GoalList = memo(({ goals, onGoalAdd }: GoalListProps) => {
       </ul>
     </div>
   );
-});
+};
 
-GoalList.displayName = 'GoalList';
+export default GoalList;

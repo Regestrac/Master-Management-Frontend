@@ -57,8 +57,12 @@ export type ModalNamesType = 'switchTaskModal' | 'confirmDeleteModal' | 'workspa
 export type Member = {
   id: number;
   name: string;
-  role: 'Owner' | 'Admin' | 'Member';
-  avatarUrl?: string;
+  role: 'manager' | 'admin' | 'member';
+  avatar_url?: string;
+  profile_color: 'rose' | 'orange' | 'amber' | 'lime' | 'emerald' | 'sky' | 'violet' | 'pink';
+  joined_at: string;
+  user_id: number;
+  ID: number;
 }
 
 export type Task = {
@@ -81,6 +85,7 @@ export type Workspace = {
   manager_id: number;
   created_at: string;
   type: 'personal' | 'team';
+  invite_code: string;
 }
 
 export type TabType = 'tasks' | 'goals';

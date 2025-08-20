@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import clsx from 'clsx';
 
@@ -25,7 +25,7 @@ const formatDueDate = (dateString: string) => {
   return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 };
 
-export const TaskList = memo(({ tasks, members, onTaskAdd }: TaskListProps) => {
+const TaskList = ({ tasks, members, onTaskAdd }: TaskListProps) => {
   const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
 
   const memberMap = useMemo(() => {
@@ -95,6 +95,6 @@ export const TaskList = memo(({ tasks, members, onTaskAdd }: TaskListProps) => {
       </ul>
     </div>
   );
-});
+};
 
-TaskList.displayName = 'TaskList';
+export default TaskList;

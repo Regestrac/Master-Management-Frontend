@@ -5,22 +5,22 @@ import { Goal, Member, Task, Workspace } from 'helpers/sharedTypes';
 // Mock API functions - replace with real API calls
 const mockFetchWorkspace = async (id: number): Promise<Workspace> => {
   await new Promise((res) => setTimeout(res, 300));
-  return { id, name: `Workspace #${id}`, manager_id: 1, created_at: new Date().toISOString(), type: 'personal' };
+  return { id, name: `Workspace #${id}`, manager_id: 1, created_at: new Date().toISOString(), type: 'personal', invite_code: '3JS8' };
 };
 
 const mockRenameWorkspace = async (id: number, name: string): Promise<Workspace> => {
   await new Promise((res) => setTimeout(res, 300));
-  return { id, name, manager_id: 1, created_at: new Date().toISOString(), type: 'personal' };
+  return { id, name, manager_id: 1, created_at: new Date().toISOString(), type: 'personal', invite_code: '3SD4' };
 };
 
 // Initial mock data
 const initialMembers: Member[] = [
-  { id: 1, name: 'You', role: 'Owner' },
-  { id: 2, name: 'Alex Doe', role: 'Member' },
-  { id: 3, name: 'Sam Lee', role: 'Member' },
-  { id: 4, name: 'Jordan Smith', role: 'Member' },
-  { id: 5, name: 'Taylor Kim', role: 'Member' },
-  { id: 6, name: 'Morgan Lee', role: 'Member' },
+  { id: 1, name: 'You', role: 'manager', profile_color: 'rose', joined_at: new Date().toISOString(), user_id: 1, ID: 1 },
+  { id: 2, name: 'Alex Doe', role: 'member', profile_color: 'amber', joined_at: new Date().toISOString(), user_id: 2, ID: 2 },
+  { id: 3, name: 'Sam Lee', role: 'member', profile_color: 'emerald', joined_at: new Date().toISOString(), user_id: 3, ID: 3 },
+  { id: 4, name: 'Jordan Smith', role: 'member', profile_color: 'lime', joined_at: new Date().toISOString(), user_id: 4, ID: 4 },
+  { id: 5, name: 'Taylor Kim', role: 'member', profile_color: 'orange', joined_at: new Date().toISOString(), user_id: 5, ID: 5 },
+  { id: 6, name: 'Morgan Lee', role: 'member', profile_color: 'sky', joined_at: new Date().toISOString(), user_id: 6, ID: 6 },
 ];
 
 const initialTasks: Task[] = [
@@ -40,7 +40,7 @@ export const useWorkspaceData = (workspaceId: number | undefined) => {
   const [members, setMembers] = useState<Member[]>(initialMembers);
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [goals, setGoals] = useState<Goal[]>(initialGoals);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Load workspace data

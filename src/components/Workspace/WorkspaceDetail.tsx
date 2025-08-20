@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
@@ -6,19 +6,17 @@ import { toast } from 'react-toastify';
 
 import { useWorkspaceData } from 'hooks/useWorkspaceData';
 
-import { TabType } from 'helpers/sharedTypes';
+import WorkspaceOverview from 'components/Workspace/Details/WorkspaceOverview';
+import WorkspaceTabs from 'components/Workspace/Details/WorkspaceTabs';
+import GoalList from 'components/Workspace/Details/GoalList';
+import TaskList from 'components/Workspace/Details/TaskList';
 
-import { WorkspaceOverview } from 'components/Workspace/Details/WorkspaceOverview';
-import { WorkspaceTabs } from 'components/Workspace/Details/WorkspaceTabs';
-
-const WorkspaceDetail: React.FC = () => {
+const WorkspaceDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const currentUserId = 1; // TODO: Get from auth context
-  const [activeTab, setActiveTab] = useState<TabType>('tasks');
 
   const {
-    workspace,
     members,
     tasks,
     goals,
@@ -27,18 +25,13 @@ const WorkspaceDetail: React.FC = () => {
     actions,
   } = useWorkspaceData(Number(id));
 
-  const inviteCode = `WS-${id || '0000'}`;
-  const currentUserRole = members.find((m) => m.id === currentUserId)?.role || 'Member';
-  const canManage = currentUserRole === 'Owner' || currentUserRole === 'Admin';
+  const currentUserRole = members.find((m) => m.id === currentUserId)?.role || 'member';
+  const canManage = currentUserRole === 'manager' || currentUserRole === 'admin';
 
   const handleLeaveWorkspace = useCallback(() => {
     // TODO: Implement leave workspace functionality
     toast.info('Leave workspace functionality coming soon');
   }, []);
-
-  const handleTabChange = useCallback((tab: TabType) => {
-    setActiveTab(tab);
-  }, [setActiveTab]);
 
   if (error) {
     return (
@@ -77,18 +70,15 @@ const WorkspaceDetail: React.FC = () => {
       {/* Back Button */}
       <button
         type='button'
-        className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:underline'
+        className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer'
         onClick={() => navigate('/workspace')}
       >
         <ArrowLeft className='w-4 h-4' />
         Back
       </button>
 
-      {/* Workspace Overview */}
       <WorkspaceOverview
-        workspace={workspace}
-        members={members}
-        inviteCode={inviteCode}
+        // members={members}
         canManage={canManage}
         onWorkspaceRename={actions.handleWorkspaceRename}
         onMemberRoleChange={actions.handleMemberRoleChange}
@@ -96,15 +86,11 @@ const WorkspaceDetail: React.FC = () => {
         onLeaveWorkspace={handleLeaveWorkspace}
       />
 
-      {/* Workspace Tabs */}
       <WorkspaceTabs
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        tasks={tasks}
-        goals={goals}
-        members={members}
-        onTaskAdd={actions.handleTaskAdd}
-        onGoalAdd={actions.handleGoalAdd}
+        taskCount={tasks.length}
+        goalCount={goals.length}
+        taskList={<TaskList tasks={tasks} members={members} onTaskAdd={actions.handleTaskAdd} />}
+        goalList={<GoalList goals={goals} onGoalAdd={actions.handleGoalAdd} />}
       />
     </div>
   );
