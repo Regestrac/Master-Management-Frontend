@@ -27,16 +27,14 @@ export const deleteWorkspace = (workspaceId: string): Promise<void> =>
     method: 'DELETE',
   });
 
-export const leaveWorkspace = (workspaceId: string): Promise<void> =>
-  postHandler({
-    path: `workspaces/${workspaceId}/leave`,
-  });
+export const leaveWorkspace = (workspaceId: string): Promise<void> => postHandler({
+  path: `workspaces/${workspaceId}/leave`,
+});
 
-export const joinWorkspace = (inviteCode: string): Promise<Workspace> =>
-  postHandler({
-    path: 'workspaces/join',
-    body: JSON.stringify({ inviteCode }),
-  });
+export const joinWorkspace = (inviteCode: string): Promise<Workspace> => postHandler({
+  path: 'workspace/join',
+  body: JSON.stringify({ invite_code: inviteCode }),
+});
 
 export const generateInviteCode = (workspaceId: string): Promise<{ inviteCode: string }> =>
   postHandler({

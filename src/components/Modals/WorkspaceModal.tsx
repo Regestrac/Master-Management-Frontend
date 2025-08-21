@@ -6,6 +6,8 @@ import clsx from 'clsx';
 import useModalStore from 'stores/modalStore';
 import { useProfileStore } from 'stores/profileStore';
 
+import { joinWorkspace } from 'services/workspace';
+
 import ModalWrapper from 'components/Modals/ModalWrapper';
 
 const WorkspaceModal = () => {
@@ -31,7 +33,11 @@ const WorkspaceModal = () => {
       if (activeTab === 'create' && name.trim()) {
         await Promise.resolve(onSuccess({ name: name.trim() } as any));
       } else if (activeTab === 'join' && inviteCode.trim()) {
-        await Promise.resolve(onSuccess({ name: '', inviteCode: inviteCode.trim() } as any));
+        joinWorkspace(inviteCode.trim()).then((res) => {
+          onSuccess({ ...res, inviteCode: inviteCode.trim() });
+        }).catch((err) => {
+          setError(err.message || 'Something went wrong');
+        });
       } else {
         return;
       }
