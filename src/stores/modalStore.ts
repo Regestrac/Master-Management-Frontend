@@ -21,6 +21,7 @@ const useModalStore = create<ModalStoreType>((set) => ({
     confirmDeleteModal: emptyModal,
     workspaceModal: emptyModal,
     manageMembersModal: emptyModal,
+    leaveWorkspaceModal: emptyModal,
   },
 
   updateVisibility: ({ modalType, isVisible, extraProps }) => set((state) => ({

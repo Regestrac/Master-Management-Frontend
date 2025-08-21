@@ -6,6 +6,10 @@ import { toast } from 'react-toastify';
 
 import { useWorkspaceData } from 'hooks/useWorkspaceData';
 
+import useModalStore from 'stores/modalStore';
+
+import { leaveWorkspace } from 'services/workspace';
+
 import WorkspaceOverview from 'components/Workspace/Details/WorkspaceOverview';
 import WorkspaceTabs from 'components/Workspace/Details/WorkspaceTabs';
 import GoalList from 'components/Workspace/Details/GoalList';
@@ -15,6 +19,8 @@ const WorkspaceDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const currentUserId = 1; // TODO: Get from auth context
+
+  const updateVisibility = useModalStore((state) => state.updateVisibility);
 
   const {
     members,
@@ -28,14 +34,35 @@ const WorkspaceDetail = () => {
   const currentUserRole = members.find((m) => m.id === currentUserId)?.role || 'member';
   const canManage = currentUserRole === 'manager' || currentUserRole === 'admin';
 
-  const handleLeaveWorkspace = useCallback(() => {
-    // TODO: Implement leave workspace functionality
-    toast.info('Leave workspace functionality coming soon');
-  }, []);
+  const handleLeaveWorkspace = useCallback(async () => {
+    if (!id) {
+      return;
+    }
+
+    try {
+      await leaveWorkspace(id);
+      toast.success('Successfully left the workspace');
+      navigate('/workspace');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to leave workspace');
+    }
+  }, [id, navigate]);
+
+  const openLeaveWorkspaceModal = useCallback(() => {
+    const workspaceName = members.length > 0 ? 'Current Workspace' : 'this workspace';
+    updateVisibility({
+      modalType: 'leaveWorkspaceModal',
+      isVisible: true,
+      extraProps: {
+        workspaceName,
+        onSuccess: handleLeaveWorkspace,
+      } as any,
+    });
+  }, [updateVisibility, handleLeaveWorkspace, members.length]);
 
   if (error) {
     return (
-      <div className='p-8'>
+      <div className='p-8 min-h-[calc(100vh-165px)]'>
         <div className='text-center'>
           <p className='text-red-600 dark:text-red-400'>
             Error:
@@ -56,7 +83,7 @@ const WorkspaceDetail = () => {
 
   if (isLoading) {
     return (
-      <div className='p-8'>
+      <div className='p-8 min-h-[calc(100vh-165px)]'>
         <div className='text-center'>
           <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto' />
           <p className='mt-2 text-gray-600 dark:text-gray-400'>Loading workspace...</p>
@@ -66,24 +93,22 @@ const WorkspaceDetail = () => {
   }
 
   return (
-    <div className='p-8 space-y-8'>
-      {/* Back Button */}
+    <div className='space-y-8 min-h-[calc(100vh-165px)]'>
       <button
         type='button'
         className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer'
         onClick={() => navigate('/workspace')}
       >
         <ArrowLeft className='w-4 h-4' />
-        Back
+        Back To Workspaces
       </button>
 
       <WorkspaceOverview
-        // members={members}
         canManage={canManage}
         onWorkspaceRename={actions.handleWorkspaceRename}
         onMemberRoleChange={actions.handleMemberRoleChange}
         onMemberRemove={actions.handleMemberRemove}
-        onLeaveWorkspace={handleLeaveWorkspace}
+        onLeaveWorkspace={openLeaveWorkspaceModal}
       />
 
       <WorkspaceTabs
