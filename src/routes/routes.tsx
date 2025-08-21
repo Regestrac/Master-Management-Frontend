@@ -61,6 +61,10 @@ const routes: RouteObject[] = [
             element: <WorkspaceHome />,
           },
           {
+            path: '/workspace/:id',
+            element: <WorkspaceDetail />,
+          },
+          {
             path: '/analytics',
           },
           {
@@ -87,10 +91,6 @@ const routes: RouteObject[] = [
       {
         path: 'task/create',
         element: <CreateTaskForm />,
-      },
-      {
-        path: '/workspace/:id',
-        element: <WorkspaceDetail />,
       },
       {
         path: '/not-found',

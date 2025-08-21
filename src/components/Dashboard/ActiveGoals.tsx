@@ -53,7 +53,7 @@ const ActiveGoals = () => {
       </div>
 
       <div className='space-y-4'>
-        {goals.map((goal) => {
+        {goals?.map((goal) => {
           const progress = goal.time_spend % 100; // For now, update this
 
           return (

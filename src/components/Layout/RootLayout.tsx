@@ -11,7 +11,7 @@ const RootLayout = () => {
   return (
     <div className={darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}>
       <Sidebar />
-      <div className='sm:ml-70 p-8'>
+      <div className='sm:ml-70 p-8 min-h-[100vh]'>
         <Header />
         <Outlet />
       </div>
