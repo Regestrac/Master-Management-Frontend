@@ -68,9 +68,9 @@ export type Member = {
 export type Task = {
   id: number;
   title: string;
-  status: 'Open' | 'In Progress' | 'Done';
+  status: string;
   assignees: number[];
-  dueDate: string;
+  due_date: string;
 }
 
 export type Goal = {

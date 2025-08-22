@@ -41,8 +41,9 @@ const sizeClasses = {
 export const MemberAvatar = memo(({ member, size, className = '', color }: MemberAvatarProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
-  const colorClass = colorClassesMap[color || 'rose'];
+  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+
+  const colorClass = colorClassesMap[color || 'violet'];
   const sizeClass = sizeClasses[size];
 
   return (

@@ -65,7 +65,7 @@ export const removeMember = (workspaceId: string, memberId: number): Promise<voi
   });
 
 // Task operations
-export const getWorkspaceTasks = (workspaceId: string): Promise<Task[]> =>
+export const getWorkspaceTasks = (workspaceId: string): Promise<{ tasks: Task[] }> =>
   getHandler({ path: `workspaces/${workspaceId}/tasks` });
 
 export const createWorkspaceTask = (workspaceId: string, task: Omit<Task, 'id'>): Promise<Task> =>

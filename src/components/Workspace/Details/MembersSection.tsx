@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { Users } from 'lucide-react';
 import { useParams } from 'react-router-dom';
@@ -7,27 +7,26 @@ import { toast } from 'react-toastify';
 import { Member } from 'helpers/sharedTypes';
 
 import useModalStore from 'stores/modalStore';
+import useWorkspaceStore from 'stores/workspaceStore';
 
 import { getMembers } from 'services/workspace';
 
 import { MemberAvatar } from 'components/Workspace/Details/MemberAvatar';
 
 type MembersSectionProps = {
-  // members: Member[];
   canManage: boolean;
   onChangeRole: (_memberId: number, _role: Member['role']) => void;
   onRemoveMember: (_memberId: number) => void;
 };
 
 const MembersSection = ({
-  // members,
   canManage,
   onChangeRole,
   onRemoveMember,
 }: MembersSectionProps) => {
-  const [members, setMembers] = useState<Member[]>([]);
-
-  const updateVisibility = useModalStore((s) => s.updateVisibility);
+  const members = useWorkspaceStore((state) => state.members);
+  const setMembers = useWorkspaceStore((state) => state.setMembers);
+  const updateVisibility = useModalStore((state) => state.updateVisibility);
 
   const shouldFetchMembersRef = useRef(true);
 
@@ -52,7 +51,7 @@ const MembersSection = ({
       });
       shouldFetchMembersRef.current = false;
     }
-  }, [id]);
+  }, [id, setMembers]);
 
   return (
     <div
