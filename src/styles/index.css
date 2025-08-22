@@ -45,16 +45,17 @@ body {
   --color-navbar-bg: 'rgba(17, 24, 39, 0.95)';
   --color-mobile-menu-bg: '#1e1e1e';
 
-  --color-primary-50: #F3F4F6;
-  --color-primary-100: #E5E7EB;
-  --color-primary-200: #D1D5DB;
-  --color-primary-300: #9CA3AF;
-  --color-primary-400: #6B7280;
+  --color-primary-50: #F4EEFE;
+  --color-primary-100: #EBE1FE;
+  --color-primary-200: #D7BEFC;
+  --color-primary-300: #C69FFB;
+  --color-primary-400: #B77DF9;
   --color-primary-500: #A855F7;
-  --color-primary-600: #9333EA;
-  --color-primary-700: #7C3AED;
-  --color-primary-800: #6D28D9;
-  --color-primary-900: #5B21B6;
+  --color-primary-600: #941FE8;
+  --color-primary-700: #6F15B0;
+  --color-primary-800: #4D0B7B;
+  --color-primary-900: #2F044F;
+  --color-primary-950: #1D0234;
 
   --color-secondary-50: #FDF2F8;
   --color-secondary-100: #FCE7F3;
