@@ -1,19 +1,12 @@
-import React, { memo, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 
-import { Plus } from 'lucide-react';
-
-interface CreateFormProps {
-  type: 'task' | 'goal';
-  onSubmit: (_title: string) => void;
+type CreateFormProps = {
   placeholder?: string;
-}
+  onSubmit: (_title: string) => void;
+  onCancle: () => void;
+};
 
-export const CreateForm = memo(({
-  type,
-  onSubmit,
-  placeholder = `${type} title`,
-}: CreateFormProps) => {
-  const [isVisible, setIsVisible] = useState(false);
+const CreateForm = ({ onSubmit, onCancle, placeholder = 'Enter Title' }: CreateFormProps) => {
   const [title, setTitle] = useState('');
 
   const handleSubmit = useCallback(() => {
@@ -23,13 +16,12 @@ export const CreateForm = memo(({
     }
     onSubmit(trimmedTitle);
     setTitle('');
-    setIsVisible(false);
   }, [title, onSubmit]);
 
   const handleCancel = useCallback(() => {
     setTitle('');
-    setIsVisible(false);
-  }, []);
+    onCancle();
+  }, [onCancle]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -38,20 +30,6 @@ export const CreateForm = memo(({
       handleCancel();
     }
   }, [handleSubmit, handleCancel]);
-
-  if (!isVisible) {
-    return (
-      <button
-        type='button'
-        onClick={() => setIsVisible(true)}
-        className='inline-flex items-center gap-1 text-xs px-2 py-1 rounded border transition border-gray-200 text-emerald-700 hover:bg-gray-100 dark:border-gray-700 dark:text-emerald-300 dark:hover:bg-gray-750'
-        title={`Create ${type}`}
-      >
-        <Plus className='w-3 h-3' />
-        New
-      </button>
-    );
-  }
 
   return (
     <div className='mb-4 flex items-center gap-2'>
@@ -80,6 +58,6 @@ export const CreateForm = memo(({
       </button>
     </div>
   );
-});
+};
 
-CreateForm.displayName = 'CreateForm';
+export default CreateForm;

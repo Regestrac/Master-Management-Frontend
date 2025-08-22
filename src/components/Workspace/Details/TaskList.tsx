@@ -15,8 +15,7 @@ import { createTask } from 'services/tasks';
 
 import { StatusBadge } from 'components/Workspace/Details/StatusBadge';
 import { MemberAvatar } from 'components/Workspace/Details/MemberAvatar';
-
-import { CreateForm } from './CreateForm';
+import CreateForm from 'components/Workspace/Details/CreateForm';
 
 const formatDueDate = (dateString: string) => {
   const date = new Date(dateString);

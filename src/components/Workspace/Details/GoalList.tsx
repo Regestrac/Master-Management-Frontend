@@ -6,8 +6,7 @@ import { Goal } from 'helpers/sharedTypes';
 import { useProfileStore } from 'stores/profileStore';
 
 import { StatusBadge } from 'components/Workspace/Details/StatusBadge';
-
-import { CreateForm } from './CreateForm';
+import CreateForm from 'components/Workspace/Details/CreateForm';
 
 type GoalListProps = {
   goals: Goal[];
@@ -32,7 +31,7 @@ const GoalList = ({ goals, onGoalAdd }: GoalListProps) => {
             {goals.length}
           </span>
           <CreateForm
-            type='goal'
+            onCancle={() => { }}
             onSubmit={onGoalAdd}
             placeholder='Goal title'
           />

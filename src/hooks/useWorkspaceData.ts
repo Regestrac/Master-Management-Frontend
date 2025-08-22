@@ -24,9 +24,9 @@ const initialMembers: Member[] = [
 ];
 
 const initialTasks: Task[] = [
-  { id: 101, title: 'Set up workspace rules', status: 'Open', assignees: [1, 2], dueDate: '2025-08-20' },
-  { id: 102, title: 'Invite teammates', status: 'In Progress', assignees: [3], dueDate: '2025-08-22' },
-  { id: 103, title: 'Plan sprint backlog', status: 'Done', assignees: [2, 4, 5], dueDate: '2025-08-18' },
+  { id: 101, title: 'Set up workspace rules', status: 'Open', assignees: [1, 2], due_date: '2025-08-20' },
+  { id: 102, title: 'Invite teammates', status: 'In Progress', assignees: [3], due_date: '2025-08-22' },
+  { id: 103, title: 'Plan sprint backlog', status: 'Done', assignees: [2, 4, 5], due_date: '2025-08-18' },
 ];
 
 const initialGoals: Goal[] = [
@@ -96,7 +96,7 @@ export const useWorkspaceData = (workspaceId: number | undefined) => {
       title,
       status: 'Open',
       assignees: [],
-      dueDate: due.toISOString().slice(0, 10),
+      due_date: due.toISOString().slice(0, 10),
     };
 
     setTasks((prev) => [newTask, ...prev]);
