@@ -73,12 +73,6 @@ const TaskList = () => {
     setIsVisible(false);
   }, [fetchTasks, id]);
 
-  if (tasks.length === 0) {
-    return (
-      <p className='text-gray-400 dark:text-gray-600'>No tasks yet.</p>
-    );
-  }
-
   return (
     <div id='tab-panel-tasks' role='tabpanel' aria-labelledby='tab-tasks'>
       <div className='flex items-center gap-2 mb-3'>
@@ -106,44 +100,48 @@ const TaskList = () => {
             placeholder='Task title'
           />
         )}
-        {tasks.map((task) => (
-          <li
-            key={task.id}
-            className={clsx(
-              'group flex items-center gap-4 rounded-lg border px-4 py-3 shadow-sm hover:shadow transition',
-              darkMode ? 'border-gray-700 bg-gray-800 hover:bg-gray-700' : 'border-gray-200 bg-gray-50 hover:bg-gray-100',
-            )}
-          >
-            <div className='flex items-center gap-3 min-w-0 flex-1'>
-              <div className='w-32 shrink-0'>
-                <StatusBadge status={task.status} variant='task' />
+        {tasks.length < 1 ? (
+          <p className='text-gray-400 dark:text-gray-600'>No tasks yet.</p>
+        ) : (
+          tasks.map((task) => (
+            <li
+              key={task.id}
+              className={clsx(
+                'group flex items-center gap-4 rounded-lg border px-4 py-3 shadow-sm hover:shadow transition',
+                darkMode ? 'border-gray-700 bg-gray-800 hover:bg-gray-700' : 'border-gray-200 bg-gray-50 hover:bg-gray-100',
+              )}
+            >
+              <div className='flex items-center gap-3 min-w-0 flex-1'>
+                <div className='w-32 shrink-0'>
+                  <StatusBadge status={task.status} variant='task' />
+                </div>
+                <span className='font-medium truncate'>{task.title}</span>
               </div>
-              <span className='font-medium truncate'>{task.title}</span>
-            </div>
 
-            <div className='flex items-center -space-x-2'>
-              {task?.assignees?.map((userId) => {
-                const member = memberMap.get(userId);
-                if (!member) {
-                  return null;
-                }
-                return (
-                  <MemberAvatar
-                    color={member.profile_color}
-                    key={`assignee-${task.id}-${userId}`}
-                    member={member}
-                    size='sm'
-                    className='border-gray-700 dark:border-white'
-                  />
-                );
-              })}
-            </div>
+              <div className='flex items-center -space-x-2'>
+                {task?.assignees?.map((userId) => {
+                  const member = memberMap.get(userId);
+                  if (!member) {
+                    return null;
+                  }
+                  return (
+                    <MemberAvatar
+                      color={member.profile_color}
+                      key={`assignee-${task.id}-${userId}`}
+                      member={member}
+                      size='sm'
+                      className='border-gray-700 dark:border-white'
+                    />
+                  );
+                })}
+              </div>
 
-            <span className='text-xs whitespace-nowrap text-gray-600 dark:text-gray-300'>
-              {formatDueDate(task.due_date)}
-            </span>
-          </li>
-        ))}
+              <span className='text-xs whitespace-nowrap text-gray-600 dark:text-gray-300'>
+                {formatDueDate(task.due_date)}
+              </span>
+            </li>
+          ))
+        )}
       </ul>
     </div>
   );

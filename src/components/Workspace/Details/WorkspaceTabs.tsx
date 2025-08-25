@@ -9,16 +9,9 @@ import { useProfileStore } from 'stores/profileStore';
 type WorkspaceTabsProps = {
   taskList: ReactNode;
   goalList: ReactNode;
-  taskCount: number;
-  goalCount: number;
 };
 
-const WorkspaceTabs = ({
-  taskList,
-  goalList,
-  taskCount,
-  goalCount,
-}: WorkspaceTabsProps) => {
+const WorkspaceTabs = ({ taskList, goalList }: WorkspaceTabsProps) => {
   const [activeTab, setActiveTab] = useState<TabType>('tasks');
 
   const isDark = useProfileStore((s) => s.data.theme) === 'dark';
@@ -38,10 +31,6 @@ const WorkspaceTabs = ({
         : 'text-gray-600 hover:text-gray-900 border-transparent'}`;
   };
 
-  const getCountBadgeClassName = () => {
-    return `ml-2 inline-flex items-center justify-center min-w-5 h-5 rounded px-1 text-[11px] ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`;
-  };
-
   return (
     <section className={`rounded-xl border overflow-hidden ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'}`}>
       <div role='tablist' aria-label='Workspace content' className={`flex items-center relative ${isDark ? 'border-b border-gray-700' : 'border-b border-gray-200'}`}>
@@ -57,9 +46,9 @@ const WorkspaceTabs = ({
           <span className='inline-flex items-center gap-2'>
             <ListChecks className='w-4 h-4' />
             Tasks
-            <span className={getCountBadgeClassName()}>
+            {/* <span className={`ml-2 inline-flex items-center justify-center min-w-5 h-5 rounded px-1 text-[11px] ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>
               {taskCount}
-            </span>
+            </span> */}
           </span>
         </button>
 
@@ -75,9 +64,9 @@ const WorkspaceTabs = ({
           <span className='inline-flex items-center gap-2'>
             <Target className='w-4 h-4' />
             Goals
-            <span className={getCountBadgeClassName()}>
+            {/* <span className={`ml-2 inline-flex items-center justify-center min-w-5 h-5 rounded px-1 text-[11px] ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>
               {goalCount}
-            </span>
+            </span> */}
           </span>
         </button>
         <div className='flex-1' />
