@@ -24,8 +24,6 @@ const WorkspaceDetail = () => {
 
   const {
     members,
-    tasks,
-    goals,
     isLoading,
     error,
     actions,
@@ -112,10 +110,8 @@ const WorkspaceDetail = () => {
       />
 
       <WorkspaceTabs
-        taskCount={tasks.length}
-        goalCount={goals.length}
         taskList={<TaskList />}
-        goalList={<GoalList goals={goals} onGoalAdd={actions.handleGoalAdd} />}
+        goalList={<GoalList />}
       />
     </div>
   );

@@ -95,7 +95,7 @@ export const assignTask = (workspaceId: string, taskId: number, assignees: numbe
   });
 
 // Goal operations
-export const getWorkspaceGoals = (workspaceId: string): Promise<Goal[]> =>
+export const getWorkspaceGoals = (workspaceId: string): Promise<{ goals: Goal[] }> =>
   getHandler({ path: `workspaces/${workspaceId}/goals` });
 
 export const createWorkspaceGoal = (workspaceId: string, goal: Omit<Goal, 'id'>): Promise<Goal> =>
