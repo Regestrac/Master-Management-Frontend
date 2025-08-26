@@ -1,9 +1,12 @@
 import clsx from 'clsx';
+import { toast } from 'react-toastify';
 
 import { Member } from 'helpers/sharedTypes';
 
 import useModalStore from 'stores/modalStore';
 import { useProfileStore } from 'stores/profileStore';
+
+import { removeMember } from 'services/workspace';
 
 import ModalWrapper from 'components/Modals/ModalWrapper';
 import { MemberAvatar } from 'components/Workspace/Details/MemberAvatar';
@@ -11,15 +14,25 @@ import { MemberAvatar } from 'components/Workspace/Details/MemberAvatar';
 type ExtraProps = {
   members?: Member[];
   canManage?: boolean;
+  workspaceId?: string;
   onChangeRole?: (_memberId: number, _role: 'manager' | 'admin' | 'member') => void;
-  onRemoveMember?: (_memberId: number) => void;
 };
 
 const ManageMembersModal = () => {
   const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
   const { modals } = useModalStore();
   const data = (modals.manageMembersModal?.extraProps as { modalData?: ExtraProps })?.modalData || {};
-  const { members = [], canManage = false, onChangeRole, onRemoveMember } = data;
+  const { members = [], canManage = false, onChangeRole, workspaceId } = data;
+
+  const handleRemoveMember = (memberId: number) => {
+    if (workspaceId && memberId) {
+      removeMember(workspaceId, memberId).then((res) => {
+        toast.success(res?.message || 'Member removed successfully');
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to remove member');
+      });
+    }
+  };
 
   return (
     <ModalWrapper modalType='manageMembersModal'>
@@ -58,7 +71,7 @@ const ManageMembersModal = () => {
                 </select>
                 <button
                   type='button'
-                  onClick={() => onRemoveMember && onRemoveMember(m.id)}
+                  onClick={() => handleRemoveMember(m.id)}
                   className={clsx('text-sm px-3 py-1 rounded border focus:outline-none focus:ring-2', darkMode
                     ? 'border-red-700 text-red-300 hover:bg-red-900/20 focus:ring-red-400/30'
                     : 'border-red-300 text-red-600 hover:bg-red-50 focus:ring-red-400/30')}

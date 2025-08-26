@@ -17,7 +17,6 @@ type WorkspaceOverviewProps = {
   canManage: boolean;
   onWorkspaceRename: (_name: string) => Promise<void>;
   onMemberRoleChange: (_memberId: number, _role: Member['role']) => void;
-  onMemberRemove: (_memberId: number) => void;
   onLeaveWorkspace: () => void;
 };
 
@@ -25,7 +24,6 @@ const WorkspaceOverview = ({
   canManage,
   onWorkspaceRename,
   onMemberRoleChange,
-  onMemberRemove,
   onLeaveWorkspace,
 }: WorkspaceOverviewProps) => {
   const [workspaceDetails, setWorkspaceDetails] = useState<Workspace>({} as Workspace);
@@ -76,7 +74,6 @@ const WorkspaceOverview = ({
           <MembersSection
             canManage={canManage}
             onChangeRole={onMemberRoleChange}
-            onRemoveMember={onMemberRemove}
           />
 
           <InviteSection

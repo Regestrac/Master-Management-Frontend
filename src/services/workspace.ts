@@ -58,11 +58,10 @@ export const updateMemberRole = (workspaceId: string, memberId: number, role: Me
     body: JSON.stringify({ role }),
   });
 
-export const removeMember = (workspaceId: string, memberId: number): Promise<void> =>
-  postHandler({
-    path: `workspaces/${workspaceId}/members/${memberId}`,
-    method: 'DELETE',
-  });
+export const removeMember = (workspaceId: string, memberId: number) => postHandler({
+  path: `workspaces/${workspaceId}/members/${memberId}`,
+  method: 'DELETE',
+});
 
 // Task operations
 export const getWorkspaceTasks = (workspaceId: string): Promise<{ tasks: Task[] }> =>

@@ -105,7 +105,6 @@ const WorkspaceDetail = () => {
         canManage={canManage}
         onWorkspaceRename={actions.handleWorkspaceRename}
         onMemberRoleChange={actions.handleMemberRoleChange}
-        onMemberRemove={actions.handleMemberRemove}
         onLeaveWorkspace={openLeaveWorkspaceModal}
       />
 

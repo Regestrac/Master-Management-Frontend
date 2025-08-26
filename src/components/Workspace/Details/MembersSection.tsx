@@ -16,14 +16,9 @@ import { MemberAvatar } from 'components/Workspace/Details/MemberAvatar';
 type MembersSectionProps = {
   canManage: boolean;
   onChangeRole: (_memberId: number, _role: Member['role']) => void;
-  onRemoveMember: (_memberId: number) => void;
 };
 
-const MembersSection = ({
-  canManage,
-  onChangeRole,
-  onRemoveMember,
-}: MembersSectionProps) => {
+const MembersSection = ({ canManage, onChangeRole }: MembersSectionProps) => {
   const members = useWorkspaceStore((state) => state.members);
   const setMembers = useWorkspaceStore((state) => state.setMembers);
   const updateVisibility = useModalStore((state) => state.updateVisibility);
@@ -37,10 +32,10 @@ const MembersSection = ({
       modalType: 'manageMembersModal',
       isVisible: true,
       extraProps: {
-        modalData: { members, canManage, onChangeRole, onRemoveMember },
+        modalData: { members, canManage, onChangeRole, workspaceId: id },
       },
     });
-  }, [members, canManage, onChangeRole, onRemoveMember, updateVisibility]);
+  }, [members, canManage, onChangeRole, updateVisibility, id]);
 
   useEffect(() => {
     if (id && shouldFetchMembersRef.current) {
