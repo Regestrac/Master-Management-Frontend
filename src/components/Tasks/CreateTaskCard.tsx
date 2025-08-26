@@ -70,7 +70,7 @@ const CreateTaskCard = ({ handleCancel }: { handleCancel: () => void }) => {
       <div className='flex flex-row justify-between'>
         <FormProvider {...methods}>
           <div className='flex items-center gap-3'>
-            <Dropdown options={PRIORITY_OPTIONS} onSelect={handlePrioritySelect} value={priority ?? undefined}>
+            <Dropdown options={PRIORITY_OPTIONS} onSelect={handlePrioritySelect} value={priority ?? undefined} isMulti={false}>
               <div className={`w-3 h-3 rounded-full cursor-pointer hover:scale-120 ${getPriorityColor(priority!)}`} />
             </Dropdown>
             <div className='flex flex-col gap-2 ms-2'>
@@ -81,7 +81,7 @@ const CreateTaskCard = ({ handleCancel }: { handleCancel: () => void }) => {
                 placeholder='Enter title...'
                 className='font-semibold text-lg cursor-text outline-none p-0! text-white border-none focus:ring-0!'
               />
-              <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={status} hideClear>
+              <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={status} hideClear isMulti={false}>
                 <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(status!)}`}>
                   {status?.toUpperCase()}
                 </span>

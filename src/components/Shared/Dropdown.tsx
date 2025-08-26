@@ -1,5 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
+import { X } from 'lucide-react';
+
 import { isHexColor } from 'helpers/utils';
 
 import { useProfileStore } from 'stores/profileStore';
@@ -34,21 +36,23 @@ type DropdownOption<T> = {
   disabled?: boolean;
 };
 
-type DropdownSelectorWrapperProps<T> = {
+type DropdownSelectorWrapperProps<T, U extends boolean> = {
   options: DropdownOption<T>[];
-  value: T;
-  onSelect: (_value: T | null) => void;
+  value: U extends true ? T[] | [] : (T | undefined);
+  onSelect: (_value: (U extends true ? T[] : T) | null) => void;
   children: React.ReactNode;
   hideClear?: boolean;
+  isMulti?: U;
 };
 
-function Dropdown<T>({
+function Dropdown<T, U extends boolean>({
   options,
   value,
   onSelect,
   children,
   hideClear,
-}: DropdownSelectorWrapperProps<T>) {
+  isMulti,
+}: DropdownSelectorWrapperProps<T, U>) {
   const [open, setOpen] = useState(false);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -56,7 +60,29 @@ function Dropdown<T>({
 
   const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
 
-  // const selected = options.find((opt) => opt.value === value);
+  const isSelected = (optionValue: T): boolean => {
+    if (isMulti) {
+      return Array.isArray(value) && (value as T[]).includes(optionValue);
+    }
+    return (value as T) === optionValue;
+  };
+
+  const handleOptionSelect = (optionValue: T) => {
+    if (isMulti) {
+      const currentValues = Array.isArray(value) ? (value as T[]) : [];
+      if (currentValues.includes(optionValue)) {
+        // Remove from selection
+        const newValues = currentValues.filter((v) => v !== optionValue);
+        onSelect(newValues as (U extends true ? T[] : T) | null);
+      } else {
+        // Add to selection
+        onSelect([...currentValues, optionValue] as (U extends true ? T[] : T) | null);
+      }
+    } else {
+      onSelect(optionValue as (U extends true ? T[] : T) | null);
+      setOpen(false);
+    }
+  };
 
   const handleChildrenClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -128,13 +154,12 @@ function Dropdown<T>({
                   onClick={(e) => {
                     if (option.disabled) { return; }
                     e.stopPropagation();
-                    onSelect(option.value);
-                    setOpen(false);
+                    handleOptionSelect(option.value);
                   }}
                   className={`
-                    flex items-center gap-2 p-2 cursor-pointer mx-2 my-1 rounded-md
+                    flex items-center gap-2 p-2 cursor-pointer mx-2 my-1 rounded-md relative
                     ${option.disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}
-                    ${value === option.value ? (darkMode ? 'bg-primary-900' : 'bg-neutral-100') : ''}
+                    ${isSelected(option.value) ? (darkMode ? 'bg-primary-900' : 'bg-neutral-100') : ''}
                     ${!option.disabled && !option.bgColor ? (darkMode ? 'hover:bg-primary-900' : 'hover:bg-neutral-100') : ''}
                     ${option.bgColor && !isHexColor(option.bgColor) ? `${option.bgColor} hover:opacity-80` : ''}
                     group
@@ -145,8 +170,21 @@ function Dropdown<T>({
                   {option.color && (
                     <span className={`w-2.5 h-2.5 rounded-full mr-2 ${!isHexColor(option.color) ? option.color : ''}`} style={isHexColor(option.color) ? { backgroundColor: option.color } : undefined} />
                   )}
-                  {option.icon && <span className='text-sm mr-2'>{option.icon}</span>}
-                  <span className={darkMode ? 'text-neutral-50' : 'text-neutral-900'}>{option.label}</span>
+                  {option.icon && (
+                    <span className='text-sm'>{option.icon}</span>
+                  )}
+                  <span className={`flex-1 ${darkMode ? 'text-neutral-50' : 'text-neutral-900'}`}>{option.label}</span>
+                  {isMulti && isSelected(option.value) && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOptionSelect(option.value);
+                      }}
+                      className={`ml-2 p-1 rounded-full ${darkMode ? 'hover:bg-neutral-700 text-neutral-400 hover:text-neutral-200' : 'hover:bg-neutral-200 text-neutral-500 hover:text-neutral-700'} transition-colors`}
+                    >
+                      <X size={12} />
+                    </button>
+                  )}
                 </li>
               );
             })}

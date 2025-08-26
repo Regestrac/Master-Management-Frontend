@@ -122,7 +122,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
                       onChange={() => toggleTaskSelection(task?.id)}
                       className='w-4 h-4 text-purple-600 rounded focus:ring-purple-500'
                     /> */}
-              <Dropdown options={PRIORITY_OPTIONS} onSelect={handlePrioritySelect} value={task?.priority}>
+              <Dropdown options={PRIORITY_OPTIONS} onSelect={handlePrioritySelect} value={task?.priority} isMulti={false}>
                 <div className={`w-3 h-3 rounded-full cursor-pointer hover:scale-120 ${getPriorityColor(task?.priority)}`} />
               </Dropdown>
               <div className='flex-1'>
@@ -160,7 +160,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
                         {task?.description}
                       </p> */}
                 <div className='flex flex-wrap items-center gap-4 text-sm'>
-                  <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={task?.status} hideClear>
+                  <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={task?.status} hideClear isMulti={false}>
                     <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(task?.status)}`}>
                       {task?.status?.toUpperCase()}
                     </span>

@@ -114,12 +114,12 @@ const TaskHeader = () => {
           <div>
             <h1 className='text-xl font-bold'>{taskDetails.title}</h1>
             <div className='flex items-center space-x-2 mt-1'>
-              <DropDown options={STATUS_OPTIONS} onSelect={handleStatusChange} hideClear value={taskDetails?.status}>
+              <DropDown options={STATUS_OPTIONS} onSelect={handleStatusChange} hideClear value={taskDetails?.status} isMulti={false}>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(taskDetails.status)}`}>
                   {taskDetails?.status?.toUpperCase()}
                 </span>
               </DropDown>
-              <DropDown options={PRIORITY_OPTIONS} onSelect={handlePriorityChange} value={taskDetails?.priority}>
+              <DropDown options={PRIORITY_OPTIONS} onSelect={handlePriorityChange} value={taskDetails?.priority} isMulti={false}>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(taskDetails.priority)}`}>
                   {capitalize(taskDetails.priority) || 'No'}
                   {' '}
