@@ -100,33 +100,34 @@ function Dropdown<T, U extends boolean>({
   }, []);
 
   useLayoutEffect(() => {
-    if (open && dropdownRef.current) {
+    if (open && dropdownRef.current && wrapperRef.current) {
+      const wrapperRect = wrapperRef.current.getBoundingClientRect();
       const dropdownRect = dropdownRef.current.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
 
-      // If dropdown is wider than viewport, stick to left
-      if (dropdownRect.width > viewportWidth) {
-        dropdownRef.current.style.left = '0px';
-        dropdownRef.current.style.right = 'auto';
-        return;
+      // Position dropdown below the trigger element
+      let top = wrapperRect.bottom + 8;
+      let left = wrapperRect.left;
+
+      // If dropdown would overflow right edge, align to right
+      if (left + dropdownRect.width > viewportWidth) {
+        left = wrapperRect.right - dropdownRect.width;
       }
 
-      // If overflows right, align left
-      if (dropdownRect.right > viewportWidth) {
-        dropdownRef.current.style.left = 'auto';
-        dropdownRef.current.style.right = '0px';
-        return;
+      // If dropdown would overflow left edge, align to left
+      if (left < 0) {
+        left = 8;
       }
 
-      // If overflows left, align right and stick to left
-      if (dropdownRect.left < 0) {
-        dropdownRef.current.style.left = '0px';
-        dropdownRef.current.style.right = 'auto';
-        return;
+      // If dropdown would overflow bottom, position above
+      if (top + dropdownRect.height > viewportHeight) {
+        top = wrapperRect.top - dropdownRect.height - 8;
       }
 
-      // Reset inline styles if not overflowing
-      dropdownRef.current.style.left = 'auto';
+      // Apply positioning
+      dropdownRef.current.style.top = `${top}px`;
+      dropdownRef.current.style.left = `${left}px`;
       dropdownRef.current.style.right = 'auto';
     }
   }, [open]);
@@ -141,7 +142,7 @@ function Dropdown<T, U extends boolean>({
         <div
           ref={dropdownRef}
           className={`
-            absolute z-50 mt-2 w-max origin-top-right rounded-md
+            fixed z-[9999] w-max rounded-md
             ${darkMode ? 'bg-neutral-900 ring-1 ring-neutral-600 ring-opacity-5' : 'bg-neutral-50 ring-1 ring-neutral-300 ring-opacity-5'}
             shadow-lg focus:outline-none`
           }
