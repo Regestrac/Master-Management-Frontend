@@ -7,7 +7,7 @@ export const getAllGoals = (params: string) => getHandler({
 
 // Get a specific goal by ID
 export const getGoal = (goalId: string | number) => getHandler({
-  path: `task/${goalId}`,
+  path: `tasks/${goalId}`,
 });
 
 // Create a new goal
@@ -18,14 +18,14 @@ export const createGoal = (data: object) => postHandler({
 
 // Update an existing goal
 export const updateGoal = (goalId: string | number, data: object) => postHandler({
-  path: `task/${goalId}`,
+  path: `tasks/${goalId}`,
   method: 'PATCH',
   body: JSON.stringify(data),
 });
 
 // Delete a goal
 export const deleteGoal = (goalId: string | number) => postHandler({
-  path: `task/${goalId}`,
+  path: `tasks/${goalId}`,
   method: 'DELETE',
 });
 

@@ -77,6 +77,7 @@ export type Goal = {
   id: number;
   title: string;
   status: 'Not Started' | 'In Progress' | 'Achieved';
+  assignees: number[];
 }
 
 export type Workspace = {

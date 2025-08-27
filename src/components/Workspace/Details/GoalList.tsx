@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -8,25 +8,40 @@ import { Plus, Target } from 'lucide-react';
 import { Goal } from 'helpers/sharedTypes';
 
 import { useProfileStore } from 'stores/profileStore';
+import useWorkspaceStore from 'stores/workspaceStore';
 
 import { getWorkspaceGoals } from 'services/workspace';
-import { createTask, updateTask } from 'services/tasks';
+import { updateGoal, createGoal } from 'services/goals';
 
 import { StatusBadge } from 'components/Workspace/Details/StatusBadge';
+import { MemberAvatar } from 'components/Workspace/Details/MemberAvatar';
+import Dropdown from 'components/Shared/Dropdown';
 import CreateForm from 'components/Workspace/Details/CreateForm';
 import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
-import Dropdown from 'components/Shared/Dropdown';
 
 const GoalList = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isVisible, setIsVisible] = useState(false);
 
+  const members = useWorkspaceStore((state) => state.members);
   const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
+
   const navigate = useNavigate();
 
   const { id } = useParams();
 
   const shouldFetchGoalsRef = useRef(true);
+
+  const memberMap = useMemo(() => {
+    return new Map(members.map((member) => [member.user_id, member]));
+  }, [members]);
+
+  const memberOptions = useMemo(() => {
+    return members.map((member) => ({
+      value: member.user_id,
+      label: member.name,
+    }));
+  }, [members]);
 
   // Status options for goals dropdown
   const goalStatusOptions = [
@@ -60,7 +75,7 @@ const GoalList = () => {
       type: 'goal',
       workspace_id: Number(id),
     };
-    createTask(payload).then(() => {
+    createGoal(payload).then(() => {
       fetchGoals();
     }).catch((err) => {
       toast.error(err?.error || 'Failed to create goal');
@@ -68,9 +83,23 @@ const GoalList = () => {
     setIsVisible(false);
   }, [fetchGoals, id]);
 
+  const handleAssigneesUpdate = useCallback(async (goalId: number, newAssignees: number[]) => {
+    try {
+      await updateGoal(goalId.toString(), { assignees: newAssignees });
+      setGoals((prevGoals) =>
+        prevGoals.map((goal) =>
+          goal.id === goalId ? { ...goal, assignees: newAssignees } : goal,
+        ),
+      );
+      toast.success('Goal assignees updated successfully');
+    } catch (err: any) {
+      toast.error(err?.error || 'Failed to update goal assignees');
+    }
+  }, []);
+
   const handleTitleUpdate = useCallback(async (goalId: number, newTitle: string) => {
     try {
-      const response = await updateTask(goalId.toString(), { title: newTitle });
+      const response = await updateGoal(goalId.toString(), { title: newTitle });
       setGoals((prevGoals) =>
         prevGoals.map((goal) =>
           goal.id === goalId ? { ...goal, title: newTitle } : goal,
@@ -85,7 +114,7 @@ const GoalList = () => {
 
   const handleStatusUpdate = useCallback(async (goalId: number, newStatus: string) => {
     try {
-      const response = await updateTask(goalId.toString(), { status: newStatus });
+      const response = await updateGoal(goalId.toString(), { status: newStatus });
       setGoals((prevGoals) =>
         prevGoals.map((goal) =>
           goal.id === goalId ? { ...goal, status: newStatus as Goal['status'] } : goal,
@@ -152,7 +181,7 @@ const GoalList = () => {
                     <StatusBadge status={goal.status} variant='goal' />
                   </Dropdown>
                 </div>
-                <div className='flex items-center gap-3 min-w-0 flex-1'>
+                <div className='flex items-center gap-3 min-w-0'>
                   <div className='bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded-full w-7 h-7 flex items-center justify-center shrink-0'>
                     <Target className='w-4 h-4' />
                   </div>
@@ -162,6 +191,41 @@ const GoalList = () => {
                     placeholder='Enter goal title...'
                   />
                 </div>
+              </div>
+              <div className='flex items-center gap-2' data-dropdown>
+                <Dropdown
+                  options={memberOptions}
+                  value={goal?.assignees || []}
+                  onSelect={(newAssignees) => handleAssigneesUpdate(goal.id, newAssignees || [])}
+                  isMulti={true}
+                  hideClear
+                >
+                  <div className='flex items-center gap-1'>
+                    {goal?.assignees?.length > 0 ? (
+                      <div className='flex items-center -space-x-2'>
+                        {goal.assignees.map((userId) => {
+                          const member = memberMap.get(userId);
+                          if (!member) {
+                            return null;
+                          }
+                          return (
+                            <MemberAvatar
+                              color={member.profile_color}
+                              key={`assignee-${goal.id}-${userId}`}
+                              member={member}
+                              size='sm'
+                              className='border-gray-700 dark:border-white'
+                            />
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className='text-xs text-gray-500 dark:text-gray-400 px-2 py-1 rounded border border-dashed border-gray-300 dark:border-gray-600'>
+                        Assign
+                      </div>
+                    )}
+                  </div>
+                </Dropdown>
               </div>
             </li>
           ))

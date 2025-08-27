@@ -213,9 +213,9 @@ const TaskList = () => {
                   hideClear
                 >
                   <div className='flex items-center gap-1'>
-                    <div className='flex items-center -space-x-2'>
-                      {task?.assignees?.length > 0 ? (
-                        task.assignees.map((userId) => {
+                    {task?.assignees?.length > 0 ? (
+                      <div className='flex items-center -space-x-2'>
+                        {task.assignees.map((userId) => {
                           const member = memberMap.get(userId);
                           if (!member) {
                             return null;
@@ -229,17 +229,17 @@ const TaskList = () => {
                               className='border-gray-700 dark:border-white'
                             />
                           );
-                        })
-                      ) : (
-                        <div className={`
-                          w-8 h-8 rounded-full border-2 border-dashed flex items-center justify-center
-                          ${darkMode ? 'border-gray-600 text-gray-500' : 'border-gray-300 text-gray-400'}
-                        `}
-                        >
-                          <UserPlus size={14} />
-                        </div>
+                        })}
+                      </div>
+                    ) : (
+                      <div className={clsx(
+                        'w-8 h-8 rounded-full border-2 border-dashed flex items-center justify-center',
+                        darkMode ? 'border-gray-600 text-gray-500' : 'border-gray-300 text-gray-400',
                       )}
-                    </div>
+                      >
+                        <UserPlus size={14} />
+                      </div>
+                    )}
                   </div>
                 </Dropdown>
               </div>
