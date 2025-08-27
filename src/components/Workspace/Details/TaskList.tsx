@@ -5,15 +5,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Plus, UserPlus } from 'lucide-react';
 
-import { Task } from 'helpers/sharedTypes';
+import { StatusType, Task } from 'helpers/sharedTypes';
+import { STATUS_OPTIONS } from 'helpers/configs';
+import { getStatusColor } from 'helpers/utils';
 
 import { useProfileStore } from 'stores/profileStore';
 import useWorkspaceStore from 'stores/workspaceStore';
+import { useNavbarStore } from 'stores/navbarStore';
 
 import { getWorkspaceTasks } from 'services/workspace';
 import { createTask, updateTask } from 'services/tasks';
 
-import { StatusBadge } from 'components/Workspace/Details/StatusBadge';
 import { MemberAvatar } from 'components/Workspace/Details/MemberAvatar';
 import CreateForm from 'components/Workspace/Details/CreateForm';
 import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
@@ -33,20 +35,13 @@ const TaskList = () => {
 
   const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
   const members = useWorkspaceStore((state) => state.members);
+  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
+
   const navigate = useNavigate();
 
   const { id } = useParams();
 
   const shouldFetchTasksRef = useRef(true);
-
-  // Status options for dropdown
-  const statusOptions = [
-    { label: 'To Do', value: 'todo', color: '#6B7280' },
-    { label: 'In Progress', value: 'inprogress', color: '#F59E0B' },
-    { label: 'Completed', value: 'completed', color: '#10B981' },
-    { label: 'Pending', value: 'pending', color: '#EF4444' },
-    { label: 'Paused', value: 'paused', color: '#8B5CF6' },
-  ];
 
   // Member options for assignees dropdown
   const memberOptions = members.map((member) => ({
@@ -143,6 +138,7 @@ const TaskList = () => {
   }, []);
 
   const handleTaskClick = (taskId: number) => {
+    updatePrevPath(`/workspace/${id}`);
     navigate(`/tasks/${taskId}`);
   };
 
@@ -157,7 +153,10 @@ const TaskList = () => {
           <button
             type='button'
             onClick={() => setIsVisible(true)}
-            className='inline-flex items-center gap-1 text-xs px-2 py-1 rounded border transition border-gray-200 text-emerald-700 hover:bg-gray-100 dark:border-gray-700 dark:text-emerald-300 dark:hover:bg-gray-750'
+            className={clsx(
+              'inline-flex items-center gap-1 text-xs px-2 py-1 rounded border transition cursor-pointer',
+              darkMode ? 'border-gray-700 text-emerald-300 hover:bg-gray-900' : 'border-gray-200 text-emerald-700 hover:bg-gray-100',
+            )}
             title='Create task'
           >
             <Plus className='w-3 h-3' />
@@ -186,15 +185,22 @@ const TaskList = () => {
               )}
             >
               <div className='flex items-center gap-3 min-w-0 flex-1'>
-                <div className='w-32 shrink-0' data-dropdown>
+                <div className='w-24 shrink-0' data-dropdown>
                   <Dropdown
-                    options={statusOptions}
+                    options={STATUS_OPTIONS}
                     value={task.status}
                     onSelect={(newStatus) => newStatus && handleStatusUpdate(task.id, newStatus)}
                     isMulti={false}
                     hideClear
                   >
-                    <StatusBadge status={task.status} variant='task' />
+                    <span
+                      className={clsx(
+                        'inline-block max-w-full truncate text-xs px-3 py-1 rounded-xl transition',
+                        getStatusColor(task.status as StatusType),
+                      )}
+                    >
+                      {task.status?.toUpperCase()}
+                    </span>
                   </Dropdown>
                 </div>
                 <InlineEditableTitle

@@ -3,17 +3,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Plus, Target } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
-import { Goal } from 'helpers/sharedTypes';
+import { Goal, StatusType } from 'helpers/sharedTypes';
+import { getStatusColor } from 'helpers/utils';
+import { STATUS_OPTIONS } from 'helpers/configs';
 
 import { useProfileStore } from 'stores/profileStore';
 import useWorkspaceStore from 'stores/workspaceStore';
+import { useNavbarStore } from 'stores/navbarStore';
 
 import { getWorkspaceGoals } from 'services/workspace';
 import { updateGoal, createGoal } from 'services/goals';
 
-import { StatusBadge } from 'components/Workspace/Details/StatusBadge';
 import { MemberAvatar } from 'components/Workspace/Details/MemberAvatar';
 import Dropdown from 'components/Shared/Dropdown';
 import CreateForm from 'components/Workspace/Details/CreateForm';
@@ -25,6 +27,7 @@ const GoalList = () => {
 
   const members = useWorkspaceStore((state) => state.members);
   const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
+  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const navigate = useNavigate();
 
@@ -42,13 +45,6 @@ const GoalList = () => {
       label: member.name,
     }));
   }, [members]);
-
-  // Status options for goals dropdown
-  const goalStatusOptions = [
-    { label: 'Not Started', value: 'Not Started', color: '#6B7280' },
-    { label: 'In Progress', value: 'In Progress', color: '#F59E0B' },
-    { label: 'Achieved', value: 'Achieved', color: '#10B981' },
-  ];
 
   const fetchGoals = useCallback(() => {
     if (id) {
@@ -127,6 +123,7 @@ const GoalList = () => {
   }, []);
 
   const handleGoalClick = (goalId: number) => {
+    updatePrevPath(`/workspace/${id}`);
     navigate(`/goals/${goalId}`);
   };
 
@@ -141,7 +138,10 @@ const GoalList = () => {
           <button
             type='button'
             onClick={() => setIsVisible(true)}
-            className='inline-flex items-center gap-1 text-xs px-2 py-1 rounded border transition border-gray-200 text-emerald-700 hover:bg-gray-100 dark:border-gray-700 dark:text-emerald-300 dark:hover:bg-gray-750'
+            className={clsx(
+              'inline-flex items-center gap-1 text-xs px-2 py-1 rounded border transition cursor-pointer',
+              darkMode ? 'border-gray-700 text-emerald-300 hover:bg-gray-900' : 'border-gray-200 text-emerald-700 hover:bg-gray-100',
+            )}
             title='Create goal'
           >
             <Plus className='w-3 h-3' />
@@ -170,27 +170,29 @@ const GoalList = () => {
               )}
             >
               <div className='flex items-center gap-3 min-w-0 flex-1'>
-                <div className='w-32 shrink-0' data-dropdown>
+                <div className='w-24 shrink-0' data-dropdown>
                   <Dropdown
-                    options={goalStatusOptions}
+                    options={STATUS_OPTIONS}
                     value={goal.status}
                     onSelect={(newStatus) => newStatus && handleStatusUpdate(goal.id, newStatus)}
                     isMulti={false}
                     hideClear
                   >
-                    <StatusBadge status={goal.status} variant='goal' />
+                    <span
+                      className={clsx(
+                        'inline-block max-w-full truncate text-xs px-3 py-1 rounded-xl transition',
+                        getStatusColor(goal.status as StatusType),
+                      )}
+                    >
+                      {goal.status?.toUpperCase()}
+                    </span>
                   </Dropdown>
                 </div>
-                <div className='flex items-center gap-3 min-w-0'>
-                  <div className='bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded-full w-7 h-7 flex items-center justify-center shrink-0'>
-                    <Target className='w-4 h-4' />
-                  </div>
-                  <InlineEditableTitle
-                    title={goal.title}
-                    onSave={(newTitle) => handleTitleUpdate(goal.id, newTitle)}
-                    placeholder='Enter goal title...'
-                  />
-                </div>
+                <InlineEditableTitle
+                  title={goal.title}
+                  onSave={(newTitle) => handleTitleUpdate(goal.id, newTitle)}
+                  placeholder='Enter goal title...'
+                />
               </div>
               <div className='flex items-center gap-2' data-dropdown>
                 <Dropdown
