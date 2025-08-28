@@ -14,6 +14,7 @@ import ProductivitySettings from 'components/Settings/ProductivitySettings';
 import DataAndStorageSettings from 'components/Settings/DataAndStorageSettings';
 import AdvancedSettings from 'components/Settings/AdvancedSettings';
 import AboutSection from 'components/Settings/AboutSection';
+import NotificationSettings from 'components/Settings/NotificationSettings';
 
 const settingsCategories = [
   { id: 'general', icon: '⚙️', label: 'General' },
@@ -178,6 +179,10 @@ const Settings = () => {
 
               <div ref={setSectionRef('productivity')}>
                 <ProductivitySettings />
+              </div>
+
+              <div ref={setSectionRef('notifications')}>
+                <NotificationSettings />
               </div>
 
               <div ref={setSectionRef('data')}>
