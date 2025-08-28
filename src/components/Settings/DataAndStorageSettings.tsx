@@ -1,4 +1,36 @@
+import { SelectOptionType } from 'helpers/sharedTypes';
+
 import { useProfileStore } from 'stores/profileStore';
+
+import SelectField from 'components/Shared/SelectField';
+import Switch from 'components/Shared/Switch';
+
+// Backup frequency options
+const backupFrequencyOptions: SelectOptionType[] = [
+  { label: 'Real-time', value: 'realtime' },
+  { label: 'Every Hour', value: 'hourly' },
+  { label: 'Daily', value: 'daily' },
+  { label: 'Weekly', value: 'weekly' },
+  { label: 'Manual Only', value: 'manual' },
+];
+
+// Task retention options
+const taskRetentionOptions: SelectOptionType[] = [
+  { label: '30 days', value: '30' },
+  { label: '90 days', value: '90' },
+  { label: '6 months', value: '180' },
+  { label: '1 year', value: '365' },
+  { label: 'Forever', value: 'forever' },
+];
+
+// Analytics retention options
+const analyticsRetentionOptions: SelectOptionType[] = [
+  { label: '90 days', value: '90' },
+  { label: '6 months', value: '180' },
+  { label: '1 year', value: '365' },
+  { label: '2 years', value: '730' },
+  { label: 'Forever', value: 'forever' },
+];
 
 const DataAndStorageSettings = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
@@ -54,42 +86,23 @@ const DataAndStorageSettings = () => {
         <div>
           <h5 className='font-semibold mb-4'>Backup & Sync</h5>
           <div className='space-y-4'>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Auto Backup</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Automatically backup data every day
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-purple-500 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6' />
-              </button>
-            </div>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Cloud Sync</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Sync data across all your devices
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-purple-500 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6' />
-              </button>
-            </div>
+            <Switch
+              name='autoBackup'
+              label='Auto Backup'
+              description='Automatically backup data every day'
+            />
+            <Switch
+              name='cloudSync'
+              label='Cloud Sync'
+              description='Sync data across all your devices'
+            />
             <div>
               <label className='block text-sm font-medium mb-2'>Backup Frequency</label>
-              <select
-                className={`w-full px-4 py-3 rounded-lg border ${darkMode
-                  ? 'bg-gray-700 border-gray-600 text-white'
-                  : 'bg-white border-gray-300 text-gray-900'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                defaultValue='daily'
-              >
-                <option value='realtime'>Real-time</option>
-                <option value='hourly'>Every Hour</option>
-                <option value='daily'>Daily</option>
-                <option value='weekly'>Weekly</option>
-                <option value='manual'>Manual Only</option>
-              </select>
+              <SelectField
+                name='backupFrequency'
+                options={backupFrequencyOptions}
+                isMulti={false}
+              />
             </div>
             <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
               <button className='flex flex-col items-center p-4 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors'>
@@ -120,45 +133,25 @@ const DataAndStorageSettings = () => {
           <div className='space-y-4'>
             <div>
               <label className='block text-sm font-medium mb-2'>Keep Completed Tasks</label>
-              <select
-                className={`w-full px-4 py-3 rounded-lg border ${darkMode
-                  ? 'bg-gray-700 border-gray-600 text-white'
-                  : 'bg-white border-gray-300 text-gray-900'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                defaultValue='90'
-              >
-                <option value='30'>30 days</option>
-                <option value='90'>90 days</option>
-                <option value='180'>6 months</option>
-                <option value='365'>1 year</option>
-                <option value='forever'>Forever</option>
-              </select>
+              <SelectField
+                name='taskRetention'
+                options={taskRetentionOptions}
+                isMulti={false}
+              />
             </div>
             <div>
               <label className='block text-sm font-medium mb-2'>Analytics Data Retention</label>
-              <select
-                className={`w-full px-4 py-3 rounded-lg border ${darkMode
-                  ? 'bg-gray-700 border-gray-600 text-white'
-                  : 'bg-white border-gray-300 text-gray-900'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                defaultValue='365'
-              >
-                <option value='90'>90 days</option>
-                <option value='180'>6 months</option>
-                <option value='365'>1 year</option>
-                <option value='730'>2 years</option>
-                <option value='forever'>Forever</option>
-              </select>
+              <SelectField
+                name='analyticsRetention'
+                options={analyticsRetentionOptions}
+                isMulti={false}
+              />
             </div>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Auto-delete Old Data</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Automatically clean up old data based on retention settings
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-purple-500 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6' />
-              </button>
-            </div>
+            <Switch
+              name='autoDeleteOldData'
+              label='Auto-delete Old Data'
+              description='Automatically clean up old data based on retention settings'
+            />
           </div>
         </div>
       </div>

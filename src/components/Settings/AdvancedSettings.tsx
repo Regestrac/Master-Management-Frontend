@@ -1,5 +1,8 @@
 import { useProfileStore } from 'stores/profileStore';
 
+import Switch from 'components/Shared/Switch';
+import Slider from 'components/Shared/Slider';
+
 const AdvancedSettings = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
 
@@ -15,45 +18,26 @@ const AdvancedSettings = () => {
         <div>
           <h5 className='font-semibold mb-4'>Performance & Memory</h5>
           <div className='space-y-4'>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Hardware Acceleration</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Use GPU acceleration for better performance
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-purple-500 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6' />
-              </button>
-            </div>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Background Sync</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Continue syncing when app is in background
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-purple-500 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6' />
-              </button>
-            </div>
-            <div>
-              <label className='block text-sm font-medium mb-2'>
-                Cache Size: 500 MB
-              </label>
-              <input
-                type='range'
-                min='100'
-                max='2000'
-                defaultValue='500'
-                className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer'
-              />
-              <div className='flex justify-between text-xs text-gray-500 mt-1'>
-                <span>100MB</span>
-                <span>1GB</span>
-                <span>2GB</span>
-              </div>
-            </div>
+            <Switch
+              name='hardwareAcceleration'
+              label='Hardware Acceleration'
+              description='Use GPU acceleration for better performance'
+            />
+            <Switch
+              name='backgroundSync'
+              label='Background Sync'
+              description='Continue syncing when app is in background'
+            />
+            <Slider
+              name='cacheSize'
+              label='Cache Size'
+              min={100}
+              max={2000}
+              step={50}
+              unit=' MB'
+              showValue={true}
+              showLabels={true}
+            />
             <button className='px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors'>
               Clear Cache
             </button>
@@ -64,39 +48,21 @@ const AdvancedSettings = () => {
         <div>
           <h5 className='font-semibold mb-4'>Developer & Debug</h5>
           <div className='space-y-4'>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Debug Mode</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Enable debug logging and detailed error messages
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1' />
-              </button>
-            </div>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Beta Features</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Enable experimental features and early access
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1' />
-              </button>
-            </div>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Analytics & Telemetry</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Send anonymous usage data to help improve the app
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-purple-500 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6' />
-              </button>
-            </div>
+            <Switch
+              name='debugMode'
+              label='Debug Mode'
+              description='Enable debug logging and detailed error messages'
+            />
+            <Switch
+              name='betaFeatures'
+              label='Beta Features'
+              description='Enable experimental features and early access'
+            />
+            <Switch
+              name='analyticsTelemetry'
+              label='Analytics & Telemetry'
+              description='Send anonymous usage data to help improve the app'
+            />
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <button className='flex flex-col items-center p-4 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors'>
                 <svg className='w-8 h-8 mb-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
@@ -127,9 +93,13 @@ const AdvancedSettings = () => {
                     AI-powered task creation and management (Beta)
                   </p>
                 </div>
-                <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 transition-colors ml-auto'>
-                  <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1' />
-                </button>
+                <div className='ml-auto'>
+                  <Switch
+                    name='aiTaskAssistant'
+                    label=''
+                    description=''
+                  />
+                </div>
               </div>
             </div>
             <div className={`p-4 rounded-lg border-2 border-dashed ${darkMode ? 'border-gray-600' : 'border-gray-300'}`}>
@@ -141,9 +111,13 @@ const AdvancedSettings = () => {
                     Detailed productivity insights and predictions (Alpha)
                   </p>
                 </div>
-                <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 transition-colors ml-auto'>
-                  <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1' />
-                </button>
+                <div className='ml-auto'>
+                  <Switch
+                    name='advancedAnalytics'
+                    label=''
+                    description=''
+                  />
+                </div>
               </div>
             </div>
             <div className={`p-4 rounded-lg border-2 border-dashed ${darkMode ? 'border-gray-600' : 'border-gray-300'}`}>
@@ -155,9 +129,14 @@ const AdvancedSettings = () => {
                     Share projects and collaborate in real-time (Coming Soon)
                   </p>
                 </div>
-                <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 transition-colors ml-auto opacity-50 cursor-not-allowed'>
-                  <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1' />
-                </button>
+                <div className='ml-auto'>
+                  <Switch
+                    name='teamCollaboration'
+                    label=''
+                    description=''
+                    disabled={true}
+                  />
+                </div>
               </div>
             </div>
           </div>
