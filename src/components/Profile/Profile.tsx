@@ -12,14 +12,14 @@ import { logout } from 'services/auth';
 import { updateProfile } from 'services/profile';
 
 import Input from 'components/Shared/Input';
-
-import ProfileInfoCard from './ProfileInfoCard';
-import QuickStats from './QuickStats';
-import Achievements from './Achievements';
-import PersonalInformation from './PersonalInformation';
-import PrivacyAndSecurity from './PrivacyAndSecurity';
-import Integrations from './Integrations';
-import HelpAndSupport from './HelpAndSupport';
+import ProfileInfoCard from 'components/Profile/ProfileInfoCard';
+import QuickStats from 'components/Profile/QuickStats';
+import Achievements from 'components/Profile/Achievements';
+import PersonalInformation from 'components/Profile/PersonalInformation';
+import PrivacyAndSecurity from 'components/Profile/PrivacyAndSecurity';
+import Integrations from 'components/Profile/Integrations';
+import HelpAndSupport from 'components/Profile/HelpAndSupport';
+import ProfileHeader from 'components/Profile/ProfileHeader';
 
 type ProfileFormType = {
   first_name: string;
@@ -41,7 +41,6 @@ const Profile = () => {
   const firstName = useProfileStore((state) => state?.data?.first_name);
   const lastName = useProfileStore((state) => state?.data?.last_name);
   const email = useProfileStore((state) => state?.data?.email);
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
 
   const shouldResetForm = useRef(true);
 
@@ -100,54 +99,41 @@ const Profile = () => {
   return (
     <>
       <div>
-        {/* Profile Header */}
-        <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8'>
-          <div>
-            <h3 className='text-2xl font-bold mb-2'>Profile & Settings</h3>
-            <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Manage your account, preferences, and productivity settings
-            </p>
-          </div>
-          <div className='flex items-center gap-4'>
-            <button className='flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors'>
-              <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12' />
-              </svg>
-              <span>Export Data</span>
-            </button>
-            <button className='flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors'>
-              <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' />
-              </svg>
-              <span>Backup</span>
-            </button>
-          </div>
-        </div>
+        <ProfileHeader />
 
-        <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-          {/* Profile Sidebar */}
-          <div className='lg:col-span-1 space-y-6'>
-            <ProfileInfoCard />
+        {/* Main Content with top margin to account for fixed header */}
+        <div className='mt-24 px-6'>
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
+            {/* Profile Sidebar - Limited scroll container */}
+            <div className='lg:col-span-1'>
+              <div className='h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent no-scrollbar'>
+                <div className='space-y-6'>
+                  <ProfileInfoCard />
+                  <QuickStats />
+                  <Achievements />
+                </div>
+              </div>
+            </div>
 
-            <QuickStats />
-
-            <Achievements />
-          </div>
-
-          {/* Main Profile Content */}
-          <div className='lg:col-span-2 space-y-8'>
-            <PersonalInformation />
-
-            <PrivacyAndSecurity />
-
-            <Integrations />
-
-            <HelpAndSupport />
+            {/* Main Profile Content - Independent scroll container */}
+            <div className='lg:col-span-2'>
+              <div className='h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent no-scrollbar'>
+                <FormProvider {...methods}>
+                  <div className='space-y-8 pb-8'>
+                    <PersonalInformation />
+                    <PrivacyAndSecurity />
+                    <Integrations />
+                    <HelpAndSupport />
+                  </div>
+                </FormProvider>
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
 
-      {/* Old UI */}
+      {/* Old UI - For Reference */}
       <div className='p-6 mt-8 max-w-md mx-auto text-textColor rounded-lg shadow-md bg-secondary-bg border-1'>
         <h1 className='text-2xl font-bold mb-6'>Profile</h1>
         <FormProvider {...methods}>

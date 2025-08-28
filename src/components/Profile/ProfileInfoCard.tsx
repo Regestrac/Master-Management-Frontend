@@ -1,7 +1,29 @@
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { LogOut } from 'lucide-react';
+
 import { useProfileStore } from 'stores/profileStore';
+import useModalStore from 'stores/modalStore';
 
 const ProfileInfoCard = () => {
   const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const clearProfile = useProfileStore((state) => state.clearProfile);
+  const navigate = useNavigate();
+  const updateVisibility = useModalStore((state) => state.updateVisibility);
+
+  const handleLogout = () => {
+    updateVisibility({
+      modalType: 'signOutModal',
+      isVisible: true,
+      extraProps: {
+        onSuccess: () => {
+          clearProfile();
+          navigate('/auth/login');
+          toast.success('You have been logged out successfully');
+        },
+      },
+    });
+  };
 
   return (
     <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
@@ -35,6 +57,17 @@ const ProfileInfoCard = () => {
             <div className='text-xs text-gray-500'>Day Streak</div>
           </div>
         </div>
+        <button
+          onClick={handleLogout}
+          className={`mt-6 w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-lg ${
+            darkMode
+              ? 'text-red-400 hover:bg-red-900/30'
+              : 'text-red-500 hover:bg-red-50'
+          } transition-colors`}
+        >
+          <LogOut className='w-4 h-4' />
+          <span>Sign Out</span>
+        </button>
       </div>
     </div>
   );

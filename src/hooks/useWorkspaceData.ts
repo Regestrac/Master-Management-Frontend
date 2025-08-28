@@ -30,9 +30,9 @@ const initialTasks: Task[] = [
 ];
 
 const initialGoals: Goal[] = [
-  { id: 201, title: 'Ship MVP', status: 'In Progress' },
-  { id: 202, title: 'Hit 100 users', status: 'Not Started' },
-  { id: 203, title: 'Collect feedback', status: 'Achieved' },
+  { id: 201, title: 'Ship MVP', status: 'In Progress', assignees: [1, 2] },
+  { id: 202, title: 'Hit 100 users', status: 'Not Started', assignees: [3] },
+  { id: 203, title: 'Collect feedback', status: 'Achieved', assignees: [2, 4, 5] },
 ];
 
 export const useWorkspaceData = (workspaceId: number | undefined) => {
@@ -108,6 +108,7 @@ export const useWorkspaceData = (workspaceId: number | undefined) => {
     const newGoal: Goal = {
       id,
       title,
+      assignees: [],
       status: 'Not Started',
     };
 
