@@ -1,6 +1,12 @@
-import { themes, useTheme } from 'context/themeHelpers';
+import { useState, useEffect, useRef } from 'react';
+
+import { toast } from 'react-toastify';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { useProfileStore } from 'stores/profileStore';
+import useModalStore from 'stores/modalStore';
+
+import { logout } from 'services/auth';
 
 import GeneralSettings from 'components/Settings/GeneralSettings';
 import AppreanceSettings from 'components/Settings/AppreanceSettings';
@@ -9,18 +15,97 @@ import DataAndStorageSettings from 'components/Settings/DataAndStorageSettings';
 import AdvancedSettings from 'components/Settings/AdvancedSettings';
 import AboutSection from 'components/Settings/AboutSection';
 
-const Settings = () => {
-  const { theme: currentTheme, setTheme } = useTheme();
+const settingsCategories = [
+  { id: 'general', icon: '⚙️', label: 'General' },
+  { id: 'appearance', icon: '🎨', label: 'Appearance' },
+  { id: 'productivity', icon: '⚡', label: 'Productivity' },
+  { id: 'notifications', icon: '🔔', label: 'Notifications' },
+  { id: 'data', icon: '💾', label: 'Data & Storage' },
+  { id: 'privacy', icon: '🔒', label: 'Privacy & Security' },
+  { id: 'integrations', icon: '🔗', label: 'Integrations' },
+  { id: 'advanced', icon: '🔧', label: 'Advanced' },
+  { id: 'about', icon: 'ℹ️', label: 'About' },
+];
 
-  const themeOptions = Object.keys(themes) as Array<keyof typeof themes>;
+const Settings = () => {
+  const [activeSection, setActiveSection] = useState('general');
+  const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const updateVisibility = useModalStore((state) => state.updateVisibility);
+
+  const methods = useForm();
+
+  // Handle sign out
+  const handleSignOut = () => {
+    logout()
+      .then(() => {
+        toast.success('Successfully signed out');
+        // Navigate to login page
+        const event = new CustomEvent('custom-navigation', {
+          detail: { url: '/auth/login', replace: true },
+        });
+        window.dispatchEvent(event);
+      })
+      .catch(() => {
+        toast.error('Failed to sign out. Please try again.');
+      });
+  };
+
+  // Open sign out modal
+  const openSignOutModal = () => {
+    updateVisibility({
+      modalType: 'signOutModal',
+      isVisible: true,
+      extraProps: {
+        onSuccess: handleSignOut,
+      },
+    });
+  };
+
+  // Scroll spy functionality
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 120; // Offset for fixed header
+      for (const category of settingsCategories) {
+        const element = sectionRefs.current[category.id];
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(category.id);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Scroll to section function
+  const scrollToSection = (sectionId: string) => {
+    const element = sectionRefs.current[sectionId];
+    if (element) {
+      const headerOffset = 120; // Account for fixed header height + padding
+      const elementPosition = element.offsetTop - headerOffset;
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  // Set section ref
+  const setSectionRef = (id: string) => (el: HTMLElement | null) => {
+    sectionRefs.current[id] = el;
+  };
 
   return (
-    <>
-      <div>
-        {/* Settings Header */}
-        <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8'>
+    <div>
+      {/* Settings Header - Fixed */}
+      <div className='fixed top-0 left-70 right-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-6 py-4'>
+        <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-4'>
           <div>
             <h3 className='text-2xl font-bold mb-2'>Settings & Configuration</h3>
             <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -42,27 +127,21 @@ const Settings = () => {
             </button>
           </div>
         </div>
+      </div>
 
+      {/* Main Content with top margin to account for fixed header */}
+      <div className='mt-24 px-6'>
         <div className='grid grid-cols-1 lg:grid-cols-4 gap-8'>
           {/* Settings Navigation */}
           <div className='lg:col-span-1'>
-            <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-4 border shadow-sm sticky top-4`}>
+            <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-4 border shadow-sm sticky top-28`}>
               <h4 className='font-semibold mb-4'>Settings Categories</h4>
               <nav className='space-y-2'>
-                {[
-                  { id: 'general', icon: '⚙️', label: 'General', active: true },
-                  { id: 'appearance', icon: '🎨', label: 'Appearance' },
-                  { id: 'productivity', icon: '⚡', label: 'Productivity' },
-                  { id: 'notifications', icon: '🔔', label: 'Notifications' },
-                  { id: 'data', icon: '💾', label: 'Data & Storage' },
-                  { id: 'privacy', icon: '🔒', label: 'Privacy & Security' },
-                  { id: 'integrations', icon: '🔗', label: 'Integrations' },
-                  { id: 'advanced', icon: '🔧', label: 'Advanced' },
-                  { id: 'about', icon: 'ℹ️', label: 'About' },
-                ].map(({ id, icon, label, active }) => (
+                {settingsCategories.map(({ id, icon, label }) => (
                   <button
                     key={id}
-                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${active
+                    onClick={() => scrollToSection(id)}
+                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors cursor-pointer ${activeSection === id
                       ? 'bg-purple-500 text-white'
                       : darkMode
                         ? 'text-gray-300 hover:bg-gray-700'
@@ -75,7 +154,10 @@ const Settings = () => {
               </nav>
 
               <div className='mt-6 pt-6 border-t border-gray-200 dark:border-gray-700'>
-                <button className='w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'>
+                <button
+                  onClick={openSignOutModal}
+                  className='w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer'
+                >
                   <span className='text-lg'>🚪</span>
                   <span className='text-sm font-medium'>Sign Out</span>
                 </button>
@@ -85,44 +167,35 @@ const Settings = () => {
 
           {/* Settings Content */}
           <div className='lg:col-span-3 space-y-8'>
-            <GeneralSettings />
-
-            <AppreanceSettings />
-
-            <ProductivitySettings />
-
-            <DataAndStorageSettings />
-
-            <AdvancedSettings />
-
-            <AboutSection />
-          </div>
-        </div>
-      </div>
-
-      {/* Old UI */}
-      <div className='settings-container'>
-        <h1 className='settings-title'>Settings</h1>
-
-        <div className='settings-section'>
-          <h2 className='settings-section-title'>Theme</h2>
-          <div className='theme-grid'>
-            {themeOptions.map((themeName) => (
-              <div
-                key={themeName}
-                className={`theme-option ${currentTheme === themeName ? 'active' : ''}`}
-                onClick={() => setTheme(themeName)}
-              >
-                <div className={`theme-preview theme-preview-${themeName}`} />
-                <span className='theme-name'>
-                  {themeName.charAt(0).toUpperCase() + themeName.slice(1)}
-                </span>
+            <FormProvider {...methods}>
+              <div ref={setSectionRef('general')}>
+                <GeneralSettings />
               </div>
-            ))}
+
+              <div ref={setSectionRef('appearance')}>
+                <AppreanceSettings />
+              </div>
+
+              <div ref={setSectionRef('productivity')}>
+                <ProductivitySettings />
+              </div>
+
+              <div ref={setSectionRef('data')}>
+                <DataAndStorageSettings />
+              </div>
+
+              <div ref={setSectionRef('advanced')}>
+                <AdvancedSettings />
+              </div>
+
+              <div ref={setSectionRef('about')}>
+                <AboutSection />
+              </div>
+            </FormProvider>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -5,6 +5,7 @@ import ConfirmDeleteModal from 'components/Modals/ConfirmDeleteModal';
 import WorkspaceModal from 'components/Modals/WorkspaceModal';
 import ManageMembersModal from 'components/Modals/ManageMembersModal';
 import LeaveWorkspaceModal from 'components/Modals/LeaveWorkspaceModal';
+import SignOutModal from 'components/Modals/SignOutModal';
 
 const Modals = () => {
   const {
@@ -13,6 +14,7 @@ const Modals = () => {
     workspaceModal,
     manageMembersModal,
     leaveWorkspaceModal,
+    signOutModal,
   } = useModalStore((state) => state.modals);
 
   return (
@@ -22,6 +24,7 @@ const Modals = () => {
       {workspaceModal.isVisible && <WorkspaceModal />}
       {manageMembersModal.isVisible && <ManageMembersModal />}
       {leaveWorkspaceModal.isVisible && <LeaveWorkspaceModal />}
+      {signOutModal.isVisible && <SignOutModal />}
     </>
   );
 };

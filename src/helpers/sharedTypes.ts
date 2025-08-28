@@ -52,7 +52,13 @@ export type ModalTypes = {
   extraProps?: ModalPropsType;
 };
 
-export type ModalNamesType = 'switchTaskModal' | 'confirmDeleteModal' | 'workspaceModal' | 'manageMembersModal' | 'leaveWorkspaceModal';
+export type ModalNamesType =
+  | 'switchTaskModal'
+  | 'confirmDeleteModal'
+  | 'workspaceModal'
+  | 'manageMembersModal'
+  | 'leaveWorkspaceModal'
+  | 'signOutModal';
 
 export type Member = {
   id: number;
