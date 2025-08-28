@@ -6,6 +6,7 @@ import Signup from 'components/Authentication/Signup';
 import Dashboard from 'components/Dashboard/Dashboard';
 import Home from 'components/Home/Home';
 import RootLayout from 'components/Layout/RootLayout';
+import SidebarOnlyLayout from 'components/Layout/SidebarOnlyLayout';
 import Profile from 'components/Profile/Profile';
 import Settings from 'components/Settings/Settings';
 import NotFound from 'components/Shared/NotFound';
@@ -64,6 +65,11 @@ const routes: RouteObject[] = [
             path: '/workspace/:id',
             element: <WorkspaceDetail />,
           },
+        ],
+      },
+      {
+        element: <SidebarOnlyLayout />,
+        children: [
           {
             path: '/analytics',
           },
