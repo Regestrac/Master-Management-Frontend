@@ -1,4 +1,94 @@
+import { SelectOptionType } from 'helpers/sharedTypes';
+
 import { useProfileStore } from 'stores/profileStore';
+
+import SelectField from 'components/Shared/SelectField';
+import Switch from 'components/Shared/Switch';
+
+// Language options
+const languageOptions: SelectOptionType[] = [
+  { label: 'English', value: 'en' },
+  { label: 'Español', value: 'es' },
+  { label: 'Français', value: 'fr' },
+  { label: 'Deutsch', value: 'de' },
+  { label: 'Italiano', value: 'it' },
+  { label: 'Português', value: 'pt' },
+  { label: 'Русский', value: 'ru' },
+  { label: '日本語', value: 'ja' },
+  { label: '한국어', value: 'ko' },
+  { label: '中文', value: 'zh' },
+  { label: 'العربية', value: 'ar' },
+  { label: 'हिन्दी', value: 'hi' },
+];
+
+// Timezone options
+const timezoneOptions: SelectOptionType[] = [
+  { label: '(UTC-12:00) Baker Island', value: 'UTC-12' },
+  { label: '(UTC-11:00) Hawaii', value: 'UTC-11' },
+  { label: '(UTC-10:00) Alaska', value: 'UTC-10' },
+  { label: '(UTC-09:00) Alaska', value: 'UTC-9' },
+  { label: '(UTC-08:00) Pacific Time', value: 'UTC-8' },
+  { label: '(UTC-07:00) Mountain Time', value: 'UTC-7' },
+  { label: '(UTC-06:00) Central Time', value: 'UTC-6' },
+  { label: '(UTC-05:00) Eastern Time', value: 'UTC-5' },
+  { label: '(UTC-04:00) Atlantic Time', value: 'UTC-4' },
+  { label: '(UTC-03:00) Argentina', value: 'UTC-3' },
+  { label: '(UTC-02:00) Mid-Atlantic', value: 'UTC-2' },
+  { label: '(UTC-01:00) Azores', value: 'UTC-1' },
+  { label: '(UTC+00:00) Greenwich Mean Time', value: 'UTC+0' },
+  { label: '(UTC+01:00) Central European Time', value: 'UTC+1' },
+  { label: '(UTC+02:00) Eastern European Time', value: 'UTC+2' },
+  { label: '(UTC+03:00) Moscow Time', value: 'UTC+3' },
+  { label: '(UTC+04:00) Gulf Time', value: 'UTC+4' },
+  { label: '(UTC+05:00) Pakistan Time', value: 'UTC+5' },
+  { label: '(UTC+06:00) Bangladesh Time', value: 'UTC+6' },
+  { label: '(UTC+07:00) Indochina Time', value: 'UTC+7' },
+  { label: '(UTC+08:00) China Standard Time', value: 'UTC+8' },
+  { label: '(UTC+09:00) Japan Standard Time', value: 'UTC+9' },
+  { label: '(UTC+10:00) Australian Eastern Time', value: 'UTC+10' },
+  { label: '(UTC+11:00) Solomon Islands Time', value: 'UTC+11' },
+  { label: '(UTC+12:00) Fiji Time', value: 'UTC+12' },
+];
+
+// Date format options
+const dateFormatOptions: SelectOptionType[] = [
+  { label: 'MM/DD/YYYY (US)', value: 'MM/DD/YYYY' },
+  { label: 'DD/MM/YYYY (UK)', value: 'DD/MM/YYYY' },
+  { label: 'YYYY-MM-DD (ISO)', value: 'YYYY-MM-DD' },
+  { label: 'DD.MM.YYYY (German)', value: 'DD.MM.YYYY' },
+  { label: 'MM-DD-YYYY', value: 'MM-DD-YYYY' },
+];
+
+// Time format options
+const timeFormatOptions: SelectOptionType[] = [
+  { label: '12-hour (AM/PM)', value: '12' },
+  { label: '24-hour', value: '24' },
+];
+
+// First day of week options
+const firstDayOptions: SelectOptionType[] = [
+  { label: 'Sunday', value: 'sunday' },
+  { label: 'Monday', value: 'monday' },
+  { label: 'Saturday', value: 'saturday' },
+];
+
+// Work week options
+const workWeekOptions: SelectOptionType[] = [
+  { label: 'Monday to Friday (5 days)', value: '5' },
+  { label: 'Monday to Saturday (6 days)', value: '6' },
+  { label: 'Full Week (7 days)', value: '7' },
+  { label: 'Custom', value: 'custom' },
+];
+
+// Default startup page options
+const startupPageOptions: SelectOptionType[] = [
+  { label: 'Dashboard', value: 'dashboard' },
+  { label: 'Tasks', value: 'tasks' },
+  { label: 'Goals', value: 'goals' },
+  { label: 'Calendar', value: 'calendar' },
+  { label: 'Analytics', value: 'analytics' },
+  { label: 'Last Visited Page', value: 'last' },
+];
 
 const GeneralSettings = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
@@ -15,84 +105,34 @@ const GeneralSettings = () => {
         <div>
           <h5 className='font-semibold mb-4'>Language & Region</h5>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            <div>
-              <label className='block text-sm font-medium mb-2'>Language</label>
-              <select className={`w-full px-4 py-3 rounded-lg border ${darkMode
-                ? 'bg-gray-700 border-gray-600 text-white'
-                : 'bg-white border-gray-300 text-gray-900'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-              >
-                <option value='en'>English</option>
-                <option value='es'>Español</option>
-                <option value='fr'>Français</option>
-                <option value='de'>Deutsch</option>
-                <option value='it'>Italiano</option>
-                <option value='pt'>Português</option>
-                <option value='ru'>Русский</option>
-                <option value='ja'>日本語</option>
-                <option value='ko'>한국어</option>
-                <option value='zh'>中文</option>
-                <option value='ar'>العربية</option>
-                <option value='hi'>हिन्दी</option>
-              </select>
-            </div>
-            <div>
-              <label className='block text-sm font-medium mb-2'>Time Zone</label>
-              <select
-                className={`w-full px-4 py-3 rounded-lg border ${darkMode
-                  ? 'bg-gray-700 border-gray-600 text-white'
-                  : 'bg-white border-gray-300 text-gray-900'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                defaultValue='UTC+0'
-              >
-                <option value='UTC-12'>(UTC-12:00) Baker Island</option>
-                <option value='UTC-11'>(UTC-11:00) Hawaii</option>
-                <option value='UTC-10'>(UTC-10:00) Alaska</option>
-                <option value='UTC-9'>(UTC-09:00) Alaska</option>
-                <option value='UTC-8'>(UTC-08:00) Pacific Time</option>
-                <option value='UTC-7'>(UTC-07:00) Mountain Time</option>
-                <option value='UTC-6'>(UTC-06:00) Central Time</option>
-                <option value='UTC-5'>(UTC-05:00) Eastern Time</option>
-                <option value='UTC-4'>(UTC-04:00) Atlantic Time</option>
-                <option value='UTC-3'>(UTC-03:00) Argentina</option>
-                <option value='UTC-2'>(UTC-02:00) Mid-Atlantic</option>
-                <option value='UTC-1'>(UTC-01:00) Azores</option>
-                <option value='UTC+0'>(UTC+00:00) Greenwich Mean Time</option>
-                <option value='UTC+1'>(UTC+01:00) Central European Time</option>
-                <option value='UTC+2'>(UTC+02:00) Eastern European Time</option>
-                <option value='UTC+3'>(UTC+03:00) Moscow Time</option>
-                <option value='UTC+4'>(UTC+04:00) Gulf Time</option>
-                <option value='UTC+5'>(UTC+05:00) Pakistan Time</option>
-                <option value='UTC+6'>(UTC+06:00) Bangladesh Time</option>
-                <option value='UTC+7'>(UTC+07:00) Indochina Time</option>
-                <option value='UTC+8'>(UTC+08:00) China Standard Time</option>
-                <option value='UTC+9'>(UTC+09:00) Japan Standard Time</option>
-                <option value='UTC+10'>(UTC+10:00) Australian Eastern Time</option>
-                <option value='UTC+11'>(UTC+11:00) Solomon Islands Time</option>
-                <option value='UTC+12'>(UTC+12:00) Fiji Time</option>
-              </select>
-            </div>
-            <div>
-              <label className='block text-sm font-medium mb-2'>Date Format</label>
-              <select className={`w-full px-4 py-3 rounded-lg border ${darkMode
-                ? 'bg-gray-700 border-gray-600 text-white'
-                : 'bg-white border-gray-300 text-gray-900'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-              >
-                <option value='MM/DD/YYYY'>MM/DD/YYYY (US)</option>
-                <option value='DD/MM/YYYY'>DD/MM/YYYY (UK)</option>
-                <option value='YYYY-MM-DD'>YYYY-MM-DD (ISO)</option>
-                <option value='DD.MM.YYYY'>DD.MM.YYYY (German)</option>
-                <option value='MM-DD-YYYY'>MM-DD-YYYY</option>
-              </select>
-            </div>
-            <div>
-              <label className='block text-sm font-medium mb-2'>Time Format</label>
-              <select className={`w-full px-4 py-3 rounded-lg border ${darkMode
-                ? 'bg-gray-700 border-gray-600 text-white'
-                : 'bg-white border-gray-300 text-gray-900'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-              >
-                <option value='12'>12-hour (AM/PM)</option>
-                <option value='24'>24-hour</option>
-              </select>
-            </div>
+            <SelectField
+              name='language'
+              label='Language'
+              options={languageOptions}
+              isMulti={false}
+              placeholder='Select language...'
+            />
+            <SelectField
+              name='timezone'
+              label='Time Zone'
+              options={timezoneOptions}
+              isMulti={false}
+              placeholder='Select timezone...'
+            />
+            <SelectField
+              name='dateFormat'
+              label='Date Format'
+              options={dateFormatOptions}
+              isMulti={false}
+              placeholder='Select date format...'
+            />
+            <SelectField
+              name='timeFormat'
+              label='Time Format'
+              options={timeFormatOptions}
+              isMulti={false}
+              placeholder='Select time format...'
+            />
           </div>
         </div>
 
@@ -100,31 +140,20 @@ const GeneralSettings = () => {
         <div>
           <h5 className='font-semibold mb-4'>Week & Calendar Settings</h5>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            <div>
-              <label className='block text-sm font-medium mb-2'>First Day of Week</label>
-              <select
-                className={`w-full px-4 py-3 rounded-lg border ${darkMode
-                  ? 'bg-gray-700 border-gray-600 text-white'
-                  : 'bg-white border-gray-300 text-gray-900'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                defaultValue='monday'
-              >
-                <option value='sunday'>Sunday</option>
-                <option value='monday'>Monday</option>
-                <option value='saturday'>Saturday</option>
-              </select>
-            </div>
-            <div>
-              <label className='block text-sm font-medium mb-2'>Work Week</label>
-              <select className={`w-full px-4 py-3 rounded-lg border ${darkMode
-                ? 'bg-gray-700 border-gray-600 text-white'
-                : 'bg-white border-gray-300 text-gray-900'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-              >
-                <option value='5'>Monday to Friday (5 days)</option>
-                <option value='6'>Monday to Saturday (6 days)</option>
-                <option value='7'>Full Week (7 days)</option>
-                <option value='custom'>Custom</option>
-              </select>
-            </div>
+            <SelectField
+              name='firstDayOfWeek'
+              label='First Day of Week'
+              options={firstDayOptions}
+              isMulti={false}
+              placeholder='Select first day...'
+            />
+            <SelectField
+              name='workWeek'
+              label='Work Week'
+              options={workWeekOptions}
+              isMulti={false}
+              placeholder='Select work week...'
+            />
           </div>
         </div>
 
@@ -132,55 +161,28 @@ const GeneralSettings = () => {
         <div>
           <h5 className='font-semibold mb-4'>Startup & Defaults</h5>
           <div className='space-y-4'>
-            <div>
-              <label className='block text-sm font-medium mb-2'>Default Page on Startup</label>
-              <select
-                className={`w-full px-4 py-3 rounded-lg border ${darkMode
-                  ? 'bg-gray-700 border-gray-600 text-white'
-                  : 'bg-white border-gray-300 text-gray-900'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                defaultValue='dashboard'
-              >
-                <option value='dashboard'>Dashboard</option>
-                <option value='tasks'>Tasks</option>
-                <option value='goals'>Goals</option>
-                <option value='calendar'>Calendar</option>
-                <option value='analytics'>Analytics</option>
-                <option value='last'>Last Visited Page</option>
-              </select>
-            </div>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Auto-start Focus Timer</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Automatically start timer when clicking on tasks
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1' />
-              </button>
-            </div>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Remember Window Size</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Save window dimensions and position
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-purple-500 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6' />
-              </button>
-            </div>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Load Recent Files</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Show recently opened projects on startup
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-purple-500 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6' />
-              </button>
-            </div>
+            <SelectField
+              name='startupPage'
+              label='Default Page on Startup'
+              options={startupPageOptions}
+              isMulti={false}
+              placeholder='Select startup page...'
+            />
+            <Switch
+              name='autoStartTimer'
+              label='Auto-start Focus Timer'
+              description='Automatically start timer when clicking on tasks'
+            />
+            <Switch
+              name='rememberWindowSize'
+              label='Remember Window Size'
+              description='Save window dimensions and position'
+            />
+            <Switch
+              name='loadRecentFiles'
+              label='Load Recent Files'
+              description='Show recently opened projects on startup'
+            />
           </div>
         </div>
       </div>

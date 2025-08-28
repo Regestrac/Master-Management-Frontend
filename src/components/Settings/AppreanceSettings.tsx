@@ -1,4 +1,24 @@
+import { SelectOptionType } from 'helpers/sharedTypes';
+
 import { useProfileStore } from 'stores/profileStore';
+
+import SelectField from 'components/Shared/SelectField';
+import Switch from 'components/Shared/Switch';
+import Slider from 'components/Shared/Slider';
+
+// Font family options
+const fontFamilyOptions: SelectOptionType[] = [
+  { label: 'Inter (Default)', value: 'inter' },
+  { label: 'Roboto', value: 'roboto' },
+  { label: 'Open Sans', value: 'open-sans' },
+  { label: 'Lato', value: 'lato' },
+  { label: 'Source Sans Pro', value: 'source-sans' },
+  { label: 'System Default', value: 'system' },
+  { label: 'Georgia (Serif)', value: 'georgia' },
+  { label: 'Times New Roman (Serif)', value: 'times' },
+  { label: 'Monaco (Monospace)', value: 'monaco' },
+  { label: 'Fira Code (Monospace)', value: 'fira-code' },
+];
 
 const AppreanceSettings = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
@@ -85,43 +105,23 @@ const AppreanceSettings = () => {
         <div>
           <h5 className='font-semibold mb-4'>Typography</h5>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            <div>
-              <label className='block text-sm font-medium mb-2'>Font Family</label>
-              <select
-                className={`w-full px-4 py-3 rounded-lg border ${darkMode
-                  ? 'bg-gray-700 border-gray-600 text-white'
-                  : 'bg-white border-gray-300 text-gray-900'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                defaultValue='inter'
-              >
-                <option value='inter'>Inter (Default)</option>
-                <option value='roboto'>Roboto</option>
-                <option value='open-sans'>Open Sans</option>
-                <option value='lato'>Lato</option>
-                <option value='source-sans'>Source Sans Pro</option>
-                <option value='system'>System Default</option>
-                <option value='georgia'>Georgia (Serif)</option>
-                <option value='times'>Times New Roman (Serif)</option>
-                <option value='monaco'>Monaco (Monospace)</option>
-                <option value='fira-code'>Fira Code (Monospace)</option>
-              </select>
-            </div>
-            <div>
-              <label className='block text-sm font-medium mb-2'>
-                Font Size: 14px
-              </label>
-              <input
-                type='range'
-                min='12'
-                max='20'
-                defaultValue='14'
-                className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer'
-              />
-              <div className='flex justify-between text-xs text-gray-500 mt-1'>
-                <span>12px</span>
-                <span>16px</span>
-                <span>20px</span>
-              </div>
-            </div>
+            <SelectField
+              name='fontFamily'
+              label='Font Family'
+              options={fontFamilyOptions}
+              isMulti={false}
+              placeholder='Select font family...'
+            />
+            <Slider
+              name='fontSize'
+              label='Font Size'
+              min={12}
+              max={20}
+              step={1}
+              unit='px'
+              showValue={true}
+              showLabels={true}
+            />
           </div>
         </div>
 
@@ -129,56 +129,31 @@ const AppreanceSettings = () => {
         <div>
           <h5 className='font-semibold mb-4'>Layout & Spacing</h5>
           <div className='space-y-4'>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Compact Mode</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Reduce spacing and padding for more content
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1' />
-              </button>
-            </div>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Show Sidebar</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Display navigation sidebar
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-purple-500 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6' />
-              </button>
-            </div>
-            <div className='flex items-center justify-between'>
-              <div>
-                <h6 className='font-medium'>Show Breadcrumbs</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Display navigation breadcrumbs
-                </p>
-              </div>
-              <button className='relative inline-flex h-6 w-11 items-center rounded-full bg-purple-500 transition-colors'>
-                <span className='inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6' />
-              </button>
-            </div>
-            <div>
-              <label className='block text-sm font-medium mb-2'>
-                Sidebar Width: 256px
-              </label>
-              <input
-                type='range'
-                min='200'
-                max='400'
-                defaultValue='256'
-                className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer'
-              />
-              <div className='flex justify-between text-xs text-gray-500 mt-1'>
-                <span>200px</span>
-                <span>300px</span>
-                <span>400px</span>
-              </div>
-            </div>
+            <Switch
+              name='compactMode'
+              label='Compact Mode'
+              description='Reduce spacing and padding for more content'
+            />
+            <Switch
+              name='showSidebar'
+              label='Show Sidebar'
+              description='Display navigation sidebar'
+            />
+            <Switch
+              name='showBreadcrumbs'
+              label='Show Breadcrumbs'
+              description='Display navigation breadcrumbs'
+            />
+            <Slider
+              name='sidebarWidth'
+              label='Sidebar Width'
+              min={200}
+              max={400}
+              step={10}
+              unit='px'
+              showValue={true}
+              showLabels={true}
+            />
           </div>
         </div>
       </div>
