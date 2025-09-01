@@ -6,8 +6,14 @@ import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
 
 const ProfileInfoCard = () => {
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
-  const clearProfile = useProfileStore((state) => state.clearProfile);
+  const { data: user, clearProfile } = useProfileStore();
+  const darkMode = user?.theme === 'dark';
+
+  const userInitial = user?.first_name?.[0] || 'U';
+  const userName = user?.first_name && user?.last_name
+    ? `${user.first_name} ${user.last_name}`
+    : 'User';
+  const userEmail = user?.email || 'No email provided';
   const navigate = useNavigate();
   const updateVisibility = useModalStore((state) => state.updateVisibility);
 
@@ -30,7 +36,7 @@ const ProfileInfoCard = () => {
       <div className='text-center'>
         <div className='relative inline-block mb-4'>
           <div className='w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-2xl font-bold'>
-            A
+            {userInitial}
           </div>
           <button className='absolute bottom-0 right-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors'>
             <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
@@ -39,9 +45,9 @@ const ProfileInfoCard = () => {
             </svg>
           </button>
         </div>
-        <h4 className='text-xl font-bold mb-1'>Alex Johnson</h4>
+        <h4 className='text-xl font-bold mb-1'>{userName}</h4>
         <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>
-          alex.johnson@example.com
+          {userEmail}
         </p>
         <div className='flex items-center justify-center space-x-2 mb-4'>
           <div className='w-2 h-2 bg-green-500 rounded-full' />
