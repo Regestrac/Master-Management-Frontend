@@ -9,7 +9,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useProfileStore } from 'stores/profileStore';
 
 import { logout } from 'services/auth';
-import { updateProfile } from 'services/profile';
 
 import Input from 'components/Shared/Input';
 import ProfileInfoCard from 'components/Profile/ProfileInfoCard';
@@ -25,12 +24,28 @@ type ProfileFormType = {
   first_name: string;
   last_name: string;
   email: string;
+  jobTitle?: string;
+  company?: string;
+  timeZone?: string;
+  language?: string;
+  bio?: string;
+  analyticsUsageData?: boolean;
+  marketingCommunications?: boolean;
+  thirdPartyIntegrations?: boolean;
 }
 
 const schema = z.object({
   first_name: z.string().nonempty('First Name is required!'),
   last_name: z.string().nonempty('Last Name is required!'),
   email: z.string().nonempty('Email is required!').email('Invalid email address!'),
+  jobTitle: z.string().optional(),
+  company: z.string().optional(),
+  timeZone: z.string().optional(),
+  language: z.string().optional(),
+  bio: z.string().optional(),
+  analyticsUsageData: z.boolean().optional(),
+  marketingCommunications: z.boolean().optional(),
+  thirdPartyIntegrations: z.boolean().optional(),
 });
 
 const Profile = () => {
@@ -52,10 +67,18 @@ const Profile = () => {
       first_name: firstName || '',
       last_name: lastName || '',
       email: email || '',
+      jobTitle: 'Senior Frontend Developer',
+      company: 'TechCorp Solutions',
+      timeZone: 'PST',
+      language: 'en',
+      bio: 'Passionate frontend developer with 5+ years of experience building modern web applications. Love learning new technologies and optimizing productivity workflows.',
+      analyticsUsageData: false,
+      marketingCommunications: false,
+      thirdPartyIntegrations: false,
     },
   });
 
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit, reset, formState: { isDirty } } = methods;
 
   const handleEditProfile = () => {
     setIsEditing(true);
@@ -72,13 +95,22 @@ const Profile = () => {
   };
 
   const handleSaveProfile = (formData: ProfileFormType) => {
-    updateProfile(formData).then((res) => {
-      toast.success(res?.message || 'Profile Updated Successfully.');
-      updateProfileInfo(res?.data);
+    try {
+      // Update the profile in the store with basic info
+      updateProfileInfo({
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+      });
+
+      // Show success message
+      toast.success('Profile updated successfully');
       setIsEditing(false);
-    }).catch((err) => {
-      toast.error(err?.error || 'Failed to update profile!');
-    });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to update profile:', error);
+      toast.error('Failed to update profile. Please try again.');
+    }
   };
 
   const handleCancel = () => {
@@ -99,7 +131,10 @@ const Profile = () => {
   return (
     <>
       <div>
-        <ProfileHeader />
+        <ProfileHeader
+          onSave={handleSubmit(handleSaveProfile)}
+          hasChanges={isDirty}
+        />
 
         {/* Main Content with top margin to account for fixed header */}
         <div className='mt-24 px-6'>
