@@ -48,7 +48,7 @@ const getStatsIcons = (stat: string) => {
 };
 
 const GoalStats = () => {
-  const [stats, setStats] = useState([]);
+  const [stats, setStats] = useState<{ count: number; status: string; }[]>([]);
 
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
 
@@ -76,7 +76,7 @@ const GoalStats = () => {
                 {Icon && <Icon className='w-4 h-4 text-white' />}
               </div>
               <p className='text-xl font-bold'>
-                {count}
+                {status === 'average_progress' ? count.toFixed(2) : count}
                 {status === 'average_progress' && '%'}
               </p>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{titleCase(status)}</p>
