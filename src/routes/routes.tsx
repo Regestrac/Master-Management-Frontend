@@ -19,6 +19,7 @@ import WorkspaceHome from 'components/Workspace/WorkspaceHome';
 import WorkspaceDetail from 'components/Workspace/WorkspaceDetail';
 import CreateTaskForm from 'components/Tasks/CreateTaskForm';
 import RootLayoutWrapper from 'components/Layout/RootLayoutWrapper';
+import Analytics from 'components/Analytics/Analytics';
 
 const routes: RouteObject[] = [
   {
@@ -72,6 +73,7 @@ const routes: RouteObject[] = [
         children: [
           {
             path: '/analytics',
+            element: <Analytics />,
           },
           {
             path: '/calendar',
