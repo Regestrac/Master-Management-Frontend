@@ -7,6 +7,7 @@ type ProfileDataType = {
   email: string;
   theme: 'dark' | 'light';
   active_task: number | null;
+  avatar_url: string | null;
 };
 
 type ProfileStateType = {
@@ -22,6 +23,7 @@ export const useProfileStore = create<ProfileStateType>((set) => ({
     email: '',
     theme: 'dark',
     active_task: null,
+    avatar_url: null,
   } as ProfileDataType,
   updateProfile: (profile) => set((state) => ({
     data: {
@@ -32,6 +34,7 @@ export const useProfileStore = create<ProfileStateType>((set) => ({
       active_task: profile.active_task !== undefined ? profile.active_task : state?.data?.active_task,
       id: profile.id ?? state?.data?.id,
       theme: profile?.theme ?? state?.data?.theme,
+      avatar_url: profile?.avatar_url ?? state?.data?.avatar_url,
     },
   })),
   clearProfile: () => set(() => ({ data: {} as ProfileDataType })),

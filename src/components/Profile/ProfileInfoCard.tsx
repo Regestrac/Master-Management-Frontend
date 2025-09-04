@@ -6,8 +6,9 @@ import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
 
 const ProfileInfoCard = () => {
-  const { data: user, clearProfile } = useProfileStore();
-  const darkMode = user?.theme === 'dark';
+  const user = useProfileStore((state) => state.data);
+  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const clearProfile = useProfileStore((state) => state.clearProfile);
 
   const userInitial = user?.first_name?.[0] || 'U';
   const userName = user?.first_name && user?.last_name
@@ -35,8 +36,14 @@ const ProfileInfoCard = () => {
     <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
       <div className='text-center'>
         <div className='relative inline-block mb-4'>
-          <div className='w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-2xl font-bold'>
-            {userInitial}
+          <div className='w-30 h-30 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-2xl font-bold overflow-hidden'>
+            {user?.avatar_url ? (
+              <img
+                src={user?.avatar_url}
+                alt='Profile'
+                className='w-full h-full rounded-full object-cover'
+              />
+            ) : userInitial}
           </div>
           <button className='absolute bottom-0 right-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors'>
             <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
@@ -65,11 +72,9 @@ const ProfileInfoCard = () => {
         </div>
         <button
           onClick={handleLogout}
-          className={`mt-6 w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-lg ${
-            darkMode
-              ? 'text-red-400 hover:bg-red-900/30'
-              : 'text-red-500 hover:bg-red-50'
-          } transition-colors`}
+          className={`mt-6 w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-lg ${darkMode
+            ? 'text-red-400 hover:bg-red-900/30'
+            : 'text-red-500 hover:bg-red-50'} transition-colors`}
         >
           <LogOut className='w-4 h-4' />
           <span>Sign Out</span>
