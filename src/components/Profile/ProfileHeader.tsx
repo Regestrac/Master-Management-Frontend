@@ -12,7 +12,7 @@ const ProfileHeader = ({ onSave, hasChanges = false }: ProfileHeaderProps) => {
     <div className='fixed top-0 left-70 right-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-6 py-4'>
       <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-4'>
         <div>
-          <h3 className='text-2xl font-bold mb-2'>Profile & Settings</h3>
+          <h3 className='text-2xl font-bold mb-2'>Profile</h3>
           <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
             Manage your account, preferences, and productivity settings
           </p>

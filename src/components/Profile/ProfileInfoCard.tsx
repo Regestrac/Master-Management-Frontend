@@ -9,14 +9,13 @@ const ProfileInfoCard = () => {
   const user = useProfileStore((state) => state.data);
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
   const clearProfile = useProfileStore((state) => state.clearProfile);
+  const updateVisibility = useModalStore((state) => state.updateVisibility);
+
+  const navigate = useNavigate();
 
   const userInitial = user?.first_name?.[0] || 'U';
-  const userName = user?.first_name && user?.last_name
-    ? `${user.first_name} ${user.last_name}`
-    : 'User';
+  const userName = user?.first_name && user?.last_name ? `${user.first_name} ${user.last_name}` : 'User';
   const userEmail = user?.email || 'No email provided';
-  const navigate = useNavigate();
-  const updateVisibility = useModalStore((state) => state.updateVisibility);
 
   const handleLogout = () => {
     updateVisibility({
