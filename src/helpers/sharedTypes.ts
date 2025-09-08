@@ -68,7 +68,6 @@ export type Member = {
   profile_color: 'rose' | 'orange' | 'amber' | 'lime' | 'emerald' | 'sky' | 'violet' | 'pink';
   joined_at: string;
   user_id: number;
-  ID: number;
 }
 
 export type Task = {

@@ -182,7 +182,7 @@ const Checklist = () => {
           )}
           {taskDetails.checklists?.map((item) => (
             <div
-              key={item.id || item.ID}
+              key={item.id}
               className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${darkMode ? 'border-gray-700' : 'border-gray-200'} ${item.completed ? 'opacity-75' : ''}`}
             >
               <div className='flex items-center space-x-3 flex-1'>

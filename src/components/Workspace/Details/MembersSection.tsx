@@ -77,7 +77,7 @@ const MembersSection = ({ canManage, onChangeRole }: MembersSectionProps) => {
         return (
           <MemberAvatar
             color={member.profile_color}
-            key={member.id || member.ID}
+            key={member.id}
             member={member}
             size='md'
             className='border-gray-700 dark:border-white'

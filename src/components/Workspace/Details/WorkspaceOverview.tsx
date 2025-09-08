@@ -66,7 +66,7 @@ const WorkspaceOverview = ({
           <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mt-1`}>
             Workspace ID:
             {' '}
-            {workspaceDetails?.id || ('ID' in workspaceDetails ? workspaceDetails.ID as string : '')}
+            {workspaceDetails?.id || ''}
           </p>
         </div>
 

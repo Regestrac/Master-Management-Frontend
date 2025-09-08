@@ -15,12 +15,12 @@ const mockRenameWorkspace = async (id: number, name: string): Promise<Workspace>
 
 // Initial mock data
 const initialMembers: Member[] = [
-  { id: 1, name: 'You', role: 'manager', profile_color: 'rose', joined_at: new Date().toISOString(), user_id: 1, ID: 1 },
-  { id: 2, name: 'Alex Doe', role: 'member', profile_color: 'amber', joined_at: new Date().toISOString(), user_id: 2, ID: 2 },
-  { id: 3, name: 'Sam Lee', role: 'member', profile_color: 'emerald', joined_at: new Date().toISOString(), user_id: 3, ID: 3 },
-  { id: 4, name: 'Jordan Smith', role: 'member', profile_color: 'lime', joined_at: new Date().toISOString(), user_id: 4, ID: 4 },
-  { id: 5, name: 'Taylor Kim', role: 'member', profile_color: 'orange', joined_at: new Date().toISOString(), user_id: 5, ID: 5 },
-  { id: 6, name: 'Morgan Lee', role: 'member', profile_color: 'sky', joined_at: new Date().toISOString(), user_id: 6, ID: 6 },
+  { id: 1, name: 'You', role: 'manager', profile_color: 'rose', joined_at: new Date().toISOString(), user_id: 1 },
+  { id: 2, name: 'Alex Doe', role: 'member', profile_color: 'amber', joined_at: new Date().toISOString(), user_id: 2 },
+  { id: 3, name: 'Sam Lee', role: 'member', profile_color: 'emerald', joined_at: new Date().toISOString(), user_id: 3 },
+  { id: 4, name: 'Jordan Smith', role: 'member', profile_color: 'lime', joined_at: new Date().toISOString(), user_id: 4 },
+  { id: 5, name: 'Taylor Kim', role: 'member', profile_color: 'orange', joined_at: new Date().toISOString(), user_id: 5 },
+  { id: 6, name: 'Morgan Lee', role: 'member', profile_color: 'sky', joined_at: new Date().toISOString(), user_id: 6 },
 ];
 
 const initialTasks: Task[] = [
