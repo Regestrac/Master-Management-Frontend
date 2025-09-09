@@ -5,10 +5,13 @@ import SelectField from 'components/Shared/SelectField';
 
 // Time zone options
 const timeZoneOptions = [
-  { value: 'PST', label: 'Pacific Standard Time (PST)' },
-  { value: 'EST', label: 'Eastern Standard Time (EST)' },
-  { value: 'GMT', label: 'Greenwich Mean Time (GMT)' },
-  { value: 'CET', label: 'Central European Time (CET)' },
+  { value: 'pst', label: 'Pacific Standard Time (PST)' },
+  { value: 'est', label: 'Eastern Standard Time (EST)' },
+  { value: 'gmt', label: 'Greenwich Mean Time (GMT)' },
+  { value: 'cet', label: 'Central European Time (CET)' },
+  { value: 'ist', label: 'Indian Standard Time (IST)' },
+  { value: 'jst', label: 'Japan Standard Time (JST)' },
+  { value: 'cst', label: 'Central Standard Time (CST)' },
 ];
 
 // Language options
@@ -18,6 +21,8 @@ const languageOptions = [
   { value: 'fr', label: 'Français' },
   { value: 'de', label: 'Deutsch' },
   { value: 'zh', label: '中文' },
+  { value: 'ar', label: 'العربية' },
+  { value: 'ja', label: '日本語' },
 ];
 
 const PersonalInformation = () => {

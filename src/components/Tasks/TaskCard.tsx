@@ -78,7 +78,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
       });
     };
 
-    if (activeTask !== taskId) {
+    if (activeTask && activeTask !== taskId) {
       updateVisibility({ modalType: 'switchTaskModal', isVisible: true, extraProps: { onSuccess: toggleTimer } });
     } else {
       toggleTimer();

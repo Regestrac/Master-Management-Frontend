@@ -15,6 +15,8 @@ import DataAndStorageSettings from 'components/Settings/DataAndStorageSettings';
 import AdvancedSettings from 'components/Settings/AdvancedSettings';
 import AboutSection from 'components/Settings/AboutSection';
 import NotificationSettings from 'components/Settings/NotificationSettings';
+import PrivacyAndSecurity from 'components/Settings/PrivacyAndSecurity';
+import Integrations from 'components/Settings/Integrations';
 
 const settingsCategories = [
   { id: 'general', icon: '⚙️', label: 'General' },
@@ -67,7 +69,7 @@ const Settings = () => {
   // Scroll spy functionality
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 120; // Offset for fixed header
+      const scrollPosition = window.scrollY + 60; // Offset for fixed header
       for (const category of settingsCategories) {
         const element = sectionRefs.current[category.id];
         if (element) {
@@ -187,6 +189,14 @@ const Settings = () => {
 
               <div ref={setSectionRef('data')}>
                 <DataAndStorageSettings />
+              </div>
+
+              <div ref={setSectionRef('privacy')}>
+                <PrivacyAndSecurity />
+              </div>
+
+              <div ref={setSectionRef('integrations')}>
+                <Integrations />
               </div>
 
               <div ref={setSectionRef('advanced')}>

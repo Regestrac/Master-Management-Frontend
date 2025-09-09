@@ -11,8 +11,6 @@ import ProfileInfoCard from 'components/Profile/ProfileInfoCard';
 import QuickStats from 'components/Profile/QuickStats';
 import Achievements from 'components/Profile/Achievements';
 import PersonalInformation from 'components/Profile/PersonalInformation';
-import PrivacyAndSecurity from 'components/Profile/PrivacyAndSecurity';
-import Integrations from 'components/Profile/Integrations';
 import HelpAndSupport from 'components/Profile/HelpAndSupport';
 import ProfileHeader from 'components/Profile/ProfileHeader';
 
@@ -126,8 +124,6 @@ const Profile = () => {
               <FormProvider {...methods}>
                 <div className='space-y-8 pb-8'>
                   <PersonalInformation />
-                  <PrivacyAndSecurity />
-                  <Integrations />
                   <HelpAndSupport />
                 </div>
               </FormProvider>

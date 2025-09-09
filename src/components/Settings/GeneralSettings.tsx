@@ -5,51 +5,6 @@ import { useProfileStore } from 'stores/profileStore';
 import SelectField from 'components/Shared/SelectField';
 import Switch from 'components/Shared/Switch';
 
-// Language options
-const languageOptions: SelectOptionType[] = [
-  { label: 'English', value: 'en' },
-  { label: 'Español', value: 'es' },
-  { label: 'Français', value: 'fr' },
-  { label: 'Deutsch', value: 'de' },
-  { label: 'Italiano', value: 'it' },
-  { label: 'Português', value: 'pt' },
-  { label: 'Русский', value: 'ru' },
-  { label: '日本語', value: 'ja' },
-  { label: '한국어', value: 'ko' },
-  { label: '中文', value: 'zh' },
-  { label: 'العربية', value: 'ar' },
-  { label: 'हिन्दी', value: 'hi' },
-];
-
-// Timezone options
-const timezoneOptions: SelectOptionType[] = [
-  { label: '(UTC-12:00) Baker Island', value: 'UTC-12' },
-  { label: '(UTC-11:00) Hawaii', value: 'UTC-11' },
-  { label: '(UTC-10:00) Alaska', value: 'UTC-10' },
-  { label: '(UTC-09:00) Alaska', value: 'UTC-9' },
-  { label: '(UTC-08:00) Pacific Time', value: 'UTC-8' },
-  { label: '(UTC-07:00) Mountain Time', value: 'UTC-7' },
-  { label: '(UTC-06:00) Central Time', value: 'UTC-6' },
-  { label: '(UTC-05:00) Eastern Time', value: 'UTC-5' },
-  { label: '(UTC-04:00) Atlantic Time', value: 'UTC-4' },
-  { label: '(UTC-03:00) Argentina', value: 'UTC-3' },
-  { label: '(UTC-02:00) Mid-Atlantic', value: 'UTC-2' },
-  { label: '(UTC-01:00) Azores', value: 'UTC-1' },
-  { label: '(UTC+00:00) Greenwich Mean Time', value: 'UTC+0' },
-  { label: '(UTC+01:00) Central European Time', value: 'UTC+1' },
-  { label: '(UTC+02:00) Eastern European Time', value: 'UTC+2' },
-  { label: '(UTC+03:00) Moscow Time', value: 'UTC+3' },
-  { label: '(UTC+04:00) Gulf Time', value: 'UTC+4' },
-  { label: '(UTC+05:00) Pakistan Time', value: 'UTC+5' },
-  { label: '(UTC+06:00) Bangladesh Time', value: 'UTC+6' },
-  { label: '(UTC+07:00) Indochina Time', value: 'UTC+7' },
-  { label: '(UTC+08:00) China Standard Time', value: 'UTC+8' },
-  { label: '(UTC+09:00) Japan Standard Time', value: 'UTC+9' },
-  { label: '(UTC+10:00) Australian Eastern Time', value: 'UTC+10' },
-  { label: '(UTC+11:00) Solomon Islands Time', value: 'UTC+11' },
-  { label: '(UTC+12:00) Fiji Time', value: 'UTC+12' },
-];
-
 // Date format options
 const dateFormatOptions: SelectOptionType[] = [
   { label: 'MM/DD/YYYY (US)', value: 'MM/DD/YYYY' },
@@ -57,6 +12,7 @@ const dateFormatOptions: SelectOptionType[] = [
   { label: 'YYYY-MM-DD (ISO)', value: 'YYYY-MM-DD' },
   { label: 'DD.MM.YYYY (German)', value: 'DD.MM.YYYY' },
   { label: 'MM-DD-YYYY', value: 'MM-DD-YYYY' },
+  { label: 'DD-MM-YYYY', value: 'DD-MM-YYYY' },
 ];
 
 // Time format options
@@ -101,24 +57,10 @@ const GeneralSettings = () => {
       </h4>
 
       <div className='space-y-6'>
-        {/* Language & Region */}
+        {/* Date & Time Format */}
         <div>
-          <h5 className='font-semibold mb-4'>Language & Region</h5>
+          <h5 className='font-semibold mb-4'>Date & Time Format</h5>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            <SelectField
-              name='language'
-              label='Language'
-              options={languageOptions}
-              isMulti={false}
-              placeholder='Select language...'
-            />
-            <SelectField
-              name='timezone'
-              label='Time Zone'
-              options={timezoneOptions}
-              isMulti={false}
-              placeholder='Select timezone...'
-            />
             <SelectField
               name='dateFormat'
               label='Date Format'
