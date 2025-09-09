@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import { SelectOptionType } from 'helpers/sharedTypes';
 
 import { useProfileStore } from 'stores/profileStore';
@@ -20,8 +22,77 @@ const fontFamilyOptions: SelectOptionType[] = [
   { label: 'Fira Code (Monospace)', value: 'fira-code' },
 ];
 
-const AppreanceSettings = () => {
+const AppearanceSettings = () => {
+  type ThemeModeType = 'light' | 'dark' | 'auto';
+
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const updateProfile = useProfileStore((state) => state.updateProfile);
+
+  // Theme mode state persisted in localStorage
+  const [themeMode, setThemeMode] = useState<ThemeModeType>(() => {
+    const saved = (typeof window !== 'undefined')
+      ? (localStorage.getItem('themeMode') as ThemeModeType | null)
+      : null;
+    if (saved === 'light' || saved === 'dark' || saved === 'auto') {
+      return saved;
+    }
+    return darkMode ? 'dark' : 'light';
+  });
+
+  // Persist themeMode changes
+  useEffect(() => {
+    localStorage.setItem('themeMode', themeMode);
+  }, [themeMode]);
+
+  // Apply selected theme to profile store when not in auto
+  useEffect(() => {
+    if (themeMode === 'light') {
+      updateProfile({ theme: 'light' });
+    } else if (themeMode === 'dark') {
+      updateProfile({ theme: 'dark' });
+    }
+  }, [themeMode, updateProfile]);
+
+  // Auto mode: follow system preference and update profile theme accordingly
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const applySystemTheme = () => {
+      const isDark = mediaQuery.matches;
+      updateProfile({ theme: isDark ? 'dark' : 'light' });
+    };
+
+    if (themeMode === 'auto') {
+      // initial apply and listen for changes
+      applySystemTheme();
+      mediaQuery.addEventListener('change', applySystemTheme);
+      return () => {
+        mediaQuery.removeEventListener('change', applySystemTheme);
+      };
+    }
+
+    // return a no-op cleanup to satisfy consistent-return
+    return () => {};
+  }, [themeMode, updateProfile]);
+
+  // Handlers
+  const handleSetLight = () => {
+    setThemeMode('light');
+    updateProfile({ theme: 'light' });
+  };
+
+  const handleSetDark = () => {
+    setThemeMode('dark');
+    updateProfile({ theme: 'dark' });
+  };
+
+  const handleSetAuto = () => {
+    setThemeMode('auto');
+    // Immediately set current system theme
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    updateProfile({ theme: isDark ? 'dark' : 'light' });
+  };
+
   return (
     <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
       <h4 className='text-xl font-bold mb-6 flex items-center'>
@@ -34,25 +105,34 @@ const AppreanceSettings = () => {
         <div>
           <h5 className='font-semibold mb-4'>Theme</h5>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-            <button className={`p-4 rounded-lg border-2 transition-all ${!darkMode
-              ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
-              : 'border-gray-300 dark:border-gray-600 hover:border-purple-500'}`}
+            <button
+              onClick={handleSetLight}
+              className={`p-4 rounded-lg border-2 transition-all ${themeMode === 'light'
+                ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
+                : 'border-gray-300 dark:border-gray-600 hover:border-purple-500'}`}
             >
               <div className='w-full h-20 bg-white border border-gray-300 rounded mb-3 flex items-center justify-center'>
                 <div className='w-8 h-8 bg-gray-200 rounded' />
               </div>
               <span className='text-sm font-medium'>Light</span>
             </button>
-            <button className={`p-4 rounded-lg border-2 transition-all ${darkMode
-              ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
-              : 'border-gray-300 dark:border-gray-600 hover:border-purple-500'}`}
+            <button
+              onClick={handleSetDark}
+              className={`p-4 rounded-lg border-2 transition-all ${themeMode === 'dark'
+                ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
+                : 'border-gray-300 dark:border-gray-600 hover:border-purple-500'}`}
             >
               <div className='w-full h-20 bg-gray-800 border border-gray-600 rounded mb-3 flex items-center justify-center'>
                 <div className='w-8 h-8 bg-gray-600 rounded' />
               </div>
               <span className='text-sm font-medium'>Dark</span>
             </button>
-            <button className='p-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 hover:border-purple-500 transition-all'>
+            <button
+              onClick={handleSetAuto}
+              className={`p-4 rounded-lg border-2 transition-all ${themeMode === 'auto'
+                ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
+                : 'border-gray-300 dark:border-gray-600 hover:border-purple-500'}`}
+            >
               <div className='w-full h-20 bg-gradient-to-r from-white to-gray-800 border border-gray-400 rounded mb-3 flex items-center justify-center'>
                 <div className='w-8 h-8 bg-gradient-to-r from-gray-200 to-gray-600 rounded' />
               </div>
@@ -161,4 +241,4 @@ const AppreanceSettings = () => {
   );
 };
 
-export default AppreanceSettings;
+export default AppearanceSettings;

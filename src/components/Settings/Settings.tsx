@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
+import clsx from 'clsx';
 
 import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
@@ -9,7 +10,7 @@ import useModalStore from 'stores/modalStore';
 import { logout } from 'services/auth';
 
 import GeneralSettings from 'components/Settings/GeneralSettings';
-import AppreanceSettings from 'components/Settings/AppreanceSettings';
+import AppearanceSettings from 'components/Settings/AppearanceSettings';
 import ProductivitySettings from 'components/Settings/ProductivitySettings';
 import DataAndStorageSettings from 'components/Settings/DataAndStorageSettings';
 import AdvancedSettings from 'components/Settings/AdvancedSettings';
@@ -107,7 +108,7 @@ const Settings = () => {
   return (
     <div>
       {/* Settings Header - Fixed */}
-      <div className='fixed top-0 left-70 right-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-6 py-4'>
+      <div className={clsx('fixed top-0 left-70 right-0 z-50 border-b px-6 py-4', darkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200')}>
         <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-4'>
           <div>
             <h3 className='text-2xl font-bold mb-2'>Settings & Configuration</h3>
@@ -176,7 +177,7 @@ const Settings = () => {
               </div>
 
               <div ref={setSectionRef('appearance')}>
-                <AppreanceSettings />
+                <AppearanceSettings />
               </div>
 
               <div ref={setSectionRef('productivity')}>
