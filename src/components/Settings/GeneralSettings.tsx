@@ -3,7 +3,6 @@ import { SelectOptionType } from 'helpers/sharedTypes';
 import { useProfileStore } from 'stores/profileStore';
 
 import SelectField from 'components/Shared/SelectField';
-import Switch from 'components/Shared/Switch';
 
 // Date format options
 const dateFormatOptions: SelectOptionType[] = [
@@ -37,14 +36,14 @@ const workWeekOptions: SelectOptionType[] = [
 ];
 
 // Default startup page options
-const startupPageOptions: SelectOptionType[] = [
-  { label: 'Dashboard', value: 'dashboard' },
-  { label: 'Tasks', value: 'tasks' },
-  { label: 'Goals', value: 'goals' },
-  { label: 'Calendar', value: 'calendar' },
-  { label: 'Analytics', value: 'analytics' },
-  { label: 'Last Visited Page', value: 'last' },
-];
+// const startupPageOptions: SelectOptionType[] = [
+//   { label: 'Dashboard', value: 'dashboard' },
+//   { label: 'Tasks', value: 'tasks' },
+//   { label: 'Goals', value: 'goals' },
+//   { label: 'Calendar', value: 'calendar' },
+//   { label: 'Analytics', value: 'analytics' },
+//   { label: 'Last Visited Page', value: 'last' },
+// ];
 
 const GeneralSettings = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
@@ -100,7 +99,7 @@ const GeneralSettings = () => {
         </div>
 
         {/* Startup Settings */}
-        <div>
+        {/* <div>
           <h5 className='font-semibold mb-4'>Startup & Defaults</h5>
           <div className='space-y-4'>
             <SelectField
@@ -115,18 +114,8 @@ const GeneralSettings = () => {
               label='Auto-start Focus Timer'
               description='Automatically start timer when clicking on tasks'
             />
-            <Switch
-              name='rememberWindowSize'
-              label='Remember Window Size'
-              description='Save window dimensions and position'
-            />
-            <Switch
-              name='loadRecentFiles'
-              label='Load Recent Files'
-              description='Show recently opened projects on startup'
-            />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

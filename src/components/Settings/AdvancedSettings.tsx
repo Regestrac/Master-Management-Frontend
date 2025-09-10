@@ -1,7 +1,6 @@
 import { useProfileStore } from 'stores/profileStore';
 
 import Switch from 'components/Shared/Switch';
-import Slider from 'components/Shared/Slider';
 
 const AdvancedSettings = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
@@ -14,36 +13,6 @@ const AdvancedSettings = () => {
       </h4>
 
       <div className='space-y-6'>
-        {/* Performance Settings */}
-        <div>
-          <h5 className='font-semibold mb-4'>Performance & Memory</h5>
-          <div className='space-y-4'>
-            <Switch
-              name='hardwareAcceleration'
-              label='Hardware Acceleration'
-              description='Use GPU acceleration for better performance'
-            />
-            <Switch
-              name='backgroundSync'
-              label='Background Sync'
-              description='Continue syncing when app is in background'
-            />
-            <Slider
-              name='cacheSize'
-              label='Cache Size'
-              min={100}
-              max={2000}
-              step={50}
-              unit=' MB'
-              showValue={true}
-              showLabels={true}
-            />
-            <button className='px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors'>
-              Clear Cache
-            </button>
-          </div>
-        </div>
-
         {/* Developer Settings */}
         <div>
           <h5 className='font-semibold mb-4'>Developer & Debug</h5>
@@ -134,7 +103,6 @@ const AdvancedSettings = () => {
                     name='teamCollaboration'
                     label=''
                     description=''
-                    disabled={true}
                   />
                 </div>
               </div>
@@ -144,23 +112,27 @@ const AdvancedSettings = () => {
 
         {/* Danger Zone */}
         <div>
-          <h5 className='font-semibold mb-4 text-red-500'>⚠️ Danger Zone</h5>
+          <h5 className='font-semibold text-2xl mb-4 text-red-500'>⚠️ Danger Zone</h5>
           <div className={`p-4 rounded-lg border-2 border-red-500 ${darkMode ? 'bg-red-900/10' : 'bg-red-50'}`}>
             <div className='space-y-4'>
-              <div>
-                <h6 className='font-medium text-red-500 mb-2'>Reset All Settings</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-3`}>
-                  This will reset all settings to their default values. This action cannot be undone.
-                </p>
+              <div className='flex items-center justify-between space-x-3 mb-3'>
+                <div>
+                  <h6 className='font-medium text-red-500 mb-2'>Reset All Settings</h6>
+                  <p className={`text-sm ${darkMode ? 'text-red-200/70' : 'text-gray-600'} mb-3`}>
+                    This will reset all settings to their default values. This action cannot be undone.
+                  </p>
+                </div>
                 <button className='px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors'>
                   Reset Settings
                 </button>
               </div>
-              <div className='border-t border-red-300 pt-4'>
-                <h6 className='font-medium text-red-500 mb-2'>Delete All Data</h6>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-3`}>
-                  Permanently delete all your tasks, goals, and data. This action cannot be undone.
-                </p>
+              <div className='border-t border-red-400 pt-4 flex items-center justify-between space-x-3'>
+                <div>
+                  <h6 className='font-medium text-red-500 mb-2'>Delete All Data</h6>
+                  <p className={`text-sm ${darkMode ? 'text-red-200/70' : 'text-gray-600'} mb-3`}>
+                    Permanently delete all your tasks, goals, and data. This action cannot be undone.
+                  </p>
+                </div>
                 <button className='px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors'>
                   Delete All Data
                 </button>

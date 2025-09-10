@@ -5,15 +5,6 @@ import { useProfileStore } from 'stores/profileStore';
 import SelectField from 'components/Shared/SelectField';
 import Switch from 'components/Shared/Switch';
 
-// Backup frequency options
-const backupFrequencyOptions: SelectOptionType[] = [
-  { label: 'Real-time', value: 'realtime' },
-  { label: 'Every Hour', value: 'hourly' },
-  { label: 'Daily', value: 'daily' },
-  { label: 'Weekly', value: 'weekly' },
-  { label: 'Manual Only', value: 'manual' },
-];
-
 // Task retention options
 const taskRetentionOptions: SelectOptionType[] = [
   { label: '30 days', value: '30' },
@@ -50,7 +41,7 @@ const DataAndStorageSettings = () => {
             <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-750' : 'bg-gray-50'}`}>
               <div className='flex items-center justify-between mb-2'>
                 <span className='font-medium'>Total Storage Used</span>
-                <span className='text-lg font-bold'>2.4 GB / 10 GB</span>
+                <span className='text-lg font-bold'>2.2 GB / 10 GB</span>
               </div>
               <div className={`w-full h-3 ${darkMode ? 'bg-gray-600' : 'bg-gray-200'} rounded-full overflow-hidden`}>
                 <div className='h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full' style={{ width: '24%' }} />
@@ -63,7 +54,6 @@ const DataAndStorageSettings = () => {
                 { label: 'Goals & Milestones', size: '450 MB', percentage: 18.75, color: 'bg-green-500' },
                 { label: 'Analytics Data', size: '320 MB', percentage: 13.33, color: 'bg-purple-500' },
                 { label: 'Attachments', size: '280 MB', percentage: 11.67, color: 'bg-orange-500' },
-                { label: 'Backups', size: '150 MB', percentage: 6.25, color: 'bg-gray-500' },
               ].map((item, index) => (
                 <div key={index} className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 bg-gray-750' : 'border-gray-200 bg-gray-50'}`}>
                   <div className='flex items-center justify-between mb-2'>
@@ -87,23 +77,10 @@ const DataAndStorageSettings = () => {
           <h5 className='font-semibold mb-4'>Backup & Sync</h5>
           <div className='space-y-4'>
             <Switch
-              name='autoBackup'
-              label='Auto Backup'
-              description='Automatically backup data every day'
-            />
-            <Switch
               name='cloudSync'
               label='Cloud Sync'
               description='Sync data across all your devices'
             />
-            <div>
-              <label className='block text-sm font-medium mb-2'>Backup Frequency</label>
-              <SelectField
-                name='backupFrequency'
-                options={backupFrequencyOptions}
-                isMulti={false}
-              />
-            </div>
             <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
               <button className='flex flex-col items-center p-4 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors'>
                 <svg className='w-8 h-8 mb-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>

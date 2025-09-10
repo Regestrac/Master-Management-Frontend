@@ -121,22 +121,10 @@ const ProductivitySettings = () => {
               />
             </div>
           </div>
-          <div className='mt-4 space-y-3'>
-            <Switch
-              name='soundNotifications'
-              label='Sound Notifications'
-              description='Play sound when timer ends'
-            />
-            <Switch
-              name='progressReminders'
-              label='Progress Reminders'
-              description='Get weekly progress check-ins for active goals'
-            />
-          </div>
         </div>
 
         {/* Automation Settings */}
-        <div>
+        {/* <div>
           <h5 className='font-semibold mb-4'>Automation & AI</h5>
           <div className='space-y-3'>
             <Switch
@@ -160,7 +148,7 @@ const ProductivitySettings = () => {
               description='Automatically create time blocks based on your schedule'
             />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

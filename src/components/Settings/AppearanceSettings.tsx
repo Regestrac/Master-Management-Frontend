@@ -1,26 +1,20 @@
 import { useEffect, useState } from 'react';
 
-import { SelectOptionType } from 'helpers/sharedTypes';
-
 import { useProfileStore } from 'stores/profileStore';
 
-import SelectField from 'components/Shared/SelectField';
-import Switch from 'components/Shared/Switch';
-import Slider from 'components/Shared/Slider';
-
 // Font family options
-const fontFamilyOptions: SelectOptionType[] = [
-  { label: 'Inter (Default)', value: 'inter' },
-  { label: 'Roboto', value: 'roboto' },
-  { label: 'Open Sans', value: 'open-sans' },
-  { label: 'Lato', value: 'lato' },
-  { label: 'Source Sans Pro', value: 'source-sans' },
-  { label: 'System Default', value: 'system' },
-  { label: 'Georgia (Serif)', value: 'georgia' },
-  { label: 'Times New Roman (Serif)', value: 'times' },
-  { label: 'Monaco (Monospace)', value: 'monaco' },
-  { label: 'Fira Code (Monospace)', value: 'fira-code' },
-];
+// const fontFamilyOptions: SelectOptionType[] = [
+//   { label: 'Inter (Default)', value: 'inter' },
+//   { label: 'Roboto', value: 'roboto' },
+//   { label: 'Open Sans', value: 'open-sans' },
+//   { label: 'Lato', value: 'lato' },
+//   { label: 'Source Sans Pro', value: 'source-sans' },
+//   { label: 'System Default', value: 'system' },
+//   { label: 'Georgia (Serif)', value: 'georgia' },
+//   { label: 'Times New Roman (Serif)', value: 'times' },
+//   { label: 'Monaco (Monospace)', value: 'monaco' },
+//   { label: 'Fira Code (Monospace)', value: 'fira-code' },
+// ];
 
 const AppearanceSettings = () => {
   type ThemeModeType = 'light' | 'dark' | 'auto';
@@ -72,7 +66,7 @@ const AppearanceSettings = () => {
     }
 
     // return a no-op cleanup to satisfy consistent-return
-    return () => {};
+    return () => { };
   }, [themeMode, updateProfile]);
 
   // Handlers
@@ -182,7 +176,7 @@ const AppearanceSettings = () => {
         </div>
 
         {/* Font Settings */}
-        <div>
+        {/* <div>
           <h5 className='font-semibold mb-4'>Typography</h5>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <SelectField
@@ -203,10 +197,10 @@ const AppearanceSettings = () => {
               showLabels={true}
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Layout Settings */}
-        <div>
+        {/* <div>
           <h5 className='font-semibold mb-4'>Layout & Spacing</h5>
           <div className='space-y-4'>
             <Switch
@@ -219,23 +213,18 @@ const AppearanceSettings = () => {
               label='Show Sidebar'
               description='Display navigation sidebar'
             />
-            <Switch
-              name='showBreadcrumbs'
-              label='Show Breadcrumbs'
-              description='Display navigation breadcrumbs'
-            />
             <Slider
               name='sidebarWidth'
               label='Sidebar Width'
               min={200}
-              max={400}
+              max={800}
               step={10}
               unit='px'
               showValue={true}
               showLabels={true}
             />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -24,14 +24,11 @@ const AboutSection = () => {
             <span className={`px-3 py-1 rounded-full ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
               Version 2.1.4
             </span>
-            <span className='px-3 py-1 bg-green-100 text-green-600 rounded-full'>
-              Up to date
-            </span>
           </div>
         </div>
 
         {/* Feature Highlights */}
-        <div>
+        <div className='mb-8'>
           <h6 className='font-semibold mb-4'>What's New in v2.1.4</h6>
           <div className='space-y-3'>
             {[
@@ -47,29 +44,6 @@ const AboutSection = () => {
                 <span className='text-sm'>{feature.slice(2)}</span>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* System Info */}
-        <div>
-          <h6 className='font-semibold mb-4'>System Information</h6>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-750' : 'bg-gray-50'}`}>
-              <div className='text-xs text-gray-500 mb-1'>Platform</div>
-              <div className='font-medium'>Web Application</div>
-            </div>
-            <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-750' : 'bg-gray-50'}`}>
-              <div className='text-xs text-gray-500 mb-1'>Browser</div>
-              <div className='font-medium'>Chrome 91.0.4472.124</div>
-            </div>
-            <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-750' : 'bg-gray-50'}`}>
-              <div className='text-xs text-gray-500 mb-1'>Last Updated</div>
-              <div className='font-medium'>June 25, 2025</div>
-            </div>
-            <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-750' : 'bg-gray-50'}`}>
-              <div className='text-xs text-gray-500 mb-1'>License</div>
-              <div className='font-medium'>Professional</div>
-            </div>
           </div>
         </div>
 
@@ -98,10 +72,10 @@ const AboutSection = () => {
         {/* Credits */}
         <div className='text-center pt-6 border-t border-gray-200 dark:border-gray-700'>
           <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>
-            Made with ❤️ by the TaskFlow Pro Team
+            Made with ❤️ by the Master Management Team
           </p>
           <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-            © 2025 TaskFlow Pro. All rights reserved.
+            © 2025 Master Management. All rights reserved.
           </p>
         </div>
       </div>
