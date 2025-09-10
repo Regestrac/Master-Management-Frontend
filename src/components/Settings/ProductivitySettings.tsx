@@ -16,11 +16,11 @@ const longBreakSessionsOptions: SelectOptionType[] = [
 
 // Goal duration options
 const goalDurationOptions: SelectOptionType[] = [
-  { label: '30 days', value: '30' },
-  { label: '60 days', value: '60' },
-  { label: '90 days', value: '90' },
-  { label: '6 months', value: '180' },
-  { label: '1 year', value: '365' },
+  { label: '30 minutes', value: '30' },
+  { label: '1 hour', value: '1' },
+  { label: '2 hours', value: '2' },
+  { label: '3 hours', value: '3' },
+  { label: '4 hours', value: '4' },
 ];
 
 // Weekly target hours options
