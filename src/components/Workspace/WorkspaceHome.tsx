@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PlusCircle, Users, Loader2, AlertCircle } from 'lucide-react';
 
 import { Workspace } from 'helpers/sharedTypes';
+import { debounce } from 'helpers/utils';
 
 import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
@@ -41,6 +42,9 @@ const WorkspaceHome = () => {
   const updateVisibility = useModalStore((state) => state.updateVisibility);
 
   const shouldFetchWorkspacesRef = useRef(true);
+  const previousSearchKey = useRef('');
+
+  const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
 
@@ -63,19 +67,28 @@ const WorkspaceHome = () => {
     });
   };
 
+  const fetchWorkspaces = useMemo(() => debounce((searchKey: string) => {
+    setIsLoading(true);
+    getWorkspaces(searchKey).then((res) => {
+      setWorkspaces(res?.workspaces);
+    }).catch((err) => {
+      setError('Failed to load workspaces. ' + err);
+    }).finally(() => {
+      setIsLoading(false);
+    });
+  }, 200), []);
+
   useEffect(() => {
+    const searchKey = searchParams.get('searchKey') || '';
     if (shouldFetchWorkspacesRef.current) {
-      setIsLoading(true);
-      getWorkspaces().then((res) => {
-        setWorkspaces(res?.workspaces);
-      }).catch((err) => {
-        setError('Failed to load workspaces. ' + err);
-      }).finally(() => {
-        setIsLoading(false);
-      });
+      fetchWorkspaces('');
+      shouldFetchWorkspacesRef.current = false;
     }
-    shouldFetchWorkspacesRef.current = false;
-  }, []);
+    if (searchKey !== previousSearchKey.current) {
+      fetchWorkspaces(searchKey);
+      previousSearchKey.current = searchKey;
+    }
+  }, [searchParams, fetchWorkspaces]);
 
   return (
     <div className='p-8 space-y-8 h-[calc(100vh-165px)]'>

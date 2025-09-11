@@ -5,8 +5,8 @@ import { Workspace, Member, Task, Goal } from 'helpers/sharedTypes';
 export const getWorkspace = (workspaceId: string): Promise<{ data: Workspace }> =>
   getHandler({ path: `workspaces/${workspaceId}` });
 
-export const getWorkspaces = (): Promise<{ workspaces: Workspace[] }> =>
-  getHandler({ path: 'workspaces' });
+export const getWorkspaces = (searchKey?: string): Promise<{ workspaces: Workspace[] }> =>
+  getHandler({ path: `workspaces${searchKey ? `?searchKey=${searchKey}` : ''}` });
 
 export const createWorkspace = (name: string): Promise<Workspace> =>
   postHandler({
