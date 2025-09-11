@@ -4,7 +4,7 @@ import { Bell, Moon, Search, Sun, Menu, X } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useSearchParams } from 'react-router-dom';
 
-import { debounce } from 'helpers/utils';
+import { debounce, omit } from 'helpers/utils';
 
 import { useNavbarStore } from 'stores/navbarStore';
 import { useProfileStore } from 'stores/profileStore';
@@ -50,7 +50,7 @@ const Header = () => {
   }, [searchParams]);
 
   const debouncedSearch = useMemo(() => debounce((value: string) => {
-    setSearchParams({ ...urlFilterParams, searchKey: value });
+    setSearchParams(value ? { ...urlFilterParams, searchKey: value } : omit(urlFilterParams, 'searchKey'));
   }, 200), [urlFilterParams, setSearchParams]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -19,6 +19,8 @@ const GoalsListing = () => {
   const goals = useGoalStore((state) => state.goals);
   const addGoal = useGoalStore((state) => state.addGoal);
 
+  const previousParams = useRef('');
+
   const [searchParams] = useSearchParams();
 
   const view = searchParams.get('view') as 'list' | 'grid' || 'list';
@@ -32,11 +34,15 @@ const GoalsListing = () => {
   };
 
   useEffect(() => {
-    getAllGoals(searchParams.toString()).then((res) => {
-      addGoal(res?.data || [], 'replace');
-    }).catch((err) => {
-      toast.error(err?.error || 'Failed to get goals!');
-    });
+    const params = searchParams.toString().split('&').filter((param) => !param.includes('view')).join('&');
+    if (params && previousParams.current !== params) {
+      getAllGoals(params).then((res) => {
+        addGoal(res?.data || [], 'replace');
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to get goals!');
+      });
+      previousParams.current = params;
+    }
   }, [searchParams, addGoal]);
 
   return (

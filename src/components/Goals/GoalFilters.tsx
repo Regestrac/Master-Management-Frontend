@@ -73,7 +73,7 @@ const GoalFilters = () => {
   }, [status, sortBy, setSearchParams, category, urlFilterParams, searchParams]);
 
   const handleUpdateView = (view: 'list' | 'grid') => {
-    setSearchParams((prev) => ({ ...prev, view }));
+    setSearchParams({ ...urlFilterParams, view });
   };
 
   return (
