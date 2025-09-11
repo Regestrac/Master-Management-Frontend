@@ -2,6 +2,9 @@ import { useCallback } from 'react';
 
 import { Copy } from 'lucide-react';
 import { toast } from 'react-toastify';
+import clsx from 'clsx';
+
+import { useProfileStore } from 'stores/profileStore';
 
 type InviteSectionProps = {
   inviteCode: string;
@@ -9,6 +12,8 @@ type InviteSectionProps = {
 };
 
 const InviteSection = ({ inviteCode, onLeaveWorkspace }: InviteSectionProps) => {
+  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+
   const handleCopyInvite = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(inviteCode);
@@ -24,14 +29,20 @@ const InviteSection = ({ inviteCode, onLeaveWorkspace }: InviteSectionProps) => 
         <label htmlFor='invite' className='sr-only'>Invite code</label>
         <div
           id='invite'
-          className='h-9 w-28 sm:w-36 truncate flex items-center justify-between rounded-lg border px-2 text-sm shadow-sm bg-white border-gray-300 text-gray-700 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300'
+          className={clsx(
+            'h-9 w-28 sm:w-36 truncate flex items-center justify-between rounded-lg border px-2 text-sm shadow-sm',
+            darkMode ? 'bg-gray-900 border-gray-700 text-gray-300' : 'bg-white border-gray-300 text-gray-700',
+          )}
           aria-label='Invite code'
         >
           {inviteCode}
           <button
             type='button'
             onClick={handleCopyInvite}
-            className='h-9 px-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400/40'
+            className={clsx(
+              'h-9 px-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400/40',
+              darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100',
+            )}
             title='Copy invite code'
             aria-label='Copy invite code'
           >
@@ -41,7 +52,9 @@ const InviteSection = ({ inviteCode, onLeaveWorkspace }: InviteSectionProps) => 
         <button
           type='button'
           onClick={onLeaveWorkspace}
-          className='h-9 px-2 rounded-lg border border-red-300 text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-300 dark:hover:bg-red-900/20 text-sm focus:outline-none focus:ring-2 focus:ring-red-400/30'
+          className={clsx(
+            'h-9 px-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-red-400/30',
+            darkMode ? 'border-red-700 text-red-300 hover:bg-red-900/20' : 'border-red-300 text-red-600 hover:bg-red-50')}
         >
           Leave
         </button>

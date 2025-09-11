@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Plus, UserPlus } from 'lucide-react';
 
 import { StatusType, Task } from 'helpers/sharedTypes';
 import { STATUS_OPTIONS } from 'helpers/configs';
-import { getStatusColor } from 'helpers/utils';
+import { getStatusColor, debounce } from 'helpers/utils';
 
 import { useProfileStore } from 'stores/profileStore';
 import useWorkspaceStore from 'stores/workspaceStore';
@@ -40,8 +40,10 @@ const TaskList = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
 
   const shouldFetchTasksRef = useRef(true);
+  const previousSearchKey = useRef('');
 
   // Member options for assignees dropdown
   const memberOptions = members.map((member) => ({
@@ -61,22 +63,27 @@ const TaskList = () => {
     return new Map(members.map((member) => [member.user_id, member]));
   }, [members]);
 
-  const fetchTasks = useCallback(() => {
+  const fetchTasks = useMemo(() => debounce((searchKey: string) => {
     if (id) {
-      getWorkspaceTasks(id).then((res) => {
+      getWorkspaceTasks(id, searchKey).then((res) => {
         setTasks(res.tasks);
       }).catch((err) => {
         toast.error(err?.error);
       });
     }
-  }, [id]);
+  }, 200), [id]);
 
   useEffect(() => {
+    const searchKey = searchParams.get('searchKey') || '';
     if (shouldFetchTasksRef.current) {
-      fetchTasks();
+      fetchTasks('');
       shouldFetchTasksRef.current = false;
     }
-  }, [fetchTasks]);
+    if (searchKey !== previousSearchKey.current) {
+      fetchTasks(searchKey);
+      previousSearchKey.current = searchKey;
+    }
+  }, [searchParams, fetchTasks]);
 
   const handleSubmit = useCallback((title: string) => {
     const payload = {
@@ -87,7 +94,7 @@ const TaskList = () => {
       workspace_id: Number(id),
     };
     createTask(payload).then(() => {
-      fetchTasks();
+      fetchTasks('');
     }).catch((err) => {
       toast.error(err?.error || 'Failed to create task');
     });
@@ -185,7 +192,7 @@ const TaskList = () => {
               )}
             >
               <div className='flex items-center gap-3 min-w-0 flex-1'>
-                <div className='w-24 shrink-0' data-dropdown>
+                <div className='w-24 shrink-0 flex items-center h-full' data-dropdown>
                   <Dropdown
                     options={STATUS_OPTIONS}
                     value={task.status}

@@ -134,7 +134,7 @@ function Dropdown<T, U extends boolean>({
 
   return (
     <div className='relative inline-block text-left' ref={wrapperRef}>
-      <div onClick={handleChildrenClick} className='cursor-pointer'>
+      <div onClick={handleChildrenClick} className='cursor-pointer flex items-center'>
         {children}
       </div>
 

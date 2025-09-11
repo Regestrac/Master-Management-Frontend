@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Plus } from 'lucide-react';
 
 import { Goal, StatusType } from 'helpers/sharedTypes';
-import { getStatusColor } from 'helpers/utils';
+import { getStatusColor, debounce } from 'helpers/utils';
 import { STATUS_OPTIONS } from 'helpers/configs';
 
 import { useProfileStore } from 'stores/profileStore';
@@ -32,8 +32,10 @@ const GoalList = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
 
   const shouldFetchGoalsRef = useRef(true);
+  const previousSearchKey = useRef('');
 
   const memberMap = useMemo(() => {
     return new Map(members.map((member) => [member.user_id, member]));
@@ -46,22 +48,27 @@ const GoalList = () => {
     }));
   }, [members]);
 
-  const fetchGoals = useCallback(() => {
+  const fetchGoals = useMemo(() => debounce((searchKey: string) => {
     if (id) {
-      getWorkspaceGoals(id).then((res) => {
+      getWorkspaceGoals(id, searchKey).then((res) => {
         setGoals(res?.goals || []);
       }).catch((err) => {
         toast.error(err?.error);
       });
     }
-  }, [id]);
+  }, 200), [id]);
 
   useEffect(() => {
+    const searchKey = searchParams.get('searchKey') || '';
     if (shouldFetchGoalsRef.current) {
-      fetchGoals();
+      fetchGoals('');
       shouldFetchGoalsRef.current = false;
     }
-  }, [fetchGoals]);
+    if (searchKey !== previousSearchKey.current) {
+      fetchGoals(searchKey);
+      previousSearchKey.current = searchKey;
+    }
+  }, [searchParams, fetchGoals]);
 
   const handleSubmit = useCallback((title: string) => {
     const payload = {
@@ -72,7 +79,7 @@ const GoalList = () => {
       workspace_id: Number(id),
     };
     createGoal(payload).then(() => {
-      fetchGoals();
+      fetchGoals('');
     }).catch((err) => {
       toast.error(err?.error || 'Failed to create goal');
     });

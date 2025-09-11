@@ -64,8 +64,8 @@ export const removeMember = (workspaceId: string, memberId: number) => postHandl
 });
 
 // Task operations
-export const getWorkspaceTasks = (workspaceId: string): Promise<{ tasks: Task[] }> =>
-  getHandler({ path: `workspaces/${workspaceId}/tasks` });
+export const getWorkspaceTasks = (workspaceId: string, searchKey?: string): Promise<{ tasks: Task[] }> =>
+  getHandler({ path: `workspaces/${workspaceId}/tasks${searchKey ? `?searchKey=${searchKey}` : ''}` });
 
 export const createWorkspaceTask = (workspaceId: string, task: Omit<Task, 'id'>): Promise<Task> =>
   postHandler({
@@ -94,8 +94,8 @@ export const assignTask = (workspaceId: string, taskId: number, assignees: numbe
   });
 
 // Goal operations
-export const getWorkspaceGoals = (workspaceId: string): Promise<{ goals: Goal[] }> =>
-  getHandler({ path: `workspaces/${workspaceId}/goals` });
+export const getWorkspaceGoals = (workspaceId: string, searchKey?: string): Promise<{ goals: Goal[] }> =>
+  getHandler({ path: `workspaces/${workspaceId}/goals${searchKey ? `?searchKey=${searchKey}` : ''}` });
 
 export const createWorkspaceGoal = (workspaceId: string, goal: Omit<Goal, 'id'>): Promise<Goal> =>
   postHandler({
