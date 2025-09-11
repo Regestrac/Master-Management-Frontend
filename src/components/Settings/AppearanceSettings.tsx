@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { useProfileStore } from 'stores/profileStore';
 
+type ThemeModeType = 'light' | 'dark' | 'auto';
+
 // Font family options
 // const fontFamilyOptions: SelectOptionType[] = [
 //   { label: 'Inter (Default)', value: 'inter' },
@@ -16,8 +18,27 @@ import { useProfileStore } from 'stores/profileStore';
 //   { label: 'Fira Code (Monospace)', value: 'fira-code' },
 // ];
 
+const accentColorOptions = [
+  { name: 'Purple', color: '#A855F7' },
+  { name: 'Blue', color: '#3B82F6' },
+  { name: 'Green', color: '#10B981' },
+  { name: 'Red', color: '#EF4444' },
+  { name: 'Orange', color: '#F59E0B' },
+  { name: 'Pink', color: '#EC4899' },
+  { name: 'Indigo', color: '#6366F1' },
+  { name: 'Teal', color: '#14B8A6' },
+  { name: 'Cyan', color: '#06B6D4' },
+  { name: 'Emerald', color: '#059669' },
+  { name: 'Lime', color: '#65A30D' },
+  { name: 'Yellow', color: '#EAB308' },
+  { name: 'Amber', color: '#D97706' },
+  { name: 'Rose', color: '#F43F5E' },
+  { name: 'Fuchsia', color: '#D946EF' },
+  { name: 'Violet', color: '#8B5CF6' },
+];
+
 const AppearanceSettings = () => {
-  type ThemeModeType = 'light' | 'dark' | 'auto';
+  const [activeColor, setActiveColor] = useState('Purple');
 
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
   const updateProfile = useProfileStore((state) => state.updateProfile);
@@ -139,33 +160,17 @@ const AppearanceSettings = () => {
         <div>
           <h5 className='font-semibold mb-4'>Accent Color</h5>
           <div className='grid grid-cols-6 md:grid-cols-8 gap-3'>
-            {[
-              { name: 'Purple', color: '#A855F7', active: true },
-              { name: 'Blue', color: '#3B82F6' },
-              { name: 'Green', color: '#10B981' },
-              { name: 'Red', color: '#EF4444' },
-              { name: 'Orange', color: '#F59E0B' },
-              { name: 'Pink', color: '#EC4899' },
-              { name: 'Indigo', color: '#6366F1' },
-              { name: 'Teal', color: '#14B8A6' },
-              { name: 'Cyan', color: '#06B6D4' },
-              { name: 'Emerald', color: '#059669' },
-              { name: 'Lime', color: '#65A30D' },
-              { name: 'Yellow', color: '#EAB308' },
-              { name: 'Amber', color: '#D97706' },
-              { name: 'Rose', color: '#F43F5E' },
-              { name: 'Fuchsia', color: '#D946EF' },
-              { name: 'Violet', color: '#8B5CF6' },
-            ].map((colorOption, index) => (
+            {accentColorOptions?.map((colorOption, index) => (
               <button
                 key={index}
-                className={`w-12 h-12 rounded-lg border-2 transition-all ${colorOption.active
+                className={`w-12 h-12 rounded-lg border-2 transition-all ${colorOption.name === activeColor
                   ? 'border-gray-900 dark:border-white scale-110'
                   : 'border-gray-300 dark:border-gray-600 hover:scale-105'}`}
                 style={{ backgroundColor: colorOption.color }}
                 title={colorOption.name}
+                onClick={() => setActiveColor(colorOption.name)}
               >
-                {colorOption.active && (
+                {colorOption.name === activeColor && (
                   <svg className='w-6 h-6 text-white mx-auto' fill='currentColor' viewBox='0 0 20 20'>
                     <path fillRule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clipRule='evenodd' />
                   </svg>

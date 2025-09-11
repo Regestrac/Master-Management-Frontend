@@ -15,7 +15,7 @@ import SettingsHeader from 'components/Settings/SettingsHeader';
 import SettingsNavbar from 'components/Settings/SettingsNavbar';
 
 const Settings = () => {
-  const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+  const sectionRefs = useRef<{ [key: string]: HTMLElement | null; }>({});
 
   const methods = useForm({
     defaultValues: {

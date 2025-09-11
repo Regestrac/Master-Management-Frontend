@@ -1,9 +1,30 @@
 import clsx from 'clsx';
+import { useFormContext } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 import { useProfileStore } from 'stores/profileStore';
 
+import { updateUserSettings } from 'services/settings';
+
 const SettingsHeader = () => {
   const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+
+  const { getValues } = useFormContext();
+
+  const handleSaveChanges = () => {
+    const payload = {
+      ...getValues(),
+      date_format: getValues()?.dateFormat?.value,
+      time_format: getValues()?.timeFormat?.value,
+      first_day_of_week: getValues()?.firstDayOfWeek?.value,
+      work_week: getValues()?.workWeek?.value,
+    };
+    updateUserSettings(payload).then((res) => {
+      toast.success(res.message || 'Settings updated successfully');
+    }).catch((err) => {
+      toast.error(err?.error || 'Failed to update settings');
+    });
+  };
 
   return (
     <div
@@ -26,7 +47,7 @@ const SettingsHeader = () => {
             </svg>
             <span>Reset to Defaults</span>
           </button>
-          <button className='flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors'>
+          <button onClick={handleSaveChanges} className='flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors'>
             <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M5 13l4 4L19 7' />
             </svg>
