@@ -42,7 +42,7 @@ const Settings = () => {
       <FormProvider {...methods}>
         <SettingsHeader />
 
-        <div className='mt-24'>
+        <div className='mt-24 max-sm:mt-38'>
           <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
             <SettingsNavbar sectionRefs={sectionRefs} />
 

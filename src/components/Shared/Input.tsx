@@ -20,7 +20,7 @@ type PropsType = {
   hideResizeIndicator?: boolean;
 };
 
-const Input = ({ name, label, icon, type = 'text', onBlur, hideResizeIndicator = false, ...props }: PropsType) => {
+const Input = ({ name, label, icon, type = 'text', onBlur, id, hideResizeIndicator = false, ...props }: PropsType) => {
   const [showPassword, setShowPassword] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -48,7 +48,7 @@ const Input = ({ name, label, icon, type = 'text', onBlur, hideResizeIndicator =
   return (
     <div className='w-full'>
       {label ? (
-        <label htmlFor={props?.id || name} className='block text-sm font-medium text-gray-700 mb-2'>
+        <label htmlFor={id || name} className='block text-sm font-medium text-gray-700 mb-2'>
           {label}
         </label>
       ) : null}
@@ -62,6 +62,7 @@ const Input = ({ name, label, icon, type = 'text', onBlur, hideResizeIndicator =
           <textarea
             {...field}
             {...props}
+            id={id || name}
             rows={hideResizeIndicator ? 1 : props.rows || 4}
             className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors?.[name]
               ? 'border-red-300 focus:ring-red-500'
@@ -89,12 +90,14 @@ const Input = ({ name, label, icon, type = 'text', onBlur, hideResizeIndicator =
           <input
             {...field}
             {...props}
+            id={id || name}
             type={showPassword ? 'text' : type}
             className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors?.[name]
               ? 'border-red-300 focus:ring-red-500'
               : 'border-gray-300 focus:ring-purple-500'} ${props.className || ''}`}
             onBlur={handleOnBlur}
             ref={inputRef}
+            autoComplete='on'
           />
         )}
         {type === 'password' && (

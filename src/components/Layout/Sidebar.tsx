@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { BarChart3, Building2, Calendar, CheckSquare, Home, Settings, Target, User } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -34,7 +35,12 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`${showNavbar ? 'translate transition-transform duration-700' : '-translate-x-full transition-transform duration-700'} fixed left-0 top-0 h-full w-70 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-r transition-colors duration-300 z-20`}>
+    <div className={clsx(
+      'fixed left-0 top-0 h-full w-70 border-r transition-colors duration-300 z-[60]',
+      showNavbar ? 'translate transition-transform duration-700' : '-translate-x-full transition-transform duration-700',
+      darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
+    )}
+    >
       <div className='p-6'>
         <div className='flex items-center space-x-3 mb-8'>
           <div className='w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center'>

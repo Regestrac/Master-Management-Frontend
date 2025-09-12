@@ -54,7 +54,7 @@ const Slider = ({
   return (
     <div className={clsx('space-y-2', className)}>
       {label && (
-        <label className='block text-sm font-medium'>
+        <label className='block text-sm font-medium' htmlFor={name}>
           {label}
           {showValue && (
             <span className='ml-2 text-gray-500'>
@@ -71,6 +71,8 @@ const Slider = ({
           min={min}
           max={max}
           step={step}
+          name={name}
+          id={name}
           value={currentValue}
           onChange={handleChange}
           disabled={disabled}

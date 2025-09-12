@@ -1,17 +1,25 @@
 import clsx from 'clsx';
 import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { Menu, X } from 'lucide-react';
 
 import { omit } from 'helpers/utils';
 
+import { useNavbarStore } from 'stores/navbarStore';
 import { useProfileStore } from 'stores/profileStore';
 
 import { updateUserSettings } from 'services/settings';
 
 const SettingsHeader = () => {
   const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
+  const showNavbar = useNavbarStore((state) => state.showNavbar);
 
   const { getValues } = useFormContext();
+
+  const handleSidebarToggle = () => {
+    setShowNavbar(!showNavbar);
+  };
 
   const handleSaveChanges = () => {
     const payload = {
@@ -34,16 +42,26 @@ const SettingsHeader = () => {
   return (
     <div
       className={clsx(
-        'fixed top-0 left-70 right-0 z-50 border-b px-6 py-4',
+        'fixed top-0 sm:left-70 right-0 z-50 border-b px-6 py-4',
         darkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200',
       )}
     >
       <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-4'>
-        <div>
-          <h3 className='text-2xl font-bold mb-2'>Settings & Configuration</h3>
-          <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-            Customize your TaskFlow Pro experience and manage system settings
-          </p>
+        <div className='w-full md:w-auto flex items-center justify-between'>
+          <div>
+            <h3 className='text-2xl font-bold mb-2'>Settings & Configuration</h3>
+            <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+              Customize your TaskFlow Pro experience and manage system settings
+            </p>
+          </div>
+          {/* Hamburger icon visible on small screens */}
+          <button
+            className={`sm:hidden ml-2 p-2 rounded-lg ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
+            onClick={handleSidebarToggle}
+            aria-label='Open sidebar'
+          >
+            {showNavbar ? <X className='w-6 h-6' /> : <Menu className='w-6 h-6' />}
+          </button>
         </div>
         <div className='flex items-center gap-4'>
           <button className='flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors'>

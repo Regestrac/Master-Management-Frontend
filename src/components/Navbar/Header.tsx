@@ -62,7 +62,7 @@ const Header = () => {
   };
 
   return (
-    <div className='flex flex-wrap items-start lg:items-center justify-between mb-8 gap-4'>
+    <div className='flex flex-wrap items-start lg:items-center justify-between gap-4'>
       <div className='w-full md:w-auto flex items-center justify-between'>
         <div>
           <h2 className='text-2xl md:text-3xl font-bold mb-1 md:mb-2 lg:whitespace-nowrap'>
@@ -92,6 +92,7 @@ const Header = () => {
               type='text'
               value={searchKeyValue}
               placeholder='Search...'
+              name='searchKey'
               onChange={handleSearchChange}
               className={clsx(
                 'pl-10 pr-4 py-2 w-full rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500',

@@ -47,6 +47,7 @@ function SelectField<T extends boolean>({
             onChange(selectedOption);
           }
         }}
+        inputId={name}
         isDisabled={disabled}
         placeholder={placeholder}
         classNames={darkTheme ? {
