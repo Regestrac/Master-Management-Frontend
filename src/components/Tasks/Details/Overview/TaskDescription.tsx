@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -14,14 +16,11 @@ const TaskDescription = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
 
+  const taskDetailsRef = useRef({});
+
   const { id } = useParams();
 
-  const methods = useForm({
-    defaultValues: {
-      title: taskDetails?.title,
-      description: taskDetails?.description,
-    },
-  });
+  const methods = useForm();
 
   const { reset, getValues } = methods;
 
@@ -41,6 +40,13 @@ const TaskDescription = () => {
       handleUpdateTask({ description: getValues('description') });
     }
   };
+
+  useEffect(() => {
+    if (taskDetails !== taskDetailsRef.current) {
+      reset(taskDetails);
+      taskDetailsRef.current = taskDetails;
+    }
+  }, [reset, taskDetails]);
 
   return (
     <FormProvider {...methods}>

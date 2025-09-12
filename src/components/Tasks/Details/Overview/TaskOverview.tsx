@@ -22,9 +22,7 @@ const TaskOverview = () => {
   useEffect(() => {
     if (id && shouldFetchTask.current) {
       getTask(id).then((fetchedTask) => {
-        if (fetchedTask) {
-          updateCurrentTaskDetails(fetchedTask?.data);
-        }
+        updateCurrentTaskDetails(fetchedTask?.data);
         // setIsLoading(false);
       }).catch((err) => {
         toast.error(err?.error || 'Failed to fetch task details.');
@@ -32,10 +30,6 @@ const TaskOverview = () => {
       });
       shouldFetchTask.current = false;
     }
-
-    return () => {
-      shouldFetchTask.current = true;
-    };
   }, [id, updateCurrentTaskDetails]);
 
   return (
