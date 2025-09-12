@@ -27,13 +27,12 @@ const Settings = () => {
       shortBreak: 5,
       longBreak: 20,
       autoStartBreaks: true,
-      longBreakAfter: { value: '4', label: '4 Sessions' },
-      defaultGoalDuration: { value: '30', label: '30 minutes' },
-      weeklyTargetHours: { value: '5', label: '5 hours' },
+      longBreakAfter: { value: 4, label: '4 Sessions' },
+      defaultGoalDuration: { value: 30, label: '30 minutes' },
+      weeklyTargetHours: { value: 5, label: '5 hours' },
     },
   });
 
-  // Set section ref
   const setSectionRef = (id: string) => (el: HTMLElement | null) => {
     sectionRefs.current[id] = el;
   };
@@ -43,12 +42,10 @@ const Settings = () => {
       <FormProvider {...methods}>
         <SettingsHeader />
 
-        {/* Main Content with top margin to account for fixed header */}
-        <div className='mt-24 px-6'>
-          <div className='grid grid-cols-1 lg:grid-cols-4 gap-8'>
+        <div className='mt-24'>
+          <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
             <SettingsNavbar sectionRefs={sectionRefs} />
 
-            {/* Settings Content */}
             <div className='lg:col-span-3 space-y-8'>
               <div ref={setSectionRef('general')}>
                 <GeneralSettings />

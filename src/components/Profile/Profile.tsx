@@ -105,8 +105,8 @@ const Profile = () => {
         hasChanges={isDirty}
       />
 
-      <div className='mt-24 px-6'>
-        <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
+      <div className='mt-24'>
+        <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
           {/* Profile Sidebar - Limited scroll container */}
           <div className='lg:col-span-1'>
             <div className='h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent no-scrollbar'>

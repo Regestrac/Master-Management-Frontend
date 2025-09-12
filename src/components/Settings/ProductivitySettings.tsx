@@ -8,28 +8,28 @@ import Slider from 'components/Shared/Slider';
 
 // Long break sessions options
 const longBreakSessionsOptions: SelectOptionType[] = [
-  { label: '2 sessions', value: '2' },
-  { label: '3 sessions', value: '3' },
-  { label: '4 sessions', value: '4' },
-  { label: '5 sessions', value: '5' },
+  { label: '2 sessions', value: 2 },
+  { label: '3 sessions', value: 3 },
+  { label: '4 sessions', value: 4 },
+  { label: '5 sessions', value: 5 },
 ];
 
 // Goal duration options
 const goalDurationOptions: SelectOptionType[] = [
-  { label: '30 minutes', value: '30' },
-  { label: '1 hour', value: '1' },
-  { label: '2 hours', value: '2' },
-  { label: '3 hours', value: '3' },
-  { label: '4 hours', value: '4' },
+  { label: '30 minutes', value: 30 },
+  { label: '1 hour', value: 1 },
+  { label: '2 hours', value: 2 },
+  { label: '3 hours', value: 3 },
+  { label: '4 hours', value: 4 },
 ];
 
 // Weekly target hours options
 const weeklyTargetOptions: SelectOptionType[] = [
-  { label: '5 hours', value: '5' },
-  { label: '10 hours', value: '10' },
-  { label: '15 hours', value: '15' },
-  { label: '20 hours', value: '20' },
-  { label: '25 hours', value: '25' },
+  { label: '5 hours', value: 5 },
+  { label: '10 hours', value: 10 },
+  { label: '15 hours', value: 15 },
+  { label: '20 hours', value: 20 },
+  { label: '25 hours', value: 25 },
 ];
 
 const ProductivitySettings = () => {

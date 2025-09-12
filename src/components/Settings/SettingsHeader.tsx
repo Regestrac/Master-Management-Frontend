@@ -2,6 +2,8 @@ import clsx from 'clsx';
 import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
+import { omit } from 'helpers/utils';
+
 import { useProfileStore } from 'stores/profileStore';
 
 import { updateUserSettings } from 'services/settings';
@@ -13,11 +15,14 @@ const SettingsHeader = () => {
 
   const handleSaveChanges = () => {
     const payload = {
-      ...getValues(),
+      ...omit(getValues(), ['dateFormat', 'timeFormat', 'firstDayOfWeek', 'workWeek', 'longBreakAfter', 'defaultGoalDuration', 'weeklyTargetHours']),
       date_format: getValues()?.dateFormat?.value,
       time_format: getValues()?.timeFormat?.value,
       first_day_of_week: getValues()?.firstDayOfWeek?.value,
       work_week: getValues()?.workWeek?.value,
+      long_break_after: getValues()?.longBreakAfter?.value,
+      goal_duration: getValues()?.defaultGoalDuration?.value,
+      weekly_target_hours: getValues()?.weeklyTargetHours?.value,
     };
     updateUserSettings(payload).then((res) => {
       toast.success(res.message || 'Settings updated successfully');
