@@ -33,8 +33,3 @@ export const deleteGoal = (goalId: string | number) => postHandler({
 export const getGoalStats = () => getHandler({
   path: 'goals/stats',
 });
-
-// Get active goals (currently being worked on)
-export const getActiveGoals = () => getHandler({
-  path: 'goals/active',
-});

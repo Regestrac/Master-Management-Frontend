@@ -8,9 +8,9 @@ import { formatTimeElapsed } from 'helpers/utils';
 
 import { useProfileStore } from 'stores/profileStore';
 
-import { getActiveGoals } from 'services/goals';
+import { getActiveGoals } from 'services/dashboard';
 
-import QuickActions from './QuickActions';
+import QuickActions from 'components/Dashboard/QuickActions';
 
 type ActiveGoalType = {
   id: number;

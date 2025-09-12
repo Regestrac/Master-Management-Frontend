@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import TaskCard from 'components/Tasks/TaskCard';
+import { getRecentTasks } from 'services/dashboard';
 
-import { getRecentTasks } from 'src/services/tasks';
+import TaskCard from 'components/Tasks/TaskCard';
 
 type RecentTaskType = {
   id: number;

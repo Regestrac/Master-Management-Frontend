@@ -43,10 +43,6 @@ export const saveSubTasks = (taskId: string, data: object) => postHandler({
   body: JSON.stringify(data),
 });
 
-export const getRecentTasks = () => getHandler({
-  path: 'recent-tasks',
-});
-
 export const getTasksStats = () => getHandler({
   path: 'tasks/stats',
 });

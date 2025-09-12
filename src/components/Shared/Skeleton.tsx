@@ -63,8 +63,8 @@ const Skeleton: React.FC<SkeletonProps> = ({
   // shimmer (default alternative): animated gradient passes through
   const shimmerStyle: React.CSSProperties = {
     backgroundImage: 'linear-gradient(135deg, rgba(229,231,235,0.05) 10%, rgba(243,244,246,0.4) 20%, rgba(229,231,235,0.05) 30%)',
-    backgroundSize: '200% 100%',
-    animation: `skeleton-shimmer ${durationMs ? durationMs : 2500}ms linear infinite` as any,
+    backgroundSize: '400% 400%',
+    animation: `skeleton-shimmer ${durationMs ? durationMs : 3500}ms linear infinite` as any,
   };
 
   // adapt colors for dark mode via currentColor overlay trick is tricky; keep base dark bg via baseClass
