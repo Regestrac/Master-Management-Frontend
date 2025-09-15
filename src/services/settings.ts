@@ -8,13 +8,14 @@ export const getUserSettings = () => getHandler({
 // Update the current user's settings
 export const updateUserSettings = (data: object) => postHandler({
   path: 'settings',
-  method: 'PUT',
+  method: 'PATCH',
   body: JSON.stringify(data),
 });
 
 // Reset the current user's settings to defaults
 export const resetUserSettings = () => postHandler({
   path: 'settings/reset',
+  method: 'PUT',
 });
 
 // Delete all data for the current user (irreversible)

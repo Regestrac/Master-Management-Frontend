@@ -1,6 +1,19 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+
+import {
+  DATE_FORMAT_OPTIONS,
+  FIRST_DAY_OPTIONS,
+  TIME_FORMAT_OPTIONS,
+  WORK_WEEK_OPTIONS,
+  GOAL_DURATION_OPTIONS,
+  LONG_BREAK_SESSIONS_OPTIONS,
+  WEEKLY_TARGET_OPTIONS,
+} from 'helpers/configs';
+
+import { getUserSettings } from 'services/settings';
 
 import GeneralSettings from 'components/Settings/GeneralSettings';
 import AppearanceSettings from 'components/Settings/AppearanceSettings';
@@ -14,24 +27,40 @@ import Integrations from 'components/Settings/Integrations';
 import SettingsHeader from 'components/Settings/SettingsHeader';
 import SettingsNavbar from 'components/Settings/SettingsNavbar';
 
+const getDefaultValues = (settings?: Record<string, string | number | boolean>) => ({
+  focusDuration: 25,
+  shortBreak: 5,
+  longBreak: 20,
+  autoStartBreaks: true,
+  dateFormat: DATE_FORMAT_OPTIONS.find((option) => option.value === settings?.date_format) || { value: 'MM/DD/YYYY', label: 'MM/DD/YYYY (US)' },
+  timeFormat: TIME_FORMAT_OPTIONS.find((option) => option.value === settings?.time_format) || { value: '12', label: '12-hour (AM/PM)' },
+  firstDayOfWeek: FIRST_DAY_OPTIONS.find((option) => option.value === settings?.first_day_of_week) || { value: 'sunday', label: 'Sunday' },
+  workWeek: WORK_WEEK_OPTIONS.find((option) => option.value === settings?.work_week) || { value: '5', label: 'Monday to Friday (5 days)' },
+  longBreakAfter: LONG_BREAK_SESSIONS_OPTIONS.find((option) => option.value === settings?.long_break_after) || { value: 4, label: '4 Sessions' },
+  defaultGoalDuration: GOAL_DURATION_OPTIONS.find((option) => option.value === settings?.default_goal_duration) || { value: 30, label: '30 minutes' },
+  weeklyTargetHours: WEEKLY_TARGET_OPTIONS.find((option) => option.value === settings?.weekly_target_hours) || { value: 5, label: '5 hours' },
+});
+
 const Settings = () => {
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null; }>({});
+  const shouldFetchSettingsRef = useRef(true);
 
   const methods = useForm({
-    defaultValues: {
-      dateFormat: { value: 'MM/DD/YYYY', label: 'MM/DD/YYYY (US)' },
-      timeFormat: { value: '12', label: '12-hour (AM/PM)' },
-      firstDayOfWeek: { value: 'sunday', label: 'Sunday' },
-      workWeek: { value: '5', label: 'Monday to Friday (5 days)' },
-      focusDuration: 25,
-      shortBreak: 5,
-      longBreak: 20,
-      autoStartBreaks: true,
-      longBreakAfter: { value: 4, label: '4 Sessions' },
-      defaultGoalDuration: { value: 30, label: '30 minutes' },
-      weeklyTargetHours: { value: 5, label: '5 hours' },
-    },
+    defaultValues: getDefaultValues(),
   });
+
+  const { reset } = methods;
+
+  useEffect(() => {
+    if (shouldFetchSettingsRef.current) {
+      getUserSettings().then((res) => {
+        reset(getDefaultValues(res?.settings));
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to fetch settings');
+      });
+      shouldFetchSettingsRef.current = false;
+    }
+  }, [reset]);
 
   const setSectionRef = (id: string) => (el: HTMLElement | null) => {
     sectionRefs.current[id] = el;

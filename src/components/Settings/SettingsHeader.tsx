@@ -8,14 +8,14 @@ import { omit } from 'helpers/utils';
 import { useNavbarStore } from 'stores/navbarStore';
 import { useProfileStore } from 'stores/profileStore';
 
-import { updateUserSettings } from 'services/settings';
+import { resetUserSettings, updateUserSettings } from 'services/settings';
 
 const SettingsHeader = () => {
   const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
   const showNavbar = useNavbarStore((state) => state.showNavbar);
 
-  const { getValues } = useFormContext();
+  const { getValues, reset } = useFormContext();
 
   const handleSidebarToggle = () => {
     setShowNavbar(!showNavbar);
@@ -36,6 +36,30 @@ const SettingsHeader = () => {
       toast.success(res.message || 'Settings updated successfully');
     }).catch((err) => {
       toast.error(err?.error || 'Failed to update settings');
+    });
+  };
+
+  const handleResetDefaults = () => {
+    resetUserSettings().then((res) => {
+      toast.success(res?.message || 'Settings reset to defaults');
+      // return getUserSettings();
+    }).then(() => {
+      const defaultValues = {
+        focusDuration: 25,
+        shortBreak: 5,
+        longBreak: 20,
+        autoStartBreaks: true,
+        dateFormat: { value: 'MM/DD/YYYY', label: 'MM/DD/YYYY (US)' },
+        timeFormat: { value: '12', label: '12-hour (AM/PM)' },
+        firstDayOfWeek: { value: 'sunday', label: 'Sunday' },
+        workWeek: { value: '5', label: 'Monday to Friday (5 days)' },
+        longBreakAfter: { value: 4, label: '4 Sessions' },
+        defaultGoalDuration: { value: 30, label: '30 minutes' },
+        weeklyTargetHours: { value: 5, label: '5 hours' },
+      };
+      reset(defaultValues);
+    }).catch((err) => {
+      toast.error(err?.error || 'Failed to reset settings');
     });
   };
 
@@ -64,7 +88,7 @@ const SettingsHeader = () => {
           </button>
         </div>
         <div className='flex items-center gap-4'>
-          <button className='flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors'>
+          <button onClick={handleResetDefaults} className='flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors'>
             <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15' />
             </svg>

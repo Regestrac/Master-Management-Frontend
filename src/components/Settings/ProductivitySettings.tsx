@@ -1,36 +1,10 @@
-import { SelectOptionType } from 'helpers/sharedTypes';
+import { GOAL_DURATION_OPTIONS, LONG_BREAK_SESSIONS_OPTIONS, WEEKLY_TARGET_OPTIONS } from 'helpers/configs';
 
 import { useProfileStore } from 'stores/profileStore';
 
 import SelectField from 'components/Shared/SelectField';
 import Switch from 'components/Shared/Switch';
 import Slider from 'components/Shared/Slider';
-
-// Long break sessions options
-const longBreakSessionsOptions: SelectOptionType[] = [
-  { label: '2 sessions', value: 2 },
-  { label: '3 sessions', value: 3 },
-  { label: '4 sessions', value: 4 },
-  { label: '5 sessions', value: 5 },
-];
-
-// Goal duration options
-const goalDurationOptions: SelectOptionType[] = [
-  { label: '30 minutes', value: 30 },
-  { label: '1 hour', value: 1 },
-  { label: '2 hours', value: 2 },
-  { label: '3 hours', value: 3 },
-  { label: '4 hours', value: 4 },
-];
-
-// Weekly target hours options
-const weeklyTargetOptions: SelectOptionType[] = [
-  { label: '5 hours', value: 5 },
-  { label: '10 hours', value: 10 },
-  { label: '15 hours', value: 15 },
-  { label: '20 hours', value: 20 },
-  { label: '25 hours', value: 25 },
-];
 
 const ProductivitySettings = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
@@ -93,7 +67,7 @@ const ProductivitySettings = () => {
               </div>
               <SelectField
                 name='longBreakAfter'
-                options={longBreakSessionsOptions}
+                options={LONG_BREAK_SESSIONS_OPTIONS}
                 isMulti={false}
               />
             </div>
@@ -108,7 +82,7 @@ const ProductivitySettings = () => {
               <label className='block text-sm font-medium mb-2'>Default Goal Duration</label>
               <SelectField
                 name='defaultGoalDuration'
-                options={goalDurationOptions}
+                options={GOAL_DURATION_OPTIONS}
                 isMulti={false}
               />
             </div>
@@ -116,7 +90,7 @@ const ProductivitySettings = () => {
               <label className='block text-sm font-medium mb-2'>Weekly Target Hours</label>
               <SelectField
                 name='weeklyTargetHours'
-                options={weeklyTargetOptions}
+                options={WEEKLY_TARGET_OPTIONS}
                 isMulti={false}
               />
             </div>

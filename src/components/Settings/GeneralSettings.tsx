@@ -1,39 +1,8 @@
-import { SelectOptionType } from 'helpers/sharedTypes';
+import { DATE_FORMAT_OPTIONS, FIRST_DAY_OPTIONS, TIME_FORMAT_OPTIONS, WORK_WEEK_OPTIONS } from 'helpers/configs';
 
 import { useProfileStore } from 'stores/profileStore';
 
 import SelectField from 'components/Shared/SelectField';
-
-// Date format options
-const dateFormatOptions: SelectOptionType[] = [
-  { label: 'MM/DD/YYYY (US)', value: 'MM/DD/YYYY' },
-  { label: 'DD/MM/YYYY (UK)', value: 'DD/MM/YYYY' },
-  { label: 'YYYY-MM-DD (ISO)', value: 'YYYY-MM-DD' },
-  { label: 'DD.MM.YYYY (German)', value: 'DD.MM.YYYY' },
-  { label: 'MM-DD-YYYY', value: 'MM-DD-YYYY' },
-  { label: 'DD-MM-YYYY', value: 'DD-MM-YYYY' },
-];
-
-// Time format options
-const timeFormatOptions: SelectOptionType[] = [
-  { label: '12-hour (AM/PM)', value: '12' },
-  { label: '24-hour', value: '24' },
-];
-
-// First day of week options
-const firstDayOptions: SelectOptionType[] = [
-  { label: 'Sunday', value: 'sunday' },
-  { label: 'Monday', value: 'monday' },
-  { label: 'Saturday', value: 'saturday' },
-];
-
-// Work week options
-const workWeekOptions: SelectOptionType[] = [
-  { label: 'Monday to Friday (5 days)', value: '5' },
-  { label: 'Monday to Saturday (6 days)', value: '6' },
-  { label: 'Full Week (7 days)', value: '7' },
-  { label: 'Custom', value: 'custom' },
-];
 
 // Default startup page options
 // const startupPageOptions: SelectOptionType[] = [
@@ -63,14 +32,14 @@ const GeneralSettings = () => {
             <SelectField
               name='dateFormat'
               label='Date Format'
-              options={dateFormatOptions}
+              options={DATE_FORMAT_OPTIONS}
               isMulti={false}
               placeholder='Select date format...'
             />
             <SelectField
               name='timeFormat'
               label='Time Format'
-              options={timeFormatOptions}
+              options={TIME_FORMAT_OPTIONS}
               isMulti={false}
               placeholder='Select time format...'
             />
@@ -84,14 +53,14 @@ const GeneralSettings = () => {
             <SelectField
               name='firstDayOfWeek'
               label='First Day of Week'
-              options={firstDayOptions}
+              options={FIRST_DAY_OPTIONS}
               isMulti={false}
               placeholder='Select first day...'
             />
             <SelectField
               name='workWeek'
               label='Work Week'
-              options={workWeekOptions}
+              options={WORK_WEEK_OPTIONS}
               isMulti={false}
               placeholder='Select work week...'
             />
