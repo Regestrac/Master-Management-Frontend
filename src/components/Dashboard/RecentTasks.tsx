@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { getRecentTasks } from 'services/dashboard';
 
 import TaskCard from 'components/Tasks/TaskCard';
+import TaskSkeleton from 'components/Dashboard/TaskSkeleton';
 
 type RecentTaskType = {
   id: number;
@@ -19,6 +20,7 @@ type RecentTaskType = {
 
 const RecentTasks = () => {
   const [recentTasks, setRecentTasks] = useState<RecentTaskType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   const shouldFetchRecentTasksRef = useRef(true);
@@ -29,10 +31,13 @@ const RecentTasks = () => {
 
   useEffect(() => {
     if (shouldFetchRecentTasksRef.current) {
+      setIsLoading(true);
       getRecentTasks().then((res) => {
         setRecentTasks(res?.data || []);
       }).catch((err) => {
         toast.error(err?.error || 'Failed to fetch recent tasks');
+      }).finally(() => {
+        setIsLoading(false);
       });
       shouldFetchRecentTasksRef.current = false;
     }
@@ -50,9 +55,15 @@ const RecentTasks = () => {
       </div>
 
       <div className='space-y-4'>
-        {recentTasks.map((task) => (
-          <TaskCard key={task.id} task={task as any} />
-        ))}
+        {isLoading ? (
+          Array.from({ length: 5 }).map((_, index) => (
+            <TaskSkeleton key={index} />
+          ))
+        ) : (
+          recentTasks.map((task) => (
+            <TaskCard key={task.id} task={task as any} />
+          ))
+        )}
       </div>
     </div>
   );
