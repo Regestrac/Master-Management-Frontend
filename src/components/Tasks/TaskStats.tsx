@@ -8,6 +8,8 @@ import { useProfileStore } from 'stores/profileStore';
 
 import { getTasksStats } from 'services/tasks';
 
+import TaskStatsSkeleton from 'components/Tasks/TaskStatsSkeleton';
+
 const getStatsGradients = (item: string) => {
   switch (item) {
     case 'total':
@@ -31,6 +33,7 @@ const getStatsGradients = (item: string) => {
 
 const TaskStats = () => {
   const [taskStats, setTaskStats] = useState([] as { status: string; count: number; }[]);
+  const [loading, setLoading] = useState(true);
 
   const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
 
@@ -40,12 +43,18 @@ const TaskStats = () => {
     if (fetchStatsRef.current) {
       getTasksStats().then((res) => {
         setTaskStats(res.data);
+        setLoading(false);
       }).catch((err) => {
         toast.error(err?.error || 'Error fetching task stats');
+        setLoading(false);
       });
       fetchStatsRef.current = false;
     }
   }, []);
+
+  if (loading) {
+    return <TaskStatsSkeleton />;
+  }
 
   return (
     <div className='grid grid-cols-2 xl:grid-cols-7 lg:grid-cols-5 md:grid-cols-4 gap-4 mb-8'>
