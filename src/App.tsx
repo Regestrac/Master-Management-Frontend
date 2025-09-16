@@ -3,8 +3,6 @@ import { ToastContainer } from 'react-toastify';
 
 import useCustomNavigation from 'hooks/useCustomNavigation';
 
-import { ThemeProvider } from 'context/ThemeContext';
-
 import Modals from 'components/Modals';
 
 import routes from './routes/routes';
@@ -15,7 +13,7 @@ function App() {
   const appRoutes = useRoutes(routes);
 
   return (
-    <ThemeProvider>
+    <>
 
       {appRoutes}
 
@@ -33,7 +31,7 @@ function App() {
 
       <Modals />
 
-    </ThemeProvider>
+    </>
   );
 }
 

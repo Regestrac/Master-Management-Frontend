@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { colorPalettes, setPrimaryPalette } from 'helpers/themeHelpers';
+
 import { useProfileStore } from 'stores/profileStore';
 
 type ThemeModeType = 'light' | 'dark' | 'auto';
@@ -108,6 +110,13 @@ const AppearanceSettings = () => {
     updateProfile({ theme: isDark ? 'dark' : 'light' });
   };
 
+  const handleAccentChange = (accentName: string) => {
+    const palette = colorPalettes[accentName];
+    if (palette) {
+      setPrimaryPalette(palette);
+    }
+  };
+
   return (
     <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
       <h4 className='text-xl font-bold mb-6 flex items-center'>
@@ -168,7 +177,10 @@ const AppearanceSettings = () => {
                   : 'border-gray-300 dark:border-gray-600 hover:scale-105'}`}
                 style={{ backgroundColor: colorOption.color }}
                 title={colorOption.name}
-                onClick={() => setActiveColor(colorOption.name)}
+                onClick={() => {
+                  setActiveColor(colorOption.name);
+                  handleAccentChange(colorOption.name);
+                }}
               >
                 {colorOption.name === activeColor && (
                   <svg className='w-6 h-6 text-white mx-auto' fill='currentColor' viewBox='0 0 20 20'>

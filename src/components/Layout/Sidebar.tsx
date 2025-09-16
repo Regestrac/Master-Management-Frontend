@@ -25,7 +25,7 @@ const Sidebar = () => {
 
   const getCurrentMenuStatus = (menuItem: string) => {
     if (pathname.includes(menuItem)) {
-      return 'bg-purple-500 text-white';
+      return 'bg-primary-500 text-white';
     }
     return darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100';
   };
@@ -54,7 +54,10 @@ const Sidebar = () => {
             <button
               key={id}
               onClick={() => handleNavLinkClick(id)}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors cursor-pointer ${getCurrentMenuStatus(id)}`}
+              className={clsx(
+                'w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors cursor-pointer',
+                getCurrentMenuStatus(id),
+              )}
             >
               <Icon className='w-5 h-5' />
               <span>{label}</span>
