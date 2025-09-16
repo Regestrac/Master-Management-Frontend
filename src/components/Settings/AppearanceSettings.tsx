@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 
+import { toast } from 'react-toastify';
+
 import { colorPalettes, setPrimaryPalette } from 'helpers/themeHelpers';
 
 import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
+
+import { updateUserSettings } from 'services/settings';
 
 type ThemeModeType = 'light' | 'dark' | 'auto';
 
@@ -22,28 +27,28 @@ type ThemeModeType = 'light' | 'dark' | 'auto';
 
 const accentColorOptions = [
   { name: 'Purple', color: '#A855F7' },
-  { name: 'Blue', color: '#3B82F6' },
-  { name: 'Green', color: '#10B981' },
-  { name: 'Red', color: '#EF4444' },
-  { name: 'Orange', color: '#F59E0B' },
-  { name: 'Pink', color: '#EC4899' },
+  { name: 'Violet', color: '#8B5CF6' },
   { name: 'Indigo', color: '#6366F1' },
-  { name: 'Teal', color: '#14B8A6' },
+  { name: 'Blue', color: '#3B82F6' },
   { name: 'Cyan', color: '#06B6D4' },
+  { name: 'Green', color: '#10B981' },
   { name: 'Emerald', color: '#059669' },
+  { name: 'Teal', color: '#14B8A6' },
   { name: 'Lime', color: '#65A30D' },
   { name: 'Yellow', color: '#EAB308' },
+  { name: 'Orange', color: '#F59E0B' },
   { name: 'Amber', color: '#D97706' },
-  { name: 'Rose', color: '#F43F5E' },
+  { name: 'Pink', color: '#EC4899' },
   { name: 'Fuchsia', color: '#D946EF' },
-  { name: 'Violet', color: '#8B5CF6' },
+  { name: 'Rose', color: '#F43F5E' },
+  { name: 'Red', color: '#EF4444' },
 ];
 
 const AppearanceSettings = () => {
-  const [activeColor, setActiveColor] = useState('Purple');
-
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const accentColor = useSettingsStore((state) => state.settings.accent_color);
   const updateProfile = useProfileStore((state) => state.updateProfile);
+  const updateSettings = useSettingsStore((state) => state.updateSettings);
 
   // Theme mode state persisted in localStorage
   const [themeMode, setThemeMode] = useState<ThemeModeType>(() => {
@@ -103,17 +108,28 @@ const AppearanceSettings = () => {
     updateProfile({ theme: 'dark' });
   };
 
+  const saveUserSettings = (payload: object) => {
+    updateUserSettings(payload).then((res) => {
+      toast.success(res.message || 'Settings updated successfully');
+      updateSettings(payload);
+    }).catch((err) => {
+      toast.error(err?.error || 'Failed to update settings');
+    });
+  };
+
   const handleSetAuto = () => {
     setThemeMode('auto');
     // Immediately set current system theme
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     updateProfile({ theme: isDark ? 'dark' : 'light' });
+    saveUserSettings({ theme: isDark ? 'dark' : 'light' });
   };
 
   const handleAccentChange = (accentName: string) => {
     const palette = colorPalettes[accentName];
     if (palette) {
       setPrimaryPalette(palette);
+      saveUserSettings({ accent_color: accentName });
     }
   };
 
@@ -172,17 +188,14 @@ const AppearanceSettings = () => {
             {accentColorOptions?.map((colorOption, index) => (
               <button
                 key={index}
-                className={`w-12 h-12 rounded-lg border-2 transition-all ${colorOption.name === activeColor
+                className={`w-12 h-12 rounded-lg border-2 transition-all ${colorOption.name === accentColor
                   ? 'border-gray-900 dark:border-white scale-110'
                   : 'border-gray-300 dark:border-gray-600 hover:scale-105'}`}
                 style={{ backgroundColor: colorOption.color }}
                 title={colorOption.name}
-                onClick={() => {
-                  setActiveColor(colorOption.name);
-                  handleAccentChange(colorOption.name);
-                }}
+                onClick={() => handleAccentChange(colorOption.name)}
               >
-                {colorOption.name === activeColor && (
+                {colorOption.name === accentColor && (
                   <svg className='w-6 h-6 text-white mx-auto' fill='currentColor' viewBox='0 0 20 20'>
                     <path fillRule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clipRule='evenodd' />
                   </svg>

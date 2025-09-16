@@ -12,6 +12,9 @@ import {
   LONG_BREAK_SESSIONS_OPTIONS,
   WEEKLY_TARGET_OPTIONS,
 } from 'helpers/configs';
+import { colorPalettes, setPrimaryPalette } from 'helpers/themeHelpers';
+
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getUserSettings } from 'services/settings';
 
@@ -42,6 +45,8 @@ const getDefaultValues = (settings?: Record<string, string | number | boolean>) 
 });
 
 const Settings = () => {
+  const updateSettings = useSettingsStore((state) => state.updateSettings);
+
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null; }>({});
   const shouldFetchSettingsRef = useRef(true);
 
@@ -55,12 +60,17 @@ const Settings = () => {
     if (shouldFetchSettingsRef.current) {
       getUserSettings().then((res) => {
         reset(getDefaultValues(res?.settings));
+        const palette = colorPalettes[res?.settings?.accent_color];
+        if (palette) {
+          setPrimaryPalette(palette);
+        }
+        updateSettings(res?.settings);
       }).catch((err) => {
         toast.error(err?.error || 'Failed to fetch settings');
       });
       shouldFetchSettingsRef.current = false;
     }
-  }, [reset]);
+  }, [reset, updateSettings]);
 
   const setSectionRef = (id: string) => (el: HTMLElement | null) => {
     sectionRefs.current[id] = el;
