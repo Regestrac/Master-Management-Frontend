@@ -21,6 +21,8 @@ import CreateForm from 'components/Workspace/Details/CreateForm';
 import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
 import Dropdown from 'components/Shared/Dropdown';
 
+import TaskListSkeleton from './TaskListSkeleton';
+
 const formatDueDate = (dateString: string) => {
   const date = new Date(dateString);
   if (Number.isNaN(date.getTime())) {
@@ -32,6 +34,7 @@ const formatDueDate = (dateString: string) => {
 const TaskList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
   const members = useWorkspaceStore((state) => state.members);
@@ -65,10 +68,13 @@ const TaskList = () => {
 
   const fetchTasks = useMemo(() => debounce((searchKey: string) => {
     if (id) {
+      setIsLoading(true);
       getWorkspaceTasks(id, searchKey).then((res) => {
         setTasks(res.tasks);
       }).catch((err) => {
         toast.error(err?.error);
+      }).finally(() => {
+        setIsLoading(false);
       });
     }
   }, 200), [id]);
@@ -151,119 +157,125 @@ const TaskList = () => {
 
   return (
     <div id='tab-panel-tasks' role='tabpanel' aria-labelledby='tab-tasks'>
-      <div className='flex items-center gap-2 mb-3'>
-        <h3 className='text-sm font-medium opacity-80'>All tasks</h3>
-        <span className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>
-          {tasks.length}
-        </span>
-        <div className='flex items-center justify-end gap-2 flex-1'>
-          <button
-            type='button'
-            onClick={() => setIsVisible(true)}
-            className={clsx(
-              'inline-flex items-center gap-1 text-xs px-2 py-1 rounded border transition cursor-pointer',
-              darkMode ? 'border-gray-700 text-primary-300 hover:bg-gray-900' : 'border-gray-200 text-primary-700 hover:bg-gray-100',
+      {isLoading ? (
+        <TaskListSkeleton count={8} />
+      ) : (
+        <>
+          <div className='flex items-center gap-2 mb-3'>
+            <h3 className='text-sm font-medium opacity-80'>All tasks</h3>
+            <span className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>
+              {tasks.length}
+            </span>
+            <div className='flex items-center justify-end gap-2 flex-1'>
+              <button
+                type='button'
+                onClick={() => setIsVisible(true)}
+                className={clsx(
+                  'inline-flex items-center gap-1 text-xs px-2 py-1 rounded border transition cursor-pointer',
+                  darkMode ? 'border-gray-700 text-primary-300 hover:bg-gray-900' : 'border-gray-200 text-primary-700 hover:bg-gray-100',
+                )}
+                title='Create task'
+              >
+                <Plus className='w-3 h-3' />
+                New
+              </button>
+            </div>
+          </div>
+          <ul className='space-y-3'>
+            {isVisible && (
+              <CreateForm
+                onSubmit={handleSubmit}
+                onCancle={() => setIsVisible(false)}
+                placeholder='Task title'
+              />
             )}
-            title='Create task'
-          >
-            <Plus className='w-3 h-3' />
-            New
-          </button>
-        </div>
-      </div>
-      <ul className='space-y-3'>
-        {isVisible && (
-          <CreateForm
-            onSubmit={handleSubmit}
-            onCancle={() => setIsVisible(false)}
-            placeholder='Task title'
-          />
-        )}
-        {tasks.length < 1 ? (
-          <p className='text-gray-400 dark:text-gray-600'>No tasks yet.</p>
-        ) : (
-          tasks.map((task) => (
-            <li
-              key={task.id}
-              onClick={() => handleTaskClick(task.id)}
-              className={clsx(
-                'group flex items-center gap-4 rounded-lg border px-4 py-3 shadow-sm hover:shadow transition cursor-pointer',
-                darkMode ? 'border-gray-700 bg-gray-800 hover:bg-gray-700' : 'border-gray-200 bg-gray-50 hover:bg-gray-100',
-              )}
-            >
-              <div className='flex items-center gap-3 min-w-0 flex-1'>
-                <div className='w-24 shrink-0 flex items-center h-full' data-dropdown>
-                  <Dropdown
-                    options={STATUS_OPTIONS}
-                    value={task.status}
-                    onSelect={(newStatus) => newStatus && handleStatusUpdate(task.id, newStatus)}
-                    isMulti={false}
-                    hideClear
-                  >
-                    <span
-                      className={clsx(
-                        'inline-block max-w-full truncate text-xs px-3 py-1 rounded-xl transition',
-                        getStatusColor(task.status as StatusType),
-                      )}
-                    >
-                      {task.status?.toUpperCase()}
-                    </span>
-                  </Dropdown>
-                </div>
-                <InlineEditableTitle
-                  title={task.title}
-                  onSave={(newTitle) => handleTitleUpdate(task.id, newTitle)}
-                  placeholder='Enter task title...'
-                />
-              </div>
-
-              <div className='flex items-center gap-2' data-dropdown>
-                <Dropdown
-                  options={memberOptions}
-                  value={task?.assignees || []}
-                  onSelect={(newAssignees) => handleAssigneesUpdate(task.id, newAssignees || [])}
-                  isMulti={true}
-                  hideClear
+            {tasks.length < 1 ? (
+              <p className='text-gray-400 dark:text-gray-600'>No tasks yet.</p>
+            ) : (
+              tasks.map((task) => (
+                <li
+                  key={task.id}
+                  onClick={() => handleTaskClick(task.id)}
+                  className={clsx(
+                    'group flex items-center gap-4 rounded-lg border px-4 py-3 shadow-sm hover:shadow transition cursor-pointer',
+                    darkMode ? 'border-gray-700 bg-gray-800 hover:bg-gray-700' : 'border-gray-200 bg-gray-50 hover:bg-gray-100',
+                  )}
                 >
-                  <div className='flex items-center gap-1'>
-                    {task?.assignees?.length > 0 ? (
-                      <div className='flex items-center -space-x-2'>
-                        {task.assignees.map((userId) => {
-                          const member = memberMap.get(userId);
-                          if (!member) {
-                            return null;
-                          }
-                          return (
-                            <MemberAvatar
-                              color={member.profile_color}
-                              key={`assignee-${task.id}-${userId}`}
-                              member={member}
-                              size='sm'
-                              className='border-gray-700 dark:border-white'
-                            />
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <div className={clsx(
-                        'w-8 h-8 rounded-full border-2 border-dashed flex items-center justify-center',
-                        darkMode ? 'border-gray-600 text-gray-500' : 'border-gray-300 text-gray-400',
-                      )}
+                  <div className='flex items-center gap-3 min-w-0 flex-1'>
+                    <div className='w-24 shrink-0 flex items-center h-full' data-dropdown>
+                      <Dropdown
+                        options={STATUS_OPTIONS}
+                        value={task.status}
+                        onSelect={(newStatus) => newStatus && handleStatusUpdate(task.id, newStatus)}
+                        isMulti={false}
+                        hideClear
                       >
-                        <UserPlus size={14} />
-                      </div>
-                    )}
+                        <span
+                          className={clsx(
+                            'inline-block max-w-full truncate text-xs px-3 py-1 rounded-xl transition',
+                            getStatusColor(task.status as StatusType),
+                          )}
+                        >
+                          {task.status?.toUpperCase()}
+                        </span>
+                      </Dropdown>
+                    </div>
+                    <InlineEditableTitle
+                      title={task.title}
+                      onSave={(newTitle) => handleTitleUpdate(task.id, newTitle)}
+                      placeholder='Enter task title...'
+                    />
                   </div>
-                </Dropdown>
-              </div>
 
-              <span className='text-xs whitespace-nowrap text-gray-600 dark:text-gray-300'>
-                {formatDueDate(task.due_date)}
-              </span>
-            </li>
-          ))
-        )}
-      </ul>
+                  <div className='flex items-center gap-2' data-dropdown>
+                    <Dropdown
+                      options={memberOptions}
+                      value={task?.assignees || []}
+                      onSelect={(newAssignees) => handleAssigneesUpdate(task.id, newAssignees || [])}
+                      isMulti={true}
+                      hideClear
+                    >
+                      <div className='flex items-center gap-1'>
+                        {task?.assignees?.length > 0 ? (
+                          <div className='flex items-center -space-x-2'>
+                            {task.assignees.map((userId) => {
+                              const member = memberMap.get(userId);
+                              if (!member) {
+                                return null;
+                              }
+                              return (
+                                <MemberAvatar
+                                  color={member.profile_color}
+                                  key={`assignee-${task.id}-${userId}`}
+                                  member={member}
+                                  size='sm'
+                                  className='border-gray-700 dark:border-white'
+                                />
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className={clsx(
+                            'w-8 h-8 rounded-full border-2 border-dashed flex items-center justify-center',
+                            darkMode ? 'border-gray-600 text-gray-500' : 'border-gray-300 text-gray-400',
+                          )}
+                          >
+                            <UserPlus size={14} />
+                          </div>
+                        )}
+                      </div>
+                    </Dropdown>
+                  </div>
+
+                  <span className='text-xs whitespace-nowrap text-gray-600 dark:text-gray-300'>
+                    {formatDueDate(task.due_date)}
+                  </span>
+                </li>
+              ))
+            )}
+          </ul>
+        </>
+      )}
     </div>
   );
 };

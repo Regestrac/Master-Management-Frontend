@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { PlusCircle, Users, Loader2, AlertCircle } from 'lucide-react';
+import { PlusCircle, Users, AlertCircle } from 'lucide-react';
 
 import { Workspace } from 'helpers/sharedTypes';
 import { debounce } from 'helpers/utils';
@@ -10,6 +10,8 @@ import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
 
 import { getWorkspaces } from 'services/workspace';
+
+import WorkspaceSkeleton from './WorkspaceSkeleton';
 
 // Mock API functions
 const mockApi = {
@@ -108,10 +110,8 @@ const WorkspaceHome = () => {
         </button>
       </header>
 
-      {isLoading && workspaces?.length === 0 ? (
-        <div className='flex justify-center items-center h-40'>
-          <Loader2 className='w-8 h-8 animate-spin text-primary-500' />
-        </div>
+      {isLoading ? (
+        <WorkspaceSkeleton count={6} />
       ) : error ? (
         <div className='p-4 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 flex items-start gap-2'>
           <AlertCircle className='w-5 h-5 mt-0.5 flex-shrink-0' />

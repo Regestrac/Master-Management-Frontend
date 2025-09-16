@@ -13,6 +13,8 @@ import { EditableTitle } from 'components/Workspace/Details/EditableTitle';
 import MembersSection from 'components/Workspace/Details/MembersSection';
 import InviteSection from 'components/Workspace/Details/InviteSection';
 
+import WorkspaceOverviewSkeleton from './WorkspaceOverviewSkeleton';
+
 type WorkspaceOverviewProps = {
   canManage: boolean;
   onWorkspaceRename: (_name: string) => Promise<void>;
@@ -27,6 +29,7 @@ const WorkspaceOverview = ({
   onLeaveWorkspace,
 }: WorkspaceOverviewProps) => {
   const [workspaceDetails, setWorkspaceDetails] = useState<Workspace>({} as Workspace);
+  const [isLoading, setIsLoading] = useState(true);
 
   const isDark = useProfileStore((s) => s.data.theme) === 'dark';
 
@@ -40,14 +43,21 @@ const WorkspaceOverview = ({
 
   useEffect(() => {
     if (id && shouldFetchOverviewRef.current) {
+      setIsLoading(true);
       getWorkspace(id).then((res) => {
         setWorkspaceDetails(res?.data);
+        setIsLoading(false);
       }).catch((err) => {
         toast.error(err?.error);
+        setIsLoading(false);
       });
       shouldFetchOverviewRef.current = false;
     }
   }, [id]);
+
+  if (isLoading) {
+    return <WorkspaceOverviewSkeleton />;
+  }
 
   return (
     <section className={`rounded-xl border p-6 ${isDark ? 'border-gray-700 bg-gradient-to-b from-gray-800 to-gray-900' : 'border-gray-200 bg-gradient-to-b from-white to-gray-50'}`}>

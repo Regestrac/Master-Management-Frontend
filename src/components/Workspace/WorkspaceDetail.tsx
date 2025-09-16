@@ -14,6 +14,7 @@ import WorkspaceOverview from 'components/Workspace/Details/WorkspaceOverview';
 import WorkspaceTabs from 'components/Workspace/Details/WorkspaceTabs';
 import GoalList from 'components/Workspace/Details/GoalList';
 import TaskList from 'components/Workspace/Details/TaskList';
+import WorkspaceOverviewSkeleton from 'components/Workspace/Details/WorkspaceOverviewSkeleton';
 
 const WorkspaceDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -79,17 +80,6 @@ const WorkspaceDetail = () => {
     );
   }
 
-  if (isLoading) {
-    return (
-      <div className='p-8 min-h-[calc(100vh-165px)]'>
-        <div className='text-center'>
-          <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto' />
-          <p className='mt-2 text-gray-600 dark:text-gray-400'>Loading workspace...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className='space-y-8 min-h-[calc(100vh-165px)]'>
       <button
@@ -101,12 +91,16 @@ const WorkspaceDetail = () => {
         Back To Workspaces
       </button>
 
-      <WorkspaceOverview
-        canManage={canManage}
-        onWorkspaceRename={actions.handleWorkspaceRename}
-        onMemberRoleChange={actions.handleMemberRoleChange}
-        onLeaveWorkspace={openLeaveWorkspaceModal}
-      />
+      {isLoading ? (
+        <WorkspaceOverviewSkeleton />
+      ) : (
+        <WorkspaceOverview
+          canManage={canManage}
+          onWorkspaceRename={actions.handleWorkspaceRename}
+          onMemberRoleChange={actions.handleMemberRoleChange}
+          onLeaveWorkspace={openLeaveWorkspaceModal}
+        />
+      )}
 
       <WorkspaceTabs
         taskList={<TaskList />}
