@@ -9,6 +9,8 @@ import { useProfileStore } from 'stores/profileStore';
 
 import { getGoalStats } from 'services/goals';
 
+import GoalStatsSkeleton from 'components/Goals/GoalStatsSkeleton';
+
 const getStatsColor = (stat: string) => {
   switch (stat) {
     case 'total':
@@ -49,6 +51,7 @@ const getStatsIcons = (stat: string) => {
 
 const GoalStats = () => {
   const [stats, setStats] = useState<{ count: number; status: string; }[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
 
@@ -58,12 +61,18 @@ const GoalStats = () => {
     if (shouldFetchStatsRef.current) {
       getGoalStats().then((res) => {
         setStats(res?.data);
+        setLoading(false);
       }).catch((err) => {
         toast.error(err?.error || 'Failed to get goal stats');
+        setLoading(false);
       });
       shouldFetchStatsRef.current = false;
     }
   }, []);
+
+  if (loading) {
+    return <GoalStatsSkeleton />;
+  }
 
   return (
     <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8'>

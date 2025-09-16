@@ -16,7 +16,7 @@ import TaskListSkeleton from 'components/Tasks/TaskListSkeleton';
 
 const TaskList = () => {
   const [createTask, setCreateTask] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const allTasks = useTaskStore((state) => state.tasks);
   const addTask = useTaskStore((state) => state.addTask);
