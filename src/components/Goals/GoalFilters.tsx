@@ -104,13 +104,13 @@ const GoalFilters = () => {
         <div className='flex rounded-lg border border-gray-300 overflow-hidden'>
           <button
             onClick={() => handleUpdateView('grid')}
-            className={`p-2 ${searchParams.get('view') === 'grid' ? 'bg-purple-500 text-white' : darkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-600'}`}
+            className={`p-2 ${searchParams.get('view') === 'grid' ? 'bg-primary-500 text-white' : darkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-600'}`}
           >
             <Grid2X2 className='w-4 h-4' />
           </button>
           <button
             onClick={() => handleUpdateView('list')}
-            className={`p-2 ${searchParams.get('view') === 'list' ? 'bg-purple-500 text-white' : darkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-600'}`}
+            className={`p-2 ${searchParams.get('view') === 'list' ? 'bg-primary-500 text-white' : darkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-600'}`}
           >
             <List className='w-4 h-4' />
           </button>

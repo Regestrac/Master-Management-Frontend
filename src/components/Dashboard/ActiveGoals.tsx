@@ -54,7 +54,7 @@ const ActiveGoals = () => {
     <div>
       <div className='flex items-center justify-between mb-6'>
         <h3 className='text-xl font-bold'>Active Goals</h3>
-        <button className='text-purple-500 hover:text-purple-600 text-sm font-medium' onClick={handleViewAllGoals}>View All</button>
+        <button className='text-primary-500 hover:text-primary-600 text-sm font-medium' onClick={handleViewAllGoals}>View All</button>
       </div>
 
       <div className='space-y-4'>
@@ -94,7 +94,7 @@ const ActiveGoals = () => {
                     <Clock className='w-4 h-4 mr-1' />
                     {formatTimeElapsed(goal.time_spend)}
                   </span>
-                  <button className='text-purple-500 hover:text-purple-600 font-medium'>
+                  <button className='text-primary-500 hover:text-primary-600 font-medium'>
                     Continue
                   </button>
                 </div>

@@ -45,7 +45,7 @@ const CreateForm = ({ onSubmit, onCancle, placeholder = 'Enter Title' }: CreateF
       <button
         type='button'
         onClick={handleSubmit}
-        className='text-xs px-3 py-2 rounded bg-emerald-600 hover:bg-emerald-700 text-white'
+        className='text-xs px-3 py-2 rounded bg-primary-600 hover:bg-primary-700 text-white'
       >
         Create
       </button>

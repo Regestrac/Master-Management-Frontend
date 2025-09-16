@@ -82,7 +82,7 @@ const GenerateTagsButton = ({ generatedTags, setGeneratedTags }: GenerateTagsBut
           <button
             type='button'
             onClick={handleAcceptGeneration}
-            className='px-2 py-1 text-xs bg-primary text-text rounded hover:bg-hover-secondary transition-colors duration-200 cursor-pointer'
+            className='px-2 py-1 text-xs bg-blue-600 text-text rounded hover:bg-hover-secondary transition-colors duration-200 cursor-pointer'
           >
             Accept
           </button>
@@ -99,7 +99,7 @@ const GenerateTagsButton = ({ generatedTags, setGeneratedTags }: GenerateTagsBut
           type='button'
           onClick={handleGenerateTags}
           disabled={isLoading}
-          className={`px-2 py-1 text-xs bg-primary text-text rounded hover:bg-hover-primary transition-colors duration-200 ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+          className={`px-2 py-1 text-xs bg-blue-600 text-text rounded hover:bg-hover-blue-600 transition-colors duration-200 ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
         >
           Generate ✨
           {isLoading ? <FadingCircles radius={2} /> : null}

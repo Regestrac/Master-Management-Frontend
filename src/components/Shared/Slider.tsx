@@ -78,9 +78,9 @@ const Slider = ({
           disabled={disabled}
           className={clsx(
             'w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer',
-            'focus:outline-none focus:ring-2 focus:ring-purple-500',
+            'focus:outline-none focus:ring-1 focus:ring-primary-500',
             'slider-thumb:appearance-none slider-thumb:w-4 slider-thumb:h-4',
-            'slider-thumb:rounded-full slider-thumb:bg-purple-500',
+            'slider-thumb:rounded-full slider-thumb:bg-primary-500',
             'slider-thumb:cursor-pointer slider-thumb:border-0',
             'slider-thumb:shadow-md slider-thumb:transition-all',
             'hover:slider-thumb:scale-110',
@@ -92,7 +92,7 @@ const Slider = ({
           style={{
             background: disabled
               ? '#e5e7eb'
-              : `linear-gradient(to right, #a855f7 0%, #a855f7 ${((currentValue - min) / (max - min)) * 100}%, #e5e7eb ${((currentValue - min) / (max - min)) * 100}%, #e5e7eb 100%)`,
+              : `linear-gradient(to right, var(--color-primary-500) 0%, var(--color-primary-500) ${((currentValue - min) / (max - min)) * 100}%, #e5e7eb ${((currentValue - min) / (max - min)) * 100}%, #e5e7eb 100%)`,
           }}
         />
       </div>

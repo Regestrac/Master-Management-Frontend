@@ -51,7 +51,7 @@ const RecentTasks = () => {
           <Plus className='w-4 h-4' />
           <span>Add Task</span>
         </button> */}
-        <button className='text-purple-500 hover:text-purple-600 text-sm font-medium' onClick={handleViewAllTask}>View All</button>
+        <button className='text-primary-500 hover:text-primary-600 text-sm font-medium' onClick={handleViewAllTask}>View All</button>
       </div>
 
       <div className='space-y-4'>

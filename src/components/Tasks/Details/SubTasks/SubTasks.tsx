@@ -133,13 +133,13 @@ const SubTasks = () => {
               label=''
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit(addSubtask)()}
               placeholder='Add a new subtask...'
-              className={`flex-1 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 ${darkMode
+              className={`flex-1 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary-500 ${darkMode
                 ? 'bg-gray-700 border-gray-600 text-white'
                 : 'bg-white border-gray-300'}`}
             />
             <button
               onClick={handleSubmit(addSubtask)}
-              className='px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors'
+              className='px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors'
             >
               <Plus className='w-4 h-4' />
             </button>

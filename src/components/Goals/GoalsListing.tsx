@@ -62,7 +62,7 @@ const GoalsListing = () => {
         <div className='flex items-center gap-4'>
           <button
             onClick={handleCreateGoal}
-            className='flex items-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors'
+            className='flex items-center space-x-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors'
           >
             <Plus className='w-4 h-4' />
             <span>New Goal</span>

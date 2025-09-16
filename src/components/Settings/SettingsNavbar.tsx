@@ -91,7 +91,7 @@ const SettingsNavbar = ({ sectionRefs }: { sectionRefs: RefObject<{ [key: string
               key={id}
               onClick={() => scrollToSection(id)}
               className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors cursor-pointer ${activeSection === id
-                ? 'bg-purple-500 text-white'
+                ? 'bg-primary-500 text-white'
                 : darkMode
                   ? 'text-gray-300 hover:bg-gray-700'
                   : 'text-gray-600 hover:bg-gray-100'}`}

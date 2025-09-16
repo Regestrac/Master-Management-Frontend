@@ -99,7 +99,7 @@ const WorkspaceHome = () => {
         </h1>
         <button
           type='button'
-          className='flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500 hover:bg-purple-600 text-white transition-colors disabled:opacity-50'
+          className='flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white transition-colors disabled:opacity-50'
           onClick={handleCreateOrJoinWorkspace}
           disabled={isLoading}
         >
@@ -110,7 +110,7 @@ const WorkspaceHome = () => {
 
       {isLoading && workspaces?.length === 0 ? (
         <div className='flex justify-center items-center h-40'>
-          <Loader2 className='w-8 h-8 animate-spin text-purple-500' />
+          <Loader2 className='w-8 h-8 animate-spin text-primary-500' />
         </div>
       ) : error ? (
         <div className='p-4 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 flex items-start gap-2'>

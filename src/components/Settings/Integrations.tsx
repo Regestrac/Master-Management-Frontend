@@ -7,7 +7,7 @@ const Integrations = () => {
     <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
       <div className='flex items-center justify-between mb-6'>
         <h4 className='text-xl font-bold'>Integrations</h4>
-        <button className='text-purple-500 hover:text-purple-600 text-sm font-medium'>Browse All</button>
+        <button className='text-primary-500 hover:text-primary-600 text-sm font-medium'>Browse All</button>
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
@@ -70,7 +70,7 @@ const Integrations = () => {
             <button
               className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors ${integration.connected
                 ? 'bg-red-500 text-white hover:bg-red-600'
-                : 'bg-purple-500 text-white hover:bg-purple-600'}`}
+                : 'bg-green-500 text-white hover:bg-green-600'}`}
             >
               {integration.connected ? 'Disconnect' : 'Connect'}
             </button>

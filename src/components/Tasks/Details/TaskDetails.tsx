@@ -44,7 +44,7 @@ const TaskDetails = () => {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center space-x-2 px-3 py-2 border-b-2 transition-colors ${activeTab === tab.id
-                    ? 'border-purple-500 text-purple-600'
+                    ? 'border-primary-500 text-primary-600'
                     : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-900'}`}`}
                 >
                   <Icon className='w-4 h-4' />

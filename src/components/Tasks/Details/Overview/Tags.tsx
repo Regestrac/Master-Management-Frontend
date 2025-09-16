@@ -128,8 +128,8 @@ const Tags = () => {
                   className={clsx(
                     'group inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-all',
                     darkMode
-                      ? 'bg-gradient-to-r from-purple-900/40 to-blue-900/40 text-purple-300 border border-purple-700/50 hover:border-purple-600'
-                      : 'bg-gradient-to-r from-purple-50 to-blue-50 text-purple-700 border border-purple-200 hover:border-purple-300',
+                      ? 'bg-gradient-to-r from-primary-900/40 to-blue-900/40 text-primary-300 border border-primary-700/50 hover:border-primary-600'
+                      : 'bg-gradient-to-r from-primary-50 to-blue-50 text-primary-700 border border-primary-200 hover:border-primary-300',
                   )}
                 >
                   #
@@ -149,8 +149,8 @@ const Tags = () => {
                 className={clsx(
                   'group inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-all',
                   darkMode
-                    ? 'bg-gradient-to-r from-purple-900/40 to-blue-900/40 text-purple-300 border border-purple-700/50 hover:border-purple-600'
-                    : 'bg-gradient-to-r from-purple-50 to-blue-50 text-purple-700 border border-purple-200 hover:border-purple-300',
+                    ? 'bg-gradient-to-r from-primary-900/40 to-blue-900/40 text-primary-300 border border-primary-700/50 hover:border-primary-600'
+                    : 'bg-gradient-to-r from-primary-50 to-blue-50 text-primary-700 border border-primary-200 hover:border-primary-300',
                 )}
               >
                 #
@@ -191,8 +191,8 @@ const Tags = () => {
                     ? 'border-red-600 bg-red-900/20 text-red-400 placeholder-red-500'
                     : 'border-red-400 bg-red-50 text-red-700 placeholder-red-400'
                   : darkMode
-                    ? 'border-purple-600 bg-gray-800 text-purple-300 placeholder-gray-500 focus:border-purple-500'
-                    : 'border-purple-400 bg-white text-purple-700 placeholder-gray-400 focus:border-purple-500',
+                    ? 'border-primary-600 bg-gray-800 text-primary-300 placeholder-gray-500 focus:border-primary-500'
+                    : 'border-primary-400 bg-white text-primary-700 placeholder-gray-400 focus:border-primary-500',
               )}
             />
             <button
@@ -218,8 +218,8 @@ const Tags = () => {
               className={clsx(
                 'inline-flex items-center px-3 py-1.5 border-2 border-dashed rounded-full text-sm font-medium transition-all hover:scale-105',
                 darkMode
-                  ? 'border-gray-600 text-gray-400 hover:border-purple-500 hover:text-purple-400 hover:bg-purple-900/20'
-                  : 'border-gray-300 text-gray-500 hover:border-purple-500 hover:text-purple-600 hover:bg-purple-50',
+                  ? 'border-gray-600 text-gray-400 hover:border-primary-500 hover:text-primary-400 hover:bg-primary-900/20'
+                  : 'border-gray-300 text-gray-500 hover:border-primary-500 hover:text-primary-600 hover:bg-primary-50',
               )}
             >
               <Plus className='w-3 h-3 mr-1' />

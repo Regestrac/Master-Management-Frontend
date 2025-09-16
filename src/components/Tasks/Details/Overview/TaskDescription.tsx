@@ -66,7 +66,7 @@ const TaskDescription = () => {
               type='textarea'
               label=''
               onBlur={saveDescription}
-              className={`w-full min-h-80 p-4 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 ${darkMode
+              className={`w-full min-h-80 p-4 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary-500 ${darkMode
                 ? 'bg-gray-700 border-gray-600 text-white'
                 : 'bg-gray-50 border-gray-300'}`}
               placeholder='Enter task description...'

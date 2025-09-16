@@ -53,7 +53,7 @@ const Switch = ({
         className={clsx(
           'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
           {
-            'bg-purple-500': field.value,
+            'bg-primary-500': field.value,
             'bg-gray-300': !field.value,
             'opacity-50 cursor-not-allowed': disabled,
             'cursor-pointer': !disabled,

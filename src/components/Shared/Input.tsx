@@ -66,7 +66,7 @@ const Input = ({ name, label, icon, type = 'text', onBlur, id, hideResizeIndicat
             rows={hideResizeIndicator ? 1 : props.rows || 4}
             className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors?.[name]
               ? 'border-red-300 focus:ring-red-500'
-              : 'border-gray-300 focus:ring-purple-500'} ${props.className || ''}`}
+              : 'border-gray-300 focus:ring-primary-500'} ${props.className || ''}`}
             style={{
               ...props.style,
               ...(hideResizeIndicator ? { resize: 'none', minHeight: 'auto', overflow: 'hidden' } : {}),
@@ -94,7 +94,7 @@ const Input = ({ name, label, icon, type = 'text', onBlur, id, hideResizeIndicat
             type={showPassword ? 'text' : type}
             className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors?.[name]
               ? 'border-red-300 focus:ring-red-500'
-              : 'border-gray-300 focus:ring-purple-500'} ${props.className || ''}`}
+              : 'border-gray-300 focus:ring-primary-500'} ${props.className || ''}`}
             onBlur={handleOnBlur}
             ref={inputRef}
             autoComplete='on'

@@ -24,8 +24,8 @@ const WorkspaceTabs = ({ taskList, goalList }: WorkspaceTabsProps) => {
     const isActive = activeTab === tab;
     return `px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 transition border-b-2 ${isActive
       ? isDark
-        ? 'text-white bg-gray-800 border-emerald-400 font-semibold'
-        : 'text-gray-900 bg-white border-emerald-600 font-semibold'
+        ? 'text-white bg-gray-800 border-primary-400 font-semibold'
+        : 'text-gray-900 bg-white border-primary-600 font-semibold'
       : isDark
         ? 'text-gray-300 hover:text-white border-transparent'
         : 'text-gray-600 hover:text-gray-900 border-transparent'}`;

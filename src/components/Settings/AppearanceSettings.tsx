@@ -132,8 +132,8 @@ const AppearanceSettings = () => {
             <button
               onClick={handleSetLight}
               className={`p-4 rounded-lg border-2 transition-all ${themeMode === 'light'
-                ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
-                : 'border-gray-300 dark:border-gray-600 hover:border-purple-500'}`}
+                ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                : 'border-gray-300 dark:border-gray-600 hover:border-primary-500'}`}
             >
               <div className='w-full h-20 bg-white border border-gray-300 rounded mb-3 flex items-center justify-center'>
                 <div className='w-8 h-8 bg-gray-200 rounded' />
@@ -143,8 +143,8 @@ const AppearanceSettings = () => {
             <button
               onClick={handleSetDark}
               className={`p-4 rounded-lg border-2 transition-all ${themeMode === 'dark'
-                ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
-                : 'border-gray-300 dark:border-gray-600 hover:border-purple-500'}`}
+                ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                : 'border-gray-300 dark:border-gray-600 hover:border-primary-500'}`}
             >
               <div className='w-full h-20 bg-gray-800 border border-gray-600 rounded mb-3 flex items-center justify-center'>
                 <div className='w-8 h-8 bg-gray-600 rounded' />
@@ -154,8 +154,8 @@ const AppearanceSettings = () => {
             <button
               onClick={handleSetAuto}
               className={`p-4 rounded-lg border-2 transition-all ${themeMode === 'auto'
-                ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
-                : 'border-gray-300 dark:border-gray-600 hover:border-purple-500'}`}
+                ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                : 'border-gray-300 dark:border-gray-600 hover:border-primary-500'}`}
             >
               <div className='w-full h-20 bg-gradient-to-r from-white to-gray-800 border border-gray-400 rounded mb-3 flex items-center justify-center'>
                 <div className='w-8 h-8 bg-gradient-to-r from-gray-200 to-gray-600 rounded' />

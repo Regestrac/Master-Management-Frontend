@@ -148,13 +148,13 @@ const Checklist = () => {
             onChange={(e) => setNewChecklistItem(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && addChecklistItem()}
             placeholder='Add a checklist item...'
-            className={`flex-1 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 ${darkMode
+            className={`flex-1 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary-500 ${darkMode
               ? 'bg-gray-700 border-gray-600 text-white'
               : 'bg-white border-gray-300'}`}
           />
           <button
             onClick={addChecklistItem}
-            className='px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors'
+            className='px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors'
           >
             <Plus className='w-4 h-4' />
           </button>
@@ -189,10 +189,10 @@ const Checklist = () => {
                 <button
                   onClick={() => toggleChecklistItem(item.id)}
                   className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${item.completed
-                    ? 'bg-purple-500 border-purple-500'
+                    ? 'bg-primary-500 border-primary-500'
                     : darkMode
-                      ? 'border-gray-500 hover:border-purple-500'
-                      : 'border-gray-300 hover:border-purple-500'}`}
+                      ? 'border-gray-500 hover:border-primary-500'
+                      : 'border-gray-300 hover:border-primary-500'}`}
                 >
                   {item.completed && <Check className='w-2.5 h-2.5 text-white' />}
                 </button>

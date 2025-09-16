@@ -41,7 +41,7 @@ const HelpAndSupport = () => {
               <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-3`}>
                 {support.description}
               </p>
-              <button className='text-purple-500 hover:text-purple-600 text-sm font-medium'>
+              <button className='text-primary-500 hover:text-primary-600 text-sm font-medium'>
                 {support.action}
               </button>
             </div>

@@ -147,7 +147,7 @@ const GoalList = () => {
             onClick={() => setIsVisible(true)}
             className={clsx(
               'inline-flex items-center gap-1 text-xs px-2 py-1 rounded border transition cursor-pointer',
-              darkMode ? 'border-gray-700 text-emerald-300 hover:bg-gray-900' : 'border-gray-200 text-emerald-700 hover:bg-gray-100',
+              darkMode ? 'border-gray-700 text-primary-300 hover:bg-gray-900' : 'border-gray-200 text-primary-700 hover:bg-gray-100',
             )}
             title='Create goal'
           >

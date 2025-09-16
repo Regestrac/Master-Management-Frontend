@@ -62,7 +62,7 @@ const WorkspaceModal = () => {
             onClick={() => setActiveTab('create')}
             className={clsx('flex-1 py-2 px-1 text-center text-sm transition border-b-2',
               activeTab === 'create'
-                ? (darkMode ? 'text-emerald-400 border-emerald-400 font-medium' : 'text-emerald-600 border-emerald-600 font-medium')
+                ? (darkMode ? 'text-primary-400 border-primary-400 font-medium' : 'text-primary-600 border-primary-600 font-medium')
                 : (darkMode ? 'text-gray-400 hover:text-gray-200 border-transparent' : 'text-gray-600 hover:text-gray-900 border-transparent'),
             )}
           >
@@ -76,7 +76,7 @@ const WorkspaceModal = () => {
             onClick={() => setActiveTab('join')}
             className={clsx('flex-1 py-2 px-1 text-center text-sm transition border-b-2',
               activeTab === 'join'
-                ? (darkMode ? 'text-emerald-400 border-emerald-400 font-medium' : 'text-emerald-600 border-emerald-600 font-medium')
+                ? (darkMode ? 'text-primary-400 border-primary-400 font-medium' : 'text-primary-600 border-primary-600 font-medium')
                 : (darkMode ? 'text-gray-400 hover:text-gray-200 border-transparent' : 'text-gray-600 hover:text-gray-900 border-transparent'),
             )}
           >
@@ -99,7 +99,7 @@ const WorkspaceModal = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className={clsx('w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2',
-                  darkMode ? 'bg-gray-700 border border-gray-600 text-white focus:ring-emerald-500' : 'bg-white border border-gray-300 focus:ring-emerald-500')}
+                  darkMode ? 'bg-gray-700 border border-gray-600 text-white focus:ring-primary-500' : 'bg-white border border-gray-300 focus:ring-primary-500')}
                 placeholder='Enter workspace name'
                 disabled={loading}
                 required
@@ -116,7 +116,7 @@ const WorkspaceModal = () => {
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value)}
                 className={clsx('w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2',
-                  darkMode ? 'bg-gray-700 border border-gray-600 text-white focus:ring-emerald-500' : 'bg-white border border-gray-300 focus:ring-emerald-500')}
+                  darkMode ? 'bg-gray-700 border border-gray-600 text-white focus:ring-primary-500' : 'bg-white border border-gray-300 focus:ring-primary-500')}
                 placeholder='Enter invite code'
                 disabled={loading}
                 required
@@ -145,8 +145,8 @@ const WorkspaceModal = () => {
             <button
               type='submit'
               className={clsx('px-4 py-2 text-sm font-medium text-white rounded shadow inline-flex items-center gap-2', darkMode
-                ? 'bg-emerald-700 hover:bg-emerald-800'
-                : 'bg-emerald-600 hover:bg-emerald-700')}
+                ? 'bg-primary-700 hover:bg-primary-800'
+                : 'bg-primary-600 hover:bg-primary-700')}
               disabled={loading || (activeTab === 'create' ? !name.trim() : !inviteCode.trim())}
             >
               {loading ? (
