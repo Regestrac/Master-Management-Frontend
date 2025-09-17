@@ -20,6 +20,7 @@ import WorkspaceDetail from 'components/Workspace/WorkspaceDetail';
 import CreateTaskForm from 'components/Tasks/CreateTaskForm';
 import RootLayoutWrapper from 'components/Layout/RootLayoutWrapper';
 import Analytics from 'components/Analytics/Analytics';
+import Calendar from 'components/Calendar/Calendar';
 
 const routes: RouteObject[] = [
   {
@@ -77,6 +78,7 @@ const routes: RouteObject[] = [
           },
           {
             path: '/calendar',
+            element: <Calendar />,
           },
           {
             path: '/profile',
