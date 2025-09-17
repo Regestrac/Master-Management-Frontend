@@ -9,9 +9,9 @@ import { useProfileStore } from 'stores/profileStore';
 
 import { getWorkspace } from 'services/workspace';
 
-import { EditableTitle } from 'components/Workspace/Details/EditableTitle';
 import MembersSection from 'components/Workspace/Details/MembersSection';
 import InviteSection from 'components/Workspace/Details/InviteSection';
+import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
 
 import WorkspaceOverviewSkeleton from './WorkspaceOverviewSkeleton';
 
@@ -68,11 +68,15 @@ const WorkspaceOverview = ({
             <span className='h-1.5 w-1.5 rounded-full bg-emerald-500' />
             Active
           </span>
-          <EditableTitle
-            title={workspaceDetails?.name || ''}
-            onSave={handleRename}
-            className={isDark ? 'text-white' : 'text-gray-900'}
-          />
+          <br />
+          <div className='flex items-center gap-2 w-full'>
+            <InlineEditableTitle
+              title={workspaceDetails?.name || ''}
+              onSave={handleRename}
+              fontSize={22}
+              className='font-extrabold w-fit'
+            />
+          </div>
           <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mt-1`}>
             Workspace ID:
             {' '}

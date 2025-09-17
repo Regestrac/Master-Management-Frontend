@@ -48,14 +48,14 @@ const WorkspaceDetail = () => {
   }, [id, navigate]);
 
   const openLeaveWorkspaceModal = useCallback(() => {
-    const workspaceName = members.length > 0 ? 'Current Workspace' : 'this workspace';
+    const workspaceName = members.length > 0 ? 'current workspace' : 'this workspace';
     updateVisibility({
       modalType: 'leaveWorkspaceModal',
       isVisible: true,
       extraProps: {
-        workspaceName,
         onSuccess: handleLeaveWorkspace,
-      } as any,
+        modalData: { workspaceName },
+      },
     });
   }, [updateVisibility, handleLeaveWorkspace, members.length]);
 
@@ -71,7 +71,7 @@ const WorkspaceDetail = () => {
           <button
             type='button'
             onClick={() => navigate('/workspace')}
-            className='mt-4 px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700'
+            className='mt-4 px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700'
           >
             Back to Workspaces
           </button>

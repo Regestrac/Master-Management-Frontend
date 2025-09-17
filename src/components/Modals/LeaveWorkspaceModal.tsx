@@ -12,8 +12,9 @@ const LeaveWorkspaceModal = () => {
   const [loading, setLoading] = useState(false);
 
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
-  const { onSuccess, workspaceName } = useModalStore((state) => state.modals.leaveWorkspaceModal.extraProps || {}) as { onSuccess?: () => void; workspaceName?: string };
+  const workspaceName = useModalStore((state) => state.modals.leaveWorkspaceModal.extraProps?.modalData?.workspaceName);
   const updateVisibility = useModalStore((state) => state.updateVisibility);
+  const onSuccess = useModalStore((state) => state.modals.leaveWorkspaceModal?.extraProps?.onSuccess);
 
   const handleCancel = () => updateVisibility({ modalType: 'leaveWorkspaceModal', isVisible: false });
 
@@ -42,7 +43,7 @@ const LeaveWorkspaceModal = () => {
           <p className={clsx('text-sm', darkMode ? 'text-gray-300' : 'text-gray-700')}>
             Are you sure you want to leave
             {' '}
-            <span className='font-medium text-emerald-600 dark:text-emerald-400'>
+            <span className='font-medium text-primary-600 dark:text-primary-400'>
               {workspaceName || 'this workspace'}
             </span>
             ?

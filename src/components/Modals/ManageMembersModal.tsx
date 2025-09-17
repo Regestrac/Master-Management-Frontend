@@ -20,9 +20,8 @@ type ExtraProps = {
 
 const ManageMembersModal = () => {
   const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
-  const { modals } = useModalStore();
-  const data = (modals.manageMembersModal?.extraProps as { modalData?: ExtraProps })?.modalData || {};
-  const { members = [], canManage = false, onChangeRole, workspaceId } = data;
+  const modalData: ExtraProps = useModalStore((state) => state.modals?.manageMembersModal?.extraProps?.modalData);
+  const { members = [], canManage = false, onChangeRole, workspaceId } = modalData;
 
   const handleRemoveMember = (memberId: number) => {
     if (workspaceId && memberId) {
@@ -37,7 +36,7 @@ const ManageMembersModal = () => {
   return (
     <ModalWrapper modalType='manageMembersModal'>
       <div className='flex items-center justify-between sticky top-0 mb-2'>
-        <h3 className='text-lg font-semibold'>Members</h3>
+        <h3 className='text-lg font-semibold text-primary-100'>Members</h3>
       </div>
       <div className='max-h-[60vh] overflow-y-auto space-y-2'>
         {members.map((m: Member) => (
@@ -56,7 +55,7 @@ const ManageMembersModal = () => {
               ) : (
                 <MemberAvatar member={m} size='md' color={m.profile_color} />
               )}
-              <div className='font-medium'>{m.name}</div>
+              <div className='font-medium text-primary-200'>{m.name}</div>
             </div>
             {canManage ? (
               <div className='flex items-center gap-2'>
@@ -72,15 +71,20 @@ const ManageMembersModal = () => {
                 <button
                   type='button'
                   onClick={() => handleRemoveMember(m.id)}
-                  className={clsx('text-sm px-3 py-1 rounded border focus:outline-none focus:ring-2', darkMode
-                    ? 'border-red-700 text-red-300 hover:bg-red-900/20 focus:ring-red-400/30'
-                    : 'border-red-300 text-red-600 hover:bg-red-50 focus:ring-red-400/30')}
+                  className={clsx(
+                    'text-sm px-3 py-1 rounded border focus:outline-none focus:ring-2',
+                    darkMode
+                      ? 'border-red-700 text-red-300 hover:bg-red-900/20 focus:ring-red-400/30'
+                      : 'border-red-300 text-red-600 hover:bg-red-50 focus:ring-red-400/30',
+                  )}
                 >
                   Remove
                 </button>
               </div>
             ) : (
-              <span className='text-xs px-2 py-1 rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'>{m.role}</span>
+              <span className='text-xs px-2 py-1 rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'>
+                {m.role}
+              </span>
             )}
           </div>
         ))}
