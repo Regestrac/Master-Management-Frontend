@@ -9,6 +9,7 @@ type InlineEditableTitlePropsType = {
   onSave: (_newTitle: string) => void;
   className?: string;
   placeholder?: string;
+  fontSize?: string | number;
 };
 
 const InlineEditableTitle = ({
@@ -16,6 +17,7 @@ const InlineEditableTitle = ({
   onSave,
   className = '',
   placeholder = 'Enter title...',
+  fontSize = 'text-sm',
 }: InlineEditableTitlePropsType) => {
   const [value, setValue] = useState(title);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,11 +28,34 @@ const InlineEditableTitle = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
+  const measureRef = useRef<HTMLSpanElement>(null);
 
   // Update value when title prop changes
   useEffect(() => {
     setValue(title);
   }, [title]);
+
+  // Helper function to convert fontSize to appropriate format
+  const getFontSizeStyle = (size: string | number): { className?: string; style?: React.CSSProperties } => {
+    if (typeof size === 'number') {
+      return { style: { fontSize: `${size}px` } };
+    }
+    if (typeof size === 'string' && /^\d+(\.\d+)?(px|rem|em|%)$/.test(size)) {
+      return { style: { fontSize: size } };
+    }
+    // Assume it's a Tailwind class
+    return { className: size };
+  };
+
+  // Function to measure text width accurately
+  const measureTextWidth = (text: string): number => {
+    if (!measureRef.current) {
+      return text.length * 8; // Fallback
+    }
+
+    measureRef.current.textContent = text || placeholder;
+    return measureRef.current.offsetWidth;
+  };
 
   const handleSave = async () => {
     if (value.trim() && value !== title) {
@@ -126,31 +151,48 @@ const InlineEditableTitle = ({
         placeholder={placeholder}
         disabled={isLoading}
         className={clsx(
-          'font-medium text-sm bg-transparent border-none outline-none resize-none',
+          'font-medium bg-transparent border-none outline-none resize-none',
+          getFontSizeStyle(fontSize).className,
           darkMode ? 'text-white placeholder-gray-400' : 'text-gray-900 placeholder-gray-500',
           isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-text',
           className,
         )}
         style={{
-          width: `${Math.max(value.length * 8 + 20, 100)}px`,
-          minWidth: '100px',
+          width: '100%',
+          minWidth: `${Math.max(measureTextWidth(value) + 20, 100)}px`,
+          ...getFontSizeStyle(fontSize).style,
         }}
       />
     );
   }
 
   return (
-    <span
-      ref={spanRef}
-      onClick={handleSpanClick}
-      className={clsx(
-        'font-medium text-sm cursor-text inline-block',
-        darkMode ? 'text-white' : 'text-gray-900',
-        className,
-      )}
-    >
-      {title || placeholder}
-    </span>
+    <>
+      {/* Hidden span for measuring text width */}
+      <span
+        ref={measureRef}
+        className={clsx(
+          'font-medium invisible absolute whitespace-nowrap pointer-events-none',
+          getFontSizeStyle(fontSize).className,
+        )}
+        style={getFontSizeStyle(fontSize).style}
+        aria-hidden='true'
+      />
+
+      <span
+        ref={spanRef}
+        onClick={handleSpanClick}
+        className={clsx(
+          'font-medium cursor-text inline-block',
+          getFontSizeStyle(fontSize).className,
+          darkMode ? 'text-white' : 'text-gray-900',
+          className,
+        )}
+        style={getFontSizeStyle(fontSize).style}
+      >
+        {title || placeholder}
+      </span>
+    </>
   );
 };
 
