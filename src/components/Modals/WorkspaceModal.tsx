@@ -6,8 +6,6 @@ import clsx from 'clsx';
 import useModalStore from 'stores/modalStore';
 import { useProfileStore } from 'stores/profileStore';
 
-import { joinWorkspace } from 'services/workspace';
-
 import ModalWrapper from 'components/Modals/ModalWrapper';
 
 const WorkspaceModal = () => {
@@ -25,19 +23,18 @@ const WorkspaceModal = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!onSuccess) { close(); return; }
+    if (!onSuccess) {
+      close();
+      return;
+    }
 
     try {
       setLoading(true);
       setError(null);
       if (activeTab === 'create' && name.trim()) {
-        await Promise.resolve(onSuccess({ name: name.trim() } as any));
+        await Promise.resolve(onSuccess({ name: name.trim() }));
       } else if (activeTab === 'join' && inviteCode.trim()) {
-        joinWorkspace(inviteCode.trim()).then((res) => {
-          onSuccess({ ...res, inviteCode: inviteCode.trim() });
-        }).catch((err) => {
-          setError(err.message || 'Something went wrong');
-        });
+        await Promise.resolve(onSuccess({ inviteCode: inviteCode.trim() }));
       } else {
         return;
       }

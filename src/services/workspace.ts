@@ -8,11 +8,10 @@ export const getWorkspace = (workspaceId: string): Promise<{ data: Workspace }> 
 export const getWorkspaces = (searchKey?: string): Promise<{ workspaces: Workspace[] }> =>
   getHandler({ path: `workspaces${searchKey ? `?searchKey=${searchKey}` : ''}` });
 
-export const createWorkspace = (name: string): Promise<Workspace> =>
-  postHandler({
-    path: 'workspaces',
-    body: JSON.stringify({ name }),
-  });
+export const createWorkspace = (name: string): Promise<{ data: Workspace }> => postHandler({
+  path: 'workspace',
+  body: JSON.stringify({ name }),
+});
 
 export const updateWorkspace = (workspaceId: string, name: string): Promise<Workspace> =>
   postHandler({
@@ -31,7 +30,7 @@ export const leaveWorkspace = (workspaceId: string): Promise<void> => postHandle
   path: `workspaces/${workspaceId}/leave`,
 });
 
-export const joinWorkspace = (inviteCode: string): Promise<Workspace> => postHandler({
+export const joinWorkspace = (inviteCode: string): Promise<{ workspace: Workspace; }> => postHandler({
   path: 'workspace/join',
   body: JSON.stringify({ invite_code: inviteCode }),
 });

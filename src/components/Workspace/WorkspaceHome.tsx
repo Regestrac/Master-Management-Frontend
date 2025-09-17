@@ -9,31 +9,9 @@ import { debounce } from 'helpers/utils';
 import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
 
-import { getWorkspaces } from 'services/workspace';
+import { createWorkspace, getWorkspaces, joinWorkspace } from 'services/workspace';
 
-import WorkspaceSkeleton from './WorkspaceSkeleton';
-
-// Mock API functions
-const mockApi = {
-  getWorkspaces: async () => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return [
-      { id: 1, name: 'My Personal Workspace' },
-      { id: 2, name: 'Team Alpha' },
-    ];
-  },
-  createWorkspace: async (name: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    return { id: Date.now(), name };
-  },
-  joinWorkspace: async (inviteCode: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    if (inviteCode === 'INVALID') {
-      throw new Error('Invalid invite code');
-    }
-    return { id: Date.now(), name: `Workspace ${inviteCode}` };
-  },
-};
+import WorkspaceSkeleton from 'components/Workspace/WorkspaceSkeleton';
 
 const WorkspaceHome = () => {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
@@ -57,12 +35,16 @@ const WorkspaceHome = () => {
       extraProps: {
         onSuccess: async (data?: { name?: string; inviteCode?: string }) => {
           if (!data) { return; }
-          if (data.inviteCode) {
-            const workspace = await mockApi.joinWorkspace(data.inviteCode);
-            setWorkspaces((prev) => [...prev, workspace as any]);
-          } else if (data.name) {
-            const workspace = await mockApi.createWorkspace(data.name);
-            setWorkspaces((prev) => [...prev, workspace as any]);
+          try {
+            if (data?.inviteCode) {
+              const workspace = await joinWorkspace(data.inviteCode);
+              setWorkspaces((prev) => [...prev, workspace?.workspace]);
+            } else if (data?.name) {
+              const workspace = await createWorkspace(data.name);
+              setWorkspaces((prev) => [...prev, workspace?.data]);
+            }
+          } catch (error) {
+            setError(error instanceof Error ? error?.message : 'Something went wrong');
           }
         },
       },
