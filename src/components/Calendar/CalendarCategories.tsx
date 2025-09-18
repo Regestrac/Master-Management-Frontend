@@ -28,7 +28,7 @@ const CalendarCategories = () => {
                 type='checkbox'
                 checked={category.visible}
                 onChange={() => { }}
-                className='w-4 h-4 text-purple-600 rounded focus:ring-purple-500'
+                className='w-4 h-4 text-primary-600 rounded focus:ring-primary-500'
               />
               <div className='w-3 h-3 rounded-full' style={{ backgroundColor: category.color }} />
               <span className='text-sm font-medium'>{category.name}</span>
@@ -44,7 +44,7 @@ const CalendarCategories = () => {
         ))}
       </div>
 
-      <button className='w-full mt-4 flex items-center justify-center space-x-2 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-purple-500 transition-colors'>
+      <button className='w-full mt-4 flex items-center justify-center space-x-2 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-500 transition-colors'>
         <Plus className='w-4 h-4' />
         <span className='text-sm'>Add Category</span>
       </button>

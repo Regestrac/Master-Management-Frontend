@@ -40,14 +40,14 @@ const MiniCalendar = () => {
             <button
               key={i}
               className={`relative h-8 rounded flex items-center justify-center transition-colors ${isToday
-                ? 'bg-purple-500 text-white font-medium'
+                ? 'bg-primary-500 text-white font-medium'
                 : isCurrentMonth
                   ? `${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} ${hasEvents ? 'font-medium' : ''}`
                   : `${darkMode ? 'text-gray-600' : 'text-gray-400'}`}`}
             >
               {dayNumber > 0 ? (dayNumber <= 30 ? dayNumber : dayNumber - 30) : 26 + dayNumber}
               {hasEvents && (
-                <div className='absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-500 rounded-full' />
+                <div className='absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-secondary-500 rounded-full' />
               )}
             </button>
           );

@@ -76,14 +76,14 @@ const MainCalendar = () => {
                 <div
                   key={i}
                   className={`min-h-32 p-2 border rounded-lg transition-all hover:shadow-md cursor-pointer ${isToday
-                    ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
+                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                     : isCurrentMonth
                       ? `${darkMode ? 'border-gray-700 bg-gray-750 hover:bg-gray-700' : 'border-gray-200 bg-white hover:bg-gray-50'}`
                       : `${darkMode ? 'border-gray-800 bg-gray-800' : 'border-gray-100 bg-gray-50'}`} ${isWeekend ? 'opacity-75' : ''}`}
                 >
                   <div className='flex items-center justify-between mb-2'>
                     <span className={`text-sm font-medium ${isToday
-                      ? 'text-purple-600'
+                      ? 'text-primary-600'
                       : isCurrentMonth
                         ? ''
                         : `${darkMode ? 'text-gray-600' : 'text-gray-400'}`}`}
@@ -126,7 +126,7 @@ const MainCalendar = () => {
                   </div>
 
                   {/* Add Event Button */}
-                  <button className='w-full mt-2 py-1 text-xs opacity-0 hover:opacity-100 transition-opacity border-2 border-dashed border-gray-300 rounded hover:border-purple-500'>
+                  <button className='w-full mt-2 py-1 text-xs opacity-0 hover:opacity-100 transition-opacity border-2 border-dashed border-gray-300 rounded hover:border-primary-500'>
                     <Plus className='w-3 h-3 mx-auto' />
                   </button>
                 </div>
@@ -150,7 +150,7 @@ const MainCalendar = () => {
               <div className='w-2 h-2 bg-green-500 rounded-full' />
               <span className={darkMode ? 'text-gray-300' : 'text-gray-700'}>Available</span>
             </div>
-            <button className='p-2 rounded-lg bg-purple-500 text-white hover:bg-purple-600 transition-colors'>
+            <button className='p-2 rounded-lg bg-primary-500 text-white hover:bg-primary-600 transition-colors'>
               <Clock className='w-4 h-4' />
             </button>
           </div>
@@ -261,7 +261,7 @@ const MainCalendar = () => {
               <div className='p-3 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600'>
                 <div className='text-center'>
                   <p className='text-sm text-gray-500 mb-2'>Available for scheduling</p>
-                  <button className='text-purple-500 hover:text-purple-600 text-sm font-medium'>
+                  <button className='text-primary-500 hover:text-primary-600 text-sm font-medium'>
                     + Schedule Something
                   </button>
                 </div>
@@ -271,7 +271,7 @@ const MainCalendar = () => {
         </div>
 
         {/* Schedule Actions */}
-        <div className='flex items-center justify-between mt-6 pt-6 border-t border-gray-200 dark:border-gray-700'>
+        <div className='flex items-center justify-between mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 flex-wrap gap-6'>
           <div className='flex items-center space-x-4 text-sm'>
             <div className='flex items-center space-x-2'>
               <Clock className='w-4 h-4 text-blue-500' />
@@ -290,7 +290,7 @@ const MainCalendar = () => {
             <button className='px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm'>
               Reschedule
             </button>
-            <button className='px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm'>
+            <button className='px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors text-sm'>
               Optimize Schedule
             </button>
           </div>

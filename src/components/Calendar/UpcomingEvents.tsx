@@ -7,7 +7,7 @@ const UpcomingEvents = () => {
     <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
       <div className='flex items-center justify-between mb-4'>
         <h4 className='font-semibold'>Upcoming</h4>
-        <button className='text-purple-500 hover:text-purple-600 text-sm font-medium'>View All</button>
+        <button className='text-primary-500 hover:text-primary-600 text-sm font-medium'>View All</button>
       </div>
       <div className='space-y-3'>
         {[
