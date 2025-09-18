@@ -3,7 +3,7 @@ import { useProfileStore } from 'stores/profileStore';
 const MetricsCards = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
   return (
-    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 pt-32 lg:pt-20'>
       {[
         {
           title: 'Productivity Score',
