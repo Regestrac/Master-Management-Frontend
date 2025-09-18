@@ -12,7 +12,7 @@ import {
   LONG_BREAK_SESSIONS_OPTIONS,
   WEEKLY_TARGET_OPTIONS,
 } from 'helpers/configs';
-import { colorPalettes, setPrimaryPalette } from 'helpers/themeHelpers';
+import { setPrimaryPalette } from 'helpers/themeHelpers';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
@@ -60,9 +60,8 @@ const Settings = () => {
     if (shouldFetchSettingsRef.current) {
       getUserSettings().then((res) => {
         reset(getDefaultValues(res?.settings));
-        const palette = colorPalettes[res?.settings?.accent_color];
-        if (palette) {
-          setPrimaryPalette(palette);
+        if (res?.settings?.accent_color) {
+          setPrimaryPalette(res.settings.accent_color);
         }
         updateSettings(res?.settings);
       }).catch((err) => {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { toast } from 'react-toastify';
 
-import { colorPalettes, setPrimaryPalette } from 'helpers/themeHelpers';
+import { setPrimaryPalette } from 'helpers/themeHelpers';
 
 import { useProfileStore } from 'stores/profileStore';
 import { useSettingsStore } from 'stores/settingsStore';
@@ -126,11 +126,8 @@ const AppearanceSettings = () => {
   };
 
   const handleAccentChange = (accentName: string) => {
-    const palette = colorPalettes[accentName];
-    if (palette) {
-      setPrimaryPalette(palette);
-      saveUserSettings({ accent_color: accentName });
-    }
+    setPrimaryPalette(accentName);
+    saveUserSettings({ accent_color: accentName });
   };
 
   return (

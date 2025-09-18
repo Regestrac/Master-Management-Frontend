@@ -1,4 +1,4 @@
-export const colorPalettes: Record<string, Record<string, string>> = {
+const colorPalettes: Record<string, Record<string, string>> = {
   Purple: {
     50: '#F4EEFE',
     100: '#EBE1FE',
@@ -224,8 +224,11 @@ export const colorPalettes: Record<string, Record<string, string>> = {
   },
 };
 
-export const setPrimaryPalette = (palette: Record<string, string>) => {
-  Object.entries(palette).forEach(([key, value]) => {
-    document.documentElement.style.setProperty(`--color-primary-${key}`, value);
-  });
+export const setPrimaryPalette = (color: string) => {
+  const palette = colorPalettes[color];
+  if (palette) {
+    Object.entries(palette).forEach(([key, value]) => {
+      document.documentElement.style.setProperty(`--color-primary-${key}`, value);
+    });
+  }
 };
