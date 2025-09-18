@@ -11,7 +11,7 @@ const ProductivityTrendChart = () => {
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Daily focus hours over time</p>
           </div>
           <div className='flex space-x-2'>
-            <button className='px-3 py-1 bg-purple-100 text-purple-600 rounded-lg text-sm font-medium'>Hours</button>
+            <button className='px-3 py-1 bg-primary-100 text-primary-600 rounded-lg text-sm font-medium'>Hours</button>
             <button className={`px-3 py-1 rounded-lg text-sm font-medium ${darkMode ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}>Tasks</button>
           </div>
         </div>
@@ -21,8 +21,8 @@ const ProductivityTrendChart = () => {
           <svg className='w-full h-full' viewBox='0 0 400 200'>
             <defs>
               <linearGradient id='chartGradient' x1='0%' y1='0%' x2='0%' y2='100%'>
-                <stop offset='0%' stopColor='#A855F7' stopOpacity='0.3' />
-                <stop offset='100%' stopColor='#A855F7' stopOpacity='0.05' />
+                <stop offset='0%' stopColor='var(--color-primary-500)' stopOpacity='0.3' />
+                <stop offset='100%' stopColor='var(--color-primary-500)' stopOpacity='0.05' />
               </linearGradient>
             </defs>
 
@@ -45,7 +45,7 @@ const ProductivityTrendChart = () => {
             <path
               d='M40,140 L80,120 L120,100 L160,80 L200,90 L240,70 L280,85 L320,65 L360,75 L380,60'
               fill='none'
-              stroke='#A855F7'
+              stroke='var(--color-primary-500)'
               strokeWidth='3'
               strokeLinecap='round'
               strokeLinejoin='round'
@@ -53,7 +53,7 @@ const ProductivityTrendChart = () => {
 
             {/* Data points */}
             {[[40, 140], [80, 120], [120, 100], [160, 80], [200, 90], [240, 70], [280, 85], [320, 65], [360, 75], [380, 60]].map(([x, y], index) => (
-              <circle key={index} cx={x} cy={y} r='4' fill='#A855F7' stroke='white' strokeWidth='2' />
+              <circle key={index} cx={x} cy={y} r='4' fill='var(--color-primary-500)' stroke='white' strokeWidth='2' />
             ))}
 
             {/* Y-axis labels */}
@@ -76,7 +76,7 @@ const ProductivityTrendChart = () => {
         <div className='flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-700'>
           <div className='flex items-center space-x-4 text-sm'>
             <div className='flex items-center space-x-2'>
-              <div className='w-3 h-3 bg-purple-500 rounded-full' />
+              <div className='w-3 h-3 bg-primary-500 rounded-full' />
               <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Focus Hours</span>
             </div>
             <span className='font-medium'>Peak: Thursday (7.2h)</span>

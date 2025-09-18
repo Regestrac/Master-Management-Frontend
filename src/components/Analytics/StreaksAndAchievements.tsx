@@ -31,7 +31,7 @@ const StreaksAndAchievements = () => {
         <h5 className='font-medium mb-3'>Recent Badges</h5>
         <div className='flex flex-wrap gap-2'>
           {['Week Warrior', 'Goal Crusher', 'Focus Master', 'Consistency King'].map((badge, index) => (
-            <span key={index} className='inline-flex items-center px-2 py-1 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-600 rounded-full text-xs font-medium'>
+            <span key={index} className='inline-flex items-center px-2 py-1 bg-gradient-to-r from-primary-100 to-secondary-100 text-primary-600 rounded-full text-xs font-medium'>
               🏆
               {' '}
               {badge}

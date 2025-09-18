@@ -12,7 +12,7 @@ const FocusSessions = () => {
 
       <div className='space-y-4'>
         <div className='text-center'>
-          <div className='text-3xl font-bold text-purple-500 mb-1'>4.2h</div>
+          <div className='text-3xl font-bold text-primary-500 mb-1'>4.2h</div>
           <div className='text-sm text-gray-500'>Average session today</div>
         </div>
 
@@ -38,12 +38,12 @@ const FocusSessions = () => {
             <div key={index} className={`p-3 rounded-lg ${darkMode ? 'bg-gray-750' : 'bg-gray-50'}`}>
               <div className='flex items-center justify-between mb-1'>
                 <span className='text-sm font-medium'>{session.task}</span>
-                <span className='text-sm text-purple-500'>{session.duration}</span>
+                <span className='text-sm text-primary-500'>{session.duration}</span>
               </div>
               <div className='flex items-center space-x-2'>
                 <div className={`flex-1 h-1 ${darkMode ? 'bg-gray-600' : 'bg-gray-200'} rounded-full`}>
                   <div
-                    className='h-1 bg-purple-500 rounded-full'
+                    className='h-1 bg-primary-500 rounded-full'
                     style={{ width: `${session.efficiency}%` }}
                   />
                 </div>

@@ -24,7 +24,8 @@ const TimeTrackingInsights = () => {
                 key={i}
                 className='h-8 rounded-sm relative group cursor-pointer transition-all hover:scale-110'
                 style={{
-                  backgroundColor: `rgba(139, 92, 246, ${intensity})`,
+                  backgroundColor: 'var(--color-primary-500)',
+                  opacity: intensity,
                   border: darkMode ? '1px solid #374151' : '1px solid #E5E7EB',
                 }}
               >
@@ -61,7 +62,7 @@ const TimeTrackingInsights = () => {
                 <div className='flex-1 mx-3'>
                   <div className={`w-full h-2 ${darkMode ? 'bg-gray-700' : 'bg-gray-200'} rounded-full`}>
                     <div
-                      className='h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-500'
+                      className='h-2 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full transition-all duration-500'
                       style={{ width: `${value}%` }}
                     />
                   </div>
@@ -79,7 +80,7 @@ const TimeTrackingInsights = () => {
       {/* Quick Stats */}
       <div className='grid grid-cols-2 gap-4'>
         <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-750' : 'bg-gray-50'}`}>
-          <div className='text-lg font-bold text-purple-500'>10:30 AM</div>
+          <div className='text-lg font-bold text-primary-500'>10:30 AM</div>
           <div className='text-xs text-gray-500'>Peak Hour</div>
         </div>
         <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-750' : 'bg-gray-50'}`}>
