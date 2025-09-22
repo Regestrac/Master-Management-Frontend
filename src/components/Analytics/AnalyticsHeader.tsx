@@ -1,5 +1,7 @@
 import { useForm, FormProvider } from 'react-hook-form';
 import { Menu, X } from 'lucide-react';
+import dayjs from 'dayjs';
+import { useSearchParams } from 'react-router-dom';
 
 import { useProfileStore } from 'stores/profileStore';
 import { useNavbarStore } from 'stores/navbarStore';
@@ -28,6 +30,73 @@ const AnalyticsHeader = () => {
     setShowNavbar(!showNavbar);
   };
 
+  const formatDate = (date: Date | null): string => date ? dayjs(date).format('DD-MM-YYYY') : '';
+
+  const getPreviousPeriod = (startDate: Date, endDate: Date) => {
+    const diff = dayjs(endDate).diff(dayjs(startDate), 'day') + 1;
+    const prevEnd = dayjs(startDate).subtract(1, 'day');
+    const prevStart = prevEnd.subtract(diff - 1, 'day');
+    return { prevStart, prevEnd };
+  };
+
+  const [_, setSearchParams] = useSearchParams();
+
+  const handleDateApply = ({ startDate, endDate }: DateRange) => {
+    const params = new URLSearchParams();
+
+    if (!startDate || !endDate) {
+      setSearchParams(params);
+      return;
+    }
+
+    // Main params
+    params.set('startDate', formatDate(startDate));
+    params.set('endDate', formatDate(endDate));
+
+    const setPrev = (s: dayjs.Dayjs, e: dayjs.Dayjs) => {
+      params.set('prevStartDate', s.format('DD-MM-YYYY'));
+      params.set('prevEndDate', e.format('DD-MM-YYYY'));
+    };
+
+    const start = dayjs(startDate);
+    const end = dayjs(endDate);
+    const today = dayjs();
+
+    if (start.isSame(end, 'day') && start.isSame(today, 'day')) {
+      // Today → yesterday
+      const y = start.subtract(1, 'day');
+      setPrev(y, y);
+    } else if (
+      start.isSame(today.startOf('week'), 'day') &&
+      end.isSame(today, 'day')
+    ) {
+      // This week → last week
+      setPrev(start.subtract(7, 'day'), start.subtract(1, 'day'));
+    } else if (
+      start.isSame(today.startOf('month'), 'day') &&
+      end.isSame(today, 'day')
+    ) {
+      // This month → last month
+      setPrev(start.subtract(1, 'month').startOf('month'), start.subtract(1, 'month').endOf('month'));
+    } else if (
+      start.isSame(today.startOf('year'), 'day') &&
+      end.isSame(today, 'day')
+    ) {
+      // This year → last year
+      setPrev(start.subtract(1, 'year').startOf('year'), start.subtract(1, 'year').endOf('year'));
+    } else if (end.isSame(today, 'day')) {
+      // Last N days (7, 30, 365) → previous period
+      const days = end.diff(start, 'day');
+      if ([7, 30, 365].includes(days)) {
+        const { prevStart, prevEnd } = getPreviousPeriod(start.toDate(), end.toDate());
+        setPrev(dayjs(prevStart), dayjs(prevEnd));
+      }
+    }
+
+    // Update params
+    setSearchParams(params);
+  };
+
   return (
     <FormProvider {...methods}>
       <div className={`sm:ml-70 fixed top-0 left-0 right-0 z-40 ${darkMode ? 'bg-gray-900' : 'bg-white'} border-b ${darkMode ? 'border-gray-800' : 'border-gray-200'} px-4 lg:px-6 py-4`}>
@@ -53,6 +122,7 @@ const AnalyticsHeader = () => {
               name='dateRange'
               placeholder='Select date range'
               className='min-w-[280px]'
+              onApply={handleDateApply}
             />
             <button className='flex items-center space-x-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors'>
               <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>

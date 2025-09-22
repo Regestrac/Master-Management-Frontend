@@ -5,19 +5,19 @@ import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { useProfileStore } from '../../stores/profileStore';
 
-export interface DateRange {
+export type DateRange = {
   startDate: Date | null;
   endDate: Date | null;
-}
+};
 
-interface DateRangePickerProps {
+type DateRangePickerProps = {
   name: string;
   label?: string;
   placeholder?: string;
   className?: string;
   onChange?: (_dateRange: DateRange) => void;
   onApply?: (_dateRange: DateRange) => void;
-}
+};
 
 const DateRangePicker = ({
   name,
@@ -32,7 +32,7 @@ const DateRangePicker = ({
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
   const [showMonthYearPicker, setShowMonthYearPicker] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState<{ top?: number; bottom?: number; left: number; right?: number }>({ left: 0 });
+  const [dropdownPosition, setDropdownPosition] = useState<{ top?: number; left: number; right?: number; width: number; maxHeight: number }>({ left: 0, top: 0, width: 600, maxHeight: 480 });
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -169,14 +169,10 @@ const DateRangePicker = ({
     },
     {
       label: 'All Time',
-      getValue: () => {
-        const today = new Date();
-        const allTimeStart = new Date(2020, 0, 1); // Assuming app started in 2020
-        return {
-          startDate: allTimeStart,
-          endDate: today,
-        };
-      },
+      getValue: () => ({
+        startDate: null,
+        endDate: null,
+      }),
     },
   ];
 
@@ -186,34 +182,45 @@ const DateRangePicker = ({
     }
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
-    const dropdownHeight = 400; // Approximate dropdown height
-    const dropdownWidth = 600; // Original dropdown width
+    // Responsive sizing based on viewport
+    const viewportPadding = 8; // keep some margin from viewport edges
+    const maxPossibleWidth = Math.min(600, window.innerWidth - viewportPadding * 2);
+    const dropdownWidth = Math.max(280, maxPossibleWidth); // keep a sensible minimum width
+    const dropdownHeight = Math.min(520, window.innerHeight - viewportPadding * 2); // max visible height
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
-    const scrollY = window.scrollY;
-    const scrollX = window.scrollX;
+    // NOTE: For position: fixed, use viewport coordinates directly from getBoundingClientRect.
+    // Do NOT add page scroll offsets, otherwise the panel will drift while scrolling.
 
     let top: number | undefined;
-    let bottom: number | undefined;
-    let left = triggerRect.left + scrollX;
+    let left = triggerRect.left;
     let right: number | undefined;
 
     // Check if dropdown fits below the trigger
     if (triggerRect.bottom + dropdownHeight <= viewportHeight) {
-      top = triggerRect.bottom + scrollY + 8; // 8px gap
+      top = Math.min(triggerRect.bottom + 8, viewportHeight - dropdownHeight - 8);
     } else {
-      // Position above the trigger
-      bottom = viewportHeight - triggerRect.top - scrollY + 8;
+      // Position above the trigger when there's not enough space below
+      top = Math.max(8, triggerRect.top - dropdownHeight - 8);
     }
 
     // Check if dropdown fits to the right
     if (triggerRect.left + dropdownWidth > viewportWidth) {
       // Position to the left
-      right = viewportWidth - triggerRect.right - scrollX;
-      left = undefined as any;
+      right = viewportWidth - triggerRect.right;
+      // Also clamp left within viewport
+      left = Math.max(8, viewportWidth - dropdownWidth - 8);
     }
 
-    setDropdownPosition({ top, bottom, left, right });
+    // Clamp within viewport horizontally if still overflowing
+    if ((left as number) + dropdownWidth > viewportWidth - 8) {
+      left = Math.max(8, viewportWidth - dropdownWidth - 8);
+    }
+    if ((left as number) < 8) {
+      left = 8;
+    }
+
+    setDropdownPosition({ top: top ?? 8, left: left as number, right, width: dropdownWidth, maxHeight: dropdownHeight });
   };
 
   useEffect(() => {
@@ -223,60 +230,129 @@ const DateRangePicker = ({
       }
     };
 
+    const handleScroll = () => {
+      if (isOpen) {
+        calculatePosition();
+      }
+    };
+
+    const handleResize = () => {
+      if (isOpen) {
+        calculatePosition();
+      }
+    };
+
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      window.addEventListener('scroll', handleScroll, true);
+      window.addEventListener('resize', handleResize);
       calculatePosition();
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleResize);
     };
   }, [isOpen]);
 
-  const formatDate = (date: Date | null) => {
-    if (!date) {
-      return '';
-    }
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
-
-  const formatDateRange = (range: DateRange) => {
-    if (!range.startDate && !range.endDate) {
-      return '';
-    }
-    if (range.startDate && !range.endDate) {
-      return formatDate(range.startDate);
-    }
-    if (!range.startDate && range.endDate) {
-      return formatDate(range.endDate);
+  const formatDateRange = (range: DateRange): React.ReactNode => {
+    // Show 'All Time' when both dates are null
+    if (range.startDate === null && range.endDate === null) {
+      return <span>All Time</span>;
     }
 
-    if (range.startDate && range.endDate) {
-      if (range.startDate.toDateString() === range.endDate.toDateString()) {
-        return formatDate(range.startDate);
+    const formatDate = (date: Date) => {
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: '2-digit',
+      });
+    };
+
+    // Handle case where only one date is selected
+    if ((range.startDate && !range.endDate) || (!range.startDate && range.endDate)) {
+      const date = range.startDate || range.endDate;
+      if (!date) {
+        return null;
       }
-      return `${formatDate(range.startDate)} - ${formatDate(range.endDate)}`;
+
+      const category = getDateCategory(date);
+      return (
+        <div className='flex items-center gap-2'>
+          <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary dark:bg-primary/20'>
+            {category}
+          </span>
+          <span>{formatDate(date)}</span>
+        </div>
+      );
     }
-    return '';
+
+    // Handle case where both dates are selected
+    if (range.startDate && range.endDate) {
+      const isSameDay = range.startDate.toDateString() === range.endDate.toDateString();
+
+      if (isSameDay) {
+        const category = getDateCategory(range.startDate);
+        return (
+          <div className='flex items-center gap-2'>
+            <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary dark:bg-primary/20'>
+              {category}
+            </span>
+            <span>{formatDate(range.startDate)}</span>
+          </div>
+        );
+      }
+
+      // Get the most specific common category for the range
+      const startCategory = getDateCategory(range.startDate);
+      const endCategory = getDateCategory(range.endDate);
+      const category = startCategory === endCategory ? startCategory : null;
+
+      return (
+        <div className='flex items-center gap-2'>
+          {category && (
+            <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary dark:bg-primary/20'>
+              {category}
+            </span>
+          )}
+          <span>{formatDate(range.startDate)}</span>
+          <span className='text-muted-foreground'>-</span>
+          <span>{formatDate(range.endDate)}</span>
+        </div>
+      );
+    }
+
+    return null;
   };
 
   // Function to check if current date range matches a preset
   const getActivePreset = () => {
+    // Handle 'All Time' case first
+    if (dateRange.startDate === null && dateRange.endDate === null) {
+      return 'All Time';
+    }
+
     if (!dateRange.startDate || !dateRange.endDate) {
-      return null;
+      return 'Custom';
     }
 
     for (const preset of presets) {
       const presetRange = preset.getValue();
-      const isSameStart = dateRange.startDate.toDateString() === presetRange.startDate.toDateString();
-      const isSameEnd = dateRange.endDate.toDateString() === presetRange.endDate.toDateString();
 
-      if (isSameStart && isSameEnd) {
-        return preset.label;
+      // Handle 'All Time' preset
+      if (preset.label === 'All Time' && !presetRange.startDate && !presetRange.endDate) {
+        continue; // Already handled at the start
+      }
+
+      // For other presets, check date equality
+      if (presetRange.startDate && presetRange.endDate) {
+        const isSameStart = dateRange.startDate.toDateString() === presetRange.startDate.toDateString();
+        const isSameEnd = dateRange.endDate.toDateString() === presetRange.endDate.toDateString();
+
+        if (isSameStart && isSameEnd) {
+          return preset.label;
+        }
       }
     }
 
@@ -291,10 +367,67 @@ const DateRangePicker = ({
     }
   };
 
-  const handleApply = () => {
-    if (onApply) {
-      onApply(dateRange);
+  const getDateCategory = (date: Date): string => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const dateToCheck = new Date(date);
+    dateToCheck.setHours(0, 0, 0, 0);
+
+    const diffTime = today.getTime() - dateToCheck.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      return 'Today';
     }
+    if (diffDays === 1) {
+      return 'Yesterday';
+    }
+    if (diffDays > 1 && diffDays <= 7) {
+      return 'This Week';
+    }
+    if (diffDays > 7 && diffDays <= 14) {
+      return 'Last Week';
+    }
+    if (dateToCheck.getMonth() === today.getMonth() && dateToCheck.getFullYear() === today.getFullYear()) {
+      return 'This Month';
+    }
+
+    const lastMonth = new Date(today);
+    lastMonth.setMonth(lastMonth.getMonth() - 1);
+    if (dateToCheck.getMonth() === lastMonth.getMonth() && dateToCheck.getFullYear() === lastMonth.getFullYear()) {
+      return 'Last Month';
+    }
+
+    return dateToCheck.getFullYear().toString();
+  };
+
+  const handleApply = () => {
+    let finalRange = { ...dateRange };
+
+    // If only one date is selected, use it for both start and end
+    if (finalRange.startDate && !finalRange.endDate) {
+      finalRange = {
+        startDate: finalRange.startDate,
+        endDate: finalRange.startDate,
+      };
+    } else if (!finalRange.startDate && finalRange.endDate) {
+      finalRange = {
+        startDate: finalRange.endDate,
+        endDate: finalRange.endDate,
+      };
+    }
+
+    // Update the field value
+    field.onChange(finalRange);
+
+    if (onApply) {
+      onApply(finalRange);
+    }
+
     setIsOpen(false);
   };
 
@@ -308,7 +441,11 @@ const DateRangePicker = ({
 
     const newRange = { ...dateRange };
 
-    if (!newRange.startDate || (newRange.startDate && newRange.endDate)) {
+    // If we're in 'All Time' mode, clear the selection and start new
+    if (newRange.startDate === null && newRange.endDate === null) {
+      newRange.startDate = date;
+      newRange.endDate = null;
+    } else if (!newRange.startDate || (newRange.startDate && newRange.endDate)) {
       // Start new selection
       newRange.startDate = date;
       newRange.endDate = null;
@@ -326,11 +463,14 @@ const DateRangePicker = ({
     if (onChange) {
       onChange(newRange);
     }
-
-    // Don't auto-close, let user click Apply button
   };
 
   const isDateInRange = (date: Date) => {
+    // If in 'All Time' mode, no dates should appear as selected
+    if (dateRange.startDate === null && dateRange.endDate === null) {
+      return false;
+    }
+
     if (!dateRange.startDate) {
       return false;
     }
@@ -347,6 +487,11 @@ const DateRangePicker = ({
   };
 
   const isDateSelected = (date: Date) => {
+    // In 'All Time' mode, no dates should appear as selected
+    if (dateRange.startDate === null && dateRange.endDate === null) {
+      return false;
+    }
+
     return (dateRange.startDate && date.toDateString() === dateRange.startDate.toDateString()) ||
       (dateRange.endDate && date.toDateString() === dateRange.endDate.toDateString());
   };
@@ -436,59 +581,62 @@ const DateRangePicker = ({
 
       {isOpen && (
         <div
-          className={`fixed z-50 rounded-lg shadow-lg border min-w-[600px] ${darkMode
+          className={`fixed z-50 rounded-lg shadow-lg border ${darkMode
             ? 'bg-gray-800 border-gray-600'
             : 'bg-white border-gray-300'}`}
           style={{
             top: dropdownPosition.top,
-            bottom: dropdownPosition.bottom,
             left: dropdownPosition.left,
             right: dropdownPosition.right,
+            width: dropdownPosition.width,
+            maxHeight: dropdownPosition.maxHeight,
           }}
         >
-          <div className='flex'>
+          <div className='flex' style={{ maxHeight: dropdownPosition.maxHeight }}>
             {/* Presets sidebar */}
-            <div className={`w-48 p-4 border-r ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}>
-              <h4 className={`text-sm font-medium mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Quick Select
-              </h4>
-              <div className='space-y-1'>
-                {presets.map((preset) => {
-                  const activePreset = getActivePreset();
-                  const isActive = activePreset === preset.label;
+            {dropdownPosition.width >= 520 && (
+              <div className={`w-48 p-4 border-r overflow-auto ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+                <h4 className={`text-sm font-medium mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Quick Select
+                </h4>
+                <div className='space-y-1'>
+                  {presets.map((preset) => {
+                    const activePreset = getActivePreset();
+                    const isActive = activePreset === preset.label;
 
-                  return (
-                    <button
-                      key={preset.label}
-                      type='button'
-                      onClick={() => handlePresetClick(preset)}
-                      className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${isActive
-                        ? darkMode
-                          ? 'bg-primary-500 text-white'
-                          : 'bg-primary-500 text-white'
-                        : darkMode
-                          ? 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                          : 'text-gray-700 hover:bg-gray-100'}`}
+                    return (
+                      <button
+                        key={preset.label}
+                        type='button'
+                        onClick={() => handlePresetClick(preset)}
+                        className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${isActive
+                          ? darkMode
+                            ? 'bg-primary-500 text-white'
+                            : 'bg-primary-500 text-white'
+                          : darkMode
+                            ? 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                            : 'text-gray-700 hover:bg-gray-100'}`}
+                      >
+                        {preset.label}
+                      </button>
+                    );
+                  })}
+                  {/* Custom option */}
+                  {getActivePreset() === 'Custom' && (
+                    <div
+                      className={`px-3 py-2 text-sm rounded-md ${darkMode
+                        ? 'bg-primary-500 text-white'
+                        : 'bg-primary-500 text-white'}`}
                     >
-                      {preset.label}
-                    </button>
-                  );
-                })}
-                {/* Custom option */}
-                {getActivePreset() === 'Custom' && (
-                  <div
-                    className={`px-3 py-2 text-sm rounded-md ${darkMode
-                      ? 'bg-primary-500 text-white'
-                      : 'bg-primary-500 text-white'}`}
-                  >
-                    Custom
-                  </div>
-                )}
+                      Custom
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Calendar */}
-            <div className='flex-1 p-4'>
+            <div className='flex-1 p-4 overflow-auto' style={{ maxHeight: dropdownPosition.maxHeight }}>
               <div className='flex items-center justify-between mb-4'>
                 <button
                   type='button'
