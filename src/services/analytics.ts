@@ -223,10 +223,9 @@ const buildQueryParams = (params: DateRangeParams): string => {
 // INDIVIDUAL API SERVICES
 // ============================================================================
 
-export const getQuickMetrics = async (params: DateRangeParams): Promise<QuickMetrics> => {
-  const queryString = buildQueryParams(params);
-  return getHandler({ path: `analytics/quick-metrics?${queryString}` });
-};
+export const getQuickMetrics = async (params: string) => getHandler({
+  path: `analytics/quick-metrics${params ? `?${params}` : ''}`,
+});
 
 export const getProductivityChartData = async (params: DateRangeParams): Promise<ProductivityChartData> => {
   const queryString = buildQueryParams(params);
