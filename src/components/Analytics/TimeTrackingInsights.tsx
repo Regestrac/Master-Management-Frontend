@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useProfileStore } from 'stores/profileStore';
 
 const TimeTrackingInsights = () => {
@@ -16,27 +18,37 @@ const TimeTrackingInsights = () => {
         <div className='grid grid-cols-12 gap-1 mb-2'>
           {Array.from({ length: 24 }, (_, i) => {
             const hour = i;
-            const intensity = hour >= 9 && hour <= 11 ? 0.9 :
-              hour >= 14 && hour <= 16 ? 0.7 :
-                hour >= 8 && hour <= 17 ? 0.4 : 0.1;
+            let intensity;
+            if (hour >= 9 && hour <= 11) {
+              intensity = 0.9;
+            } else if (hour >= 14 && hour <= 16) {
+              intensity = 0.7;
+            } else if (hour >= 8 && hour <= 17) {
+              intensity = 0.4;
+            } else {
+              intensity = 0.1;
+            }
+
             return (
-              <div
-                key={i}
-                className='h-8 rounded-sm relative group cursor-pointer transition-all hover:scale-110'
-                style={{
-                  backgroundColor: 'var(--color-primary-500)',
-                  opacity: intensity,
-                  border: darkMode ? '1px solid #374151' : '1px solid #E5E7EB',
-                }}
-              >
-                <div className='absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity'>
-                  {hour}
-                  :00
-                  <br />
-                  {Math.round(intensity * 100)}
-                  %
+              <React.Fragment key={i}>
+                <div
+                  id={`hour-${hour}`}
+                  className='h-8 rounded-sm relative group cursor-pointer transition-all hover:scale-110'
+                  style={{
+                    backgroundColor: 'var(--color-primary-500)',
+                    opacity: intensity,
+                    border: darkMode ? '1px solid #374151' : '1px solid #E5E7EB',
+                  }}
+                >
+                  <div className='absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity'>
+                    {hour}
+                    :00
+                    <br />
+                    {Math.round(intensity * 100)}
+                    %
+                  </div>
                 </div>
-              </div>
+              </React.Fragment>
             );
           })}
         </div>

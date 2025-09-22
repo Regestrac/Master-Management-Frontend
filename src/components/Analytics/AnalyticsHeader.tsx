@@ -1,28 +1,26 @@
 import { useForm, FormProvider } from 'react-hook-form';
 import { Menu, X } from 'lucide-react';
 
-import { SelectOptionType } from 'helpers/sharedTypes';
-
 import { useProfileStore } from 'stores/profileStore';
 import { useNavbarStore } from 'stores/navbarStore';
 
-import SelectField from 'components/Shared/SelectField';
+import DateRangePicker, { DateRange } from 'components/Shared/DateRangePicker';
 
 const AnalyticsHeader = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
   const showNavbar = useNavbarStore((state) => state.showNavbar);
 
-  const rangeOptions: SelectOptionType[] = [
-    { value: '7d', label: 'Last 7 days' },
-    { value: '30d', label: 'Last 30 days' },
-    { value: '90d', label: 'Last 90 days' },
-    { value: '1y', label: 'Last year' },
-  ];
-
-  const methods = useForm<{ analyticsRange: SelectOptionType }>({
+  const methods = useForm<{ dateRange: DateRange }>({
     defaultValues: {
-      analyticsRange: rangeOptions[0],
+      dateRange: {
+        startDate: (() => {
+          const date = new Date();
+          date.setDate(date.getDate() - 7);
+          return date;
+        })(),
+        endDate: new Date(),
+      },
     },
   });
 
@@ -51,12 +49,10 @@ const AnalyticsHeader = () => {
             </button>
           </div>
           <div className='flex items-center gap-4'>
-            <SelectField
-              name='analyticsRange'
-              options={rangeOptions}
-              placeholder='Select range'
-              isMulti={false}
-              className='min-w-[180px]'
+            <DateRangePicker
+              name='dateRange'
+              placeholder='Select date range'
+              className='min-w-[280px]'
             />
             <button className='flex items-center space-x-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors'>
               <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
