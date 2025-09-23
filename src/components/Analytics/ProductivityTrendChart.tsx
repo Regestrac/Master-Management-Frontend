@@ -1,7 +1,18 @@
+import { useState } from 'react';
+
 import { useProfileStore } from 'stores/profileStore';
 
+const createChartPathString = (data: number[][]) => {
+  return data.map(([x, y], index) => `${index === 0 ? 'M' : 'L'}${x},${y}`).join(' ');
+};
+
+const dummyChartData = [[50, 140], [100, 120], [150, 100], [200, 80], [250, 90], [300, 70], [350, 85]];
+
 const ProductivityTrendChart = () => {
+  const [chartData, _setChartData] = useState(dummyChartData);
+
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+
   return (
     <div className='lg:col-span-2'>
       <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
@@ -17,8 +28,8 @@ const ProductivityTrendChart = () => {
         </div>
 
         {/* Chart Placeholder - would use a real chart library like Chart.js or Recharts */}
-        <div className='relative h-64'>
-          <svg className='w-full h-full' viewBox='0 0 400 200'>
+        <div className='relative h-70'>
+          <svg className='w-full h-full' viewBox='0 0 400 220'>
             <defs>
               <linearGradient id='chartGradient' x1='0%' y1='0%' x2='0%' y2='100%'>
                 <stop offset='0%' stopColor='var(--color-primary-500)' stopOpacity='0.3' />
@@ -28,22 +39,22 @@ const ProductivityTrendChart = () => {
 
             {/* Grid lines */}
             {[0, 50, 100, 150, 200].map((y) => (
-              <line key={y} x1='40' y1={y} x2='380' y2={y} stroke={darkMode ? '#374151' : '#E5E7EB'} strokeWidth='1' />
+              <line key={y} x1='50' y1={y} x2='350' y2={y} stroke={darkMode ? '#374151' : '#E5E7EB'} strokeWidth='1' />
             ))}
-            {[40, 100, 160, 220, 280, 340, 380].map((x) => (
+            {[50, 100, 150, 200, 250, 300, 350].map((x) => (
               <line key={x} x1={x} y1='0' x2={x} y2='200' stroke={darkMode ? '#374151' : '#E5E7EB'} strokeWidth='1' />
             ))}
 
             {/* Chart area */}
             <path
-              d='M40,140 L80,120 L120,100 L160,80 L200,90 L240,70 L280,85 L320,65 L360,75 L380,60'
+              d={createChartPathString(chartData)}
               fill='url(#chartGradient)'
               stroke='none'
             />
 
             {/* Chart line */}
             <path
-              d='M40,140 L80,120 L120,100 L160,80 L200,90 L240,70 L280,85 L320,65 L360,75 L380,60'
+              d={createChartPathString(chartData)}
               fill='none'
               stroke='var(--color-primary-500)'
               strokeWidth='3'
@@ -52,7 +63,7 @@ const ProductivityTrendChart = () => {
             />
 
             {/* Data points */}
-            {[[40, 140], [80, 120], [120, 100], [160, 80], [200, 90], [240, 70], [280, 85], [320, 65], [360, 75], [380, 60]].map(([x, y], index) => (
+            {chartData.map(([x, y], index) => (
               <circle key={index} cx={x} cy={y} r='4' fill='var(--color-primary-500)' stroke='white' strokeWidth='2' />
             ))}
 
@@ -63,13 +74,13 @@ const ProductivityTrendChart = () => {
             <text x='30' y='165' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>2h</text>
 
             {/* X-axis labels */}
-            <text x='35' y='190' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Mon</text>
-            <text x='95' y='190' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Tue</text>
-            <text x='155' y='190' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Wed</text>
-            <text x='215' y='190' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Thu</text>
-            <text x='275' y='190' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Fri</text>
-            <text x='335' y='190' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Sat</text>
-            <text x='375' y='190' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Sun</text>
+            <text x='35' y='215' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Mon</text>
+            <text x='90' y='215' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Tue</text>
+            <text x='140' y='215' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Wed</text>
+            <text x='190' y='215' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Thu</text>
+            <text x='240' y='215' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Fri</text>
+            <text x='290' y='215' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Sat</text>
+            <text x='340' y='215' className={`text-xs ${darkMode ? 'fill-gray-400' : 'fill-gray-600'}`}>Sun</text>
           </svg>
         </div>
 
