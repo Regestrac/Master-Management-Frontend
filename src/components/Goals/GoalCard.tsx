@@ -33,7 +33,7 @@ type GoalType = {
   streak: number;
   time_spend: number;
   due_date: string;
-  currentWeekHours: number;
+  weekly_progress: number;
   weeklyTarget: number;
   tags: string[];
   achievements: string[];
@@ -44,6 +44,18 @@ type GoalCardPropsType = {
   goal: GoalType;
   view: 'grid' | 'list';
   isActive: boolean;
+};
+
+const secondsToTime = (seconds: number) => {
+  if (seconds < 60) {
+    return `${seconds}s`;
+  } else if (seconds < 3600) {
+    const minutes = Math.floor(seconds / 60);
+    return `${minutes}m`;
+  } else {
+    const hours = Math.floor(seconds / 3600);
+    return `${hours}h`;
+  }
 };
 
 const GoalCard = ({ goal, view }: GoalCardPropsType) => {
@@ -101,7 +113,7 @@ const GoalCard = ({ goal, view }: GoalCardPropsType) => {
     navigate(`/goals/${goal?.id}`);
   };
 
-  const getWeeklyProgress = () => ((goal?.currentWeekHours / goal?.weeklyTarget) * 100) > 100 ? 100 : ((goal?.currentWeekHours / goal?.weeklyTarget) * 100);
+  const getWeeklyProgress = () => (((goal?.weekly_progress / 3600) / (goal?.weeklyTarget || 1)) * 100) > 100 ? 100 : (((goal?.weekly_progress / 3600) / (goal?.weeklyTarget || 1)) * 100);
 
   const renderProgressBar = () => (
     <div className={clsx('w-full rounded-full h-2', darkMode ? 'bg-gray-700' : 'bg-gray-200')}>
@@ -239,7 +251,7 @@ const GoalCard = ({ goal, view }: GoalCardPropsType) => {
                 />
               </div>
               <span className='text-sm font-medium w-12 text-right'>
-                {goal?.progress || 0}
+                {Math.round(goal?.progress || 0)}
                 %
               </span>
               {renderTimerControls()}
@@ -296,10 +308,9 @@ const GoalCard = ({ goal, view }: GoalCardPropsType) => {
             <div className='flex justify-between text-sm mb-1'>
               <span>This Week</span>
               <span>
-                {goal?.currentWeekHours || 0}
-                h /
-                {' '}
-                {goal?.weeklyTarget || 0}
+                {secondsToTime(goal?.weekly_progress || 0)}
+                &nbsp;/&nbsp;
+                {goal?.weeklyTarget || 1}
                 h
               </span>
             </div>

@@ -7,7 +7,7 @@ const ProgressCircle = ({ progress }: { progress: number; }) => {
         <ProgressCircleIcon progress={progress} />
         <div className='absolute inset-0 flex items-center justify-center'>
           <span className='text-xl font-bold'>
-            {progress}
+            {Math.round(progress)}
             %
           </span>
         </div>
