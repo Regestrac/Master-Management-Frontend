@@ -21,7 +21,8 @@ type ActiveGoalType = {
   status: string;
   last_accessed_at: string;
   type: 'goal' | 'task';
-}
+  progress: number;
+};
 
 const ActiveGoals = () => {
   const [goals, setGoals] = useState<ActiveGoalType[]>([]);
@@ -64,15 +65,13 @@ const ActiveGoals = () => {
           ))
         ) : (
           goals?.map((goal) => {
-            const progress = goal.time_spend % 100; // For now, update this
-
             return (
               <div key={goal.id} className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
                 <div className='mb-4'>
                   <h4 className='font-semibold mb-2'>{goal.title}</h4>
                   <div className='flex items-center justify-between text-sm mb-2'>
                     <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      {progress}
+                      {goal?.progress?.toFixed(1) || 0}
                       % complete
                     </span>
                     <span className='text-orange-500 flex items-center'>
@@ -85,7 +84,7 @@ const ActiveGoals = () => {
                   <div className={`w-full ${darkMode ? 'bg-gray-700' : 'bg-gray-200'} rounded-full h-2`}>
                     <div
                       className='bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500'
-                      style={{ width: `${progress}%` }}
+                      style={{ width: `${goal?.progress || 0}%` }}
                     />
                   </div>
                 </div>
