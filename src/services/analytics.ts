@@ -227,10 +227,9 @@ export const getQuickMetrics = async (params: string) => getHandler({
   path: `analytics/quick-metrics${params ? `?${params}` : ''}`,
 });
 
-export const getProductivityChartData = async (params: DateRangeParams): Promise<ProductivityChartData> => {
-  const queryString = buildQueryParams(params);
-  return getHandler({ path: `analytics/productivity-chart?${queryString}` });
-};
+export const getProductivityChartData = async (params: string): Promise<ProductivityChartData> => getHandler({
+  path: `analytics/productivity-chart${params ? `?${params}` : ''}`,
+});
 
 export const getTaskDistributionData = async (params: DateRangeParams): Promise<TaskDistributionData> => {
   const queryString = buildQueryParams(params);
