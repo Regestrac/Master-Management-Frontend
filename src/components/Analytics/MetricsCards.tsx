@@ -35,7 +35,7 @@ const MetricsCards = () => {
 
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
 
-  const previousParamsRef = useRef<string>(null);
+  const previousParamsRef = useRef<string>('');
 
   const [searchParams] = useSearchParams();
 

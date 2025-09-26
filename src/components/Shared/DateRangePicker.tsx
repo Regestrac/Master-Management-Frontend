@@ -102,7 +102,7 @@ const DateRangePicker = ({
       getValue: () => {
         const today = new Date();
         const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(today.getDate() - 7);
+        sevenDaysAgo.setDate(today.getDate() - 6);
         return {
           startDate: sevenDaysAgo,
           endDate: today,

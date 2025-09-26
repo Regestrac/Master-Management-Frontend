@@ -1,3 +1,5 @@
+import { useCallback, useEffect } from 'react';
+
 import { useForm, FormProvider } from 'react-hook-form';
 import { Menu, X } from 'lucide-react';
 import dayjs from 'dayjs';
@@ -13,12 +15,14 @@ const AnalyticsHeader = () => {
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
   const showNavbar = useNavbarStore((state) => state.showNavbar);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const methods = useForm<{ dateRange: DateRange }>({
     defaultValues: {
       dateRange: {
         startDate: (() => {
           const date = new Date();
-          date.setDate(date.getDate() - 7);
+          date.setDate(date.getDate() - 6); // last 7 days inclusive (today and previous 6)
           return date;
         })(),
         endDate: new Date(),
@@ -32,16 +36,14 @@ const AnalyticsHeader = () => {
 
   const formatDate = (date: Date | null): string => date ? dayjs(date).format('DD-MM-YYYY') : '';
 
-  const getPreviousPeriod = (startDate: Date, endDate: Date) => {
+  const getPreviousPeriod = useCallback((startDate: Date, endDate: Date) => {
     const diff = dayjs(endDate).diff(dayjs(startDate), 'day') + 1;
     const prevEnd = dayjs(startDate).subtract(1, 'day');
     const prevStart = prevEnd.subtract(diff - 1, 'day');
     return { prevStart, prevEnd };
-  };
+  }, []);
 
-  const [_, setSearchParams] = useSearchParams();
-
-  const handleDateApply = ({ startDate, endDate }: DateRange) => {
+  const handleDateApply = useCallback(({ startDate, endDate }: DateRange) => {
     const params = new URLSearchParams();
 
     if (!startDate || !endDate) {
@@ -95,7 +97,20 @@ const AnalyticsHeader = () => {
 
     // Update params
     setSearchParams(params);
-  };
+  }, [getPreviousPeriod, setSearchParams]);
+
+  // On first mount, if URL has no date params, default to last 7 days and update URL
+  useEffect(() => {
+    const hasParams = !!(searchParams.get('startDate') && searchParams.get('endDate'));
+    if (hasParams) {
+      return;
+    }
+    const end = new Date();
+    const start = new Date();
+    start.setDate(end.getDate() - 6); // last 7 days inclusive
+    methods.setValue('dateRange', { startDate: start, endDate: end });
+    handleDateApply({ startDate: start, endDate: end });
+  }, [handleDateApply, methods, searchParams]);
 
   return (
     <FormProvider {...methods}>
