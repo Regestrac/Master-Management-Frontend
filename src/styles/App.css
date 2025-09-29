@@ -53,18 +53,18 @@
 }
 
 .scrollbar-sm::-webkit-scrollbar-track {
-  background: var(--color-primary-400);
+  background: var(--color-primary-800);
   border-radius: 3px;
 }
 
 .scrollbar-sm::-webkit-scrollbar-thumb {
-  background-color: var(--color-primary-300);
+  background-color: var(--color-primary-200);
   border-radius: 10px;
   border: 1px solid transparent;
 }
 
 .scrollbar-sm::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-primary-200);
+  background-color: var(--color-primary-50);
 }
 
 .scrollbar-sm::-webkit-scrollbar-button {

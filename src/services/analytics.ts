@@ -231,10 +231,9 @@ export const getProductivityChartData = async (params: string): Promise<Producti
   path: `analytics/productivity-chart${params ? `?${params}` : ''}`,
 });
 
-export const getTaskDistributionData = async (params: DateRangeParams): Promise<TaskDistributionData> => {
-  const queryString = buildQueryParams(params);
-  return getHandler({ path: `analytics/task-distribution?${queryString}` });
-};
+export const getTaskDistributionData = async (params: string) => getHandler({
+  path: `analytics/task-distribution${params ? `?${params}` : ''}`,
+});
 
 export const getGoalProgress = async (params: DateRangeParams): Promise<GoalProgress> => {
   const queryString = buildQueryParams(params);

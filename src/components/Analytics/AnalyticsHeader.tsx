@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { useForm, FormProvider } from 'react-hook-form';
 import { Menu, X } from 'lucide-react';
@@ -14,6 +14,8 @@ const AnalyticsHeader = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
   const showNavbar = useNavbarStore((state) => state.showNavbar);
+
+  const shouldUpdateParamsRef = useRef<boolean>(true);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -102,7 +104,8 @@ const AnalyticsHeader = () => {
   // On first mount, if URL has no date params, default to last 7 days and update URL
   useEffect(() => {
     const hasParams = !!(searchParams.get('startDate') && searchParams.get('endDate'));
-    if (hasParams) {
+    if (hasParams || !shouldUpdateParamsRef.current) {
+      shouldUpdateParamsRef.current = false;
       return;
     }
     const end = new Date();
@@ -110,6 +113,7 @@ const AnalyticsHeader = () => {
     start.setDate(end.getDate() - 6); // last 7 days inclusive
     methods.setValue('dateRange', { startDate: start, endDate: end });
     handleDateApply({ startDate: start, endDate: end });
+    shouldUpdateParamsRef.current = false;
   }, [handleDateApply, methods, searchParams]);
 
   return (
