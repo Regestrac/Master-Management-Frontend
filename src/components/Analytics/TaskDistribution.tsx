@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { toast } from 'react-toastify';
 import { useSearchParams } from 'react-router-dom';
+
+import { generateRandomColor } from 'helpers/utils';
 
 import { useProfileStore } from 'stores/profileStore';
 
@@ -28,18 +30,6 @@ const TaskDistribution = () => {
   const prevSearchParamsRef = useRef<string>('');
 
   const [searchParams] = useSearchParams();
-
-  const generateColor = useCallback((key: string) => {
-    // Simple deterministic hash -> HEX color
-    let hash = 0;
-    for (let i = 0; i < key.length; i += 1) {
-      hash = ((hash << 5) - hash) + key.charCodeAt(i);
-      hash |= 0; // Convert to 32bit int
-    }
-    // Use unsigned hash to build a hex color
-    const hex = (hash >>> 0).toString(16).padStart(6, '0').slice(0, 6);
-    return `#${hex}`.toUpperCase();
-  }, []);
 
   useEffect(() => {
     const paramsString = searchParams.toString();
@@ -69,7 +59,7 @@ const TaskDistribution = () => {
             label: n.label,
             count: n.count,
             percentage: newTotal > 0 ? (n.count / newTotal) * 100 : 0,
-            color: generateColor(n.label),
+            color: generateRandomColor(n.label),
           }));
 
           setItems(withMeta);
@@ -85,7 +75,7 @@ const TaskDistribution = () => {
         });
       prevSearchParamsRef.current = paramsString;
     }
-  }, [searchParams, generateColor]);
+  }, [searchParams]);
 
   // Compute arcs for donut chart
   let accumulatedOffset = 0;

@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { formatDurationInSeconds } from 'helpers/utils';
+
 import { useProfileStore } from 'stores/profileStore';
 
 import { getQuickMetrics } from 'services/analytics';
@@ -16,18 +18,6 @@ type QuickMetricsType = {
   productivity_score_change: number;
   tasks_completed_change: number;
   goal_progress_change: number;
-};
-
-const formatTime = (seconds: number): string => {
-  if (seconds < 60) {
-    return `${seconds}s`;
-  } else if (seconds < 3600) {
-    const minutes = Math.floor(seconds / 60);
-    return `${minutes}m`;
-  } else {
-    const hours = Math.floor(seconds / 3600);
-    return `${hours}h`;
-  }
 };
 
 const MetricsCards = () => {
@@ -73,8 +63,8 @@ const MetricsCards = () => {
         },
         {
           title: 'Focus Time',
-          value: formatTime(metricsData.focus_time),
-          change: metricsData.focus_time_change ? `${metricsData.focus_time_change > 0 ? '+' : ''}${formatTime(metricsData.focus_time_change)}` : null,
+          value: formatDurationInSeconds(metricsData.focus_time),
+          change: metricsData.focus_time_change ? `${metricsData.focus_time_change > 0 ? '+' : ''}${formatDurationInSeconds(metricsData.focus_time_change)}` : null,
           trend: metricsData.focus_time_change > 0 ? 'up' : 'down',
           icon: '⏱️',
           color: 'from-purple-500 to-purple-600',

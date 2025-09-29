@@ -27,6 +27,7 @@ const formatValue = (v: number, unit: YUnit) => {
   const rounded = Math.round(v); // minutes/seconds as ints
   return `${rounded}${unit === 'minutes' ? 'm' : 's'}`;
 };
+
 const formatDateLabel = (isoDate: string) => {
   const d = new Date(isoDate);
   return d.toLocaleDateString(undefined, { month: 'short', day: '2-digit' });

@@ -297,3 +297,27 @@ export function parseMarkdownJson(markdownString: string) {
     throw new Error('Failed to parse JSON: ' + (error as Error).message);
   }
 }
+
+export const generateRandomColor = (key: string) => {
+  // Simple deterministic hash -> HEX color
+  let hash = 0;
+  for (let i = 0; i < key.length; i += 1) {
+    hash = ((hash << 5) - hash) + key.charCodeAt(i);
+    hash |= 0; // Convert to 32bit int
+  }
+  // Use unsigned hash to build a hex color
+  const hex = (hash >>> 0).toString(16).padStart(6, '0').slice(0, 6);
+  return `#${hex}`.toUpperCase();
+};
+
+export const formatDurationInSeconds = (seconds: number): string => {
+  if (seconds < 60) {
+    return `${seconds}s`;
+  } else if (seconds < 3600) {
+    const minutes = Math.floor(seconds / 60);
+    return `${minutes}m`;
+  } else {
+    const hours = Math.floor(seconds / 3600);
+    return `${hours}h`;
+  }
+};
