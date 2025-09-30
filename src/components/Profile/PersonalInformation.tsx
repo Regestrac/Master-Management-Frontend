@@ -5,9 +5,15 @@ import { useProfileStore } from 'stores/profileStore';
 import Input from 'components/Shared/Input';
 import SelectField from 'components/Shared/SelectField';
 
+import PersonalInformationSkeleton from './PersonalInformationSkeleton';
+
 const PersonalInformation = () => {
-  const user = useProfileStore((state) => state.data);
-  const darkMode = user?.theme === 'dark';
+  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const isProfileLoading = useProfileStore((state) => state.isLoading);
+
+  if (isProfileLoading) {
+    return <PersonalInformationSkeleton />;
+  }
 
   return (
     <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>

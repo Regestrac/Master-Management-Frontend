@@ -31,6 +31,7 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const updateProfile = useProfileStore((state) => state.updateProfile);
+  const updateLoading = useProfileStore((state) => state.updateLoading);
 
   const navigate = useNavigate();
 
@@ -47,11 +48,14 @@ const Login: React.FC = () => {
     login(formData).then((res) => {
       navigate('/dashboard', { replace: true });
       toast.success(res?.message || 'Login successful! Welcome!');
+      updateLoading(true);
       getProfile().then((profile) => {
         updateProfile(profile?.data);
+        updateLoading(false);
       }).catch((err) => {
         toast.error(err?.error || 'Failed to fetch profile. Please try again.');
         setIsLoading(false);
+        updateLoading(false);
       });
     }).catch((err) => {
       setError(err.error || 'Login failed. Please try again.');

@@ -17,6 +17,7 @@ const ValidateUser = () => {
 
   const updateProfile = useProfileStore((state) => state.updateProfile);
   const updateSettings = useSettingsStore((state) => state.updateSettings);
+  const updateLoading = useProfileStore((state) => state.updateLoading);
 
   const isValidated = useRef(false);
 
@@ -25,6 +26,7 @@ const ValidateUser = () => {
   // const { pathname } = useLocation();
 
   const getProfileInfo = useCallback(() => {
+    updateLoading(true);
     getProfile().then((profile) => {
       updateProfile(profile?.data);
       getUserSettings().then((res) => {
@@ -37,8 +39,10 @@ const ValidateUser = () => {
       });
     }).catch((err) => {
       toast.error(err?.error || 'Failed to fetch profile. Please try again.');
+    }).finally(() => {
+      updateLoading(false);
     });
-  }, [updateProfile, updateSettings]);
+  }, [updateProfile, updateSettings, updateLoading]);
 
   useEffect(() => {
     if (!isValidated.current) {

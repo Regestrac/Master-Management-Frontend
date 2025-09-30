@@ -17,6 +17,8 @@ type ProfileDataType = {
 
 type ProfileStateType = {
   data: ProfileDataType;
+  isLoading: boolean;
+  updateLoading: (_value: boolean) => void;
   updateProfile: (_profile: Partial<ProfileDataType>) => void;
   clearProfile: () => void;
 };
@@ -30,6 +32,8 @@ export const useProfileStore = create<ProfileStateType>((set) => ({
     active_task: null,
     avatar_url: null,
   } as ProfileDataType,
+  isLoading: false,
+  updateLoading: (value) => set(() => ({ isLoading: value })),
   updateProfile: (profile) => set((state) => ({
     data: {
       ...state.data,

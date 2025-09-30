@@ -68,6 +68,7 @@ const Signup: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const updateProfile = useProfileStore((state) => state.updateProfile);
+  const updateLoading = useProfileStore((state) => state.updateLoading);
 
   const navigate = useNavigate();
 
@@ -97,11 +98,14 @@ const Signup: React.FC = () => {
     setIsLoading(true);
     signup(formData).then(() => {
       navigate('/dashboard', { replace: true });
+      updateLoading(true);
       getProfile().then((profile) => {
         updateProfile(profile?.data);
+        updateLoading(false);
       }).catch((err) => {
         toast.error(err?.error || 'Failed to fetch profile. Please try again.');
         setIsLoading(false);
+        updateLoading(false);
       });
     }).catch((err) => {
       setError(err?.error || 'Failed to signup!');
