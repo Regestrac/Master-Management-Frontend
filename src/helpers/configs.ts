@@ -69,3 +69,25 @@ export const WEEKLY_TARGET_OPTIONS: SelectOptionType[] = [
   { label: '20 hours', value: 20 },
   { label: '25 hours', value: 25 },
 ];
+
+// Time zone options
+export const TIME_ZONE_OPTIONS = [
+  { value: 'pst', label: 'Pacific Standard Time (PST)' },
+  { value: 'est', label: 'Eastern Standard Time (EST)' },
+  { value: 'gmt', label: 'Greenwich Mean Time (GMT)' },
+  { value: 'cet', label: 'Central European Time (CET)' },
+  { value: 'ist', label: 'Indian Standard Time (IST)' },
+  { value: 'jst', label: 'Japan Standard Time (JST)' },
+  { value: 'cst', label: 'Central Standard Time (CST)' },
+];
+
+// Language options
+export const LANGUAGE_OPTIONS = [
+  { value: 'en', label: 'English' },
+  { value: 'es', label: 'Español' },
+  { value: 'fr', label: 'Français' },
+  { value: 'de', label: 'Deutsch' },
+  { value: 'zh', label: '中文' },
+  { value: 'ar', label: 'العربية' },
+  { value: 'ja', label: '日本語' },
+];

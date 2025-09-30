@@ -1,29 +1,9 @@
+import { LANGUAGE_OPTIONS, TIME_ZONE_OPTIONS } from 'helpers/configs';
+
 import { useProfileStore } from 'stores/profileStore';
 
 import Input from 'components/Shared/Input';
 import SelectField from 'components/Shared/SelectField';
-
-// Time zone options
-const timeZoneOptions = [
-  { value: 'pst', label: 'Pacific Standard Time (PST)' },
-  { value: 'est', label: 'Eastern Standard Time (EST)' },
-  { value: 'gmt', label: 'Greenwich Mean Time (GMT)' },
-  { value: 'cet', label: 'Central European Time (CET)' },
-  { value: 'ist', label: 'Indian Standard Time (IST)' },
-  { value: 'jst', label: 'Japan Standard Time (JST)' },
-  { value: 'cst', label: 'Central Standard Time (CST)' },
-];
-
-// Language options
-const languageOptions = [
-  { value: 'en', label: 'English' },
-  { value: 'es', label: 'Español' },
-  { value: 'fr', label: 'Français' },
-  { value: 'de', label: 'Deutsch' },
-  { value: 'zh', label: '中文' },
-  { value: 'ar', label: 'العربية' },
-  { value: 'ja', label: '日本語' },
-];
 
 const PersonalInformation = () => {
   const user = useProfileStore((state) => state.data);
@@ -75,7 +55,7 @@ const PersonalInformation = () => {
         <SelectField
           name='timeZone'
           label='Time Zone'
-          options={timeZoneOptions}
+          options={TIME_ZONE_OPTIONS}
           placeholder='Select time zone'
           isMulti={false}
           className='w-full'
@@ -84,7 +64,7 @@ const PersonalInformation = () => {
         <SelectField
           name='language'
           label='Language'
-          options={languageOptions}
+          options={LANGUAGE_OPTIONS}
           placeholder='Select language'
           isMulti={false}
           className='w-full'

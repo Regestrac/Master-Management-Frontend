@@ -5,7 +5,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { LANGUAGE_OPTIONS, TIME_ZONE_OPTIONS } from 'helpers/configs';
+
 import { useProfileStore } from 'stores/profileStore';
+
+import { updateProfile } from 'services/profile';
 
 import ProfileInfoCard from 'components/Profile/ProfileInfoCard';
 import QuickStats from 'components/Profile/QuickStats';
@@ -20,12 +24,9 @@ type ProfileFormType = {
   email: string;
   jobTitle?: string;
   company?: string;
-  timeZone?: string;
-  language?: string;
+  timeZone?: { value: string; label: string };
+  language?: { value: string; label: string };
   bio?: string;
-  analyticsUsageData?: boolean;
-  marketingCommunications?: boolean;
-  thirdPartyIntegrations?: boolean;
 }
 
 const schema = z.object({
@@ -34,19 +35,19 @@ const schema = z.object({
   email: z.string().nonempty('Email is required!').email('Invalid email address!'),
   jobTitle: z.string().optional(),
   company: z.string().optional(),
-  timeZone: z.string().optional(),
-  language: z.string().optional(),
+  timeZone: z.object({ value: z.string(), label: z.string() }).optional(),
+  language: z.object({ value: z.string(), label: z.string() }).optional(),
   bio: z.string().optional(),
-  analyticsUsageData: z.boolean().optional(),
-  marketingCommunications: z.boolean().optional(),
-  thirdPartyIntegrations: z.boolean().optional(),
 });
 
 const Profile = () => {
   const updateProfileInfo = useProfileStore((state) => state.updateProfile);
-  const firstName = useProfileStore((state) => state?.data?.first_name);
-  const lastName = useProfileStore((state) => state?.data?.last_name);
-  const email = useProfileStore((state) => state?.data?.email);
+  const {
+    first_name: firstName,
+    last_name: lastName,
+    email,
+    ...userData
+  } = useProfileStore((state) => state?.data);
 
   const shouldResetForm = useRef(true);
 
@@ -56,35 +57,42 @@ const Profile = () => {
       first_name: firstName || '',
       last_name: lastName || '',
       email: email || '',
-      jobTitle: 'Senior Frontend Developer',
-      company: 'TechCorp Solutions',
-      timeZone: 'PST',
-      language: 'en',
-      bio: 'Passionate frontend developer with 5+ years of experience building modern web applications. Love learning new technologies and optimizing productivity workflows.',
-      analyticsUsageData: false,
-      marketingCommunications: false,
-      thirdPartyIntegrations: false,
+      jobTitle: userData.job_title || '',
+      company: userData.company || '',
+      timeZone: TIME_ZONE_OPTIONS.find((option) => option.value === userData.time_zone),
+      language: LANGUAGE_OPTIONS.find((option) => option.value === userData.language),
+      bio: userData.bio || '',
     },
   });
 
   const { handleSubmit, reset, formState: { isDirty } } = methods;
 
   const handleSaveProfile = (formData: ProfileFormType) => {
-    try {
-      // Update the profile in the store with basic info
+    const payload = {
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      email: formData.email,
+      job_title: formData.jobTitle,
+      company: formData.company,
+      time_zone: formData.timeZone?.value,
+      language: formData.language?.value,
+      bio: formData.bio,
+    };
+    updateProfile(payload).then((res) => {
       updateProfileInfo({
         first_name: formData.first_name,
         last_name: formData.last_name,
         email: formData.email,
+        job_title: formData.jobTitle,
+        company: formData.company,
+        time_zone: formData.timeZone?.value,
+        language: formData.language?.value,
+        bio: formData.bio,
       });
-
-      // Show success message
-      toast.success('Profile updated successfully');
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to update profile:', error);
-      toast.error('Failed to update profile. Please try again.');
-    }
+      toast.success(res.message || 'Profile updated successfully');
+    }).catch((err) => {
+      toast.error(err.error || 'Failed to update profile. Please try again.');
+    });
   };
 
   useEffect(() => {
@@ -93,10 +101,15 @@ const Profile = () => {
         first_name: firstName || '',
         last_name: lastName || '',
         email: email || '',
+        jobTitle: userData.job_title || '',
+        company: userData.company || '',
+        timeZone: TIME_ZONE_OPTIONS.find((option) => option.value === userData.time_zone),
+        language: LANGUAGE_OPTIONS.find((option) => option.value === userData.language),
+        bio: userData.bio || '',
       });
       shouldResetForm.current = false;
     }
-  }, [email, firstName, lastName, reset]);
+  }, [email, firstName, lastName, reset, userData.bio, userData.company, userData.job_title, userData.language, userData.time_zone]);
 
   return (
     <div>
