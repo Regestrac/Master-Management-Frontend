@@ -311,13 +311,20 @@ export const generateRandomColor = (key: string) => {
 };
 
 export const formatDurationInSeconds = (seconds: number): string => {
+  if (!seconds || seconds <= 0) {
+    return '0s';
+  }
   if (seconds < 60) {
     return `${seconds}s`;
-  } else if (seconds < 3600) {
-    const minutes = Math.floor(seconds / 60);
-    return `${minutes}m`;
-  } else {
-    const hours = Math.floor(seconds / 3600);
-    return `${hours}h`;
   }
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const parts: string[] = [];
+  if (hours > 0) {
+    parts.push(`${hours}h`);
+  }
+  if (minutes > 0) {
+    parts.push(`${minutes}m`);
+  }
+  return parts.join(' ') || '0s';
 };

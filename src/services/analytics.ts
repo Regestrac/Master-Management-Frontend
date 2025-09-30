@@ -239,10 +239,9 @@ export const getGoalProgress = async (params: string) => getHandler({
   path: `analytics/goal-progress${params ? `?${params}` : ''}`,
 });
 
-export const getTimeInsights = async (params: DateRangeParams): Promise<TimeInsights> => {
-  const queryString = buildQueryParams(params);
-  return getHandler({ path: `analytics/time-insights?${queryString}` });
-};
+export const getTimeInsights = async (params: string) => getHandler({
+  path: `analytics/timely-insights${params ? `?${params}` : ''}`,
+});
 
 export const getStreaksAndAchievements = async (params: DateRangeParams): Promise<StreaksAndAchievements> => {
   const queryString = buildQueryParams(params);
