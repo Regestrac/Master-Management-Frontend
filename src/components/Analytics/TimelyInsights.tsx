@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Tooltip } from 'react-tooltip';
 
 import { formatDurationInSeconds } from 'helpers/utils';
 
@@ -123,14 +124,15 @@ const TimelyInsights = () => {
                     opacity: intensity,
                     border: darkMode ? '1px solid #374151' : '1px solid #E5E7EB',
                   }}
-                  title={`${formatHour(hour)} • ${formatDurationInSeconds(value)}`}
-                >
-                  <div className='absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity'>
+                  data-tooltip-id={`hour-${hour}`}
+                />
+                <Tooltip id={`hour-${hour}`}>
+                  <div className='text-xs rounded'>
                     {formatHour(hour)}
                     <br />
                     {formatDurationInSeconds(value)}
                   </div>
-                </div>
+                </Tooltip>
               </React.Fragment>
             );
           })}

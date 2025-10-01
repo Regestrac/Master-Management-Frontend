@@ -33,6 +33,7 @@
     "react-router-dom": "^7.6.3",
     "react-select": "^5.10.2",
     "react-toastify": "^11.0.5",
+    "react-tooltip": "^5.29.1",
     "tailwindcss": "^4.1.7",
     "zod": "^3.25.64",
     "zustand": "^5.0.5"
