@@ -1,17 +1,21 @@
 import { useCallback, useEffect, useRef } from 'react';
 
 import { useForm, FormProvider } from 'react-hook-form';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import dayjs from 'dayjs';
 import { useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { useProfileStore } from 'stores/profileStore';
 import { useNavbarStore } from 'stores/navbarStore';
+
+import { updateTheme } from 'services/profile';
 
 import DateRangePicker, { DateRange } from 'components/Shared/DateRangePicker';
 
 const AnalyticsHeader = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const updateProfile = useProfileStore((state) => state.updateProfile);
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
   const showNavbar = useNavbarStore((state) => state.showNavbar);
 
@@ -34,6 +38,15 @@ const AnalyticsHeader = () => {
 
   const handleSidebarToggle = () => {
     setShowNavbar(!showNavbar);
+  };
+
+  const updateColorTheme = () => {
+    updateProfile({ theme: darkMode ? 'light' : 'dark' });
+    updateTheme({ theme: darkMode ? 'light' : 'dark' }).then((res) => {
+      updateProfile({ theme: res?.theme });
+    }).catch((err) => {
+      toast.error(err?.error);
+    });
   };
 
   const formatDate = (date: Date | null): string => date ? dayjs(date).format('DD-MM-YYYY') : '';
@@ -148,6 +161,12 @@ const AnalyticsHeader = () => {
                 <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' />
               </svg>
               <span className='hidden sm:inline'>Export Report</span>
+            </button>
+            <button
+              onClick={updateColorTheme}
+              className={`p-2 rounded-lg ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
+            >
+              {darkMode ? <Sun className='w-5 h-5' /> : <Moon className='w-5 h-5' />}
             </button>
           </div>
         </div>

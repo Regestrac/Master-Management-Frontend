@@ -1,15 +1,28 @@
-import { Plus, Menu, X } from 'lucide-react';
+import { Plus, Menu, X, Sun, Moon } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 import { useProfileStore } from 'stores/profileStore';
 import { useNavbarStore } from 'stores/navbarStore';
 
+import { updateTheme } from 'services/profile';
+
 const CalendarHeader = () => {
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const updateProfile = useProfileStore((state) => state.updateProfile);
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
   const showNavbar = useNavbarStore((state) => state.showNavbar);
 
   const handleSidebarToggle = () => {
     setShowNavbar(!showNavbar);
+  };
+
+  const updateColorTheme = () => {
+    updateProfile({ theme: darkMode ? 'light' : 'dark' });
+    updateTheme({ theme: darkMode ? 'light' : 'dark' }).then((res) => {
+      updateProfile({ theme: res?.theme });
+    }).catch((err) => {
+      toast.error(err?.error);
+    });
   };
 
   return (
@@ -40,6 +53,12 @@ const CalendarHeader = () => {
           <button className='flex items-center space-x-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors'>
             <Plus className='w-4 h-4' />
             <span className='hidden sm:inline'>Add Event</span>
+          </button>
+          <button
+            onClick={updateColorTheme}
+            className={`p-2 rounded-lg ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
+          >
+            {darkMode ? <Sun className='w-5 h-5' /> : <Moon className='w-5 h-5' />}
           </button>
         </div>
       </div>

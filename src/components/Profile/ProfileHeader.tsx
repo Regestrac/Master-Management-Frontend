@@ -1,8 +1,11 @@
 import clsx from 'clsx';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 import { useNavbarStore } from 'stores/navbarStore';
 import { useProfileStore } from 'stores/profileStore';
+
+import { updateTheme } from 'services/profile';
 
 type ProfileHeaderProps = {
   onSave?: () => void;
@@ -11,11 +14,21 @@ type ProfileHeaderProps = {
 
 const ProfileHeader = ({ onSave, hasChanges = false }: ProfileHeaderProps) => {
   const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const updateProfile = useProfileStore((state) => state.updateProfile);
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
   const showNavbar = useNavbarStore((state) => state.showNavbar);
 
   const handleSidebarToggle = () => {
     setShowNavbar(!showNavbar);
+  };
+
+  const updateColorTheme = () => {
+    updateProfile({ theme: darkMode ? 'light' : 'dark' });
+    updateTheme({ theme: darkMode ? 'light' : 'dark' }).then((res) => {
+      updateProfile({ theme: res?.theme });
+    }).catch((err) => {
+      toast.error(err?.error);
+    });
   };
 
   return (
@@ -49,6 +62,12 @@ const ProfileHeader = ({ onSave, hasChanges = false }: ProfileHeaderProps) => {
               <span>Save Changes</span>
             </button>
           )}
+          <button
+            onClick={updateColorTheme}
+            className={`p-2 rounded-lg ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
+          >
+            {darkMode ? <Sun className='w-5 h-5' /> : <Moon className='w-5 h-5' />}
+          </button>
 
           {/* <button className='flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors'>
             <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
