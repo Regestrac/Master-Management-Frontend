@@ -3,10 +3,10 @@ import { Bold, Italic, Code, Underline as UnderlineIcon, Strikethrough, Link as 
 import clsx from 'clsx';
 import { BubbleMenu } from '@tiptap/react/menus';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 const CustomBubbleMenu = ({ editor }: { editor: Editor; }) => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   if (!editor) {
     return null;

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { Member } from 'helpers/sharedTypes';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 type MemberAvatarProps = {
   member: Member;
@@ -41,7 +41,7 @@ const sizeClasses = {
 export const MemberAvatar = memo(({ member, size, className = '', color }: MemberAvatarProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const colorClass = colorClassesMap[color || 'violet'];
   const sizeClass = sizeClasses[size];

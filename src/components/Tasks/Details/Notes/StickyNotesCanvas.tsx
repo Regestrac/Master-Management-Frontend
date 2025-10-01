@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { StickyNoteDataType } from 'helpers/sharedTypes';
 import { omit } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { createNote, deleteNote, getAllNotes, updateNote } from 'services/note';
 
@@ -21,7 +21,7 @@ const StickyNotesCanvas = () => {
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
   const [_lastPanPoint, setLastPanPoint] = useState({ x: 0, y: 0 });
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const { id } = useParams();
 

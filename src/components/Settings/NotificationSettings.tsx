@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import Switch from '../Shared/Switch';
 
@@ -13,7 +13,8 @@ interface NotificationSetting {
 }
 
 const NotificationSettings = () => {
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
+
   const [notifications, setNotifications] = useState<NotificationSetting[]>([
     {
       id: 'task-reminders',

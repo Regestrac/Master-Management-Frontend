@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { formatDurationInSeconds, generateRandomColor } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getGoalProgress } from 'services/analytics';
 
@@ -19,7 +19,7 @@ type GoalProgressType = {
 
 const GoalProgressOverview = () => {
   const [goalProgress, setGoalProgress] = useState<GoalProgressType>([]);
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const prevSearchParamsRef = useRef('');
 

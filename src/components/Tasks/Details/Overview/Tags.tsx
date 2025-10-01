@@ -5,8 +5,8 @@ import clsx from 'clsx';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 
-import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateTask } from 'services/tasks';
 
@@ -19,7 +19,7 @@ const Tags = () => {
   const [error, setError] = useState('');
   const [generatedTags, setGeneratedTags] = useState<string[]>([]);
 
-  const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((s) => s.currentTaskDetails);
   const updateTaskDetails = useTaskStore((s) => s.updateCurrentTaskDetails);
 

@@ -1,11 +1,11 @@
 import { Outlet } from 'react-router-dom';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import Sidebar from 'components/Layout/Sidebar';
 
 const SidebarOnlyLayout = () => {
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   return (
     <div className={darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}>

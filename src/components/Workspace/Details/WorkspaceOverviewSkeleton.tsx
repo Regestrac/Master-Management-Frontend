@@ -1,12 +1,12 @@
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import Skeleton from 'components/Shared/Skeleton';
 
 const WorkspaceOverviewSkeleton = () => {
-  const isDark = useProfileStore((s) => s.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   return (
-    <section className={`rounded-xl border p-6 ${isDark ? 'border-gray-700 bg-gradient-to-b from-gray-800 to-gray-900' : 'border-gray-200 bg-gradient-to-b from-white to-gray-50'}`}>
+    <section className={`rounded-xl border p-6 ${darkMode ? 'border-gray-700 bg-gradient-to-b from-gray-800 to-gray-900' : 'border-gray-200 bg-gradient-to-b from-white to-gray-50'}`}>
       <div className='flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6'>
         <div className='min-w-0 flex-1'>
           {/* Active status skeleton */}

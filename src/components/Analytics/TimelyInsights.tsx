@@ -6,7 +6,7 @@ import { Tooltip } from 'react-tooltip';
 
 import { formatDurationInSeconds } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getTimeInsights } from 'services/analytics';
 
@@ -23,7 +23,7 @@ const dayName = (index: number): string => {
 };
 
 const TimelyInsights = () => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const previousSearchParamsRef = useRef<string | null>(null);
 

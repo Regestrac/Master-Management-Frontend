@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CheckSquare, Clock, Flame, Trophy } from 'lucide-react';
 import { toast } from 'react-toastify';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getQuickStats } from 'services/dashboard';
 
@@ -18,7 +18,7 @@ const secondsToHour = (seconds: number) => {
 const QuickStats = () => {
   const [stats, setStats] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const shouldFetchStatsRef = useRef(true);
 

@@ -9,9 +9,9 @@ import clsx from 'clsx';
 
 import { StatusType } from 'helpers/sharedTypes';
 
-import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
 import { useNavbarStore } from 'stores/navbarStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { createTask, deleteTask, getSubTasks } from 'services/tasks';
 
@@ -36,7 +36,7 @@ const SubTasks = () => {
   const [subtasks, setSubtasks] = useState<SubTaskType[]>([]);
   const [generatedTasks, setGeneratedTasks] = useState<GeneratedTaskType[]>([]);
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const parentTaskId = useTaskStore((state) => state.currentTaskDetails?.parent_id);
   const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 

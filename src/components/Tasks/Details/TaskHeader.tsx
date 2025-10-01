@@ -12,6 +12,7 @@ import { TaskType } from 'helpers/sharedTypes';
 import { useTaskStore } from 'stores/taskStore';
 import { useProfileStore } from 'stores/profileStore';
 import { useNavbarStore } from 'stores/navbarStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateTask } from 'services/tasks';
 import { updateActiveTask } from 'services/profile';
@@ -33,7 +34,7 @@ const TaskHeader = () => {
   const [editingField, setEditingField] = useState<any>(null);
   const [tempValues, setTempValues] = useState({} as Record<string, string>);
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
   const activeTask = useProfileStore((state) => state.data.active_task);
   const updateTaskState = useTaskStore((state) => state.updateTask);

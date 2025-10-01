@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 
 import { isHexColor } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 type DropdownOption<T> = {
   label: string;
@@ -58,7 +58,7 @@ function Dropdown<T, U extends boolean>({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const isSelected = (optionValue: T): boolean => {
     if (isMulti) {

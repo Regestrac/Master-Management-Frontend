@@ -2,8 +2,8 @@ import { RefObject, useEffect, useState } from 'react';
 
 import { toast } from 'react-toastify';
 
-import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { logout } from 'services/auth';
 
@@ -35,7 +35,7 @@ const handleSignOut = () => {
 const SettingsNavbar = ({ sectionRefs }: { sectionRefs: RefObject<{ [key: string]: HTMLElement | null }>; }) => {
   const [activeSection, setActiveSection] = useState('general');
 
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const updateVisibility = useModalStore((state) => state.updateVisibility);
 
   // Open sign out modal

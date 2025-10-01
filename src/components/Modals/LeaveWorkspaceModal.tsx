@@ -4,14 +4,14 @@ import clsx from 'clsx';
 import { LogOut, AlertTriangle } from 'lucide-react';
 
 import useModalStore from 'stores/modalStore';
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import ModalWrapper from 'components/Modals/ModalWrapper';
 
 const LeaveWorkspaceModal = () => {
   const [loading, setLoading] = useState(false);
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const workspaceName = useModalStore((state) => state.modals.leaveWorkspaceModal.extraProps?.modalData?.workspaceName);
   const updateVisibility = useModalStore((state) => state.updateVisibility);
   const onSuccess = useModalStore((state) => state.modals.leaveWorkspaceModal?.extraProps?.onSuccess);

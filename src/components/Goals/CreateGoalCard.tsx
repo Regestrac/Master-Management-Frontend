@@ -7,8 +7,8 @@ import { PriorityType, StatusType } from 'helpers/sharedTypes';
 import { STATUS_OPTIONS } from 'helpers/configs';
 import { getStatusColor } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
 import { useGoalStore } from 'stores/goalsStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { createGoal } from 'services/goals';
 
@@ -28,7 +28,7 @@ type CreateGoalCardPropsType = {
 };
 
 const CreateGoalCard = ({ handleCancel, view }: CreateGoalCardPropsType) => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const addGoal = useGoalStore((state) => state.addGoal);
 
   const bgColor = darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200';

@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { useTaskStore } from 'stores/taskStore';
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { createNote, deleteNote, updateNote } from 'services/note';
 
@@ -34,7 +34,7 @@ const stickyNoteColors = [
 const StickyNotes = () => {
   const [showStickyNoteForm, setShowStickyNoteForm] = useState(false);
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
   const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
 

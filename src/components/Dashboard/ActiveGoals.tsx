@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 import { formatTimeElapsed } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getActiveGoals } from 'services/dashboard';
 
@@ -27,7 +27,7 @@ type ActiveGoalType = {
 const ActiveGoals = () => {
   const [goals, setGoals] = useState<ActiveGoalType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const shouldFetchGoalsRef = useRef(true);
 

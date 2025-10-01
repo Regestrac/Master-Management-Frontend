@@ -4,14 +4,14 @@ import { AlertTriangle } from 'lucide-react';
 import clsx from 'clsx';
 
 import useModalStore from 'stores/modalStore';
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import ModalWrapper from 'components/Modals/ModalWrapper';
 
 const SwitchTaskModal = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskType = useModalStore((state) => state.modals.switchTaskModal.extraProps?.modalData?.taskType);
   const taskName = useModalStore((state) => state.modals.switchTaskModal.extraProps?.modalData?.taskName);
   const onSuccess = useModalStore((state) => state.modals.switchTaskModal.extraProps?.onSuccess);

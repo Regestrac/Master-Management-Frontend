@@ -3,7 +3,7 @@ import Select, { MultiValue } from 'react-select';
 
 import { SelectOptionType } from 'helpers/sharedTypes';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 type SelectProps<T extends boolean> = {
   name: string;
@@ -26,7 +26,7 @@ function SelectField<T extends boolean>({
   onChange,
   ...selectProps
 }: SelectProps<T>) {
-  const darkTheme = useProfileStore((state) => state.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const { field, fieldState } = useController({ name });
 
@@ -50,7 +50,7 @@ function SelectField<T extends boolean>({
         inputId={name}
         isDisabled={disabled}
         placeholder={placeholder}
-        classNames={darkTheme ? {
+        classNames={darkMode ? {
           control: (state) => `bg-gray-800! text-gray-300! rounded-md! ${state.isFocused && !fieldState.error ? 'border-primary-500!' : 'border-gray-600!'} ${fieldState.error ? 'border-red-500!' : ''} ${state.isDisabled ? 'cursor-not-allowed! bg-gray-700!' : ''}`,
           menuList: () => 'bg-gray-800 border-gray-600 border-1 rounded-md',
           option: (state) => `cursor-pointer! hover:bg-primary-500/50! ${state.isFocused ? 'bg-primary-500/50!' : ''} ${state.isSelected ? 'bg-primary-600/50! text-white' : 'text-gray-900'}`,

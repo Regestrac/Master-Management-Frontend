@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import { toast } from 'react-toastify';
 
 import { getUserSettings, updateUserSettings, resetUserSettings } from 'services/settings';
@@ -57,111 +56,101 @@ const defaultSettings: UserSettingsType = {
   work_week: '5',
 };
 
-export const useSettingsStore = create<SettingsStoreType>()(
-  persist(
-    (set, get) => ({
-      // Initial state
-      settings: defaultSettings,
-      isLoading: false,
-      error: null,
-      hasUnsavedChanges: false,
+export const useSettingsStore = create<SettingsStoreType>()((set, get) => ({
+  // Initial state
+  settings: defaultSettings,
+  isLoading: false,
+  error: null,
+  hasUnsavedChanges: false,
 
-      // Initialize settings from server
-      initializeSettings: async () => {
-        set({ isLoading: true, error: null });
+  // Initialize settings from server
+  initializeSettings: async () => {
+    set({ isLoading: true, error: null });
 
-        try {
-          const response = await getUserSettings();
-          const serverSettings = response?.settings || {};
+    try {
+      const response = await getUserSettings();
+      const serverSettings = response?.settings || {};
 
-          set({
-            settings: {
-              ...defaultSettings,
-              ...serverSettings,
-            },
-            isLoading: false,
-            hasUnsavedChanges: false,
-          });
-        } catch (error: any) {
-          set({
-            error: error?.error || 'Failed to load settings',
-            isLoading: false,
-          });
-          toast.error('Failed to load settings');
-        }
+      set({
+        settings: {
+          ...defaultSettings,
+          ...serverSettings,
+        },
+        isLoading: false,
+        hasUnsavedChanges: false,
+      });
+    } catch (error: any) {
+      set({
+        error: error?.error || 'Failed to load settings',
+        isLoading: false,
+      });
+      toast.error('Failed to load settings');
+    }
+  },
+
+  // Update settings
+  updateSettings: (newSettings: Partial<UserSettingsType>) => {
+    set((state) => ({
+      settings: {
+        ...state.settings,
+        ...newSettings,
       },
+      hasUnsavedChanges: true,
+    }));
+  },
 
-      // Update settings
-      updateSettings: (newSettings: Partial<UserSettingsType>) => {
-        set((state) => ({
-          settings: {
-            ...state.settings,
-            ...newSettings,
-          },
-          hasUnsavedChanges: true,
-        }));
-      },
+  // Save settings to server
+  saveSettings: async () => {
+    const { settings } = get();
+    set({ isLoading: true, error: null });
 
-      // Save settings to server
-      saveSettings: async () => {
-        const { settings } = get();
-        set({ isLoading: true, error: null });
+    try {
+      // Send settings directly as they match the API format
+      const response = await updateUserSettings(settings);
 
-        try {
-          // Send settings directly as they match the API format
-          const response = await updateUserSettings(settings);
+      set({
+        isLoading: false,
+        hasUnsavedChanges: false,
+      });
 
-          set({
-            isLoading: false,
-            hasUnsavedChanges: false,
-          });
+      toast.success(response?.message || 'Settings saved successfully');
+    } catch (error: any) {
+      set({
+        error: error?.error || 'Failed to save settings',
+        isLoading: false,
+      });
+      toast.error('Failed to save settings');
+    }
+  },
 
-          toast.success(response?.message || 'Settings saved successfully');
-        } catch (error: any) {
-          set({
-            error: error?.error || 'Failed to save settings',
-            isLoading: false,
-          });
-          toast.error('Failed to save settings');
-        }
-      },
+  // Reset settings to defaults
+  resetToDefaults: async () => {
+    set({ isLoading: true, error: null });
 
-      // Reset settings to defaults
-      resetToDefaults: async () => {
-        set({ isLoading: true, error: null });
+    try {
+      await resetUserSettings();
+      set({
+        settings: defaultSettings,
+        isLoading: false,
+        hasUnsavedChanges: false,
+      });
+      toast.success('Settings reset to defaults');
+    } catch (error: any) {
+      set({
+        error: error?.error || 'Failed to reset settings',
+        isLoading: false,
+      });
+      toast.error('Failed to reset settings');
+    }
+  },
 
-        try {
-          await resetUserSettings();
-          set({
-            settings: defaultSettings,
-            isLoading: false,
-            hasUnsavedChanges: false,
-          });
-          toast.success('Settings reset to defaults');
-        } catch (error: any) {
-          set({
-            error: error?.error || 'Failed to reset settings',
-            isLoading: false,
-          });
-          toast.error('Failed to reset settings');
-        }
-      },
+  // Set error state
+  setError: (_error: string | null) => {
+    set({ error: _error });
+  },
 
-      // Set error state
-      setError: (_error: string | null) => {
-        set({ error: _error });
-      },
-
-      // Clear unsaved changes flag
-      clearUnsavedChanges: () => {
-        set({ hasUnsavedChanges: false });
-      },
-    }),
-    {
-      name: 'user-settings-storage',
-      partialize: (state) => ({
-        settings: state.settings,
-      }),
-    },
-  ),
-);
+  // Clear unsaved changes flag
+  clearUnsavedChanges: () => {
+    set({ hasUnsavedChanges: false });
+  },
+}));

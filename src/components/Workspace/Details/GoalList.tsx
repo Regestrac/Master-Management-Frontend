@@ -9,9 +9,9 @@ import { Goal, StatusType } from 'helpers/sharedTypes';
 import { getStatusColor, debounce } from 'helpers/utils';
 import { STATUS_OPTIONS } from 'helpers/configs';
 
-import { useProfileStore } from 'stores/profileStore';
 import useWorkspaceStore from 'stores/workspaceStore';
 import { useNavbarStore } from 'stores/navbarStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getWorkspaceGoals } from 'services/workspace';
 import { updateGoal, createGoal } from 'services/goals';
@@ -29,7 +29,7 @@ const GoalList = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const members = useWorkspaceStore((state) => state.members);
-  const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const navigate = useNavigate();

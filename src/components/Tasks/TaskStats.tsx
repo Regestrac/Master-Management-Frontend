@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import { titleCase } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getTasksStats } from 'services/tasks';
 
@@ -35,7 +35,7 @@ const TaskStats = () => {
   const [taskStats, setTaskStats] = useState([] as { status: string; count: number; }[]);
   const [loading, setLoading] = useState(true);
 
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const fetchStatsRef = useRef(true);
 

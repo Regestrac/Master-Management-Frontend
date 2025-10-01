@@ -1,8 +1,8 @@
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 import { useTaskStore } from 'stores/taskStore';
 
 const TaskProgress = () => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
 
   const taskProgress = 67;

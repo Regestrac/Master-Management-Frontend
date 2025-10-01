@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import Skeleton from 'components/Shared/Skeleton';
 
@@ -9,7 +9,7 @@ type GoalsListSkeletonPropsType = {
 };
 
 const GoalsListSkeleton = ({ view }: GoalsListSkeletonPropsType) => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const bgColor = darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200';
 

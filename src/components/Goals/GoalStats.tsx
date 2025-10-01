@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 import { titleCase } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getGoalStats } from 'services/goals';
 
@@ -53,7 +53,7 @@ const GoalStats = () => {
   const [stats, setStats] = useState<{ count: number; status: string; }[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const shouldFetchStatsRef = useRef(true);
 

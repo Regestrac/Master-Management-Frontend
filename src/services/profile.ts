@@ -15,9 +15,3 @@ export const updateActiveTask = (data: object) => postHandler({
   body: JSON.stringify(data),
   method: 'PATCH',
 });
-
-export const updateTheme = (data: object) => postHandler({
-  path: 'update-theme',
-  body: JSON.stringify(data),
-  method: 'PATCH',
-});

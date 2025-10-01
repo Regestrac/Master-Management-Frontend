@@ -4,7 +4,7 @@ import { ListChecks, Target } from 'lucide-react';
 
 import { TabType } from 'helpers/sharedTypes';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 type WorkspaceTabsProps = {
   taskList: ReactNode;
@@ -14,7 +14,7 @@ type WorkspaceTabsProps = {
 const WorkspaceTabs = ({ taskList, goalList }: WorkspaceTabsProps) => {
   const [activeTab, setActiveTab] = useState<TabType>('tasks');
 
-  const isDark = useProfileStore((s) => s.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const handleTabChange = useCallback((tab: TabType) => {
     setActiveTab(tab);
@@ -23,17 +23,17 @@ const WorkspaceTabs = ({ taskList, goalList }: WorkspaceTabsProps) => {
   const getTabClassName = (tab: TabType) => {
     const isActive = activeTab === tab;
     return `px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 transition border-b-2 ${isActive
-      ? isDark
+      ? darkMode
         ? 'text-white bg-gray-800 border-primary-400 font-semibold'
         : 'text-gray-900 bg-white border-primary-600 font-semibold'
-      : isDark
+      : darkMode
         ? 'text-gray-300 hover:text-white border-transparent'
         : 'text-gray-600 hover:text-gray-900 border-transparent'}`;
   };
 
   return (
-    <section className={`rounded-xl border overflow-hidden ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'}`}>
-      <div role='tablist' aria-label='Workspace content' className={`flex items-center relative ${isDark ? 'border-b border-gray-700' : 'border-b border-gray-200'}`}>
+    <section className={`rounded-xl border overflow-hidden ${darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'}`}>
+      <div role='tablist' aria-label='Workspace content' className={`flex items-center relative ${darkMode ? 'border-b border-gray-700' : 'border-b border-gray-200'}`}>
         <button
           role='tab'
           aria-selected={activeTab === 'tasks'}

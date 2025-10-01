@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { generateRandomColor } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getTaskDistributionData } from 'services/analytics';
 
@@ -25,7 +25,7 @@ const TaskDistribution = () => {
   const [items, setItems] = useState<DistributionItemType[]>([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const prevSearchParamsRef = useRef<string>('');
 

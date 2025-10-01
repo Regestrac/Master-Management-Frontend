@@ -14,6 +14,7 @@ import { useTaskStore } from 'stores/taskStore';
 import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
 import { useNavbarStore } from 'stores/navbarStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateTask } from 'services/tasks';
 import { updateActiveTask } from 'services/profile';
@@ -39,7 +40,7 @@ const formatDate = (dateString: string) => {
 };
 
 const TaskCard = ({ task }: TaskCardPropsType) => {
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const updateTaskState = useTaskStore((state) => state.updateTask);
   const activeTask = useProfileStore((state) => state.data.active_task);
   const updateProfile = useProfileStore((state) => state.updateProfile);

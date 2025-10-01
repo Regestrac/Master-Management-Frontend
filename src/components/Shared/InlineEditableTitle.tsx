@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 
 import clsx from 'clsx';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 type InlineEditableTitlePropsType = {
   title: string;
@@ -24,7 +24,7 @@ const InlineEditableTitle = ({
   const [isFocused, setIsFocused] = useState(false);
   // const [_cursorPosition, setCursorPosition] = useState(0);
 
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);

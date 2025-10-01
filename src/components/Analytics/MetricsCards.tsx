@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 import { formatDurationInSeconds } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getQuickMetrics } from 'services/analytics';
 
@@ -23,7 +23,7 @@ type QuickMetricsType = {
 const MetricsCards = () => {
   const [metricsData, setMetricsData] = useState({} as QuickMetricsType);
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const previousParamsRef = useRef<string>('');
 

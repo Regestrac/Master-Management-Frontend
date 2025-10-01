@@ -6,12 +6,12 @@ import { Menu, X } from 'lucide-react';
 import { omit } from 'helpers/utils';
 
 import { useNavbarStore } from 'stores/navbarStore';
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { resetUserSettings, updateUserSettings } from 'services/settings';
 
 const SettingsHeader = () => {
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
   const showNavbar = useNavbarStore((state) => state.showNavbar);
 

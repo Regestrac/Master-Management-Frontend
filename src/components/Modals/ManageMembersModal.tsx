@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { Member } from 'helpers/sharedTypes';
 
 import useModalStore from 'stores/modalStore';
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { removeMember } from 'services/workspace';
 
@@ -19,7 +19,7 @@ type ExtraProps = {
 };
 
 const ManageMembersModal = () => {
-  const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const modalData: ExtraProps = useModalStore((state) => state.modals?.manageMembersModal?.extraProps?.modalData);
   const { members = [], canManage = false, onChangeRole, workspaceId } = modalData;
 

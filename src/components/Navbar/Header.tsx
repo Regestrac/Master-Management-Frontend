@@ -9,14 +9,15 @@ import { debounce, omit } from 'helpers/utils';
 
 import { useNavbarStore } from 'stores/navbarStore';
 import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
-import { updateTheme } from 'services/profile';
+import { updateTheme } from 'services/settings';
 
 const Header = () => {
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
   const showNavbar = useNavbarStore((state) => state.showNavbar);
-  const updateProfile = useProfileStore((state) => state.updateProfile);
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
+  const updateSettings = useSettingsStore((state) => state.updateSettings);
   const firstName = useProfileStore((state) => state?.data?.first_name);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,9 +29,9 @@ const Header = () => {
   const { pathname } = useLocation();
 
   const updateColorTheme = () => {
-    updateProfile({ theme: darkMode ? 'light' : 'dark' });
+    updateSettings({ theme: darkMode ? 'light' : 'dark' });
     updateTheme({ theme: darkMode ? 'light' : 'dark' }).then((res) => {
-      updateProfile({ theme: res?.theme });
+      updateSettings({ theme: res?.theme });
     }).catch((err) => {
       toast.error(err?.error);
     });

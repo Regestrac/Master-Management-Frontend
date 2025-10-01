@@ -3,9 +3,9 @@ import { Menu, X, Sun, Moon } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 import { useNavbarStore } from 'stores/navbarStore';
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
-import { updateTheme } from 'services/profile';
+import { updateTheme } from 'services/settings';
 
 type ProfileHeaderProps = {
   onSave?: () => void;
@@ -13,8 +13,8 @@ type ProfileHeaderProps = {
 };
 
 const ProfileHeader = ({ onSave, hasChanges = false }: ProfileHeaderProps) => {
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
-  const updateProfile = useProfileStore((state) => state.updateProfile);
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
+  const updateSettings = useSettingsStore((state) => state.updateSettings);
   const setShowNavbar = useNavbarStore((state) => state.setShowNavbar);
   const showNavbar = useNavbarStore((state) => state.showNavbar);
 
@@ -23,9 +23,9 @@ const ProfileHeader = ({ onSave, hasChanges = false }: ProfileHeaderProps) => {
   };
 
   const updateColorTheme = () => {
-    updateProfile({ theme: darkMode ? 'light' : 'dark' });
+    updateSettings({ theme: darkMode ? 'light' : 'dark' });
     updateTheme({ theme: darkMode ? 'light' : 'dark' }).then((res) => {
-      updateProfile({ theme: res?.theme });
+      updateSettings({ theme: res?.theme });
     }).catch((err) => {
       toast.error(err?.error);
     });

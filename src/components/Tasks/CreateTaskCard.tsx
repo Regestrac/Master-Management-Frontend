@@ -7,7 +7,7 @@ import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
 import { getPriorityColor, getStatusColor } from 'helpers/utils';
 
 import { useTaskStore } from 'stores/taskStore';
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { createTask } from 'services/tasks';
 
@@ -21,7 +21,7 @@ type CreateTaskFormDataType = {
 }
 
 const CreateTaskCard = ({ handleCancel }: { handleCancel: () => void }) => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const addTask = useTaskStore((state) => state.addTask);
 
   const methods = useForm<CreateTaskFormDataType>({

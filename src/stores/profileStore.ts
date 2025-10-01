@@ -5,7 +5,6 @@ type ProfileDataType = {
   first_name: string;
   last_name: string;
   email: string;
-  theme: 'dark' | 'light';
   active_task: number | null;
   avatar_url: string | null;
   job_title: string;
@@ -28,7 +27,6 @@ export const useProfileStore = create<ProfileStateType>((set) => ({
     first_name: '',
     last_name: '',
     email: '',
-    theme: 'dark',
     active_task: null,
     avatar_url: null,
   } as ProfileDataType,
@@ -42,7 +40,6 @@ export const useProfileStore = create<ProfileStateType>((set) => ({
       email: profile.email ?? state.data.email,
       active_task: profile.active_task !== undefined ? profile.active_task : state?.data?.active_task,
       id: profile.id ?? state?.data?.id,
-      theme: profile?.theme ?? state?.data?.theme,
       avatar_url: profile?.avatar_url ?? state?.data?.avatar_url,
       job_title: profile?.job_title ?? state?.data?.job_title,
       company: profile?.company ?? state?.data?.company,

@@ -4,10 +4,11 @@ import { LogOut } from 'lucide-react';
 
 import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 const ProfileInfoCard = () => {
   const user = useProfileStore((state) => state.data);
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const clearProfile = useProfileStore((state) => state.clearProfile);
   const updateVisibility = useModalStore((state) => state.updateVisibility);
 

@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { ModalNamesType } from 'helpers/sharedTypes';
 
 import useModalStore from 'stores/modalStore';
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 type ModalWrapperPropsType = {
   modalType: ModalNamesType;
@@ -17,7 +17,7 @@ type ModalWrapperPropsType = {
 const ModalWrapper = ({ modalType, children, className }: ModalWrapperPropsType) => {
   const { updateVisibility } = useModalStore();
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const disableOutsideClick = useModalStore((state) => state.modals[modalType]?.extraProps?.disableOutsideClick);
   const hideCloseButton = useModalStore((state) => state.modals[modalType]?.extraProps?.hideCloseButton);
 

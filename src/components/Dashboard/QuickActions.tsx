@@ -1,10 +1,10 @@
 import { BarChart3, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 const QuickActions = () => {
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const navigate = useNavigate();
 

@@ -1,6 +1,6 @@
 import { SelectOptionType } from 'helpers/sharedTypes';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import SelectField from 'components/Shared/SelectField';
 import Switch from 'components/Shared/Switch';
@@ -24,7 +24,7 @@ const analyticsRetentionOptions: SelectOptionType[] = [
 ];
 
 const DataAndStorageSettings = () => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   return (
     <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>

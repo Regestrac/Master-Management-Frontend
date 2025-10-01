@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 import { Workspace, Member } from 'helpers/sharedTypes';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getWorkspace } from 'services/workspace';
 
@@ -31,7 +31,7 @@ const WorkspaceOverview = ({
   const [workspaceDetails, setWorkspaceDetails] = useState<Workspace>({} as Workspace);
   const [isLoading, setIsLoading] = useState(true);
 
-  const isDark = useProfileStore((s) => s.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const { id } = useParams<{ id: string }>();
 
@@ -60,7 +60,7 @@ const WorkspaceOverview = ({
   }
 
   return (
-    <section className={`rounded-xl border p-6 ${isDark ? 'border-gray-700 bg-gradient-to-b from-gray-800 to-gray-900' : 'border-gray-200 bg-gradient-to-b from-white to-gray-50'}`}>
+    <section className={`rounded-xl border p-6 ${darkMode ? 'border-gray-700 bg-gradient-to-b from-gray-800 to-gray-900' : 'border-gray-200 bg-gradient-to-b from-white to-gray-50'}`}>
 
       <div className='flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6'>
         <div className='min-w-0 flex-1'>
@@ -77,7 +77,7 @@ const WorkspaceOverview = ({
               className='font-extrabold w-fit'
             />
           </div>
-          <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mt-1`}>
+          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mt-1`}>
             Workspace ID:
             {' '}
             {workspaceDetails?.id || ''}

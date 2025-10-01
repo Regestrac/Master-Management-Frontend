@@ -4,8 +4,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateTask } from 'services/tasks';
 
@@ -13,7 +13,7 @@ import Input from 'components/Shared/Input';
 import GenerateDescriptionButtons from 'components/Tasks/ai/GenerateDescriptionButtons';
 
 const TaskDescription = () => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
 
   const taskDetailsRef = useRef({});

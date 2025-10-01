@@ -3,7 +3,7 @@ import { BarChart3, Building2, Calendar, CheckSquare, Home, Settings, Target, Us
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useNavbarStore } from 'stores/navbarStore';
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 const navbarItems = [
   { id: 'dashboard', icon: Home, label: 'Dashboard' },
@@ -17,7 +17,7 @@ const navbarItems = [
 ];
 
 const Sidebar = () => {
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const showNavbar = useNavbarStore((state) => state.showNavbar);
 
   const navigate = useNavigate();

@@ -4,7 +4,7 @@ import { Copy } from 'lucide-react';
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 type InviteSectionProps = {
   inviteCode: string;
@@ -12,7 +12,7 @@ type InviteSectionProps = {
 };
 
 const InviteSection = ({ inviteCode, onLeaveWorkspace }: InviteSectionProps) => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const handleCopyInvite = useCallback(async () => {
     try {

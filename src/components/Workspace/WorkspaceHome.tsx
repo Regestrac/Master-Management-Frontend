@@ -6,8 +6,8 @@ import { PlusCircle, Users, AlertCircle } from 'lucide-react';
 import { Workspace } from 'helpers/sharedTypes';
 import { debounce } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { createWorkspace, getWorkspaces, joinWorkspace } from 'services/workspace';
 
@@ -18,7 +18,7 @@ const WorkspaceHome = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const updateVisibility = useModalStore((state) => state.updateVisibility);
 
   const shouldFetchWorkspacesRef = useRef(true);

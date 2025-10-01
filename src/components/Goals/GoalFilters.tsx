@@ -6,7 +6,7 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { isEmpty } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import SelectField from 'components/Shared/SelectField';
 
@@ -35,7 +35,7 @@ const goalSortOptions = [
 ];
 
 const GoalFilters = () => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const [searchParams, setSearchParams] = useSearchParams();
 

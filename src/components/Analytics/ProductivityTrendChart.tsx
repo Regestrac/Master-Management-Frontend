@@ -5,7 +5,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getProductivityChartData } from 'services/analytics';
 
@@ -54,7 +54,7 @@ const ProductivityTrendChart = () => {
   const [yUnit, setYUnit] = useState<YUnit>('hours');
   const [peakText, setPeakText] = useState<string>('Peak: -');
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const prevSearchParamsRef = useRef<string | null>(null);
 

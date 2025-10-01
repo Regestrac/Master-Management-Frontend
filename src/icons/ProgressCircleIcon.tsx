@@ -1,9 +1,9 @@
 import { SVGProps } from 'react';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 const ProgressCircleIcon = ({ progress, ...props }: { progress: number } & SVGProps<SVGSVGElement>) => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   return (
     <svg className='w-24 h-24 transform -rotate-90' viewBox='0 0 100 100' {...props}>

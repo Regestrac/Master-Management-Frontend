@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import Skeleton from 'components/Shared/Skeleton';
 
 const TaskListSkeleton = () => {
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   return (
     <div className='space-y-4'>

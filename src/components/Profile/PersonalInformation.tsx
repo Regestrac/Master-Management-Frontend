@@ -1,6 +1,7 @@
 import { LANGUAGE_OPTIONS, TIME_ZONE_OPTIONS } from 'helpers/configs';
 
 import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import Input from 'components/Shared/Input';
 import SelectField from 'components/Shared/SelectField';
@@ -8,7 +9,7 @@ import SelectField from 'components/Shared/SelectField';
 import PersonalInformationSkeleton from './PersonalInformationSkeleton';
 
 const PersonalInformation = () => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const isProfileLoading = useProfileStore((state) => state.isLoading);
 
   if (isProfileLoading) {

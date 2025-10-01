@@ -13,7 +13,7 @@ import Link from '@tiptap/extension-link';
 import Underline from '@tiptap/extension-underline';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import CustomBubbleMenu from './CustomBubbleMenu';
 import CustomFloatingMenu from './CustomFloatingMenu';
@@ -28,7 +28,7 @@ type EditorFieldPropsType = {
 const EditorField = ({ value, onChange, placeholder, className }: EditorFieldPropsType) => {
   const [isFocused, setIsFocused] = useState(false);
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   // Create editor instance with StarterKit and custom configuration
   const editor = useEditor({

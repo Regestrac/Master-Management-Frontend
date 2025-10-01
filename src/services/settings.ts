@@ -23,3 +23,9 @@ export const deleteAllUserData = () => postHandler({
   path: 'settings/delete-all-data',
   method: 'DELETE',
 });
+
+export const updateTheme = (data: object) => postHandler({
+  path: 'update-theme',
+  body: JSON.stringify(data),
+  method: 'PATCH',
+});

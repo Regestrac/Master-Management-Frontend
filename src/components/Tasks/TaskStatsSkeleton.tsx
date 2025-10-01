@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import Skeleton from 'components/Shared/Skeleton';
 
 const TaskStatsSkeleton = () => {
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   return (
     <div className='grid grid-cols-2 xl:grid-cols-7 lg:grid-cols-5 md:grid-cols-4 gap-4 mb-8'>

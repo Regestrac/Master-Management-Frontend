@@ -4,12 +4,12 @@ import { Plus, Link as LinkIcon, Loader2 } from 'lucide-react';
 import clsx from 'clsx';
 
 import useModalStore from 'stores/modalStore';
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import ModalWrapper from 'components/Modals/ModalWrapper';
 
 const WorkspaceModal = () => {
-  const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const updateVisibility = useModalStore((s) => s.updateVisibility);
   const onSuccess = useModalStore((s) => s.modals.workspaceModal.extraProps?.onSuccess);
 

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 import { formatDurationInSeconds } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getFocusSessionInfo } from 'services/analytics';
 
@@ -18,7 +18,7 @@ type FocusSessionInfoType = {
 const FocusSessions = () => {
   const [focusSessionInfo, setFocusSessionInfo] = useState<FocusSessionInfoType | null>(null);
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const previousSearchParamsRef = useRef<string>('');
 

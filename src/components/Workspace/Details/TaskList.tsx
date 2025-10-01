@@ -9,9 +9,9 @@ import { StatusType, Task } from 'helpers/sharedTypes';
 import { STATUS_OPTIONS } from 'helpers/configs';
 import { getStatusColor, debounce } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
 import useWorkspaceStore from 'stores/workspaceStore';
 import { useNavbarStore } from 'stores/navbarStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getWorkspaceTasks } from 'services/workspace';
 import { createTask, updateTask } from 'services/tasks';
@@ -36,7 +36,7 @@ const TaskList = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const darkMode = useProfileStore((s) => s.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const members = useWorkspaceStore((state) => state.members);
   const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 

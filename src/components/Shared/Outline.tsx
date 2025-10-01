@@ -2,7 +2,7 @@ import React, { CSSProperties, HTMLAttributes, useEffect, useRef, useState } fro
 
 import clsx from 'clsx';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { isHexColor } from 'src/helpers/utils';
 
@@ -50,7 +50,7 @@ const Outline = ({
   const childRef = useRef<HTMLElement>(null);
   const [borderRadius, setBorderRadius] = useState('0');
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   useEffect(() => {
     if (childRef.current) {

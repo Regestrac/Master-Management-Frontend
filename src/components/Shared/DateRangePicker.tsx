@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useController } from 'react-hook-form';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 
-import { useProfileStore } from '../../stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 export type DateRange = {
   startDate: Date | null;
@@ -27,12 +27,14 @@ const DateRangePicker = ({
   onChange,
   onApply,
 }: DateRangePickerProps) => {
-  const darkMode = useProfileStore((state) => state.data?.theme) === 'dark';
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
   const [showMonthYearPicker, setShowMonthYearPicker] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState<{ top?: number; left: number; right?: number; width: number; maxHeight: number }>({ left: 0, top: 0, width: 600, maxHeight: 480 });
+
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
+
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 

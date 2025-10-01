@@ -14,6 +14,7 @@ import { useProfileStore } from 'stores/profileStore';
 import { useGoalStore } from 'stores/goalsStore';
 import useModalStore from 'stores/modalStore';
 import { useNavbarStore } from 'stores/navbarStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateTask } from 'services/tasks';
 import { updateActiveTask } from 'services/profile';
@@ -61,7 +62,7 @@ const secondsToTime = (seconds: number) => {
 const GoalCard = ({ goal, view }: GoalCardPropsType) => {
   const [editName, setEditName] = useState(false);
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const updateGoalState = useGoalStore((state) => state.updateGoal);
   const updateVisibility = useModalStore((state) => state.updateVisibility);

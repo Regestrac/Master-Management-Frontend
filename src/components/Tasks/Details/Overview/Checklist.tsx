@@ -7,8 +7,8 @@ import { Check, List, Plus, Trash2 } from 'lucide-react';
 import { isEmpty } from 'helpers/utils';
 
 import useModalStore from 'stores/modalStore';
-import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import GenerateChecklistButton from 'components/Tasks/ai/GenerateChecklistButton';
 import Outline from 'components/Shared/Outline';
@@ -32,7 +32,7 @@ const Checklist = () => {
   const [generatedChecklist, setGeneratedChecklist] = useState<GeneratedChecklistType[]>([]);
 
   const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
   const updateVisibility = useModalStore((state) => state.updateVisibility);
 

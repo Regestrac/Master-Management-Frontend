@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 
 import { setPrimaryPalette } from 'helpers/themeHelpers';
 
-import { useProfileStore } from 'stores/profileStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateUserSettings } from 'services/settings';
@@ -45,9 +44,8 @@ const accentColorOptions = [
 ];
 
 const AppearanceSettings = () => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const accentColor = useSettingsStore((state) => state.settings.accent_color);
-  const updateProfile = useProfileStore((state) => state.updateProfile);
   const updateSettings = useSettingsStore((state) => state.updateSettings);
 
   // Theme mode state persisted in localStorage
@@ -69,11 +67,11 @@ const AppearanceSettings = () => {
   // Apply selected theme to profile store when not in auto
   useEffect(() => {
     if (themeMode === 'light') {
-      updateProfile({ theme: 'light' });
+      updateSettings({ theme: 'light' });
     } else if (themeMode === 'dark') {
-      updateProfile({ theme: 'dark' });
+      updateSettings({ theme: 'dark' });
     }
-  }, [themeMode, updateProfile]);
+  }, [themeMode, updateSettings]);
 
   // Auto mode: follow system preference and update profile theme accordingly
   useEffect(() => {
@@ -81,7 +79,7 @@ const AppearanceSettings = () => {
 
     const applySystemTheme = () => {
       const isDark = mediaQuery.matches;
-      updateProfile({ theme: isDark ? 'dark' : 'light' });
+      updateSettings({ theme: isDark ? 'dark' : 'light' });
     };
 
     if (themeMode === 'auto') {
@@ -95,17 +93,17 @@ const AppearanceSettings = () => {
 
     // return a no-op cleanup to satisfy consistent-return
     return () => { };
-  }, [themeMode, updateProfile]);
+  }, [themeMode, updateSettings]);
 
   // Handlers
   const handleSetLight = () => {
     setThemeMode('light');
-    updateProfile({ theme: 'light' });
+    updateSettings({ theme: 'light' });
   };
 
   const handleSetDark = () => {
     setThemeMode('dark');
-    updateProfile({ theme: 'dark' });
+    updateSettings({ theme: 'dark' });
   };
 
   const saveUserSettings = (payload: object) => {
@@ -121,7 +119,7 @@ const AppearanceSettings = () => {
     setThemeMode('auto');
     // Immediately set current system theme
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    updateProfile({ theme: isDark ? 'dark' : 'light' });
+    updateSettings({ theme: isDark ? 'dark' : 'light' });
     saveUserSettings({ theme: isDark ? 'dark' : 'light' });
   };
 
