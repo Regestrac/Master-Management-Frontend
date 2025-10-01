@@ -1,7 +1,39 @@
+import { useEffect, useRef, useState } from 'react';
+
+import { useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+import { formatDurationInSeconds } from 'helpers/utils';
+
 import { useProfileStore } from 'stores/profileStore';
 
+import { getFocusSessionInfo } from 'services/analytics';
+
+type FocusSessionInfoType = {
+  total_sessions: number;
+  duration: number;
+  efficency: number;
+};
+
 const FocusSessions = () => {
+  const [focusSessionInfo, setFocusSessionInfo] = useState<FocusSessionInfoType | null>(null);
+
   const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+
+  const previousSearchParamsRef = useRef<string>('');
+
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (previousSearchParamsRef.current !== searchParams.toString()) {
+      getFocusSessionInfo(searchParams.toString()).then((res) => {
+        setFocusSessionInfo(res?.data);
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to fetch focus session info. Please try again.');
+      });
+      previousSearchParamsRef.current = searchParams.toString();
+    }
+  }, [searchParams]);
 
   return (
     <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
@@ -12,17 +44,24 @@ const FocusSessions = () => {
 
       <div className='space-y-4'>
         <div className='text-center'>
-          <div className='text-3xl font-bold text-primary-500 mb-1'>4.2h</div>
-          <div className='text-sm text-gray-500'>Average session today</div>
+          <div className='text-3xl font-bold text-primary-500 mb-1'>
+            {formatDurationInSeconds(focusSessionInfo?.duration || 0)}
+          </div>
+          <div className='text-sm text-gray-500'>Total session duration</div>
         </div>
 
         <div className='grid grid-cols-2 gap-4 text-center'>
           <div>
-            <div className='text-xl font-bold'>8</div>
+            <div className='text-xl font-bold'>
+              {focusSessionInfo?.total_sessions || 0}
+            </div>
             <div className='text-xs text-gray-500'>Sessions</div>
           </div>
           <div>
-            <div className='text-xl font-bold'>89%</div>
+            <div className='text-xl font-bold'>
+              {focusSessionInfo?.efficency?.toFixed(1) || 0}
+              %
+            </div>
             <div className='text-xs text-gray-500'>Efficiency</div>
           </div>
         </div>

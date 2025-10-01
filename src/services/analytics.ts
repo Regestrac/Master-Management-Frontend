@@ -248,10 +248,9 @@ export const getStreaksAndAchievements = async (params: DateRangeParams): Promis
   return getHandler({ path: `analytics/streaks-achievements?${queryString}` });
 };
 
-export const getFocusSessionInfo = async (params: DateRangeParams): Promise<FocusSessionInfo> => {
-  const queryString = buildQueryParams(params);
-  return getHandler({ path: `analytics/focus-sessions?${queryString}` });
-};
+export const getFocusSessionInfo = async (params: string) => getHandler({
+  path: `analytics/focus-sessions${params ? `?${params}` : ''}`,
+});
 
 export const getAIInsights = async (params: DateRangeParams): Promise<AIInsights> => {
   const queryString = buildQueryParams(params);
