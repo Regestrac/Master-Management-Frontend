@@ -50,82 +50,74 @@ const AppearanceSettings = () => {
 
   // Theme mode state persisted in localStorage
   const [themeMode, setThemeMode] = useState<ThemeModeType>(() => {
-    const saved = (typeof window !== 'undefined')
-      ? (localStorage.getItem('themeMode') as ThemeModeType | null)
-      : null;
+    const saved = localStorage.getItem('themeMode') as ThemeModeType | null;
     if (saved === 'light' || saved === 'dark' || saved === 'auto') {
       return saved;
     }
     return darkMode ? 'dark' : 'light';
   });
 
-  // Persist themeMode changes
+  // Persist themeMode changes to localStorage
   useEffect(() => {
     localStorage.setItem('themeMode', themeMode);
   }, [themeMode]);
 
-  // Apply selected theme to profile store when not in auto
+  // Auto mode: follow system preference
   useEffect(() => {
-    if (themeMode === 'light') {
-      updateSettings({ theme: 'light' });
-    } else if (themeMode === 'dark') {
-      updateSettings({ theme: 'dark' });
+    if (themeMode !== 'auto') {
+      return undefined;
     }
-  }, [themeMode, updateSettings]);
 
-  // Auto mode: follow system preference and update profile theme accordingly
-  useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
     const applySystemTheme = () => {
-      const isDark = mediaQuery.matches;
-      updateSettings({ theme: isDark ? 'dark' : 'light' });
+      updateUserSettings({ theme: mediaQuery.matches ? 'dark' : 'light' }).then(() => {
+        updateSettings({ theme: mediaQuery.matches ? 'dark' : 'light' });
+      }).catch((error: any) => {
+        toast.error(error?.error || 'Failed to update theme');
+      });
     };
 
-    if (themeMode === 'auto') {
-      // initial apply and listen for changes
-      applySystemTheme();
-      mediaQuery.addEventListener('change', applySystemTheme);
-      return () => {
-        mediaQuery.removeEventListener('change', applySystemTheme);
-      };
-    }
+    applySystemTheme();
+    mediaQuery.addEventListener('change', applySystemTheme);
 
-    // return a no-op cleanup to satisfy consistent-return
-    return () => { };
+    return () => {
+      mediaQuery.removeEventListener('change', applySystemTheme);
+    };
   }, [themeMode, updateSettings]);
 
-  // Handlers
-  const handleSetLight = () => {
-    setThemeMode('light');
-    updateSettings({ theme: 'light' });
+  // Update theme and persist to API
+  const handleThemeChange = async (theme: 'light' | 'dark', mode: ThemeModeType) => {
+    setThemeMode(mode);
+
+    try {
+      await updateUserSettings({ theme });
+      updateSettings({ theme });
+      toast.success('Theme updated successfully');
+    } catch (error: any) {
+      toast.error(error?.error || 'Failed to update theme');
+    }
   };
 
-  const handleSetDark = () => {
-    setThemeMode('dark');
-    updateSettings({ theme: 'dark' });
-  };
-
-  const saveUserSettings = (payload: object) => {
-    updateUserSettings(payload).then((res) => {
-      toast.success(res.message || 'Settings updated successfully');
-      updateSettings(payload);
-    }).catch((err) => {
-      toast.error(err?.error || 'Failed to update settings');
-    });
-  };
+  const handleSetLight = () => handleThemeChange('light', 'light');
+  const handleSetDark = () => handleThemeChange('dark', 'dark');
 
   const handleSetAuto = () => {
     setThemeMode('auto');
-    // Immediately set current system theme
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    updateSettings({ theme: isDark ? 'dark' : 'light' });
-    saveUserSettings({ theme: isDark ? 'dark' : 'light' });
+    handleThemeChange(isDark ? 'dark' : 'light', 'auto');
   };
 
-  const handleAccentChange = (accentName: string) => {
+  const handleAccentChange = async (accentName: string) => {
     setPrimaryPalette(accentName);
-    saveUserSettings({ accent_color: accentName });
+
+    try {
+      await updateUserSettings({ accent_color: accentName });
+      updateSettings({ accent_color: accentName });
+      toast.success('Accent color updated successfully');
+    } catch (error: any) {
+      toast.error(error?.error || 'Failed to update accent color');
+    }
   };
 
   return (
