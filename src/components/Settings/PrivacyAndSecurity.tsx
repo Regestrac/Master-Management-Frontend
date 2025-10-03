@@ -46,7 +46,7 @@ const PrivacyAndSecurity = () => {
             <Switch
               name='analyticsUsageData'
               label='Analytics & Usage Data'
-              description='Help improve TaskFlow Pro by sharing anonymous usage data'
+              description='Help improve Master Management by sharing anonymous usage data'
             />
             <Switch
               name='marketingCommunications'

@@ -9,7 +9,7 @@ import { useSettingsStore } from 'stores/settingsStore';
 import { removeMember } from 'services/workspace';
 
 import ModalWrapper from 'components/Modals/ModalWrapper';
-import { MemberAvatar } from 'components/Workspace/Details/MemberAvatar';
+import MemberAvatar from 'components/Workspace/Details/MemberAvatar';
 
 type ExtraProps = {
   members?: Member[];

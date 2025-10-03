@@ -5,8 +5,7 @@ import { useSettingsStore } from 'stores/settingsStore';
 
 import Input from 'components/Shared/Input';
 import SelectField from 'components/Shared/SelectField';
-
-import PersonalInformationSkeleton from './PersonalInformationSkeleton';
+import PersonalInformationSkeleton from 'components/Profile/PersonalInformationSkeleton';
 
 const PersonalInformation = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';

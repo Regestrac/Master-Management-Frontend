@@ -38,7 +38,7 @@ const sizeClasses = {
   lg: { container: 'w-10 h-10', text: 'text-sm' },
 };
 
-export const MemberAvatar = memo(({ member, size, className = '', color }: MemberAvatarProps) => {
+const MemberAvatar = memo(({ member, size, className = '', color }: MemberAvatarProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
@@ -90,3 +90,5 @@ export const MemberAvatar = memo(({ member, size, className = '', color }: Membe
     </div>
   );
 });
+
+export default MemberAvatar;

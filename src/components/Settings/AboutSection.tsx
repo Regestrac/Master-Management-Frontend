@@ -7,7 +7,7 @@ const AboutSection = () => {
     <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
       <h4 className='text-xl font-bold mb-6 flex items-center'>
         <span className='text-2xl mr-3'>ℹ️</span>
-        About TaskFlow Pro
+        About Master Management
       </h4>
 
       <div className='space-y-6'>
@@ -16,7 +16,7 @@ const AboutSection = () => {
           <div className='w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4'>
             TF
           </div>
-          <h5 className='text-2xl font-bold mb-2'>TaskFlow Pro</h5>
+          <h5 className='text-2xl font-bold mb-2'>Master Management</h5>
           <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-4`}>
             The ultimate productivity suite for modern professionals
           </p>

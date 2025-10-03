@@ -36,6 +36,8 @@
       "services/*": ["services/*"],
       "helpers/*": ["helpers/*"],
       "hooks/*": ["hooks/*"],
+      "routes/*": ["routes/*"],
+      "assets/*": ["assets/*"],
       "src/*": ["*"],
     }
   },

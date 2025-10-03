@@ -126,7 +126,7 @@ const Signup: React.FC = () => {
               <div className='w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center'>
                 <Target className='w-7 h-7 text-white' />
               </div>
-              <h1 className='text-2xl font-bold text-gray-900'>TaskFlow Pro</h1>
+              <h1 className='text-2xl font-bold text-gray-900'>Master Management</h1>
             </div>
             <h2 className='text-3xl font-bold text-gray-900 mb-2'>Create your account</h2>
             <p className='text-gray-600'>Join thousands of productive professionals</p>

@@ -54,7 +54,7 @@ const HelpAndSupport = () => {
           <div>
             <h6 className='font-medium'>App Version</h6>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              TaskFlow Pro v2.1.4 (Latest)
+              Master Management v2.1.4 (Latest)
             </p>
           </div>
           <button className='px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm'>

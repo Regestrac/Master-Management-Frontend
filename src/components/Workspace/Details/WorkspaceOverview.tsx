@@ -12,8 +12,7 @@ import { getWorkspace } from 'services/workspace';
 import MembersSection from 'components/Workspace/Details/MembersSection';
 import InviteSection from 'components/Workspace/Details/InviteSection';
 import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
-
-import WorkspaceOverviewSkeleton from './WorkspaceOverviewSkeleton';
+import WorkspaceOverviewSkeleton from 'components/Workspace/Details/WorkspaceOverviewSkeleton';
 
 type WorkspaceOverviewProps = {
   canManage: boolean;

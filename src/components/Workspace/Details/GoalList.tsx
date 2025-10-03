@@ -16,12 +16,11 @@ import { useSettingsStore } from 'stores/settingsStore';
 import { getWorkspaceGoals } from 'services/workspace';
 import { updateGoal, createGoal } from 'services/goals';
 
-import { MemberAvatar } from 'components/Workspace/Details/MemberAvatar';
+import MemberAvatar from 'components/Workspace/Details/MemberAvatar';
 import Dropdown from 'components/Shared/Dropdown';
 import CreateForm from 'components/Workspace/Details/CreateForm';
 import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
-
-import GoalListSkeleton from './GoalListSkeleton';
+import GoalListSkeleton from 'components/Workspace/Details/GoalListSkeleton';
 
 const GoalList = () => {
   const [goals, setGoals] = useState<Goal[]>([]);

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
-import Switch from '../Shared/Switch';
+import Switch from 'components/Shared/Switch';
 
 interface NotificationSetting {
   id: string;
@@ -54,7 +54,7 @@ const NotificationSettings = () => {
     {
       id: 'new-features',
       title: 'New Features',
-      description: 'Updates about new TaskFlow Pro features',
+      description: 'Updates about new Master Management features',
       enabled: false,
       frequency: 'as-needed',
     },

@@ -75,7 +75,7 @@ const SettingsHeader = () => {
           <div>
             <h3 className='text-2xl font-bold mb-2'>Settings & Configuration</h3>
             <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-              Customize your TaskFlow Pro experience and manage system settings
+              Customize your Master Management experience and manage system settings
             </p>
           </div>
           {/* Hamburger icon visible on small screens */}

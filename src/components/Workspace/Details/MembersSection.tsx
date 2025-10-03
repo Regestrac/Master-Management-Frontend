@@ -11,7 +11,7 @@ import useWorkspaceStore from 'stores/workspaceStore';
 
 import { getMembers } from 'services/workspace';
 
-import { MemberAvatar } from 'components/Workspace/Details/MemberAvatar';
+import MemberAvatar from 'components/Workspace/Details/MemberAvatar';
 
 type MembersSectionProps = {
   canManage: boolean;

@@ -40,6 +40,8 @@ const formatDate = (dateString: string) => {
 };
 
 const TaskCard = ({ task }: TaskCardPropsType) => {
+  const [editName, setEditName] = useState(false);
+
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const updateTaskState = useTaskStore((state) => state.updateTask);
   const activeTask = useProfileStore((state) => state.data.active_task);
@@ -104,8 +106,6 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
     updatePrevPath(pathname.includes('dashboard') ? '/dashboard' : '/tasks');
     navigate(`/tasks/${task?.id}`);
   };
-
-  const [editName, setEditName] = useState(false);
 
   return (
     <Outline colors={['bg-primary-500', 'bg-secondary-500']} width='3px' variant='rotate' disabled={activeTask !== task?.id}>

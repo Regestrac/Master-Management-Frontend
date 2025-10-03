@@ -10,6 +10,7 @@ type GoalType = {
   time_spend: number;
   due_date: string;
   type: 'goal' | 'task';
+  weekly_progress: number;
 
   startedAt?: string;
   description: string;

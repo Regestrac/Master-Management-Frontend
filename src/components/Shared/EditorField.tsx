@@ -15,8 +15,8 @@ import HorizontalRule from '@tiptap/extension-horizontal-rule';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
-import CustomBubbleMenu from './CustomBubbleMenu';
-import CustomFloatingMenu from './CustomFloatingMenu';
+import CustomBubbleMenu from 'components/Shared/CustomBubbleMenu';
+import CustomFloatingMenu from 'components/Shared/CustomFloatingMenu';
 
 type EditorFieldPropsType = {
   value: string;

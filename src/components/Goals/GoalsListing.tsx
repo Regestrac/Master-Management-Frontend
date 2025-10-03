@@ -11,9 +11,8 @@ import { getAllGoals } from 'services/goals';
 import GoalCard from 'components/Goals/GoalCard';
 import GoalFiltersSkeleton from 'components/Goals/GoalFiltersSkeleton';
 import GoalsListSkeleton from 'components/Goals/GoalsListSkeleton';
-
-import CreateGoalCard from './CreateGoalCard';
-import GoalFilters from './GoalFilters';
+import CreateGoalCard from 'components/Goals/CreateGoalCard';
+import GoalFilters from 'components/Goals/GoalFilters';
 
 const GoalsListing = () => {
   const [createGoal, setCreateGoal] = useState(false);

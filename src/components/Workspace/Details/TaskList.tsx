@@ -16,12 +16,11 @@ import { useSettingsStore } from 'stores/settingsStore';
 import { getWorkspaceTasks } from 'services/workspace';
 import { createTask, updateTask } from 'services/tasks';
 
-import { MemberAvatar } from 'components/Workspace/Details/MemberAvatar';
+import MemberAvatar from 'components/Workspace/Details/MemberAvatar';
 import CreateForm from 'components/Workspace/Details/CreateForm';
 import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
 import Dropdown from 'components/Shared/Dropdown';
-
-import TaskListSkeleton from './TaskListSkeleton';
+import TaskListSkeleton from 'components/Workspace/Details/TaskListSkeleton';
 
 const formatDueDate = (dateString: string) => {
   const date = new Date(dateString);
