@@ -40,7 +40,7 @@ const AnalyticsHeader = () => {
     setShowNavbar(!showNavbar);
   };
 
-  const updateColorTheme = () => {
+  const updateAppTheme = () => {
     updateSettings({ theme: darkMode ? 'light' : 'dark' });
     updateTheme({ theme: darkMode ? 'light' : 'dark' }).then((res) => {
       updateSettings({ theme: res?.theme });
@@ -163,7 +163,7 @@ const AnalyticsHeader = () => {
               <span className='hidden sm:inline'>Export Report</span>
             </button>
             <button
-              onClick={updateColorTheme}
+              onClick={updateAppTheme}
               className={`p-2 rounded-lg ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
             >
               {darkMode ? <Sun className='w-5 h-5' /> : <Moon className='w-5 h-5' />}
