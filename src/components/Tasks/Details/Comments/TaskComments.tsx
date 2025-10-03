@@ -3,11 +3,11 @@ import { useState } from 'react';
 import dayjs from 'dayjs';
 import { MessageSquare } from 'lucide-react';
 
-import { useProfileStore } from 'stores/profileStore';
 import { useTaskStore } from 'stores/taskStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 const TaskComments = () => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
 
   const [newComment, setNewComment] = useState('');
@@ -55,7 +55,7 @@ const TaskComments = () => {
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder='Add a comment...'
                 rows={3}
-                className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 ${darkMode
+                className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary-500 ${darkMode
                   ? 'bg-gray-700 border-gray-600 text-white'
                   : 'bg-white border-gray-300'}`}
               />
@@ -63,7 +63,7 @@ const TaskComments = () => {
                 <button
                   onClick={addComment}
                   disabled={!newComment.trim()}
-                  className='px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                  className='px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
                 >
                   Add Comment
                 </button>

@@ -7,7 +7,7 @@ import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
 import { getPriorityColor, getStatusColor } from 'helpers/utils';
 
 import { useTaskStore } from 'stores/taskStore';
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { createTask } from 'services/tasks';
 
@@ -21,7 +21,7 @@ type CreateTaskFormDataType = {
 }
 
 const CreateTaskCard = ({ handleCancel }: { handleCancel: () => void }) => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const addTask = useTaskStore((state) => state.addTask);
 
   const methods = useForm<CreateTaskFormDataType>({
@@ -70,7 +70,7 @@ const CreateTaskCard = ({ handleCancel }: { handleCancel: () => void }) => {
       <div className='flex flex-row justify-between'>
         <FormProvider {...methods}>
           <div className='flex items-center gap-3'>
-            <Dropdown options={PRIORITY_OPTIONS} onSelect={handlePrioritySelect} value={priority ?? undefined}>
+            <Dropdown options={PRIORITY_OPTIONS} onSelect={handlePrioritySelect} value={priority ?? undefined} isMulti={false}>
               <div className={`w-3 h-3 rounded-full cursor-pointer hover:scale-120 ${getPriorityColor(priority!)}`} />
             </Dropdown>
             <div className='flex flex-col gap-2 ms-2'>
@@ -81,7 +81,7 @@ const CreateTaskCard = ({ handleCancel }: { handleCancel: () => void }) => {
                 placeholder='Enter title...'
                 className='font-semibold text-lg cursor-text outline-none p-0! text-white border-none focus:ring-0!'
               />
-              <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={status} hideClear>
+              <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={status} hideClear isMulti={false}>
                 <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(status!)}`}>
                   {status?.toUpperCase()}
                 </span>

@@ -11,6 +11,8 @@ import { TaskType } from 'helpers/sharedTypes';
 
 import { useTaskStore } from 'stores/taskStore';
 import { useProfileStore } from 'stores/profileStore';
+import { useNavbarStore } from 'stores/navbarStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateTask } from 'services/tasks';
 import { updateActiveTask } from 'services/profile';
@@ -32,12 +34,14 @@ const TaskHeader = () => {
   const [editingField, setEditingField] = useState<any>(null);
   const [tempValues, setTempValues] = useState({} as Record<string, string>);
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
   const activeTask = useProfileStore((state) => state.data.active_task);
   const updateTaskState = useTaskStore((state) => state.updateTask);
   const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
   const updateProfile = useProfileStore((state) => state.updateProfile);
+  const prevPath = useNavbarStore((state) => state.prevPath);
+  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const navigate = useNavigate();
 
@@ -52,7 +56,8 @@ const TaskHeader = () => {
   };
 
   const handleBackClick = () => {
-    navigate('/tasks');
+    navigate(prevPath || '/dashboard');
+    updatePrevPath('');
   };
 
   const handleUpdateTask = (id: string, payload: object) => {
@@ -110,12 +115,12 @@ const TaskHeader = () => {
           <div>
             <h1 className='text-xl font-bold'>{taskDetails.title}</h1>
             <div className='flex items-center space-x-2 mt-1'>
-              <DropDown options={STATUS_OPTIONS} onSelect={handleStatusChange} hideClear value={taskDetails?.status}>
+              <DropDown options={STATUS_OPTIONS} onSelect={handleStatusChange} hideClear value={taskDetails?.status} isMulti={false}>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(taskDetails.status)}`}>
                   {taskDetails?.status?.toUpperCase()}
                 </span>
               </DropDown>
-              <DropDown options={PRIORITY_OPTIONS} onSelect={handlePriorityChange} value={taskDetails?.priority}>
+              <DropDown options={PRIORITY_OPTIONS} onSelect={handlePriorityChange} value={taskDetails?.priority} isMulti={false}>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(taskDetails.priority)}`}>
                   {capitalize(taskDetails.priority) || 'No'}
                   {' '}

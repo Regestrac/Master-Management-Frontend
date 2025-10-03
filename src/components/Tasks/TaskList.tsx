@@ -11,9 +11,12 @@ import { getAllTasks } from 'services/tasks';
 import TaskFilters from 'components/Tasks/TaskFilters';
 import TaskCard from 'components/Tasks/TaskCard';
 import CreateTaskCard from 'components/Tasks/CreateTaskCard';
+import TaskFiltersSkeleton from 'components/Tasks/TaskFiltersSkeleton';
+import TaskListSkeleton from 'components/Tasks/TaskListSkeleton';
 
 const TaskList = () => {
   const [createTask, setCreateTask] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const allTasks = useTaskStore((state) => state.tasks);
   const addTask = useTaskStore((state) => state.addTask);
@@ -35,10 +38,13 @@ const TaskList = () => {
 
   useEffect(() => {
     if (previousParams.current !== searchParams.toString()) {
+      setLoading(true);
       getAllTasks(searchParams.toString()).then((res) => {
         addTask(res?.data, 'replace');
+        setLoading(false);
       }).catch((err) => {
         toast.error(err?.error || 'Failed to get tasks');
+        setLoading(false);
       });
       previousParams.current = searchParams.toString();
     }
@@ -47,23 +53,31 @@ const TaskList = () => {
   return (
     <>
       <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6'>
-
-        <TaskFilters />
+        {loading ? (
+          <TaskFiltersSkeleton />
+        ) : (
+          <TaskFilters />
+        )}
 
         <div className='flex items-center gap-4'>
           <button
             onClick={handleCreateTask}
-            className='flex items-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors'
+            className='flex items-center space-x-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors'
           >
             <Plus className='w-4 h-4' />
             <span>New Task</span>
           </button>
         </div>
       </div>
-      <div className='space-y-4'>
-        {createTask && <CreateTaskCard handleCancel={handleCancel} />}
-        {allTasks.map((task) => <TaskCard key={task.id} task={task} />)}
-      </div>
+
+      {loading ? (
+        <TaskListSkeleton />
+      ) : (
+        <div className='space-y-4'>
+          {createTask && <CreateTaskCard handleCancel={handleCancel} />}
+          {allTasks.map((task) => <TaskCard key={task.id} task={task} />)}
+        </div>
+      )}
     </>
   );
 };

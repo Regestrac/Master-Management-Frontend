@@ -3,15 +3,21 @@ import { useCallback, useEffect, useRef } from 'react';
 // import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { setPrimaryPalette } from 'helpers/themeHelpers';
+
 import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { validate } from 'services/auth';
 import { getProfile } from 'services/profile';
+import { getUserSettings } from 'services/settings';
 
 const ValidateUser = () => {
   // const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   const updateProfile = useProfileStore((state) => state.updateProfile);
+  const updateSettings = useSettingsStore((state) => state.updateSettings);
+  const updateLoading = useProfileStore((state) => state.updateLoading);
 
   const isValidated = useRef(false);
 
@@ -20,12 +26,23 @@ const ValidateUser = () => {
   // const { pathname } = useLocation();
 
   const getProfileInfo = useCallback(() => {
+    updateLoading(true);
     getProfile().then((profile) => {
       updateProfile(profile?.data);
+      getUserSettings().then((res) => {
+        if (res?.settings?.accent_color) {
+          setPrimaryPalette(res.settings.accent_color);
+        }
+        updateSettings(res?.settings);
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to fetch settings. Please try again.');
+      });
     }).catch((err) => {
       toast.error(err?.error || 'Failed to fetch profile. Please try again.');
+    }).finally(() => {
+      updateLoading(false);
     });
-  }, [updateProfile]);
+  }, [updateProfile, updateSettings, updateLoading]);
 
   useEffect(() => {
     if (!isValidated.current) {

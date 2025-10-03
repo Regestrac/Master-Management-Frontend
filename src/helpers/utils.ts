@@ -159,7 +159,7 @@ export const getStatusColor = (status: StatusType) => {
     case 'todo':
       return 'text-blue-400 bg-blue-400/10';
     case 'inprogress':
-      return 'text-primary-600 bg-primary-600/20';
+      return 'text-purple-600 bg-purple-600/20';
     case 'paused':
       return 'text-gray-400 bg-gray-400/10';
     case 'pending':
@@ -218,4 +218,113 @@ export const titleCase = (str: string) => {
     .split(' ')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
+};
+
+/**
+ * Removes one or more specified keys from an object.
+ *
+ * - For a single key, it uses the spread method for optimal performance.
+ * - For multiple keys, it uses a more generalized approach with `Object.fromEntries` for flexibility.
+ *
+ * @param {T} obj - The source object to omit keys from.
+ * @param {K | K[]} keys - The key or array of keys to omit.
+ * @returns {Omit<T, K>} A new object without the specified keys.
+ *
+ * @example
+ * // Single key removal
+ * const user = { id: 1, name: "Alice", role: "admin" };
+ * const result = omit(user, "role");
+ * console.log(result); // { id: 1, name: "Alice" }
+ *
+ * @example
+ * // Multiple keys removal
+ * const data = { id: 1, name: "Alice", role: "admin", active: true };
+ * const result = omit(data, ["role", "active"]);
+ * console.log(result); // { id: 1, name: "Alice" }
+ */
+export const omit = <T extends object, K extends keyof T>(obj: T, keys: K | K[]): Omit<T, K> => {
+  if (!Array.isArray(keys)) {
+    // Use the spread method for single key removal
+    const { [keys]: _, ...rest } = obj;
+    return rest as Omit<T, K>;
+  }
+
+  // Use Object.entries for multiple keys
+  const keysToOmit = new Set(keys);
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key]) => !keysToOmit.has(key as K)),
+  ) as Omit<T, K>;
+};
+
+export function parseJsonArray(jsonString: string) {
+  let cleanedJsonString = jsonString.trim(); // Trim whitespace from both ends
+
+  // Check if the string starts with '```json' and ends with '```'
+  if (cleanedJsonString.startsWith('```json') && cleanedJsonString.endsWith('```')) {
+    // Remove '```json' from the beginning (and the newline after it)
+    cleanedJsonString = cleanedJsonString.substring('```json\n'.length);
+    // Remove '```' from the end
+    cleanedJsonString = cleanedJsonString.substring(0, cleanedJsonString.length - '```'.length);
+    cleanedJsonString = cleanedJsonString.replace(/\n/g, '');
+    cleanedJsonString = cleanedJsonString.trim(); // Trim again in case of extra newlines/spaces
+  }
+  try {
+    const parsedData = JSON.parse(cleanedJsonString);
+
+    // Ensure the parsed data is indeed an array
+    if (!Array.isArray(parsedData)) {
+      throw new Error('The provided JSON string does not represent an array.');
+    }
+
+    return parsedData;
+  } catch {
+    return [];
+  }
+}
+
+export function parseMarkdownJson(markdownString: string) {
+  const regex = /```(?:json)?\n([\s\S]*?)\n```/;
+  const match = markdownString.match(regex);
+
+  if (!match || match.length < 2) {
+    throw new Error('No valid JSON block found in the input string.');
+  }
+
+  try {
+    const jsonStr = match[1];
+    return JSON.parse(jsonStr);
+  } catch (error) {
+    throw new Error('Failed to parse JSON: ' + (error as Error).message);
+  }
+}
+
+export const generateRandomColor = (key: string) => {
+  // Simple deterministic hash -> HEX color
+  let hash = 0;
+  for (let i = 0; i < key.length; i += 1) {
+    hash = ((hash << 5) - hash) + key.charCodeAt(i);
+    hash |= 0; // Convert to 32bit int
+  }
+  // Use unsigned hash to build a hex color
+  const hex = (hash >>> 0).toString(16).padStart(6, '0').slice(0, 6);
+  return `#${hex}`.toUpperCase();
+};
+
+export const formatDurationInSeconds = (seconds: number): string => {
+  if (!seconds || seconds <= 0) {
+    return '0s';
+  }
+  if (seconds < 60) {
+    return `${seconds}s`;
+  }
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const parts: string[] = [];
+  if (hours > 0) {
+    parts.push(`${hours}h`);
+  }
+  if (minutes > 0) {
+    parts.push(`${minutes}m`);
+  }
+  return parts.join(' ') || '0s';
 };

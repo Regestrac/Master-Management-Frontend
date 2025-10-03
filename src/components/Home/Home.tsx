@@ -51,7 +51,7 @@ const Home = () => {
       role: 'Product Manager',
       company: 'TechCorp',
       image: 'keys/sarah-avatar?prompt=professional%20woman%20headshot%20avatar',
-      quote: "TaskFlow Pro has transformed how I manage my team's productivity. The analytics are incredibly insightful.",
+      quote: "Master Management has transformed how I manage my team's productivity. The analytics are incredibly insightful.",
     },
     {
       name: 'Michael Rodriguez',
@@ -203,7 +203,7 @@ const Home = () => {
                 <span className='bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent'> Smart Productivity</span>
               </h1>
               <p className='text-xl text-gray-600 mb-8 leading-relaxed'>
-                TaskFlow Pro combines intelligent task management, goal tracking, and productivity analytics to help you accomplish more than ever before.
+                Master Management combines intelligent task management, goal tracking, and productivity analytics to help you accomplish more than ever before.
               </p>
               <div className='flex flex-col sm:flex-row gap-4'>
                 <button className='bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-200 font-semibold flex items-center justify-center group'>
@@ -224,7 +224,7 @@ const Home = () => {
               <div className='absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl transform rotate-3 scale-105 opacity-20' />
               <img
                 src='src/assets/dashboard-preview.png'
-                alt='TaskFlow Pro Dashboard'
+                alt='Master Management Dashboard'
                 className='relative rounded-2xl shadow-2xl w-full'
               />
               <div className='absolute -top-4 -right-4 bg-gradient-to-r from-green-400 to-emerald-500 text-white px-4 py-2 rounded-lg shadow-lg'>
@@ -247,7 +247,7 @@ const Home = () => {
               <span className='bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent'> productive</span>
             </h2>
             <p className='text-xl text-gray-600 max-w-3xl mx-auto'>
-              From simple task tracking to advanced analytics, TaskFlow Pro provides all the tools you need to achieve your goals and maximize productivity.
+              From simple task tracking to advanced analytics, Master Management provides all the tools you need to achieve your goals and maximize productivity.
             </p>
           </div>
 
@@ -297,7 +297,7 @@ const Home = () => {
               Loved by thousands of
               <span className='bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent'> productive people</span>
             </h2>
-            <p className='text-xl text-gray-600'>See what our users have to say about TaskFlow Pro</p>
+            <p className='text-xl text-gray-600'>See what our users have to say about Master Management</p>
           </div>
 
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
@@ -409,7 +409,7 @@ const Home = () => {
             Ready to supercharge your productivity?
           </h2>
           <p className='text-xl text-gray-300 mb-8'>
-            Join thousands of professionals who have transformed their work and life with TaskFlow Pro.
+            Join thousands of professionals who have transformed their work and life with Master Management.
           </p>
           <div className='flex flex-col sm:flex-row gap-4 justify-center'>
             <button className='bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-200 font-semibold'>
@@ -435,7 +435,7 @@ const Home = () => {
                 <div className='w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center'>
                   <Target className='w-4 h-4 text-white' />
                 </div>
-                <span className='text-xl font-bold'>TaskFlow Pro</span>
+                <span className='text-xl font-bold'>Master Management</span>
               </div>
               <p className='text-gray-400 leading-relaxed'>
                 The ultimate productivity suite for achieving your goals and maximizing your potential.
@@ -475,7 +475,7 @@ const Home = () => {
 
           <div className='border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center'>
             <p className='text-gray-400 text-sm'>
-              © 2025 TaskFlow Pro. All rights reserved.
+              © 2025 Master Management. All rights reserved.
             </p>
             <div className='flex space-x-6 mt-4 md:mt-0'>
               <a href='#' className='text-gray-400 hover:text-white transition-colors'>

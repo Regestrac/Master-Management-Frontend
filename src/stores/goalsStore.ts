@@ -1,25 +1,29 @@
 import { create } from 'zustand';
 
-import { TaskType } from 'src/helpers/sharedTypes';
+import { StatusType } from 'src/helpers/sharedTypes';
 
 // Goal-specific types
 type GoalType = {
   id: number;
   title: string;
+  status: StatusType;
+  time_spend: number;
+  due_date: string;
+  type: 'goal' | 'task';
+  weekly_progress: number;
+
+  startedAt?: string;
   description: string;
-  status: TaskType['status'];
-  category: string;
-  progress: number;
-  streak: number;
-  totalTime: string;
-  targetDate: string;
-  currentWeekHours: number;
-  weeklyTarget: number;
   tags: string[];
+
+  category: string;
+  streak: number;
   achievements: string[];
   priority?: 'low' | 'normal' | 'high';
-  startDate?: string;
-  type?: 'goal';
+
+  progress: number;
+  currentWeekHours: number;
+  weeklyTarget: number;
 };
 
 type GoalMilestoneType = {

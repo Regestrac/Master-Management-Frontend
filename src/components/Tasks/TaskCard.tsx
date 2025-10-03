@@ -1,7 +1,9 @@
+import { useState } from 'react';
+
 import { Calendar, Clock, Flame, Pause, Play } from 'lucide-react';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { TaskType } from 'helpers/sharedTypes';
@@ -10,6 +12,9 @@ import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
 
 import { useTaskStore } from 'stores/taskStore';
 import { useProfileStore } from 'stores/profileStore';
+import useModalStore from 'stores/modalStore';
+import { useNavbarStore } from 'stores/navbarStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateTask } from 'services/tasks';
 import { updateActiveTask } from 'services/profile';
@@ -35,12 +40,17 @@ const formatDate = (dateString: string) => {
 };
 
 const TaskCard = ({ task }: TaskCardPropsType) => {
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const [editName, setEditName] = useState(false);
+
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const updateTaskState = useTaskStore((state) => state.updateTask);
   const activeTask = useProfileStore((state) => state.data.active_task);
   const updateProfile = useProfileStore((state) => state.updateProfile);
+  const updateVisibility = useModalStore((state) => state.updateVisibility);
+  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const methods = useForm({
     defaultValues: {
@@ -60,13 +70,22 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
   //   setExpandedTask(expandedTask === taskId ? null : taskId);
   // };
 
-  const toggleTimer = (taskId: number) => {
-    updateActiveTask({ active_task: activeTask === taskId ? null : taskId }).then((res) => {
-      toast.success(res?.message);
-      updateProfile({ active_task: res?.active_task });
-    }).catch((err) => {
-      toast.error(err?.error);
-    });
+  const handleToggleTimer = (taskId: number) => {
+    const toggleTimer = () => {
+      updateActiveTask({ active_task: activeTask === taskId ? null : taskId }).then((res) => {
+        updateVisibility({ modalType: 'switchTaskModal', isVisible: false });
+        toast.success(res?.message);
+        updateProfile({ active_task: res?.active_task });
+      }).catch((err) => {
+        toast.error(err?.error);
+      });
+    };
+
+    if (activeTask && activeTask !== taskId) {
+      updateVisibility({ modalType: 'switchTaskModal', isVisible: true, extraProps: { onSuccess: toggleTimer } });
+    } else {
+      toggleTimer();
+    }
   };
 
   const handlePrioritySelect = (value: string | null) => {
@@ -84,6 +103,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
   };
 
   const handleTaskClick = () => {
+    updatePrevPath(pathname.includes('dashboard') ? '/dashboard' : '/tasks');
     navigate(`/tasks/${task?.id}`);
   };
 
@@ -92,6 +112,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
       <div
         className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer`}
         onClick={handleTaskClick}
+        key={task?.id}
       >
         <div className='py-4 px-6'>
           <div className='flex items-center justify-between'>
@@ -102,31 +123,45 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
                       onChange={() => toggleTaskSelection(task?.id)}
                       className='w-4 h-4 text-purple-600 rounded focus:ring-purple-500'
                     /> */}
-              <Dropdown options={PRIORITY_OPTIONS} onSelect={handlePrioritySelect} value={task?.priority}>
+              <Dropdown options={PRIORITY_OPTIONS} onSelect={handlePrioritySelect} value={task?.priority} isMulti={false}>
                 <div className={`w-3 h-3 rounded-full cursor-pointer hover:scale-120 ${getPriorityColor(task?.priority)}`} />
               </Dropdown>
               <div className='flex-1'>
                 <FormProvider {...methods}>
                   <div className='flex items-center gap-3 mb-2'>
-                    <Input
-                      name='title'
-                      label=''
-                      className='font-semibold text-lg cursor-text outline-none p-0! border-none focus:ring-0!'
-                      onClick={(e) => e.stopPropagation()}
-                      onBlur={(value) => {
-                        if (value !== task?.title) {
-                          handleUpdateTask(task?.id?.toString(), { title: value });
-                          updateTaskState({ id: task?.id, title: value });
-                        }
-                      }}
-                    />
+                    {editName ? (
+                      <Input
+                        name='title'
+                        label=''
+                        className='font-semibold text-lg cursor-text outline-none p-0! border-none focus:ring-0!'
+                        onClick={(e) => e.stopPropagation()}
+                        autoFocus
+                        onBlur={(value) => {
+                          if (value !== task?.title) {
+                            handleUpdateTask(task?.id?.toString(), { title: value });
+                            updateTaskState({ id: task?.id, title: value });
+                          }
+                          setEditName(false);
+                        }}
+                      />
+                    ) : (
+                      <h4
+                        className='font-semibold text-lg cursor-text outline-none p-0! border-none focus:ring-0!'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditName(true);
+                        }}
+                      >
+                        {task?.title}
+                      </h4>
+                    )}
                   </div>
                 </FormProvider>
                 {/* <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm mb-3`}>
                         {task?.description}
                       </p> */}
                 <div className='flex flex-wrap items-center gap-4 text-sm'>
-                  <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={task?.status} hideClear>
+                  <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={task?.status} hideClear isMulti={false}>
                     <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(task?.status)}`}>
                       {task?.status?.toUpperCase()}
                     </span>
@@ -180,7 +215,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  toggleTimer(task?.id);
+                  handleToggleTimer(task?.id);
                 }}
                 className={`p-3 rounded-lg transition-colors ${activeTask === task?.id
                   ? 'bg-red-500 hover:bg-red-600 text-white'

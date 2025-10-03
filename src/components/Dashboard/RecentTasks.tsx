@@ -3,9 +3,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import TaskCard from 'components/Tasks/TaskCard';
+import { getRecentTasks } from 'services/dashboard';
 
-import { getRecentTasks } from 'src/services/tasks';
+import TaskCard from 'components/Tasks/TaskCard';
+import TaskSkeleton from 'components/Dashboard/TaskSkeleton';
 
 type RecentTaskType = {
   id: number;
@@ -19,6 +20,7 @@ type RecentTaskType = {
 
 const RecentTasks = () => {
   const [recentTasks, setRecentTasks] = useState<RecentTaskType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   const shouldFetchRecentTasksRef = useRef(true);
@@ -29,10 +31,13 @@ const RecentTasks = () => {
 
   useEffect(() => {
     if (shouldFetchRecentTasksRef.current) {
+      setIsLoading(true);
       getRecentTasks().then((res) => {
         setRecentTasks(res?.data || []);
       }).catch((err) => {
         toast.error(err?.error || 'Failed to fetch recent tasks');
+      }).finally(() => {
+        setIsLoading(false);
       });
       shouldFetchRecentTasksRef.current = false;
     }
@@ -46,13 +51,19 @@ const RecentTasks = () => {
           <Plus className='w-4 h-4' />
           <span>Add Task</span>
         </button> */}
-        <button className='text-purple-500 hover:text-purple-600 text-sm font-medium' onClick={handleViewAllTask}>View All</button>
+        <button className='text-primary-500 hover:text-primary-600 text-sm font-medium' onClick={handleViewAllTask}>View All</button>
       </div>
 
       <div className='space-y-4'>
-        {recentTasks.map((task) => (
-          <TaskCard key={task.id} task={task as any} />
-        ))}
+        {isLoading ? (
+          Array.from({ length: 5 }).map((_, index) => (
+            <TaskSkeleton key={index} />
+          ))
+        ) : (
+          recentTasks.map((task) => (
+            <TaskCard key={task.id} task={task as any} />
+          ))
+        )}
       </div>
     </div>
   );

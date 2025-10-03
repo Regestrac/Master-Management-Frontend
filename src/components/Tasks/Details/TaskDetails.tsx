@@ -7,7 +7,7 @@ import {
   Target,
 } from 'lucide-react';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import TaskHeader from 'components/Tasks/Details/TaskHeader';
 import TaskProgress from 'components/Tasks/Details/TaskProgress';
@@ -16,10 +16,10 @@ import TaskActivity from 'components/Tasks/Details/Activity/TaskActivity';
 import TaskNotes from 'components/Tasks/Details/Notes/TaskNotes';
 import TaskComments from 'components/Tasks/Details/Comments/TaskComments';
 
-const TaskDetailsPage = () => {
+const TaskDetails = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
@@ -44,7 +44,7 @@ const TaskDetailsPage = () => {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center space-x-2 px-3 py-2 border-b-2 transition-colors ${activeTab === tab.id
-                    ? 'border-purple-500 text-purple-600'
+                    ? 'border-primary-500 text-primary-600'
                     : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-900'}`}`}
                 >
                   <Icon className='w-4 h-4' />
@@ -66,4 +66,4 @@ const TaskDetailsPage = () => {
   );
 };
 
-export default TaskDetailsPage;
+export default TaskDetails;

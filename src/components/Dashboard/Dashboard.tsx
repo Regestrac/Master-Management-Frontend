@@ -1,11 +1,11 @@
-import TaskQuickStats from 'components/Dashboard/TaskQuickStats';
+import QuickStats from 'components/Dashboard/QuickStats';
 import RecentTasks from 'components/Dashboard/RecentTasks';
 import ActiveGoals from 'components/Dashboard/ActiveGoals';
 
 const Dashboard = () => {
   return (
     <>
-      <TaskQuickStats />
+      <QuickStats />
       <RecentTasks />
       <ActiveGoals />
     </>

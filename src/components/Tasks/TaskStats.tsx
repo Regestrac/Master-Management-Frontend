@@ -4,9 +4,11 @@ import { toast } from 'react-toastify';
 
 import { titleCase } from 'helpers/utils';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { getTasksStats } from 'services/tasks';
+
+import TaskStatsSkeleton from 'components/Tasks/TaskStatsSkeleton';
 
 const getStatsGradients = (item: string) => {
   switch (item) {
@@ -30,9 +32,10 @@ const getStatsGradients = (item: string) => {
 };
 
 const TaskStats = () => {
-  const [taskStats, setTaskStats] = useState({} as Record<string, number>);
+  const [taskStats, setTaskStats] = useState([] as { status: string; count: number; }[]);
+  const [loading, setLoading] = useState(true);
 
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const fetchStatsRef = useRef(true);
 
@@ -40,22 +43,28 @@ const TaskStats = () => {
     if (fetchStatsRef.current) {
       getTasksStats().then((res) => {
         setTaskStats(res.data);
+        setLoading(false);
       }).catch((err) => {
         toast.error(err?.error || 'Error fetching task stats');
+        setLoading(false);
       });
       fetchStatsRef.current = false;
     }
   }, []);
 
+  if (loading) {
+    return <TaskStatsSkeleton />;
+  }
+
   return (
-    <div className='grid grid-cols-2 lg:grid-cols-6 md:grid-cols-3 gap-4 mb-8'>
-      {Object.entries(taskStats).map(([key, value]) => {
-        const gradient = getStatsGradients(key);
+    <div className='grid grid-cols-2 xl:grid-cols-7 lg:grid-cols-5 md:grid-cols-4 gap-4 mb-8'>
+      {taskStats.map((stats) => {
+        const gradient = getStatsGradients(stats?.status);
         return (
-          <div key={key} className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg p-4 shadow-sm border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+          <div key={stats?.status} className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg p-4 shadow-sm border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
             <div className={`w-8 h-8 bg-gradient-to-r ${gradient} rounded-lg mb-2`} />
-            <p className='text-2xl font-bold'>{value}</p>
-            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{titleCase(key)}</p>
+            <p className='text-2xl font-bold'>{stats?.count}</p>
+            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{titleCase(stats?.status)}</p>
           </div>
         );
       })}

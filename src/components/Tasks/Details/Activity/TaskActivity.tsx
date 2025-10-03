@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { CheckSquare, Edit3, History, MessageSquare, Plus, User } from 'lucide-react';
 
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 const getActionIcon = (type: any) => {
   switch (type) {
@@ -66,7 +66,7 @@ const history = [
 ];
 
 const TaskActivity = () => {
-  const darkMode = useProfileStore((state) => state.data.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   return (
     <div className={`rounded-xl border transition-colors ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
       <div className='p-6 border-b border-gray-200 dark:border-gray-700'>

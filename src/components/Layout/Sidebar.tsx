@@ -1,13 +1,15 @@
-import { BarChart3, Calendar, CheckSquare, Home, Settings, Target, User } from 'lucide-react';
+import clsx from 'clsx';
+import { BarChart3, Building2, Calendar, CheckSquare, Home, Settings, Target, User } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useNavbarStore } from 'stores/navbarStore';
-import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 const navbarItems = [
   { id: 'dashboard', icon: Home, label: 'Dashboard' },
   { id: 'tasks', icon: CheckSquare, label: 'Tasks' },
   { id: 'goals', icon: Target, label: 'Goals' },
+  { id: 'workspace', icon: Building2, label: 'Workspace' },
   { id: 'analytics', icon: BarChart3, label: 'Analytics' },
   { id: 'calendar', icon: Calendar, label: 'Calendar' },
   { id: 'profile', icon: User, label: 'Profile' },
@@ -15,7 +17,7 @@ const navbarItems = [
 ];
 
 const Sidebar = () => {
-  const darkMode = useProfileStore((state) => state?.data?.theme) === 'dark';
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const showNavbar = useNavbarStore((state) => state.showNavbar);
 
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ const Sidebar = () => {
 
   const getCurrentMenuStatus = (menuItem: string) => {
     if (pathname.includes(menuItem)) {
-      return 'bg-purple-500 text-white';
+      return 'bg-primary-500 text-white';
     }
     return darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100';
   };
@@ -33,7 +35,12 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`${showNavbar ? 'translate transition-transform duration-700' : '-translate-x-full transition-transform duration-700'} fixed left-0 top-0 h-full w-70 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-r transition-colors duration-300 z-20`}>
+    <div className={clsx(
+      'fixed left-0 top-0 h-full w-70 border-r transition-colors duration-300 z-[60]',
+      showNavbar ? 'translate transition-transform duration-700' : '-translate-x-full transition-transform duration-700',
+      darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
+    )}
+    >
       <div className='p-6'>
         <div className='flex items-center space-x-3 mb-8'>
           <div className='w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center'>
@@ -47,7 +54,10 @@ const Sidebar = () => {
             <button
               key={id}
               onClick={() => handleNavLinkClick(id)}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors cursor-pointer ${getCurrentMenuStatus(id)}`}
+              className={clsx(
+                'w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors cursor-pointer',
+                getCurrentMenuStatus(id),
+              )}
             >
               <Icon className='w-5 h-5' />
               <span>{label}</span>

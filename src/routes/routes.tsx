@@ -6,16 +6,21 @@ import Signup from 'components/Authentication/Signup';
 import Dashboard from 'components/Dashboard/Dashboard';
 import Home from 'components/Home/Home';
 import RootLayout from 'components/Layout/RootLayout';
+import SidebarOnlyLayout from 'components/Layout/SidebarOnlyLayout';
 import Profile from 'components/Profile/Profile';
 import Settings from 'components/Settings/Settings';
 import NotFound from 'components/Shared/NotFound';
 import StyleGuide from 'components/StyleGuide';
 import Tasks from 'components/Tasks/Tasks';
-import TaskDetail from 'components/Tasks/TaskDetail';
-import TaskManagementAppDesign from 'components/Tasks/TaskManagementAppDesign';
+import TaskManagementAppDesign from 'components/StyleGuide/TaskManagementAppDesign';
+import TaskDetail from 'components/Tasks/Details/TaskDetails';
 import Goals from 'components/Goals/Goals';
+import WorkspaceHome from 'components/Workspace/WorkspaceHome';
+import WorkspaceDetail from 'components/Workspace/WorkspaceDetail';
 import CreateTaskForm from 'components/Tasks/CreateTaskForm';
 import RootLayoutWrapper from 'components/Layout/RootLayoutWrapper';
+import Analytics from 'components/Analytics/Analytics';
+import Calendar from 'components/Calendar/Calendar';
 
 const routes: RouteObject[] = [
   {
@@ -55,10 +60,25 @@ const routes: RouteObject[] = [
             element: <Goals />,
           },
           {
+            path: '/workspace',
+            element: <WorkspaceHome />,
+          },
+          {
+            path: '/workspace/:id',
+            element: <WorkspaceDetail />,
+          },
+        ],
+      },
+      {
+        element: <SidebarOnlyLayout />,
+        children: [
+          {
             path: '/analytics',
+            element: <Analytics />,
           },
           {
             path: '/calendar',
+            element: <Calendar />,
           },
           {
             path: '/profile',
@@ -72,6 +92,10 @@ const routes: RouteObject[] = [
       },
       {
         path: '/tasks/:id',
+        element: <TaskDetail />,
+      },
+      {
+        path: '/goals/:id',
         element: <TaskDetail />,
       },
       {

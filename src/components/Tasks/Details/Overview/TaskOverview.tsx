@@ -1,16 +1,44 @@
-import TaskDescription from './TaskDescription';
-import Checklist from './Checklist';
-import Tags from './Tags';
-import SubTasks from '../SubTasks/SubTasks';
+import { useEffect, useRef } from 'react';
+
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+import { useTaskStore } from 'stores/taskStore';
+
+import { getTask } from 'services/tasks';
+
+import TaskDescription from 'components/Tasks/Details/Overview/TaskDescription';
+import Checklist from 'components/Tasks/Details/Overview/Checklist';
+import Tags from 'components/Tasks/Details/Overview/Tags';
+import SubTasks from 'components/Tasks/Details/SubTasks/SubTasks';
 
 const TaskOverview = () => {
+  const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
+
+  const shouldFetchTask = useRef(true);
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id && shouldFetchTask.current) {
+      getTask(id).then((fetchedTask) => {
+        updateCurrentTaskDetails(fetchedTask?.data);
+        // setIsLoading(false);
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to fetch task details.');
+        // setIsLoading(false);
+      });
+      shouldFetchTask.current = false;
+    }
+  }, [id, updateCurrentTaskDetails]);
+
   return (
     <div className='grid lg:grid-cols-5 gap-4 space-y-6'>
-      <div className='lg:col-span-3 overflow-auto max-h-[70vh] flex flex-col space-y-6 pr-2'>
+      <div className='lg:col-span-3 overflow-auto max-h-[70vh] flex flex-col space-y-6 pr-2 scrollbar-sm'>
         <TaskDescription />
         <SubTasks />
       </div>
-      <div className='lg:col-span-2 overflow-auto max-h-[70vh] flex flex-col space-y-6 pr-2'>
+      <div className='lg:col-span-2 overflow-auto max-h-[70vh] flex flex-col space-y-6 pr-2 scrollbar-sm'>
         <Checklist />
         {/* <StickyNotes /> */}
         <Tags />
