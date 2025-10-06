@@ -3,9 +3,9 @@ import { ToastContainer } from 'react-toastify';
 
 import useCustomNavigation from 'hooks/useCustomNavigation';
 
-import routes from 'routes/routes';
-
 import Modals from 'components/Modals';
+
+import routes from 'src/routes/routes';
 
 function App() {
   useCustomNavigation();
