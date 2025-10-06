@@ -10,7 +10,8 @@ import SidebarOnlyLayout from 'components/Layout/SidebarOnlyLayout';
 import Profile from 'components/Profile/Profile';
 import Settings from 'components/Settings/Settings';
 import NotFound from 'components/Shared/NotFound';
-import TermsOfService from 'components/Shared/TermsOfService';
+import TermsOfService from 'components/Resources/TermsOfService';
+import PrivacyPolicy from 'components/Resources/PrivacyPolicy';
 import StyleGuide from 'components/StyleGuide';
 import Tasks from 'components/Tasks/Tasks';
 import TaskManagementAppDesign from 'components/StyleGuide/TaskManagementAppDesign';
@@ -34,6 +35,10 @@ const routes: RouteObject[] = [
       {
         path: '/legal/terms',
         element: <TermsOfService />,
+      },
+      {
+        path: '/legal/privacy',
+        element: <PrivacyPolicy />,
       },
       {
         path: '/auth',

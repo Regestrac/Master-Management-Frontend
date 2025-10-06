@@ -253,9 +253,9 @@ const Signup: React.FC = () => {
                   {' '}
                   and
                   {' '}
-                  <a href='#' className='text-purple-600 hover:text-purple-500 font-medium'>
+                  <Link to='/legal/privacy' className='text-purple-600 hover:text-purple-500 font-medium'>
                     Privacy Policy
-                  </a>
+                  </Link>
                 </span>
               </label>
               {agreeToTermsError ? (

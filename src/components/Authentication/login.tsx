@@ -180,7 +180,9 @@ const Login: React.FC = () => {
               {' '}
               and
               {' '}
-              <a href='#' className='text-purple-600 hover:text-purple-500'>Privacy Policy</a>
+              <Link to='/legal/privacy' className='text-purple-600 hover:text-purple-500'>
+                Privacy Policy
+              </Link>
             </p>
           </div>
         </div>

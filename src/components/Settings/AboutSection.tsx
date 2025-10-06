@@ -90,10 +90,10 @@ const AboutSection = () => {
             </button>
 
             {/* Privacy Policy */}
-            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
+            <Link to='/legal/privacy' className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
               <div className='text-2xl mb-2'>🔒</div>
               <div className='text-sm font-medium'>Privacy Policy</div>
-            </button>
+            </Link>
 
             {/* Terms of Service */}
             <Link to='/legal/terms' className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
