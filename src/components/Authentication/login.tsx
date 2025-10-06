@@ -174,7 +174,9 @@ const Login: React.FC = () => {
             <p className='text-sm text-gray-500'>
               By signing in, you agree to our
               {' '}
-              <a href='#' className='text-purple-600 hover:text-purple-500'>Terms of Service</a>
+              <Link to='/legal/terms' className='text-purple-600 hover:text-purple-500'>
+                Terms of Service
+              </Link>
               {' '}
               and
               {' '}

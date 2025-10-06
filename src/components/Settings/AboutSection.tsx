@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import { useSettingsStore } from 'stores/settingsStore';
 
 const AboutSection = () => {
@@ -51,21 +53,53 @@ const AboutSection = () => {
         <div>
           <h6 className='font-semibold mb-4'>Resources & Support</h6>
           <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-            {[
-              { title: 'Documentation', icon: '📚', link: '#' },
-              { title: 'Changelog', icon: '📝', link: '#' },
-              { title: 'Support', icon: '💬', link: '#' },
-              { title: 'Community', icon: '👥', link: '#' },
-              { title: 'Feature Requests', icon: '💡', link: '#' },
-              { title: 'Bug Reports', icon: '🐛', link: '#' },
-              { title: 'Privacy Policy', icon: '🔒', link: '#' },
-              { title: 'Terms of Service', icon: '📄', link: '#' },
-            ].map((resource, index) => (
-              <button key={index} className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
-                <div className='text-2xl mb-2'>{resource.icon}</div>
-                <div className='text-sm font-medium'>{resource.title}</div>
-              </button>
-            ))}
+            {/* Documentation */}
+            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
+              <div className='text-2xl mb-2'>📚</div>
+              <div className='text-sm font-medium'>Documentation</div>
+            </button>
+
+            {/* Changelog */}
+            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
+              <div className='text-2xl mb-2'>📝</div>
+              <div className='text-sm font-medium'>Changelog</div>
+            </button>
+
+            {/* Support */}
+            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
+              <div className='text-2xl mb-2'>💬</div>
+              <div className='text-sm font-medium'>Support</div>
+            </button>
+
+            {/* Community */}
+            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
+              <div className='text-2xl mb-2'>👥</div>
+              <div className='text-sm font-medium'>Community</div>
+            </button>
+
+            {/* Feature Requests */}
+            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
+              <div className='text-2xl mb-2'>💡</div>
+              <div className='text-sm font-medium'>Feature Requests</div>
+            </button>
+
+            {/* Bug Reports */}
+            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
+              <div className='text-2xl mb-2'>🐛</div>
+              <div className='text-sm font-medium'>Bug Reports</div>
+            </button>
+
+            {/* Privacy Policy */}
+            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
+              <div className='text-2xl mb-2'>🔒</div>
+              <div className='text-sm font-medium'>Privacy Policy</div>
+            </button>
+
+            {/* Terms of Service */}
+            <Link to='/legal/terms' className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
+              <div className='text-2xl mb-2'>📄</div>
+              <div className='text-sm font-medium'>Terms of Service</div>
+            </Link>
           </div>
         </div>
 
