@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { BarChart3, Building2, Calendar, CheckSquare, Home, Settings, Target, User } from 'lucide-react';
+import { BarChart3, Building2, CheckSquare, Home, Settings, Target, User } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useNavbarStore } from 'stores/navbarStore';
@@ -11,7 +11,7 @@ const navbarItems = [
   { id: 'goals', icon: Target, label: 'Goals' },
   { id: 'workspace', icon: Building2, label: 'Workspace' },
   { id: 'analytics', icon: BarChart3, label: 'Analytics' },
-  { id: 'calendar', icon: Calendar, label: 'Calendar' },
+  // { id: 'calendar', icon: Calendar, label: 'Calendar' },
   { id: 'profile', icon: User, label: 'Profile' },
   { id: 'settings', icon: Settings, label: 'Settings' },
 ];
@@ -32,6 +32,7 @@ const Sidebar = () => {
 
   const handleNavLinkClick = (id: string) => {
     navigate(`/${id}`);
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   };
 
   return (

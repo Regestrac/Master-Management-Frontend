@@ -25,22 +25,22 @@ type ThemeModeType = 'light' | 'dark' | 'auto';
 // ];
 
 const accentColorOptions = [
+  { name: 'Fuchsia', color: '#D946EF' },
   { name: 'Purple', color: '#A855F7' },
   { name: 'Violet', color: '#8B5CF6' },
   { name: 'Indigo', color: '#6366F1' },
   { name: 'Blue', color: '#3B82F6' },
   { name: 'Cyan', color: '#06B6D4' },
+  { name: 'Teal', color: '#14B8A6' },
   { name: 'Green', color: '#10B981' },
   { name: 'Emerald', color: '#059669' },
-  { name: 'Teal', color: '#14B8A6' },
   { name: 'Lime', color: '#65A30D' },
   { name: 'Yellow', color: '#EAB308' },
   { name: 'Orange', color: '#F59E0B' },
   { name: 'Amber', color: '#D97706' },
-  { name: 'Pink', color: '#EC4899' },
-  { name: 'Fuchsia', color: '#D946EF' },
   { name: 'Rose', color: '#F43F5E' },
   { name: 'Red', color: '#EF4444' },
+  { name: 'Pink', color: '#EC4899' },
 ];
 
 const AppearanceSettings = () => {

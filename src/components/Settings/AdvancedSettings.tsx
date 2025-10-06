@@ -21,16 +21,19 @@ const AdvancedSettings = () => {
               name='debugMode'
               label='Debug Mode'
               description='Enable debug logging and detailed error messages'
+              disabled
             />
             <Switch
               name='betaFeatures'
               label='Beta Features'
               description='Enable experimental features and early access'
+              disabled
             />
             <Switch
               name='analyticsTelemetry'
               label='Analytics & Telemetry'
               description='Send anonymous usage data to help improve the app'
+              disabled
             />
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <button className='flex flex-col items-center p-4 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors'>
@@ -67,6 +70,7 @@ const AdvancedSettings = () => {
                     name='aiTaskAssistant'
                     label=''
                     description=''
+                    disabled
                   />
                 </div>
               </div>
@@ -85,6 +89,7 @@ const AdvancedSettings = () => {
                     name='advancedAnalytics'
                     label=''
                     description=''
+                    disabled
                   />
                 </div>
               </div>
@@ -103,6 +108,7 @@ const AdvancedSettings = () => {
                     name='teamCollaboration'
                     label=''
                     description=''
+                    disabled
                   />
                 </div>
               </div>
@@ -122,8 +128,8 @@ const AdvancedSettings = () => {
                     This will reset all settings to their default values. This action cannot be undone.
                   </p>
                 </div>
-                <button className='px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors'>
-                  Reset Settings
+                <button className='px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center'>
+                  <span className='whitespace-nowrap'>Reset Settings</span>
                 </button>
               </div>
               <div className='border-t border-red-400 pt-4 flex items-center justify-between space-x-3'>
@@ -133,8 +139,8 @@ const AdvancedSettings = () => {
                     Permanently delete all your tasks, goals, and data. This action cannot be undone.
                   </p>
                 </div>
-                <button className='px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors'>
-                  Delete All Data
+                <button className='px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center'>
+                  <span className='whitespace-nowrap'>Delete All Data</span>
                 </button>
               </div>
             </div>
