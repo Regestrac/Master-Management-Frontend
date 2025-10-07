@@ -4,7 +4,7 @@ import { Clock, Flame } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { formatTimeElapsed } from 'helpers/utils';
+import { formatDuration } from 'helpers/utils';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
@@ -91,7 +91,7 @@ const ActiveGoals = () => {
                 <div className={`flex items-center justify-between text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   <span className='flex items-center'>
                     <Clock className='w-4 h-4 mr-1' />
-                    {formatTimeElapsed(goal.time_spend)}
+                    {formatDuration(goal.time_spend)}
                   </span>
                   <button className='text-primary-500 hover:text-primary-600 font-medium'>
                     Continue

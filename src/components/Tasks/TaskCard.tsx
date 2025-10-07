@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { TaskType } from 'helpers/sharedTypes';
-import { formatTimeElapsed, getPriorityColor, getStatusColor } from 'helpers/utils';
+import { formatDuration, getPriorityColor, getStatusColor } from 'helpers/utils';
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
 
 import { useTaskStore } from 'stores/taskStore';
@@ -173,7 +173,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
                   )}
                   <span className={` cursor-default ${darkMode ? 'text-gray-400' : 'text-gray-600'} flex items-center`}>
                     <Clock className='w-4 h-4 mr-1' />
-                    {formatTimeElapsed(task?.time_spend)}
+                    {formatDuration(task?.time_spend)}
                   </span>
                   {task?.due_date && (
                     <span className={` cursor-default ${darkMode ? 'text-gray-400' : 'text-gray-600'} flex items-center`}>

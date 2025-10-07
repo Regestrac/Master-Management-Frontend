@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { formatDurationInSeconds } from 'helpers/utils';
+import { formatDuration } from 'helpers/utils';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
@@ -63,8 +63,8 @@ const MetricsCards = () => {
         },
         {
           title: 'Focus Time',
-          value: formatDurationInSeconds(metricsData.focus_time),
-          change: metricsData.focus_time_change ? `${metricsData.focus_time_change > 0 ? '+' : ''}${formatDurationInSeconds(metricsData.focus_time_change)}` : null,
+          value: formatDuration(metricsData.focus_time),
+          change: metricsData.focus_time_change ? `${metricsData.focus_time_change > 0 ? '+' : ''}${formatDuration(metricsData.focus_time_change)}` : null,
           trend: metricsData.focus_time_change > 0 ? 'up' : 'down',
           icon: '⏱️',
           color: 'from-purple-500 to-purple-600',

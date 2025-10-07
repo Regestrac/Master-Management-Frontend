@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Tooltip } from 'react-tooltip';
 
-import { formatDurationInSeconds } from 'helpers/utils';
+import { formatDuration } from 'helpers/utils';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
@@ -130,7 +130,7 @@ const TimelyInsights = () => {
                   <div className='text-xs rounded'>
                     {formatHour(hour)}
                     <br />
-                    {formatDurationInSeconds(value)}
+                    {formatDuration(value)}
                   </div>
                 </Tooltip>
               </React.Fragment>
@@ -165,8 +165,8 @@ const TimelyInsights = () => {
                     />
                   </div>
                 </div>
-                <span className='text-sm font-medium w-16 text-right' title={formatDurationInSeconds(seconds)}>
-                  {formatDurationInSeconds(seconds)}
+                <span className='text-sm font-medium w-16 text-right' title={formatDuration(seconds)}>
+                  {formatDuration(seconds)}
                 </span>
               </div>
             );

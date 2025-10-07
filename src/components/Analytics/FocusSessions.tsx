@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { formatDurationInSeconds } from 'helpers/utils';
+import { formatDuration } from 'helpers/utils';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
@@ -45,7 +45,7 @@ const FocusSessions = () => {
       <div className='space-y-4'>
         <div className='text-center'>
           <div className='text-3xl font-bold text-primary-500 mb-1'>
-            {formatDurationInSeconds(focusSessionInfo?.duration || 0)}
+            {formatDuration(focusSessionInfo?.duration || 0)}
           </div>
           <div className='text-sm text-gray-500'>Total session duration</div>
         </div>

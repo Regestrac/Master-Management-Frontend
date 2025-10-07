@@ -7,7 +7,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { STATUS_OPTIONS } from 'helpers/configs';
-import { formatTimeElapsed, getStatusColor } from 'helpers/utils';
+import { formatDuration, getStatusColor } from 'helpers/utils';
 import { TaskType } from 'helpers/sharedTypes';
 
 import { useProfileStore } from 'stores/profileStore';
@@ -161,7 +161,7 @@ const GoalCard = ({ goal, view }: GoalCardPropsType) => {
       <div className='flex items-center'>
         <Clock className='w-4 h-4 mr-1' />
         <span>
-          {formatTimeElapsed(goal?.time_spend)}
+          {formatDuration(goal?.time_spend)}
           {' '}
           total
         </span>
@@ -298,7 +298,7 @@ const GoalCard = ({ goal, view }: GoalCardPropsType) => {
             <div className='text-center'>
               <div className='flex justify-center items-center mb-1'>
                 <Clock className='w-4 h-4 mr-1' />
-                <span className='font-semibold'>{formatTimeElapsed(goal?.time_spend)}</span>
+                <span className='font-semibold'>{formatDuration(goal?.time_spend)}</span>
               </div>
               <p className={`text-xs ${textColor}`}>Total Time</p>
             </div>

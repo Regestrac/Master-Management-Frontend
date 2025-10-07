@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useSearchParams } from 'react-router-dom';
 
-import { formatDurationInSeconds, generateRandomColor } from 'helpers/utils';
+import { formatDuration, generateRandomColor } from 'helpers/utils';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
@@ -72,7 +72,7 @@ const GoalProgressOverview = () => {
             <div className='flex items-center justify-between text-xs'>
               <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
                 Time spend:&nbsp;
-                {formatDurationInSeconds(goal.duration)}
+                {formatDuration(goal.duration)}
               </span>
               {(() => {
                 const isBehind = goal.due_date ? new Date(goal.due_date) < new Date() : false;
