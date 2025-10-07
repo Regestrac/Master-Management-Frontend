@@ -3,8 +3,6 @@ import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { Menu, X } from 'lucide-react';
 
-import { omit } from 'helpers/utils';
-
 import { useNavbarStore } from 'stores/navbarStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
@@ -22,15 +20,35 @@ const SettingsHeader = () => {
   };
 
   const handleSaveChanges = () => {
+    const allValues = getValues();
     const payload = {
-      ...omit(getValues(), ['dateFormat', 'timeFormat', 'firstDayOfWeek', 'workWeek', 'longBreakAfter', 'defaultGoalDuration', 'weeklyTargetHours']),
-      date_format: getValues()?.dateFormat?.value,
-      time_format: getValues()?.timeFormat?.value,
-      first_day_of_week: getValues()?.firstDayOfWeek?.value,
-      work_week: getValues()?.workWeek?.value,
-      long_break_after: getValues()?.longBreakAfter?.value,
-      goal_duration: getValues()?.defaultGoalDuration?.value,
-      weekly_target_hours: getValues()?.weeklyTargetHours?.value,
+      date_format: allValues?.dateFormat?.value,
+      time_format: allValues?.timeFormat?.value,
+      first_day_of_week: allValues?.firstDayOfWeek?.value,
+      work_week: allValues?.workWeek?.value,
+      focus_duration: allValues?.focusDuration,
+      short_break: allValues?.shortBreak,
+      long_break: allValues?.longBreak,
+      auto_break: allValues?.autoStartBreaks,
+      long_break_after: allValues?.longBreakAfter?.value,
+      goal_duration: allValues?.defaultGoalDuration?.value,
+      weekly_target_hours: allValues?.weeklyTargetHours?.value,
+      task_reminder: allValues?.taskReminder,
+      goal_progress: allValues?.goalProgress,
+      session_breaks: allValues?.sessionBreaks,
+      daily_summary: allValues?.dailySummary,
+      milestone: allValues?.milestone,
+      new_feature: allValues?.newFeature,
+      cloud_sync: allValues?.cloudSync,
+      keep_completed_for: allValues?.taskRetention?.value,
+      analytic_data_retention: allValues?.analyticsRetention?.value,
+      auto_delete_old_data: allValues?.autoDeleteOldData,
+      debug_mode: allValues?.debugMode,
+      beta_features: allValues?.betaFeatures,
+      telemetry: allValues?.analyticsTelemetry,
+      ai_assistant: allValues?.aiTaskAssistant,
+      advanced_analytics: allValues?.advancedAnalytics,
+      team_collaboration: allValues?.teamCollaboration,
     };
     updateUserSettings(payload).then((res) => {
       toast.success(res.message || 'Settings updated successfully');
