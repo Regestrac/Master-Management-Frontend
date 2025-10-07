@@ -1,7 +1,5 @@
 import { useSettingsStore } from 'stores/settingsStore';
 
-import Switch from 'components/Shared/Switch';
-
 const PrivacyAndSecurity = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
@@ -40,7 +38,7 @@ const PrivacyAndSecurity = () => {
         </div>
 
         {/* Data Privacy */}
-        <div>
+        {/* <div>
           <h5 className='font-semibold mb-4'>Data Privacy</h5>
           <div className='space-y-4'>
             <Switch
@@ -59,7 +57,7 @@ const PrivacyAndSecurity = () => {
               description='Allow approved third-party apps to access your data'
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Data Management */}
         <div>

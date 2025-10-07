@@ -21,19 +21,16 @@ const AdvancedSettings = () => {
               name='debugMode'
               label='Debug Mode'
               description='Enable debug logging and detailed error messages'
-              disabled
             />
             <Switch
               name='betaFeatures'
               label='Beta Features'
               description='Enable experimental features and early access'
-              disabled
             />
             <Switch
               name='analyticsTelemetry'
               label='Analytics & Telemetry'
               description='Send anonymous usage data to help improve the app'
-              disabled
             />
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <button className='flex flex-col items-center p-4 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors'>
@@ -70,7 +67,6 @@ const AdvancedSettings = () => {
                     name='aiTaskAssistant'
                     label=''
                     description=''
-                    disabled
                   />
                 </div>
               </div>
@@ -89,7 +85,6 @@ const AdvancedSettings = () => {
                     name='advancedAnalytics'
                     label=''
                     description=''
-                    disabled
                   />
                 </div>
               </div>
@@ -108,7 +103,6 @@ const AdvancedSettings = () => {
                     name='teamCollaboration'
                     label=''
                     description=''
-                    disabled
                   />
                 </div>
               </div>

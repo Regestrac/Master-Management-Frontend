@@ -70,7 +70,6 @@ export const WEEKLY_TARGET_OPTIONS: SelectOptionType[] = [
   { label: '25 hours', value: 25 },
 ];
 
-// Time zone options
 export const TIME_ZONE_OPTIONS = [
   { value: 'pst', label: 'Pacific Standard Time (PST)' },
   { value: 'est', label: 'Eastern Standard Time (EST)' },
@@ -81,7 +80,6 @@ export const TIME_ZONE_OPTIONS = [
   { value: 'cst', label: 'Central Standard Time (CST)' },
 ];
 
-// Language options
 export const LANGUAGE_OPTIONS = [
   { value: 'en', label: 'English' },
   { value: 'es', label: 'Español' },
@@ -90,4 +88,20 @@ export const LANGUAGE_OPTIONS = [
   { value: 'zh', label: '中文' },
   { value: 'ar', label: 'العربية' },
   { value: 'ja', label: '日本語' },
+];
+
+export const TASK_RETENTION_OPTIONS: SelectOptionType[] = [
+  { label: '30 days', value: '30' },
+  { label: '90 days', value: '90' },
+  { label: '6 months', value: '180' },
+  { label: '1 year', value: '365' },
+  { label: 'Forever', value: 'forever' },
+];
+
+export const ANALYTICS_RETENTION_OPTIONS: SelectOptionType[] = [
+  { label: '90 days', value: '90' },
+  { label: '6 months', value: '180' },
+  { label: '1 year', value: '365' },
+  { label: '2 years', value: '730' },
+  { label: 'Forever', value: 'forever' },
 ];

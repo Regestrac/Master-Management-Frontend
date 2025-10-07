@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { toast } from 'react-toastify';
 
-import { SelectOptionType } from 'helpers/sharedTypes';
+import { ANALYTICS_RETENTION_OPTIONS, TASK_RETENTION_OPTIONS } from 'helpers/configs';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
@@ -18,24 +18,6 @@ type StorageUsageResponse = {
   workspaces_bytes: number;
   focus_bytes: number;
 };
-
-// Task retention options
-const taskRetentionOptions: SelectOptionType[] = [
-  { label: '30 days', value: '30' },
-  { label: '90 days', value: '90' },
-  { label: '6 months', value: '180' },
-  { label: '1 year', value: '365' },
-  { label: 'Forever', value: 'forever' },
-];
-
-// Analytics retention options
-const analyticsRetentionOptions: SelectOptionType[] = [
-  { label: '90 days', value: '90' },
-  { label: '6 months', value: '180' },
-  { label: '1 year', value: '365' },
-  { label: '2 years', value: '730' },
-  { label: 'Forever', value: 'forever' },
-];
 
 // Helper function to format bytes to human-readable format
 const formatBytes = (bytes: number): string => {
@@ -204,7 +186,7 @@ const DataAndStorageSettings = () => {
               <label className='block text-sm font-medium mb-2'>Keep Completed Tasks</label>
               <SelectField
                 name='taskRetention'
-                options={taskRetentionOptions}
+                options={TASK_RETENTION_OPTIONS}
                 isMulti={false}
               />
             </div>
@@ -212,7 +194,7 @@ const DataAndStorageSettings = () => {
               <label className='block text-sm font-medium mb-2'>Analytics Data Retention</label>
               <SelectField
                 name='analyticsRetention'
-                options={analyticsRetentionOptions}
+                options={ANALYTICS_RETENTION_OPTIONS}
                 isMulti={false}
               />
             </div>
