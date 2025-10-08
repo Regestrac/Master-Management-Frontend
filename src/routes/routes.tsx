@@ -23,6 +23,8 @@ import CreateTaskForm from 'components/Tasks/CreateTaskForm';
 import RootLayoutWrapper from 'components/Layout/RootLayoutWrapper';
 import Analytics from 'components/Analytics/Analytics';
 import Calendar from 'components/Calendar/Calendar';
+import BugReport from 'components/Resources/BugReport';
+import FeatureRequest from 'components/Resources/FeatureRequest';
 
 const routes: RouteObject[] = [
   {
@@ -76,6 +78,30 @@ const routes: RouteObject[] = [
           {
             path: '/workspace/:id',
             element: <WorkspaceDetail />,
+          },
+          {
+            path: '/documentation',
+            element: null,
+          },
+          {
+            path: '/changelog',
+            element: null,
+          },
+          {
+            path: '/support',
+            element: null,
+          },
+          {
+            path: '/community',
+            element: null,
+          },
+          {
+            path: '/feature-request',
+            element: <FeatureRequest />,
+          },
+          {
+            path: '/bug-report',
+            element: <BugReport />,
           },
         ],
       },

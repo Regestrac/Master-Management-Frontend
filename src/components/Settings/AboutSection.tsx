@@ -1,6 +1,18 @@
+import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
 import { useSettingsStore } from 'stores/settingsStore';
+
+const resourceAndSupportItems = [
+  { label: 'Documentation', symbol: '📚', path: '' },
+  { label: 'Changelog', symbol: '📝', path: '' },
+  { label: 'Support', symbol: '💬', path: '' },
+  { label: 'Community', symbol: '👥', path: '' },
+  { label: 'Feature Requests', symbol: '💡', path: '' },
+  { label: 'Bug Reports', symbol: '🐛', path: '' },
+  { label: 'Privacy Policy', symbol: '🔒', path: '/legal/privacy' },
+  { label: 'Terms of Service', symbol: '📄', path: '/legal/terms' },
+];
 
 const AboutSection = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
@@ -16,14 +28,14 @@ const AboutSection = () => {
         {/* App Info */}
         <div className='text-center'>
           <div className='w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4'>
-            TF
+            MM
           </div>
           <h5 className='text-2xl font-bold mb-2'>Master Management</h5>
-          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-4`}>
+          <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
             The ultimate productivity suite for modern professionals
           </p>
-          <div className='flex items-center justify-center space-x-4 text-sm'>
-            <span className={`px-3 py-1 rounded-full ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
+          <div className='flex items-center justify-center space-x-4 text-sm mt-4'>
+            <span className={clsx('px-3 py-1 rounded-full', darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600')}>
               Version 2.1.4
             </span>
           </div>
@@ -53,53 +65,19 @@ const AboutSection = () => {
         <div>
           <h6 className='font-semibold mb-4'>Resources & Support</h6>
           <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-            {/* Documentation */}
-            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
-              <div className='text-2xl mb-2'>📚</div>
-              <div className='text-sm font-medium'>Documentation</div>
-            </button>
-
-            {/* Changelog */}
-            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
-              <div className='text-2xl mb-2'>📝</div>
-              <div className='text-sm font-medium'>Changelog</div>
-            </button>
-
-            {/* Support */}
-            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
-              <div className='text-2xl mb-2'>💬</div>
-              <div className='text-sm font-medium'>Support</div>
-            </button>
-
-            {/* Community */}
-            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
-              <div className='text-2xl mb-2'>👥</div>
-              <div className='text-sm font-medium'>Community</div>
-            </button>
-
-            {/* Feature Requests */}
-            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
-              <div className='text-2xl mb-2'>💡</div>
-              <div className='text-sm font-medium'>Feature Requests</div>
-            </button>
-
-            {/* Bug Reports */}
-            <button className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
-              <div className='text-2xl mb-2'>🐛</div>
-              <div className='text-sm font-medium'>Bug Reports</div>
-            </button>
-
-            {/* Privacy Policy */}
-            <Link to='/legal/privacy' className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
-              <div className='text-2xl mb-2'>🔒</div>
-              <div className='text-sm font-medium'>Privacy Policy</div>
-            </Link>
-
-            {/* Terms of Service */}
-            <Link to='/legal/terms' className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
-              <div className='text-2xl mb-2'>📄</div>
-              <div className='text-sm font-medium'>Terms of Service</div>
-            </Link>
+            {resourceAndSupportItems.map((item, index) => (
+              <Link
+                to={item.path}
+                key={index}
+                className={clsx(
+                  'p-3 rounded-lg border transition-colors text-left',
+                  darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50',
+                )}
+              >
+                <div className='text-2xl mb-2'>{item.symbol}</div>
+                <div className='text-sm font-medium'>{item.label}</div>
+              </Link>
+            ))}
           </div>
         </div>
 
