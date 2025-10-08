@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import { useSettingsStore } from 'stores/settingsStore';
 
 const resourceAndSupportItems = [
-  { label: 'Documentation', symbol: '📚', path: '' },
-  { label: 'Changelog', symbol: '📝', path: '' },
-  { label: 'Support', symbol: '💬', path: '' },
-  { label: 'Community', symbol: '👥', path: '' },
-  { label: 'Feature Requests', symbol: '💡', path: '' },
-  { label: 'Bug Reports', symbol: '🐛', path: '' },
+  { label: 'Documentation', symbol: '📚', path: '/documentation' },
+  { label: 'Changelog', symbol: '📝', path: '/changelog' },
+  { label: 'Support', symbol: '💬', path: '/support' },
+  { label: 'Community', symbol: '👥', path: '/community' },
+  { label: 'Feature Requests', symbol: '💡', path: '/feature-request' },
+  { label: 'Bug Reports', symbol: '🐛', path: '/bug-report' },
   { label: 'Privacy Policy', symbol: '🔒', path: '/legal/privacy' },
   { label: 'Terms of Service', symbol: '📄', path: '/legal/terms' },
 ];
@@ -42,7 +42,7 @@ const AboutSection = () => {
         </div>
 
         {/* Feature Highlights */}
-        <div className='mb-8'>
+        {/* <div className='mb-8'>
           <h6 className='font-semibold mb-4'>What's New in v2.1.4</h6>
           <div className='space-y-3'>
             {[
@@ -59,7 +59,7 @@ const AboutSection = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Links */}
         <div>

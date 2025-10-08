@@ -1,0 +1,441 @@
+import { useState } from 'react';
+
+import {
+  Mail,
+  Phone,
+  MessageCircle,
+  Clock,
+  MapPin,
+  Send,
+  HelpCircle,
+  Book,
+  Users,
+  Zap,
+  AlertCircle,
+  ExternalLink,
+} from 'lucide-react';
+
+import { useSettingsStore } from 'stores/settingsStore';
+
+interface ContactForm {
+  name: string;
+  email: string;
+  subject: string;
+  category: 'general' | 'technical' | 'billing' | 'feature' | 'bug';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  message: string;
+}
+
+interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+  category: string;
+}
+
+const Support = () => {
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
+  const [formData, setFormData] = useState<ContactForm>({
+    name: '',
+    email: '',
+    subject: '',
+    category: 'general',
+    priority: 'medium',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
+
+  const handleInputChange = (field: keyof ContactForm, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Simulate API call
+    setTimeout(() => {
+      // eslint-disable-next-line no-console
+      console.log('Support request submitted:', formData);
+      window.alert('Support request submitted successfully! We\'ll get back to you within 24 hours.');
+      setIsSubmitting(false);
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        category: 'general',
+        priority: 'medium',
+        message: '',
+      });
+    }, 1000);
+  };
+
+  const faqs: FAQ[] = [
+    {
+      id: '1',
+      question: 'How do I reset my password?',
+      answer: 'You can reset your password by clicking the "Forgot Password" link on the login page. Enter your email address and we\'ll send you a reset link.',
+      category: 'account',
+    },
+    {
+      id: '2',
+      question: 'How do I sync my calendar with external providers?',
+      answer: 'Go to Settings > Integrations and select your calendar provider (Google Calendar, Outlook, etc.). Follow the authentication steps to connect your account.',
+      category: 'integrations',
+    },
+    {
+      id: '3',
+      question: 'Can I collaborate with team members?',
+      answer: 'Yes! You can create workspaces and invite team members. Go to your workspace settings and use the "Invite Members" feature to add collaborators.',
+      category: 'collaboration',
+    },
+    {
+      id: '4',
+      question: 'How do focus sessions work?',
+      answer: 'Focus sessions use the Pomodoro technique. Set a timer for focused work periods (default 25 minutes) followed by short breaks. You can customize the duration in Settings.',
+      category: 'features',
+    },
+    {
+      id: '5',
+      question: 'Is my data secure and private?',
+      answer: 'Absolutely. We use industry-standard encryption and security measures. Your data is never shared with third parties. Read our Privacy Policy for more details.',
+      category: 'privacy',
+    },
+    {
+      id: '6',
+      question: 'How do I export my data?',
+      answer: 'You can export your data from Settings > Data & Privacy > Export Data. Choose the format (CSV, JSON, PDF) and time range for your export.',
+      category: 'data',
+    },
+  ];
+
+  const supportChannels = [
+    {
+      icon: <Mail className='h-6 w-6' />,
+      title: 'Email Support',
+      description: 'Get help via email',
+      contact: 'support@mastermanagement.com',
+      responseTime: '24 hours',
+      color: 'text-blue-500',
+      bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+    },
+    {
+      icon: <MessageCircle className='h-6 w-6' />,
+      title: 'Live Chat',
+      description: 'Chat with our support team',
+      contact: 'Available 9 AM - 6 PM EST',
+      responseTime: 'Instant',
+      color: 'text-green-500',
+      bgColor: 'bg-green-50 dark:bg-green-900/20',
+    },
+    {
+      icon: <Phone className='h-6 w-6' />,
+      title: 'Phone Support',
+      description: 'Call us directly',
+      contact: '+1 (555) 123-4567',
+      responseTime: 'Business hours',
+      color: 'text-purple-500',
+      bgColor: 'bg-purple-50 dark:bg-purple-900/20',
+    },
+  ];
+
+  const quickLinks = [
+    {
+      icon: <Book className='h-5 w-5' />,
+      title: 'Documentation',
+      description: 'Comprehensive guides and tutorials',
+      link: '/documentation',
+    },
+    {
+      icon: <Users className='h-5 w-5' />,
+      title: 'Community Forum',
+      description: 'Connect with other users',
+      link: '/community',
+    },
+    {
+      icon: <Zap className='h-5 w-5' />,
+      title: 'Feature Requests',
+      description: 'Suggest new features',
+      link: '/feature-request',
+    },
+  ];
+
+  return (
+    <div className='max-w-6xl mx-auto p-6'>
+      <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
+        {/* Header */}
+        <div className='mb-8'>
+          <div className='flex items-center gap-3 mb-2'>
+            <HelpCircle className='h-6 w-6 text-purple-500' />
+            <h1 className='text-2xl font-bold'>Help & Support</h1>
+          </div>
+          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>
+            Get the help you need to make the most of Master Management. We're here to support you every step of the way.
+          </p>
+        </div>
+
+        {/* Support Channels */}
+        <div className='mb-8'>
+          <h2 className='text-xl font-semibold mb-4'>Contact Us</h2>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+            {supportChannels.map((channel, index) => (
+              <div
+                key={index}
+                className={`${channel.bgColor} rounded-lg p-4 border ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}
+              >
+                <div className={`${channel.color} mb-3`}>
+                  {channel.icon}
+                </div>
+                <h3 className='font-semibold mb-1'>{channel.title}</h3>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>
+                  {channel.description}
+                </p>
+                <p className='font-medium text-sm mb-1'>{channel.contact}</p>
+                <div className='flex items-center gap-1 text-xs text-gray-500'>
+                  <Clock className='h-3 w-3' />
+                  <span>
+                    Response:
+                    {' '}
+                    {channel.responseTime}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Contact Form */}
+        <div className='mb-8'>
+          <h2 className='text-xl font-semibold mb-4'>Send us a Message</h2>
+          <div className={`${darkMode ? 'bg-gray-700/50' : 'bg-gray-50'} rounded-lg p-6`}>
+            <form onSubmit={handleSubmit} className='space-y-4'>
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                <div>
+                  <label htmlFor='name' className='block text-sm font-medium mb-2'>
+                    Full Name *
+                  </label>
+                  <input
+                    type='text'
+                    id='name'
+                    required
+                    value={formData.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    className={`w-full px-4 py-2.5 rounded-lg border ${
+                      darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'
+                    } focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors`}
+                    placeholder='Your full name'
+                  />
+                </div>
+                <div>
+                  <label htmlFor='email' className='block text-sm font-medium mb-2'>
+                    Email Address *
+                  </label>
+                  <input
+                    type='email'
+                    id='email'
+                    required
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    className={`w-full px-4 py-2.5 rounded-lg border ${
+                      darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'
+                    } focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors`}
+                    placeholder='your.email@example.com'
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor='subject' className='block text-sm font-medium mb-2'>
+                  Subject *
+                </label>
+                <input
+                  type='text'
+                  id='subject'
+                  required
+                  value={formData.subject}
+                  onChange={(e) => handleInputChange('subject', e.target.value)}
+                  className={`w-full px-4 py-2.5 rounded-lg border ${
+                    darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'
+                  } focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors`}
+                  placeholder='Brief description of your inquiry'
+                />
+              </div>
+
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                <div>
+                  <label htmlFor='category' className='block text-sm font-medium mb-2'>
+                    Category *
+                  </label>
+                  <select
+                    id='category'
+                    required
+                    value={formData.category}
+                    onChange={(e) => handleInputChange('category', e.target.value)}
+                    className={`w-full px-4 py-2.5 rounded-lg border ${
+                      darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'
+                    } focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors`}
+                  >
+                    <option value='general'>General Inquiry</option>
+                    <option value='technical'>Technical Support</option>
+                    <option value='billing'>Billing & Account</option>
+                    <option value='feature'>Feature Request</option>
+                    <option value='bug'>Bug Report</option>
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor='priority' className='block text-sm font-medium mb-2'>
+                    Priority
+                  </label>
+                  <select
+                    id='priority'
+                    value={formData.priority}
+                    onChange={(e) => handleInputChange('priority', e.target.value)}
+                    className={`w-full px-4 py-2.5 rounded-lg border ${
+                      darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'
+                    } focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors`}
+                  >
+                    <option value='low'>Low</option>
+                    <option value='medium'>Medium</option>
+                    <option value='high'>High</option>
+                    <option value='urgent'>Urgent</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor='message' className='block text-sm font-medium mb-2'>
+                  Message *
+                </label>
+                <textarea
+                  id='message'
+                  required
+                  rows={5}
+                  value={formData.message}
+                  onChange={(e) => handleInputChange('message', e.target.value)}
+                  className={`w-full px-4 py-2.5 rounded-lg border ${
+                    darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'
+                  } focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors resize-none`}
+                  placeholder='Please provide detailed information about your inquiry...'
+                />
+              </div>
+
+              <div className='flex items-center justify-between pt-4'>
+                <div className='flex items-center gap-2 text-sm text-gray-500'>
+                  <AlertCircle className='h-4 w-4' />
+                  <span>We typically respond within 24 hours</span>
+                </div>
+                <button
+                  type='submit'
+                  disabled={isSubmitting}
+                  className='inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium rounded-lg hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200'
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white' />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className='h-4 w-4' />
+                      Send Message
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {/* Quick Links */}
+        <div className='mb-8'>
+          <h2 className='text-xl font-semibold mb-4'>Quick Links</h2>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+            {quickLinks.map((link, index) => (
+              <a
+                key={index}
+                href={link.link}
+                className={`${
+                  darkMode ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-700' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                } rounded-lg p-4 border transition-colors group`}
+              >
+                <div className='flex items-center gap-3'>
+                  <div className='text-purple-500'>
+                    {link.icon}
+                  </div>
+                  <div className='flex-1'>
+                    <h3 className='font-medium group-hover:text-purple-500 transition-colors'>
+                      {link.title}
+                    </h3>
+                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {link.description}
+                    </p>
+                  </div>
+                  <ExternalLink className='h-4 w-4 text-gray-400 group-hover:text-purple-500 transition-colors' />
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* FAQ Section */}
+        <div className='mb-8'>
+          <h2 className='text-xl font-semibold mb-4'>Frequently Asked Questions</h2>
+          <div className='space-y-3'>
+            {faqs.map((faq) => (
+              <div
+                key={faq.id}
+                className={`${
+                  darkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200'
+                } rounded-lg border`}
+              >
+                <button
+                  onClick={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
+                  className={`w-full p-4 text-left hover:${
+                    darkMode ? 'bg-gray-700' : 'bg-gray-100'
+                  } transition-colors rounded-lg`}
+                >
+                  <div className='flex items-center justify-between'>
+                    <h3 className='font-medium'>{faq.question}</h3>
+                    <div className={`transform transition-transform ${expandedFAQ === faq.id ? 'rotate-180' : ''}`}>
+                      <svg className='h-5 w-5 text-gray-500' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 9l-7 7-7-7' />
+                      </svg>
+                    </div>
+                  </div>
+                </button>
+                {expandedFAQ === faq.id && (
+                  <div className='px-4 pb-4'>
+                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {faq.answer}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Office Hours */}
+        <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700/30 border-gray-600' : 'bg-blue-50 border-blue-200'} border`}>
+          <div className='flex items-start gap-3'>
+            <MapPin className='h-5 w-5 text-blue-500 mt-0.5' />
+            <div>
+              <h3 className='font-medium text-sm mb-1'>Support Hours</h3>
+              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Monday - Friday: 9:00 AM - 6:00 PM EST
+                <br />
+                Saturday: 10:00 AM - 4:00 PM EST
+                <br />
+                Sunday: Closed
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Support;

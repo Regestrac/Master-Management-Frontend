@@ -25,6 +25,10 @@ import Analytics from 'components/Analytics/Analytics';
 import Calendar from 'components/Calendar/Calendar';
 import BugReport from 'components/Resources/BugReport';
 import FeatureRequest from 'components/Resources/FeatureRequest';
+import Documentation from 'components/Resources/Documentation';
+import ChangeLog from 'components/Resources/ChangeLog';
+import Support from 'components/Resources/Support';
+import Community from 'components/Resources/Community';
 
 const routes: RouteObject[] = [
   {
@@ -79,30 +83,6 @@ const routes: RouteObject[] = [
             path: '/workspace/:id',
             element: <WorkspaceDetail />,
           },
-          {
-            path: '/documentation',
-            element: null,
-          },
-          {
-            path: '/changelog',
-            element: null,
-          },
-          {
-            path: '/support',
-            element: null,
-          },
-          {
-            path: '/community',
-            element: null,
-          },
-          {
-            path: '/feature-request',
-            element: <FeatureRequest />,
-          },
-          {
-            path: '/bug-report',
-            element: <BugReport />,
-          },
         ],
       },
       {
@@ -123,6 +103,30 @@ const routes: RouteObject[] = [
           {
             path: '/settings',
             element: <Settings />,
+          },
+          {
+            path: '/documentation',
+            element: <Documentation />,
+          },
+          {
+            path: '/changelog',
+            element: <ChangeLog />,
+          },
+          {
+            path: '/support',
+            element: <Support />,
+          },
+          {
+            path: '/community',
+            element: <Community />,
+          },
+          {
+            path: '/feature-request',
+            element: <FeatureRequest />,
+          },
+          {
+            path: '/bug-report',
+            element: <BugReport />,
           },
         ],
       },

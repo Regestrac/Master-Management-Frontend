@@ -1,0 +1,269 @@
+import { useState } from 'react';
+
+import { Calendar, Tag, ChevronDown, ChevronRight, GitCommit, Zap, Bug, Plus, ArrowUp } from 'lucide-react';
+
+import { useSettingsStore } from 'stores/settingsStore';
+
+interface ChangeLogEntry {
+  version: string;
+  date: string;
+  type: 'major' | 'minor' | 'patch';
+  changes: {
+    type: 'feature' | 'improvement' | 'bugfix' | 'breaking';
+    title: string;
+    description: string;
+  }[];
+}
+
+const ChangeLog = () => {
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
+  const [expandedVersions, setExpandedVersions] = useState<Set<string>>(new Set(['2.1.0']));
+
+  const toggleVersion = (version: string) => {
+    const newExpanded = new Set(expandedVersions);
+    if (newExpanded.has(version)) {
+      newExpanded.delete(version);
+    } else {
+      newExpanded.add(version);
+    }
+    setExpandedVersions(newExpanded);
+  };
+
+  const getChangeIcon = (type: string) => {
+    switch (type) {
+      case 'feature': return <Plus className='h-4 w-4 text-green-500' />;
+      case 'improvement': return <ArrowUp className='h-4 w-4 text-blue-500' />;
+      case 'bugfix': return <Bug className='h-4 w-4 text-orange-500' />;
+      case 'breaking': return <Zap className='h-4 w-4 text-red-500' />;
+      default: return <GitCommit className='h-4 w-4 text-gray-500' />;
+    }
+  };
+
+  const getVersionTypeColor = (type: string) => {
+    switch (type) {
+      case 'major': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
+      case 'minor': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
+      case 'patch': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+    }
+  };
+
+  const changeLogData: ChangeLogEntry[] = [
+    {
+      version: '2.1.0',
+      date: '2024-10-08',
+      type: 'minor',
+      changes: [
+        {
+          type: 'feature',
+          title: 'Enhanced Analytics Dashboard',
+          description: 'Added comprehensive productivity metrics and goal tracking visualizations with interactive charts.',
+        },
+        {
+          type: 'feature',
+          title: 'Community Forum Integration',
+          description: 'Introduced community features for user collaboration and knowledge sharing.',
+        },
+        {
+          type: 'improvement',
+          title: 'Performance Optimizations',
+          description: 'Improved app loading times by 40% through code splitting and lazy loading.',
+        },
+        {
+          type: 'bugfix',
+          title: 'Calendar Sync Issues',
+          description: 'Fixed synchronization problems with external calendar providers.',
+        },
+      ],
+    },
+    {
+      version: '2.0.1',
+      date: '2024-09-25',
+      type: 'patch',
+      changes: [
+        {
+          type: 'bugfix',
+          title: 'Task Completion Notifications',
+          description: 'Resolved issue where completion notifications were not being sent consistently.',
+        },
+        {
+          type: 'bugfix',
+          title: 'Dark Mode Theme Fixes',
+          description: 'Fixed contrast issues in dark mode for better accessibility.',
+        },
+        {
+          type: 'improvement',
+          title: 'Mobile Responsiveness',
+          description: 'Enhanced mobile experience with better touch interactions and layout adjustments.',
+        },
+      ],
+    },
+    {
+      version: '2.0.0',
+      date: '2024-09-15',
+      type: 'major',
+      changes: [
+        {
+          type: 'breaking',
+          title: 'New Authentication System',
+          description: 'Migrated to OAuth 2.0 authentication. Users will need to re-authenticate on first login.',
+        },
+        {
+          type: 'feature',
+          title: 'Workspace Collaboration',
+          description: 'Added multi-user workspace support with role-based permissions and real-time collaboration.',
+        },
+        {
+          type: 'feature',
+          title: 'Advanced Goal Management',
+          description: 'Introduced hierarchical goals, dependencies, and automated progress tracking.',
+        },
+        {
+          type: 'feature',
+          title: 'Focus Sessions 2.0',
+          description: 'Redesigned focus sessions with customizable timers, ambient sounds, and productivity insights.',
+        },
+        {
+          type: 'improvement',
+          title: 'Redesigned User Interface',
+          description: 'Complete UI overhaul with modern design principles and improved user experience.',
+        },
+      ],
+    },
+    {
+      version: '1.5.2',
+      date: '2024-08-30',
+      type: 'patch',
+      changes: [
+        {
+          type: 'bugfix',
+          title: 'Data Export Issues',
+          description: 'Fixed problems with CSV and PDF export functionality for reports.',
+        },
+        {
+          type: 'improvement',
+          title: 'Search Performance',
+          description: 'Optimized search algorithms for faster results across tasks and goals.',
+        },
+      ],
+    },
+    {
+      version: '1.5.1',
+      date: '2024-08-15',
+      type: 'patch',
+      changes: [
+        {
+          type: 'bugfix',
+          title: 'Notification Settings',
+          description: 'Resolved issue where notification preferences were not being saved correctly.',
+        },
+        {
+          type: 'bugfix',
+          title: 'Time Zone Handling',
+          description: 'Fixed time zone conversion issues in calendar and scheduling features.',
+        },
+      ],
+    },
+  ];
+
+  return (
+    <div className='max-w-4xl mx-auto p-6'>
+      <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
+        <div className='mb-6'>
+          <div className='flex items-center gap-3 mb-2'>
+            <GitCommit className='h-6 w-6 text-purple-500' />
+            <h1 className='text-2xl font-bold'>Change Log</h1>
+          </div>
+          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>
+            Track all updates, improvements, and fixes to Master Management. Stay informed about new features and changes.
+          </p>
+        </div>
+
+        <div className='space-y-4'>
+          {changeLogData.map((entry) => (
+            <div
+              key={entry.version}
+              className={`${darkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200'} rounded-lg border`}
+            >
+              <button
+                onClick={() => toggleVersion(entry.version)}
+                className={`w-full p-4 text-left hover:${darkMode ? 'bg-gray-700' : 'bg-gray-100'} transition-colors rounded-lg`}
+              >
+                <div className='flex items-center justify-between'>
+                  <div className='flex items-center gap-3'>
+                    {expandedVersions.has(entry.version) ? (
+                      <ChevronDown className='h-5 w-5 text-gray-500' />
+                    ) : (
+                      <ChevronRight className='h-5 w-5 text-gray-500' />
+                    )}
+                    <div className='flex items-center gap-3'>
+                      <span className='text-lg font-semibold'>
+                        v
+                        {entry.version}
+                      </span>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getVersionTypeColor(entry.type)}`}>
+                        {entry.type.toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                  <div className='flex items-center gap-2 text-sm text-gray-500'>
+                    <Calendar className='h-4 w-4' />
+                    <span>{new Date(entry.date).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              </button>
+
+              {expandedVersions.has(entry.version) && (
+                <div className='px-4 pb-4'>
+                  <div className='ml-8 space-y-3'>
+                    {entry.changes.map((change, index) => (
+                      <div key={index} className='flex gap-3'>
+                        <div className='flex-shrink-0 mt-0.5'>
+                          {getChangeIcon(change.type)}
+                        </div>
+                        <div className='flex-1'>
+                          <div className='flex items-center gap-2 mb-1'>
+                            <h4 className='font-medium text-sm'>{change.title}</h4>
+                            <span
+                              className={`px-2 py-0.5 rounded text-xs font-medium ${change.type === 'feature'
+                                ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                                : change.type === 'improvement'
+                                  ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+                                  : change.type === 'bugfix'
+                                    ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400'
+                                    : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'}`}
+                            >
+                              {change.type}
+                            </span>
+                          </div>
+                          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {change.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className={`mt-6 p-4 rounded-lg ${darkMode ? 'bg-gray-700/30 border-gray-600' : 'bg-blue-50 border-blue-200'} border`}>
+          <div className='flex items-start gap-3'>
+            <Tag className='h-5 w-5 text-blue-500 mt-0.5' />
+            <div>
+              <h3 className='font-medium text-sm mb-1'>Stay Updated</h3>
+              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Follow our development progress and get notified about new releases.
+                Check back regularly for the latest updates and improvements.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ChangeLog;

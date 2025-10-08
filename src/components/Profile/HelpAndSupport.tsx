@@ -1,4 +1,37 @@
+import { Link } from 'react-router-dom';
+
 import { useSettingsStore } from 'stores/settingsStore';
+
+const helpAndSupportItems = [
+  {
+    title: 'Help Center',
+    description: 'Browse articles and guides',
+    icon: '📚',
+    action: 'Browse',
+    path: '/documentation',
+  },
+  {
+    title: 'Contact Support',
+    description: 'Get help from our team',
+    icon: '💬',
+    action: 'Contact',
+    path: '/support',
+  },
+  {
+    title: 'Feature Requests',
+    description: 'Suggest new features',
+    icon: '💡',
+    action: 'Suggest',
+    path: '/feature-request',
+  },
+  {
+    title: 'Community Forum',
+    description: 'Connect with other users',
+    icon: '👥',
+    action: 'Join',
+    path: '/community',
+  },
+];
 
 const HelpAndSupport = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
@@ -8,32 +41,7 @@ const HelpAndSupport = () => {
       <h4 className='text-xl font-bold mb-6'>Help & Support</h4>
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-        {[
-          {
-            title: 'Help Center',
-            description: 'Browse articles and guides',
-            icon: '📚',
-            action: 'Browse',
-          },
-          {
-            title: 'Contact Support',
-            description: 'Get help from our team',
-            icon: '💬',
-            action: 'Contact',
-          },
-          {
-            title: 'Feature Requests',
-            description: 'Suggest new features',
-            icon: '💡',
-            action: 'Suggest',
-          },
-          {
-            title: 'Community Forum',
-            description: 'Connect with other users',
-            icon: '👥',
-            action: 'Join',
-          },
-        ].map((support, index) => (
+        {helpAndSupportItems.map((support, index) => (
           <div key={index} className={`p-4 rounded-lg border ${darkMode ? 'border-gray-700 bg-gray-750' : 'border-gray-200 bg-gray-50'} hover:shadow-md transition-all cursor-pointer`}>
             <div className='text-center'>
               <div className='text-3xl mb-2'>{support.icon}</div>
@@ -41,9 +49,9 @@ const HelpAndSupport = () => {
               <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-3`}>
                 {support.description}
               </p>
-              <button className='text-primary-500 hover:text-primary-600 text-sm font-medium'>
+              <Link to={support.path} className='text-primary-500 hover:text-primary-600 text-sm font-medium'>
                 {support.action}
-              </button>
+              </Link>
             </div>
           </div>
         ))}
