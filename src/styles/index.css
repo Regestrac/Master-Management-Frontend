@@ -6,7 +6,8 @@
 @import './components/Settings.css';
 @import './components/Home.css';
 @import './components/Tasks.css';
-@import './components//shared/Outline.css';
+@import './components/shared/Outline.css';
+@import './components/shared/DateRangePicker.css';
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
