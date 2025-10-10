@@ -4,6 +4,10 @@ export type StatusType = 'completed' | 'todo' | 'inprogress' | 'pending' | 'paus
 
 export type PriorityType = 'high' | 'normal' | 'low';
 
+export type TargetType = 'repetition' | 'hours' | 'days' | 'weeks' | 'months' | 'sessions' | 'points' | 'percentage';
+
+export type TargetFrequency = 'daily' | 'alternate_days' | 'weekly' | 'monthly' | 'custom';
+
 export type TaskType = {
   id: number;
   title: string;
