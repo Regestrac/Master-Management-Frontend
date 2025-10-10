@@ -19,6 +19,9 @@ export type TaskType = {
   due_date: string;
   category: string;
   type: 'goal' | 'task';
+  target_value?: number | null;
+  target_type?: TargetType | null;
+  target_frequency?: TargetFrequency | null;
 };
 
 export type SelectOptionType = {

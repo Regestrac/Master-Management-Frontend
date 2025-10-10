@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 import { capitalize, getPriorityColor, getStatusColor } from 'helpers/utils';
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
-import { TaskType } from 'helpers/sharedTypes';
+import { TaskType, TargetType, TargetFrequency } from 'helpers/sharedTypes';
 
 import { useTaskStore } from 'stores/taskStore';
 import { useProfileStore } from 'stores/profileStore';
@@ -18,6 +18,25 @@ import { updateTask } from 'services/tasks';
 import { updateActiveTask } from 'services/profile';
 
 import DropDown from 'components/Shared/Dropdown';
+
+const TARGET_TYPE_OPTIONS = [
+  { label: 'Repetition', value: 'repetition' },
+  { label: 'Hours', value: 'hours' },
+  { label: 'Days', value: 'days' },
+  { label: 'Weeks', value: 'weeks' },
+  { label: 'Months', value: 'months' },
+  { label: 'Sessions', value: 'sessions' },
+  { label: 'Points', value: 'points' },
+  { label: 'Percentage', value: 'percentage' },
+];
+
+const TARGET_FREQUENCY_OPTIONS = [
+  { label: 'Daily', value: 'daily' },
+  { label: 'Alternate Days', value: 'alternate_days' },
+  { label: 'Weekly', value: 'weekly' },
+  { label: 'Monthly', value: 'monthly' },
+  { label: 'Custom', value: 'custom' },
+];
 
 const moreOptions = [
   { label: 'Mark As Completed', value: 'mark_completed', bgColor: 'text-green-600 bg-green-500/20', icon: <Check className='w-4 h-4' /> },
@@ -84,12 +103,38 @@ const TaskHeader = () => {
     }
   };
 
+  const handleTargetTypeChange = (value: string | null) => {
+    if (taskDetails?.target_type !== value) {
+      handleUpdateTask(taskDetails?.id?.toString(), { target_type: value });
+      updateTaskState({ id: taskDetails?.id, target_type: value as TargetType });
+      updateCurrentTaskDetails({ ...taskDetails, target_type: value as TargetType });
+    }
+  };
+
+  const handleTargetFrequencyChange = (value: string | null) => {
+    if (taskDetails?.target_frequency !== value) {
+      handleUpdateTask(taskDetails?.id?.toString(), { target_frequency: value });
+      updateTaskState({ id: taskDetails?.id, target_frequency: value as TargetFrequency });
+      updateCurrentTaskDetails({ ...taskDetails, target_frequency: value as TargetFrequency });
+    }
+  };
+
   const startEditing = (field: any, currentValue: any) => {
     setEditingField(field);
     setTempValues((prev) => ({ ...prev, [field]: currentValue }));
   };
 
   const saveField = (field: any) => {
+    const value = tempValues[field];
+    if (field === 'targetValue') {
+      handleUpdateTask(taskDetails?.id?.toString(), { target_value: value ? Number(value) : null });
+      updateTaskState({ id: taskDetails?.id, target_value: value ? Number(value) : null });
+      updateCurrentTaskDetails({ ...taskDetails, target_value: value ? Number(value) : null });
+    } else if (field === 'dueDate') {
+      handleUpdateTask(taskDetails?.id?.toString(), { due_date: value });
+      updateTaskState({ id: taskDetails?.id, due_date: value });
+      updateCurrentTaskDetails({ ...taskDetails, due_date: value });
+    }
     setEditingField(null);
     setTempValues((prev) => ({ ...prev, [field]: undefined }));
   };
@@ -127,6 +172,77 @@ const TaskHeader = () => {
                   priority
                 </span>
               </DropDown>
+
+              {/* Target Configuration Display */}
+              {taskDetails?.type === 'goal' && (
+                <div className={`flex items-center space-x-2 px-2 py-1 rounded-lg ${darkMode ? 'bg-blue-900/30 border border-blue-700/50' : 'bg-blue-50 border border-blue-200'}`}>
+                  <span className='w-1.5 h-1.5 rounded-full bg-blue-500' />
+                  <div className='flex items-center space-x-1 text-xs'>
+                    {/* Target Value - Always show for goals */}
+                    {editingField === 'targetValue' ? (
+                      <div className='flex items-center space-x-1'>
+                        <input
+                          type='number'
+                          value={tempValues.targetValue || ''}
+                          onChange={(e) => setTempValues((prev) => ({ ...prev, targetValue: e.target.value }))}
+                          className={`w-16 px-1 py-0.5 text-xs rounded border focus:outline-none focus:ring-1 focus:ring-blue-500 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                          placeholder='0'
+                        />
+                        <button onClick={() => saveField('targetValue')} className='text-green-500 hover:text-green-600'>
+                          <Check className='w-3 h-3' />
+                        </button>
+                        <button onClick={cancelEditing} className='text-red-500 hover:text-red-600'>
+                          <X className='w-3 h-3' />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => startEditing('targetValue', taskDetails.target_value || '')}
+                        className={`font-medium hover:underline ${
+                          taskDetails?.target_value
+                            ? (darkMode ? 'text-blue-300' : 'text-blue-700')
+                            : (darkMode ? 'text-gray-500' : 'text-gray-400')
+                        }`}
+                      >
+                        {taskDetails.target_value || 'Set target'}
+                      </button>
+                    )}
+
+                    {/* Target Type - Always show for goals */}
+                    <DropDown options={TARGET_TYPE_OPTIONS} onSelect={handleTargetTypeChange} value={taskDetails?.target_type} isMulti={false}>
+                      <span
+                        className={`font-medium cursor-pointer hover:underline ${
+                          taskDetails?.target_type
+                            ? (darkMode ? 'text-blue-300' : 'text-blue-700')
+                            : (darkMode ? 'text-gray-500' : 'text-gray-400')
+                        }`}
+                      >
+                        {taskDetails?.target_type
+                          ? TARGET_TYPE_OPTIONS.find((opt) => opt.value === taskDetails.target_type)?.label
+                          : 'Select type'
+                        }
+                      </span>
+                    </DropDown>
+
+                    {/* Target Frequency - Always show for goals */}
+                    <span className={`${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>•</span>
+                    <DropDown options={TARGET_FREQUENCY_OPTIONS} onSelect={handleTargetFrequencyChange} value={taskDetails?.target_frequency} isMulti={false}>
+                      <span
+                        className={`font-medium cursor-pointer hover:underline ${
+                          taskDetails?.target_frequency
+                            ? (darkMode ? 'text-blue-300' : 'text-blue-700')
+                            : (darkMode ? 'text-gray-500' : 'text-gray-400')
+                        }`}
+                      >
+                        {taskDetails?.target_frequency
+                          ? TARGET_FREQUENCY_OPTIONS.find((opt) => opt.value === taskDetails.target_frequency)?.label
+                          : 'Select frequency'
+                        }
+                      </span>
+                    </DropDown>
+                  </div>
+                </div>
+              )}
               {taskDetails?.due_date ? (
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Due
