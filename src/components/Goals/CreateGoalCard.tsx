@@ -14,6 +14,7 @@ import { createGoal } from 'services/goals';
 
 import Dropdown from 'components/Shared/Dropdown';
 import Input from 'components/Shared/Input';
+import { DatePicker } from 'components/Shared/DatePicker';
 
 type CreateGoalFormDataType = {
   new_goal_title: string;
@@ -23,6 +24,7 @@ type CreateGoalFormDataType = {
   target_value: number | null;
   target_type: TargetType | null;
   target_frequency: TargetFrequency | null;
+  due_date: Date | null;
 };
 
 type CreateGoalCardPropsType = {
@@ -64,6 +66,7 @@ const CreateGoalCard = ({ handleCancel, view }: CreateGoalCardPropsType) => {
       target_value: null,
       target_type: null,
       target_frequency: null,
+      due_date: null,
     },
   });
 
@@ -81,6 +84,7 @@ const CreateGoalCard = ({ handleCancel, view }: CreateGoalCardPropsType) => {
       target_value: formData?.target_value,
       target_type: formData?.target_type,
       target_frequency: formData?.target_frequency,
+      due_date: formData?.due_date ? formData.due_date.toISOString().split('T')[0] : null,
     };
     createGoal(payload)
       .then((res) => {
@@ -219,6 +223,25 @@ const CreateGoalCard = ({ handleCancel, view }: CreateGoalCardPropsType) => {
               {target_frequency ? TARGET_FREQUENCY_OPTIONS.find((opt) => opt.value === target_frequency)?.label : 'Frequency'}
             </div>
           </Dropdown>
+        </div>
+
+        {/* Due Date */}
+        <div className={view === 'grid' ? 'space-x-2 flex' : 'space-y-1'}>
+          <label className={clsx(
+            'text-xs font-medium',
+            view === 'grid' ? 'flex items-center h-full' : 'block',
+            darkMode ? 'text-gray-400' : 'text-gray-600',
+          )}
+          >
+            Due Date
+          </label>
+          <div className='flex-1'>
+            <DatePicker
+              name='due_date'
+              placeholder='Set due date'
+              className='text-sm'
+            />
+          </div>
         </div>
       </div>
     </div>

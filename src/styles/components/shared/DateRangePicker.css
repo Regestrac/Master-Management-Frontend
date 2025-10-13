@@ -1,5 +1,5 @@
 .rmdp-wrapper {
-  background-color: transparent !important;
+  background-color: white !important;
   width: fit-content !important;
   display: inline-block !important;
 }
@@ -12,6 +12,8 @@
 .rmdp-calendar {
   width: fit-content !important;
   display: inline-block !important;
+  border-radius: 8px !important;
+  /* box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important; */
 }
 
 .rmdp-arrow-container {
@@ -58,6 +60,10 @@
 }
 
 /* Dark theme adjustments */
+.rmdp-dark.rmdp-wrapper {
+  background-color: #1E2939 !important;
+}
+
 .rmdp-dark .rmdp-calendar,
 .rmdp-dark .rmdp-month-picker,
 .rmdp-dark .rmdp-year-picker {
