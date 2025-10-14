@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-import { Calendar, Tag, ChevronDown, ChevronRight, GitCommit, Zap, Bug, Plus, ArrowUp } from 'lucide-react';
+import { Calendar, Tag, ChevronDown, ChevronRight, GitCommit, Zap, Bug, Plus, ArrowUp, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
@@ -17,7 +18,20 @@ interface ChangeLogEntry {
 
 const ChangeLog = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
+  const navigate = useNavigate();
   const [expandedVersions, setExpandedVersions] = useState<Set<string>>(new Set(['2.1.0']));
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+  }, []);
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
+  };
 
   const toggleVersion = (version: string) => {
     const newExpanded = new Set(expandedVersions);
@@ -167,101 +181,127 @@ const ChangeLog = () => {
   ];
 
   return (
-    <div className='max-w-4xl mx-auto p-6'>
-      <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
-        <div className='mb-6'>
-          <div className='flex items-center gap-3 mb-2'>
-            <GitCommit className='h-6 w-6 text-purple-500' />
-            <h1 className='text-2xl font-bold'>Change Log</h1>
-          </div>
-          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>
-            Track all updates, improvements, and fixes to Master Management. Stay informed about new features and changes.
-          </p>
-        </div>
-
-        <div className='space-y-4'>
-          {changeLogData.map((entry) => (
-            <div
-              key={entry.version}
-              className={`${darkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200'} rounded-lg border`}
-            >
+    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+      {/* Header */}
+      <header className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-b shadow-sm fixed top-0 left-0 right-0 z-50`}>
+        <div className='max-w-4xl mx-auto px-6 py-4'>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center space-x-4'>
               <button
-                onClick={() => toggleVersion(entry.version)}
-                className={`w-full p-4 text-left hover:${darkMode ? 'bg-gray-700' : 'bg-gray-100'} transition-colors rounded-lg`}
+                onClick={handleBack}
+                className={`flex items-center space-x-2 ${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors`}
+                aria-label='Go back'
               >
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center gap-3'>
-                    {expandedVersions.has(entry.version) ? (
-                      <ChevronDown className='h-5 w-5 text-gray-500' />
-                    ) : (
-                      <ChevronRight className='h-5 w-5 text-gray-500' />
-                    )}
+                <ArrowLeft className='w-5 h-5' />
+                <span>Back</span>
+              </button>
+            </div>
+            <div className='flex items-center space-x-3'>
+              <div className='w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center'>
+                <GitCommit className='w-6 h-6 text-white' />
+              </div>
+              <div>
+                <h1 className='text-xl font-bold'>Change Log</h1>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Master Management</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Content */}
+      <main className='max-w-4xl mx-auto px-6 pt-24 pb-8'>
+        <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-8 border shadow-sm`}>
+          <div className='mb-6'>
+            <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm mb-4`}>
+              Track all updates, improvements, and fixes to Master Management. Stay informed about new features and changes.
+            </p>
+          </div>
+
+          <div className='space-y-4'>
+            {changeLogData.map((entry) => (
+              <div
+                key={entry.version}
+                className={`${darkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200'} rounded-lg border`}
+              >
+                <button
+                  onClick={() => toggleVersion(entry.version)}
+                  className={`w-full p-4 text-left hover:${darkMode ? 'bg-gray-700' : 'bg-gray-100'} transition-colors rounded-lg`}
+                >
+                  <div className='flex items-center justify-between'>
                     <div className='flex items-center gap-3'>
-                      <span className='text-lg font-semibold'>
-                        v
-                        {entry.version}
-                      </span>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getVersionTypeColor(entry.type)}`}>
-                        {entry.type.toUpperCase()}
-                      </span>
+                      {expandedVersions.has(entry.version) ? (
+                        <ChevronDown className='h-5 w-5 text-gray-500' />
+                      ) : (
+                        <ChevronRight className='h-5 w-5 text-gray-500' />
+                      )}
+                      <div className='flex items-center gap-3'>
+                        <span className='text-lg font-semibold'>
+                          v
+                          {entry.version}
+                        </span>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getVersionTypeColor(entry.type)}`}>
+                          {entry.type.toUpperCase()}
+                        </span>
+                      </div>
+                    </div>
+                    <div className='flex items-center gap-2 text-sm text-gray-500'>
+                      <Calendar className='h-4 w-4' />
+                      <span>{new Date(entry.date).toLocaleDateString()}</span>
                     </div>
                   </div>
-                  <div className='flex items-center gap-2 text-sm text-gray-500'>
-                    <Calendar className='h-4 w-4' />
-                    <span>{new Date(entry.date).toLocaleDateString()}</span>
-                  </div>
-                </div>
-              </button>
+                </button>
 
-              {expandedVersions.has(entry.version) && (
-                <div className='px-4 pb-4'>
-                  <div className='ml-8 space-y-3'>
-                    {entry.changes.map((change, index) => (
-                      <div key={index} className='flex gap-3'>
-                        <div className='flex-shrink-0 mt-0.5'>
-                          {getChangeIcon(change.type)}
-                        </div>
-                        <div className='flex-1'>
-                          <div className='flex items-center gap-2 mb-1'>
-                            <h4 className='font-medium text-sm'>{change.title}</h4>
-                            <span
-                              className={`px-2 py-0.5 rounded text-xs font-medium ${change.type === 'feature'
-                                ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
-                                : change.type === 'improvement'
-                                  ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
-                                  : change.type === 'bugfix'
-                                    ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400'
-                                    : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'}`}
-                            >
-                              {change.type}
-                            </span>
+                {expandedVersions.has(entry.version) && (
+                  <div className='px-4 pb-4'>
+                    <div className='ml-8 space-y-3'>
+                      {entry.changes.map((change, index) => (
+                        <div key={index} className='flex gap-3'>
+                          <div className='flex-shrink-0 mt-0.5'>
+                            {getChangeIcon(change.type)}
                           </div>
-                          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            {change.description}
-                          </p>
+                          <div className='flex-1'>
+                            <div className='flex items-center gap-2 mb-1'>
+                              <h4 className='font-medium text-sm'>{change.title}</h4>
+                              <span
+                                className={`px-2 py-0.5 rounded text-xs font-medium ${change.type === 'feature'
+                                  ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                                  : change.type === 'improvement'
+                                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+                                    : change.type === 'bugfix'
+                                      ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400'
+                                      : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'}`}
+                              >
+                                {change.type}
+                              </span>
+                            </div>
+                            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              {change.description}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+                )}
+              </div>
+            ))}
+          </div>
 
-        <div className={`mt-6 p-4 rounded-lg ${darkMode ? 'bg-gray-700/30 border-gray-600' : 'bg-blue-50 border-blue-200'} border`}>
-          <div className='flex items-start gap-3'>
-            <Tag className='h-5 w-5 text-blue-500 mt-0.5' />
-            <div>
-              <h3 className='font-medium text-sm mb-1'>Stay Updated</h3>
-              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Follow our development progress and get notified about new releases.
-                Check back regularly for the latest updates and improvements.
-              </p>
+          <div className={`mt-6 p-4 rounded-lg ${darkMode ? 'bg-gray-700/30 border-gray-600' : 'bg-blue-50 border-blue-200'} border`}>
+            <div className='flex items-start gap-3'>
+              <Tag className='h-5 w-5 text-blue-500 mt-0.5' />
+              <div>
+                <h3 className='font-medium text-sm mb-1'>Stay Updated</h3>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Follow our development progress and get notified about new releases.
+                  Check back regularly for the latest updates and improvements.
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

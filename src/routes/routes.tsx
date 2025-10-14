@@ -47,6 +47,14 @@ const routes: RouteObject[] = [
         element: <PrivacyPolicy />,
       },
       {
+        path: '/documentation',
+        element: <Documentation />,
+      },
+      {
+        path: '/changelog',
+        element: <ChangeLog />,
+      },
+      {
         path: '/auth',
         element: <Authentication />,
         children: [
@@ -103,14 +111,6 @@ const routes: RouteObject[] = [
           {
             path: '/settings',
             element: <Settings />,
-          },
-          {
-            path: '/documentation',
-            element: <Documentation />,
-          },
-          {
-            path: '/changelog',
-            element: <ChangeLog />,
           },
           {
             path: '/support',
