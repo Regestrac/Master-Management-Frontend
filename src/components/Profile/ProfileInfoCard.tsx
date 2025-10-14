@@ -6,6 +6,8 @@ import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
+import { logout } from 'services/auth';
+
 const ProfileInfoCard = () => {
   const user = useProfileStore((state) => state.data);
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
@@ -24,9 +26,13 @@ const ProfileInfoCard = () => {
       isVisible: true,
       extraProps: {
         onSuccess: () => {
-          clearProfile();
-          navigate('/auth/login');
-          toast.success('You have been logged out successfully');
+          logout().then(() => {
+            toast.success('Successfully signed out');
+            clearProfile();
+            navigate('/auth/login');
+          }).catch(() => {
+            toast.error('Failed to sign out. Please try again.');
+          });
         },
       },
     });

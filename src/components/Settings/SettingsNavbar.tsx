@@ -1,9 +1,11 @@
 import { RefObject, useEffect, useState } from 'react';
 
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 import useModalStore from 'stores/modalStore';
 import { useSettingsStore } from 'stores/settingsStore';
+import { useProfileStore } from 'stores/profileStore';
 
 import { logout } from 'services/auth';
 
@@ -19,24 +21,14 @@ const settingsCategories = [
   { id: 'about', icon: 'ℹ️', label: 'About' },
 ];
 
-const handleSignOut = () => {
-  logout().then(() => {
-    toast.success('Successfully signed out');
-    // Navigate to login page
-    const event = new CustomEvent('custom-navigation', {
-      detail: { url: '/auth/login', replace: true },
-    });
-    window.dispatchEvent(event);
-  }).catch(() => {
-    toast.error('Failed to sign out. Please try again.');
-  });
-};
-
 const SettingsNavbar = ({ sectionRefs }: { sectionRefs: RefObject<{ [key: string]: HTMLElement | null }>; }) => {
   const [activeSection, setActiveSection] = useState('general');
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const updateVisibility = useModalStore((state) => state.updateVisibility);
+  const clearProfile = useProfileStore((state) => state.clearProfile);
+
+  const navigate = useNavigate();
 
   // Open sign out modal
   const openSignOutModal = () => {
@@ -44,7 +36,15 @@ const SettingsNavbar = ({ sectionRefs }: { sectionRefs: RefObject<{ [key: string
       modalType: 'signOutModal',
       isVisible: true,
       extraProps: {
-        onSuccess: handleSignOut,
+        onSuccess: () => {
+          logout().then(() => {
+            toast.success('Successfully signed out');
+            clearProfile();
+            navigate('/auth/login');
+          }).catch(() => {
+            toast.error('Failed to sign out. Please try again.');
+          });
+        },
       },
     });
   };
