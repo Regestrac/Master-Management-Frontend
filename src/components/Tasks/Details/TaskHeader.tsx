@@ -2,16 +2,16 @@ import { useState } from 'react';
 
 import dayjs from 'dayjs';
 import { Archive, ArrowLeft, Check, CheckSquare, Copy, Eraser, MoreVertical, MoveRight, Star, Trash2, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { capitalize, getPriorityColor, getStatusColor } from 'helpers/utils';
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
 import { TaskType, TargetType, TargetFrequency } from 'helpers/sharedTypes';
+import { navigateBack } from 'helpers/navigationUtils';
 
 import { useTaskStore } from 'stores/taskStore';
-import { useNavbarStore } from 'stores/navbarStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateTask } from 'services/tasks';
@@ -62,8 +62,6 @@ const TaskHeader = () => {
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
   const updateTaskState = useTaskStore((state) => state.updateTask);
   const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
-  const prevPath = useNavbarStore((state) => state.prevPath);
-  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const methods = useForm<DueDateForm>({
     defaultValues: {
@@ -72,10 +70,10 @@ const TaskHeader = () => {
   });
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const handleBackClick = () => {
-    navigate(prevPath || '/dashboard');
-    updatePrevPath('');
+    navigateBack(navigate, searchParams, '/dashboard');
   };
 
   const handleUpdateTask = (id: string, payload: object) => {

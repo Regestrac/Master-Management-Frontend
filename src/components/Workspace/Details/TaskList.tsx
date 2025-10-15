@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Plus, UserPlus } from 'lucide-react';
 
 import { StatusType, Task } from 'helpers/sharedTypes';
 import { STATUS_OPTIONS } from 'helpers/configs';
 import { getStatusColor, debounce } from 'helpers/utils';
+import { navigateWithHistory } from 'helpers/navigationUtils';
 
 import useWorkspaceStore from 'stores/workspaceStore';
-import { useNavbarStore } from 'stores/navbarStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
 import { getWorkspaceTasks } from 'services/workspace';
@@ -37,10 +37,9 @@ const TaskList = () => {
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const members = useWorkspaceStore((state) => state.members);
-  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const navigate = useNavigate();
-
+  const { pathname } = useLocation();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -150,8 +149,12 @@ const TaskList = () => {
   }, []);
 
   const handleTaskClick = (taskId: number) => {
-    updatePrevPath(`/workspace/${id}`);
-    navigate(`/tasks/${taskId}`);
+    navigateWithHistory(
+      navigate,
+      `/tasks/${taskId}`,
+      pathname,
+      searchParams,
+    );
   };
 
   return (

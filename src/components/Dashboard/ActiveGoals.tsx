@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Clock, Flame } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { formatDuration } from 'helpers/utils';
+import { navigateWithHistory } from 'helpers/navigationUtils';
 
 import { useSettingsStore } from 'stores/settingsStore';
 import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
-import { useNavbarStore } from 'stores/navbarStore';
 
 import { getActiveGoals } from 'services/dashboard';
 import { updateTask } from 'services/tasks';
@@ -105,11 +105,12 @@ const ActiveGoals = () => {
   const activeTask = useProfileStore((state) => state.data.active_task);
   const updateProfile = useProfileStore((state) => state.updateProfile);
   const updateVisibility = useModalStore((state) => state.updateVisibility);
-  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const shouldFetchGoalsRef = useRef(true);
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { pathname } = useLocation();
 
   const handleViewAllGoals = () => {
     navigate('/goals');
@@ -144,8 +145,12 @@ const ActiveGoals = () => {
   };
 
   const handleGoalClick = (goalId: number) => {
-    updatePrevPath('/dashboard');
-    navigate(`/goals/${goalId}`);
+    navigateWithHistory(
+      navigate,
+      `/goals/${goalId}`,
+      pathname,
+      searchParams,
+    );
   };
 
   useEffect(() => {

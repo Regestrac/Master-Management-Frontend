@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Plus } from 'lucide-react';
 
 import { Goal, StatusType } from 'helpers/sharedTypes';
 import { getStatusColor, debounce } from 'helpers/utils';
 import { STATUS_OPTIONS } from 'helpers/configs';
+import { navigateWithHistory } from 'helpers/navigationUtils';
 
 import useWorkspaceStore from 'stores/workspaceStore';
-import { useNavbarStore } from 'stores/navbarStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
 import { getWorkspaceGoals } from 'services/workspace';
@@ -29,10 +29,9 @@ const GoalList = () => {
 
   const members = useWorkspaceStore((state) => state.members);
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
-  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const navigate = useNavigate();
-
+  const { pathname } = useLocation();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -135,8 +134,12 @@ const GoalList = () => {
   }, []);
 
   const handleGoalClick = (goalId: number) => {
-    updatePrevPath(`/workspace/${id}`);
-    navigate(`/goals/${goalId}`);
+    navigateWithHistory(
+      navigate,
+      `/goals/${goalId}`,
+      pathname,
+      searchParams,
+    );
   };
 
   return (

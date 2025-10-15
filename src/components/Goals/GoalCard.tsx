@@ -4,16 +4,16 @@ import { Flame, Clock, Play, Pause, Calendar } from 'lucide-react';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 
 import { STATUS_OPTIONS } from 'helpers/configs';
 import { formatDuration, getStatusColor } from 'helpers/utils';
 import { TaskType } from 'helpers/sharedTypes';
+import { navigateWithHistory } from 'helpers/navigationUtils';
 
 import { useProfileStore } from 'stores/profileStore';
 import { useGoalStore } from 'stores/goalsStore';
 import useModalStore from 'stores/modalStore';
-import { useNavbarStore } from 'stores/navbarStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateTask } from 'services/tasks';
@@ -68,9 +68,10 @@ const GoalCard = ({ goal, view }: GoalCardPropsType) => {
   const updateVisibility = useModalStore((state) => state.updateVisibility);
   const activeTask = useProfileStore((state) => state.data.active_task);
   const updateProfile = useProfileStore((state) => state.updateProfile);
-  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { pathname } = useLocation();
 
   const bgColor = darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200';
   const textColor = darkMode ? 'text-gray-400' : 'text-gray-600';
@@ -110,8 +111,12 @@ const GoalCard = ({ goal, view }: GoalCardPropsType) => {
   };
 
   const handleTaskClick = () => {
-    updatePrevPath('/goals');
-    navigate(`/goals/${goal?.id}`);
+    navigateWithHistory(
+      navigate,
+      `/goals/${goal?.id}`,
+      pathname,
+      searchParams,
+    );
   };
 
   const getWeeklyProgress = () => (((goal?.weekly_progress / 3600) / (goal?.weeklyTarget || 1)) * 100) > 100 ? 100 : (((goal?.weekly_progress / 3600) / (goal?.weeklyTarget || 1)) * 100);

@@ -2,16 +2,16 @@ import { useEffect, useRef, useState } from 'react';
 
 import { CheckSquare, Plus, Trash2 } from 'lucide-react';
 import dayjs from 'dayjs';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
 import clsx from 'clsx';
 
 import { StatusType } from 'helpers/sharedTypes';
 import { getStatusColor } from 'helpers/utils';
+import { navigateWithHistory } from 'helpers/navigationUtils';
 
 import { useTaskStore } from 'stores/taskStore';
-import { useNavbarStore } from 'stores/navbarStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
 import { createTask, deleteTask, getSubTasks, updateTask } from 'services/tasks';
@@ -40,14 +40,14 @@ const SubTasks = () => {
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const parentTaskId = useTaskStore((state) => state.currentTaskDetails?.parent_id);
-  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
   const taskType = useTaskStore((state) => state.currentTaskDetails.type);
 
   const subtasksFetchedRef = useRef(false);
 
   const { id } = useParams();
-
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { pathname } = useLocation();
 
   const methods = useForm({
     defaultValues: { title: '' },
@@ -85,8 +85,12 @@ const SubTasks = () => {
   };
 
   const handleSubtaskClick = (subtaskId: number) => {
-    updatePrevPath(`/${taskType}s/${id}`);
-    navigate(`/${taskType}s/${subtaskId}`);
+    navigateWithHistory(
+      navigate,
+      `/${taskType}s/${subtaskId}`,
+      pathname,
+      searchParams,
+    );
   };
 
   const handleSubtaskTitleSave = async (subtaskId: number, newTitle: string) => {

@@ -3,17 +3,17 @@ import { useState } from 'react';
 import { Calendar, Clock, Flame, Pause, Play } from 'lucide-react';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { TaskType } from 'helpers/sharedTypes';
 import { formatDuration, getPriorityColor, getStatusColor } from 'helpers/utils';
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
+import { navigateWithHistory } from 'helpers/navigationUtils';
 
 import { useTaskStore } from 'stores/taskStore';
 import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
-import { useNavbarStore } from 'stores/navbarStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateTask } from 'services/tasks';
@@ -47,10 +47,10 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
   const activeTask = useProfileStore((state) => state.data.active_task);
   const updateProfile = useProfileStore((state) => state.updateProfile);
   const updateVisibility = useModalStore((state) => state.updateVisibility);
-  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
 
   const methods = useForm({
     defaultValues: {
@@ -103,8 +103,12 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
   };
 
   const handleTaskClick = () => {
-    updatePrevPath(pathname.includes('dashboard') ? '/dashboard' : '/tasks');
-    navigate(`/tasks/${task?.id}`);
+    navigateWithHistory(
+      navigate,
+      `/tasks/${task?.id}`,
+      pathname,
+      searchParams,
+    );
   };
 
   return (
