@@ -20,6 +20,7 @@ import { updateActiveTask } from 'services/profile';
 
 import DropDown from 'components/Shared/Dropdown';
 import { DatePicker } from 'components/Shared/DatePicker';
+import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
 
 const TARGET_TYPE_OPTIONS = [
   { label: 'Repetition', value: 'repetition' },
@@ -152,6 +153,12 @@ const TaskHeader = () => {
       handleUpdateTask(taskDetails?.id?.toString(), { due_date: value });
       updateTaskState({ id: taskDetails?.id, due_date: value });
       updateCurrentTaskDetails({ ...taskDetails, due_date: value });
+    } else if (field === 'title') {
+      if (value && value.trim()) {
+        handleUpdateTask(taskDetails?.id?.toString(), { title: value.trim() });
+        updateTaskState({ id: taskDetails?.id, title: value.trim() });
+        updateCurrentTaskDetails({ ...taskDetails, title: value.trim() });
+      }
     }
     setEditingField(null);
     setTempValues((prev) => ({ ...prev, [field]: undefined }));
@@ -160,6 +167,13 @@ const TaskHeader = () => {
   const cancelEditing = () => {
     setEditingField(null);
     setTempValues({});
+  };
+
+  const handleTitleSave = async (newTitle: string) => {
+    await updateTask(taskDetails?.id?.toString(), { title: newTitle });
+    updateTaskState({ id: taskDetails?.id, title: newTitle });
+    updateCurrentTaskDetails({ ...taskDetails, title: newTitle });
+    toast.success('Task title updated successfully');
   };
 
   const handleMoreOptionSelect = (_option: any) => {
@@ -177,7 +191,13 @@ const TaskHeader = () => {
               <CheckSquare className='w-4 h-4 text-white' />
             </div>
             <div>
-              <h1 className='text-xl font-bold'>{taskDetails.title}</h1>
+              <InlineEditableTitle
+                title={taskDetails.title}
+                onSave={handleTitleSave}
+                fontSize='text-xl'
+                className='font-bold'
+                placeholder='Enter task title...'
+              />
               <div className='flex items-center space-x-2 mt-1'>
                 <DropDown options={STATUS_OPTIONS} onSelect={handleStatusChange} hideClear value={taskDetails?.status} isMulti={false}>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(taskDetails.status)}`}>

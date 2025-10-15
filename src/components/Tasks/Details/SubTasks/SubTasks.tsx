@@ -8,14 +8,16 @@ import { FormProvider, useForm } from 'react-hook-form';
 import clsx from 'clsx';
 
 import { StatusType } from 'helpers/sharedTypes';
+import { getStatusColor } from 'helpers/utils';
 
 import { useTaskStore } from 'stores/taskStore';
 import { useNavbarStore } from 'stores/navbarStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
-import { createTask, deleteTask, getSubTasks } from 'services/tasks';
+import { createTask, deleteTask, getSubTasks, updateTask } from 'services/tasks';
 
 import Input from 'components/Shared/Input';
+import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
 import GenerateSubtasksButtons from 'components/Tasks/ai/GenerateSubtasksButtons';
 
 type SubTaskType = {
@@ -84,6 +86,14 @@ const SubTasks = () => {
   const handleSubtaskClick = (subtaskId: number) => {
     updatePrevPath(`/tasks/${id}`);
     navigate(`/tasks/${subtaskId}`);
+  };
+
+  const handleSubtaskTitleSave = async (subtaskId: number, newTitle: string) => {
+    await updateTask(subtaskId.toString(), { title: newTitle });
+    setSubtasks(subtasks.map((st) =>
+      st.id === subtaskId ? { ...st, title: newTitle } : st,
+    ));
+    toast.success('Subtask title updated successfully');
   };
 
   useEffect(() => {
@@ -202,10 +212,18 @@ const SubTasks = () => {
                   {subtask.completed && <Check className='w-3 h-3 text-white' />}
                 </button> */}
                 <div className='flex-1'>
-                  <p className='font-medium'>
-                    {subtask.title}
-                  </p>
+                  <InlineEditableTitle
+                    title={subtask.title}
+                    onSave={(newTitle) => handleSubtaskTitleSave(subtask.id, newTitle)}
+                    fontSize='text-base'
+                    className='font-medium'
+                    placeholder='Enter subtask title...'
+                  />
                   <div className='flex items-center space-x-4 mt-1 text-sm'>
+                    {/* Status Badge */}
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(subtask.status)}`}>
+                      {subtask.status?.toUpperCase()}
+                    </span>
                     {subtask.due_date && (
                       <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         Due:
