@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import dayjs from 'dayjs';
-import { Archive, ArrowLeft, Check, CheckSquare, Copy, Eraser, MoreVertical, MoveRight, Pause, Play, Star, Trash2, X } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Archive, ArrowLeft, Check, CheckSquare, Copy, Eraser, MoreVertical, MoveRight, Star, Trash2, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -11,12 +11,10 @@ import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
 import { TaskType, TargetType, TargetFrequency } from 'helpers/sharedTypes';
 
 import { useTaskStore } from 'stores/taskStore';
-import { useProfileStore } from 'stores/profileStore';
 import { useNavbarStore } from 'stores/navbarStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateTask } from 'services/tasks';
-import { updateActiveTask } from 'services/profile';
 
 import DropDown from 'components/Shared/Dropdown';
 import { DatePicker } from 'components/Shared/DatePicker';
@@ -62,29 +60,18 @@ const TaskHeader = () => {
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
+  const updateTaskState = useTaskStore((state) => state.updateTask);
+  const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
+  const prevPath = useNavbarStore((state) => state.prevPath);
+  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
+
   const methods = useForm<DueDateForm>({
     defaultValues: {
       due_date: taskDetails?.due_date ? new Date(taskDetails.due_date) : null,
     },
   });
-  const activeTask = useProfileStore((state) => state.data.active_task);
-  const updateTaskState = useTaskStore((state) => state.updateTask);
-  const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
-  const updateProfile = useProfileStore((state) => state.updateProfile);
-  const prevPath = useNavbarStore((state) => state.prevPath);
-  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const navigate = useNavigate();
-
-  const { id } = useParams();
-
-  const toggleTimer = (taskId: number) => {
-    updateActiveTask({ active_task: activeTask === taskId ? null : taskId }).then((res) => {
-      updateProfile({ active_task: res?.active_task });
-    }).catch((err) => {
-      toast.error(err?.error);
-    });
-  };
 
   const handleBackClick = () => {
     navigate(prevPath || '/dashboard');
@@ -310,28 +297,11 @@ const TaskHeader = () => {
           </div>
         </div>
 
-        <div className='flex items-center space-x-3'>
-          <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Created on&nbsp;
-            {taskDetails?.created_at ? dayjs(taskDetails.created_at).format('MMM DD, YYYY') : null}
-          </span>
-          <button
-            onClick={() => toggleTimer(taskDetails.id)}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${activeTask === Number(id) ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'} text-white`}
-          >
-            {activeTask === Number(id) ? <Pause className='w-4 h-4' /> : <Play className='w-4 h-4' />}
-            <span>
-              {activeTask === Number(id) ? 'Stop' : 'Start'}
-              {' '}
-              Timer
-            </span>
-          </button>
-          <DropDown options={moreOptions} onSelect={handleMoreOptionSelect} hideClear value={null}>
-            <div className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}>
-              <MoreVertical className='w-5 h-5' />
-            </div>
-          </DropDown>
-        </div>
+        <DropDown options={moreOptions} onSelect={handleMoreOptionSelect} hideClear value={null}>
+          <div className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}>
+            <MoreVertical className='w-5 h-5' />
+          </div>
+        </DropDown>
       </div>
     </FormProvider>
   );

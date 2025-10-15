@@ -15,6 +15,7 @@ import TaskOverview from 'components/Tasks/Details/Overview/TaskOverview';
 import TaskActivity from 'components/Tasks/Details/Activity/TaskActivity';
 import TaskNotes from 'components/Tasks/Details/Notes/TaskNotes';
 import TaskComments from 'components/Tasks/Details/Comments/TaskComments';
+import TaskTimer from 'components/Tasks/Details/TaskTimer';
 
 const TaskDetails = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -31,27 +32,30 @@ const TaskDetails = () => {
           <TaskProgress />
 
           {/* Tabs */}
-          <div className='flex space-x-6 mt-6 2xl:mx-12'>
-            {[
-              { id: 'overview', label: 'Overview', icon: Target },
-              { id: 'notes', label: 'Notes', icon: Edit3 },
-              { id: 'activity', label: 'Activity', icon: History },
-              { id: 'comments', label: 'Comments', icon: MessageSquare },
-            ].map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 px-3 py-2 border-b-2 transition-colors ${activeTab === tab.id
-                    ? 'border-primary-500 text-primary-600'
-                    : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-900'}`}`}
-                >
-                  <Icon className='w-4 h-4' />
-                  <span className='font-medium'>{tab.label}</span>
-                </button>
-              );
-            })}
+          <div className='flex items-center justify-between mt-4'>
+            <div className='flex space-x-6 2xl:mx-12'>
+              {[
+                { id: 'overview', label: 'Overview', icon: Target },
+                { id: 'notes', label: 'Notes', icon: Edit3 },
+                { id: 'activity', label: 'Activity', icon: History },
+                { id: 'comments', label: 'Comments', icon: MessageSquare },
+              ].map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center space-x-2 px-3 py-2 border-b-2 transition-colors ${activeTab === tab.id
+                      ? 'border-primary-500 text-primary-600'
+                      : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-900'}`}`}
+                  >
+                    <Icon className='w-4 h-4' />
+                    <span className='font-medium'>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <TaskTimer />
           </div>
         </div>
       </div>

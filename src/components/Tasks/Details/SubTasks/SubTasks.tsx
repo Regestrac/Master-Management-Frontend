@@ -41,6 +41,7 @@ const SubTasks = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const parentTaskId = useTaskStore((state) => state.currentTaskDetails?.parent_id);
   const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
+  const taskType = useTaskStore((state) => state.currentTaskDetails.type);
 
   const subtasksFetchedRef = useRef(false);
 
@@ -61,7 +62,7 @@ const SubTasks = () => {
         status: 'todo' as const,
         time_spend: 0,
         parent_id: Number(id),
-        type: 'task',
+        type: taskType,
       };
       createTask(payload).then((res) => {
         toast.success(res?.message || 'Successfully created task');
@@ -84,8 +85,8 @@ const SubTasks = () => {
   };
 
   const handleSubtaskClick = (subtaskId: number) => {
-    updatePrevPath(`/tasks/${id}`);
-    navigate(`/tasks/${subtaskId}`);
+    updatePrevPath(`/${taskType}s/${id}`);
+    navigate(`/${taskType}s/${subtaskId}`);
   };
 
   const handleSubtaskTitleSave = async (subtaskId: number, newTitle: string) => {
