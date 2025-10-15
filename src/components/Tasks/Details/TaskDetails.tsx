@@ -22,7 +22,7 @@ const TaskDetails = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={`min-h-screen transition-colors duration-300 -m-8 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
       {/* Header */}
       <div className={`sticky top-0 z-40 border-b transition-colors ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
         <div className='mx-auto px-6 py-4'>

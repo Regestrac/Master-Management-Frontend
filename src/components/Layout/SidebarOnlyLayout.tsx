@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
-import Sidebar from 'components/Layout/Sidebar';
+import Sidebar from 'components/Navbar/Sidebar';
 
 const SidebarOnlyLayout = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';

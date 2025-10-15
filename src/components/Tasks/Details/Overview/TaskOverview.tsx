@@ -11,16 +11,17 @@ import TaskDescription from 'components/Tasks/Details/Overview/TaskDescription';
 import Checklist from 'components/Tasks/Details/Overview/Checklist';
 import Tags from 'components/Tasks/Details/Overview/Tags';
 import SubTasks from 'components/Tasks/Details/SubTasks/SubTasks';
+import TaskStatus from 'components/Tasks/Details/Overview/TaskStatus';
 
 const TaskOverview = () => {
   const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
 
-  const shouldFetchTask = useRef(true);
+  const prevTaskIdRef = useRef('');
 
   const { id } = useParams();
 
   useEffect(() => {
-    if (id && shouldFetchTask.current) {
+    if (id && prevTaskIdRef.current !== id) {
       getTask(id).then((fetchedTask) => {
         updateCurrentTaskDetails(fetchedTask?.data);
         // setIsLoading(false);
@@ -28,7 +29,7 @@ const TaskOverview = () => {
         toast.error(err?.error || 'Failed to fetch task details.');
         // setIsLoading(false);
       });
-      shouldFetchTask.current = false;
+      prevTaskIdRef.current = id;
     }
   }, [id, updateCurrentTaskDetails]);
 
@@ -42,6 +43,7 @@ const TaskOverview = () => {
         <Checklist />
         {/* <StickyNotes /> */}
         <Tags />
+        <TaskStatus />
       </div>
 
       {/* Attachments */}

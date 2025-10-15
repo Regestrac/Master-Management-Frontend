@@ -29,6 +29,7 @@ import Documentation from 'components/Resources/Documentation';
 import ChangeLog from 'components/Resources/ChangeLog';
 import Support from 'components/Resources/Support';
 import Community from 'components/Resources/Community';
+import AuthenticatedLayout from 'components/Layout/AuthenticatedLayout';
 
 const routes: RouteObject[] = [
   {
@@ -69,78 +70,83 @@ const routes: RouteObject[] = [
         ],
       },
       {
-        element: <RootLayout />,
+        element: <AuthenticatedLayout />,
         children: [
           {
-            path: '/dashboard',
-            element: <Dashboard />,
+            element: <RootLayout />,
+            children: [
+              {
+                path: '/dashboard',
+                element: <Dashboard />,
+              },
+              {
+                path: '/tasks',
+                element: <Tasks />,
+              },
+              {
+                path: '/goals',
+                element: <Goals />,
+              },
+              {
+                path: '/workspace',
+                element: <WorkspaceHome />,
+              },
+              {
+                path: '/workspace/:id',
+                element: <WorkspaceDetail />,
+              },
+            ],
           },
           {
-            path: '/tasks',
-            element: <Tasks />,
-          },
-          {
-            path: '/goals',
-            element: <Goals />,
-          },
-          {
-            path: '/workspace',
-            element: <WorkspaceHome />,
-          },
-          {
-            path: '/workspace/:id',
-            element: <WorkspaceDetail />,
+            element: <SidebarOnlyLayout />,
+            children: [
+              {
+                path: '/analytics',
+                element: <Analytics />,
+              },
+              {
+                path: '/calendar',
+                element: <Calendar />,
+              },
+              {
+                path: '/profile',
+                element: <Profile />,
+              },
+              {
+                path: '/settings',
+                element: <Settings />,
+              },
+              {
+                path: '/support',
+                element: <Support />,
+              },
+              {
+                path: '/community',
+                element: <Community />,
+              },
+              {
+                path: '/feature-request',
+                element: <FeatureRequest />,
+              },
+              {
+                path: '/bug-report',
+                element: <BugReport />,
+              },
+              {
+                path: '/tasks/:id',
+                element: <TaskDetail />,
+              },
+              {
+                path: '/goals/:id',
+                element: <TaskDetail />,
+              },
+              {
+                path: '/task/create',
+                element: <CreateTaskForm />,
+              },
+            ],
           },
         ],
-      },
-      {
-        element: <SidebarOnlyLayout />,
-        children: [
-          {
-            path: '/analytics',
-            element: <Analytics />,
-          },
-          {
-            path: '/calendar',
-            element: <Calendar />,
-          },
-          {
-            path: '/profile',
-            element: <Profile />,
-          },
-          {
-            path: '/settings',
-            element: <Settings />,
-          },
-          {
-            path: '/support',
-            element: <Support />,
-          },
-          {
-            path: '/community',
-            element: <Community />,
-          },
-          {
-            path: '/feature-request',
-            element: <FeatureRequest />,
-          },
-          {
-            path: '/bug-report',
-            element: <BugReport />,
-          },
-        ],
-      },
-      {
-        path: '/tasks/:id',
-        element: <TaskDetail />,
-      },
-      {
-        path: '/goals/:id',
-        element: <TaskDetail />,
-      },
-      {
-        path: 'task/create',
-        element: <CreateTaskForm />,
       },
       {
         path: '/not-found',
