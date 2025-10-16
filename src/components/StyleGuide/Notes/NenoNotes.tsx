@@ -399,7 +399,7 @@ const NeonCyberpunkStickyNote = ({
     transform: `translate(${position.x}px, ${position.y}px) ${isDragging ? 'scale(1.02) skew(-1deg)' :
       isHovered ? 'scale(1.01) skew(-0.5deg)' :
         'skew(0deg)'
-      }`,
+    }`,
     transition: isDragging || resizeState.isResizing ? 'none' : 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     zIndex: isDragging || resizeState.isResizing ? 1000 : 'auto',
     filter: isDarkMode ? 'brightness(1.1) contrast(1.2)' : 'brightness(1) contrast(1)',
@@ -795,8 +795,8 @@ const NeonCyberpunkStickyNoteDemo = () => {
       className={`
         min-h-screen p-8 relative overflow-hidden transition-all duration-500
         ${globalDarkMode
-          ? 'bg-gradient-to-br from-gray-900 via-black to-gray-800'
-          : 'bg-gradient-to-br from-gray-100 via-white to-gray-200'
+        ? 'bg-gradient-to-br from-gray-900 via-black to-gray-800'
+        : 'bg-gradient-to-br from-gray-100 via-white to-gray-200'
         }
       `}
     >
@@ -835,7 +835,7 @@ const NeonCyberpunkStickyNoteDemo = () => {
         <div className='text-center mb-16'>
           <h1
             className={`text-6xl font-bold mb-6 transition-colors duration-300 ${globalDarkMode ? 'text-cyan-400' : 'text-gray-900'
-              }`}
+            }`}
             style={{
               fontFamily: '"Fira Code", "JetBrains Mono", monospace',
               textShadow: globalDarkMode ? '0 0 20px #00ffff80' : 'none',
@@ -845,7 +845,7 @@ const NeonCyberpunkStickyNoteDemo = () => {
           </h1>
           <p
             className={`mb-10 text-xl transition-colors duration-300 ${globalDarkMode ? 'text-cyan-200' : 'text-gray-600'
-              }`}
+            }`}
             style={{
               fontFamily: '"Fira Code", "JetBrains Mono", monospace',
             }}
@@ -859,8 +859,8 @@ const NeonCyberpunkStickyNoteDemo = () => {
                 px-10 py-5 rounded-lg font-medium text-lg transform hover:scale-105 
                 transition-all duration-300 shadow-xl hover:shadow-2xl border-2
                 ${globalDarkMode
-                  ? 'bg-gray-900/80 text-cyan-400 border-cyan-400 hover:bg-gray-800/80'
-                  : 'bg-white text-gray-900 border-gray-400 hover:bg-gray-50'
+                ? 'bg-gray-900/80 text-cyan-400 border-cyan-400 hover:bg-gray-800/80'
+                : 'bg-white text-gray-900 border-gray-400 hover:bg-gray-50'
                 }
               `}
               style={{
@@ -877,8 +877,8 @@ const NeonCyberpunkStickyNoteDemo = () => {
               className={`
                 px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 border-2
                 ${globalDarkMode
-                  ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700 border-yellow-400'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-400'
+                ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700 border-yellow-400'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-400'
                 }
                 shadow-lg hover:shadow-xl
               `}

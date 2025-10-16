@@ -462,7 +462,7 @@ const PolaroidStickyNote = ({
     transform: `translate(${position.x}px, ${position.y}px) ${isDragging ? 'scale(1.05) rotate(2deg)' :
       isHovered ? 'scale(1.02) rotate(0.5deg)' :
         'rotate(0deg)'
-      }${isShaking ? ' translateX(2px)' : ''}`,
+    }${isShaking ? ' translateX(2px)' : ''}`,
     transition: isDragging || resizeState.isResizing ? 'none' : isShaking ? 'transform 0.1s ease-in-out' : 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     zIndex: isDragging || resizeState.isResizing ? 1000 : showStylePicker ? 900 : 'auto',
     backgroundColor: '#FFFFFF',
@@ -941,8 +941,8 @@ const PolaroidStickyNoteDemo = () => {
       className={`
         min-h-screen p-8 relative overflow-scroll transition-all duration-500
         ${globalDarkMode
-          ? 'bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900'
-          : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
+        ? 'bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900'
+        : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
         }
       `}
     >
@@ -975,7 +975,7 @@ const PolaroidStickyNoteDemo = () => {
           <div
             key={i}
             className={`absolute opacity-5 ${globalDarkMode ? 'bg-white' : 'bg-gray-700'
-              }`}
+            }`}
             style={{
               width: `${80 + i * 20}px`,
               height: `${100 + i * 25}px`,
@@ -993,7 +993,7 @@ const PolaroidStickyNoteDemo = () => {
         <div className='text-center mb-16'>
           <h1
             className={`text-6xl font-bold mb-6 transition-colors duration-500 ${globalDarkMode ? 'text-white' : 'text-gray-900'
-              }`}
+            }`}
             style={{
               fontFamily: '"Kalam", cursive',
               letterSpacing: '-0.025em',
@@ -1003,7 +1003,7 @@ const PolaroidStickyNoteDemo = () => {
           </h1>
           <p
             className={`mb-10 text-xl transition-colors duration-500 ${globalDarkMode ? 'text-gray-300' : 'text-gray-700'
-              }`}
+            }`}
             style={{ fontFamily: '"Indie Flower", cursive' }}
           >
             Instant • Nostalgic • Authentic • Customizable
@@ -1015,8 +1015,8 @@ const PolaroidStickyNoteDemo = () => {
                 px-8 py-4 rounded-lg font-medium text-lg transform hover:scale-105 
                 transition-all duration-300 shadow-lg hover:shadow-xl
                 ${globalDarkMode
-                  ? 'bg-blue-600 text-blue-100 hover:bg-blue-500'
-                  : 'bg-blue-500 text-white hover:bg-blue-600'
+                ? 'bg-blue-600 text-blue-100 hover:bg-blue-500'
+                : 'bg-blue-500 text-white hover:bg-blue-600'
                 }
               `}
               style={{
@@ -1033,8 +1033,8 @@ const PolaroidStickyNoteDemo = () => {
               className={`
                 px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105
                 ${globalDarkMode
-                  ? 'bg-gray-600 text-gray-100 hover:bg-gray-500'
-                  : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                ? 'bg-gray-600 text-gray-100 hover:bg-gray-500'
+                : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
                 }
               `}
               style={{

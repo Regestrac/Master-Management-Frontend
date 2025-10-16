@@ -504,9 +504,9 @@ const KeralaStickyNote = ({
     width: `${dimensions.width}px`,
     height: `${dimensions.height}px`,
     transform: `translate(${position.x}px, ${position.y}px) ${isDragging ? 'scale(1.02) rotate(0.5deg)' :
-        isHovered ? 'scale(1.01) rotate(0.2deg)' :
-          'rotate(0deg)'
-      }`,
+      isHovered ? 'scale(1.01) rotate(0.2deg)' :
+        'rotate(0deg)'
+    }`,
     transition: isDragging || resizeState.isResizing ? 'none' : 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
     zIndex: isDragging || resizeState.isResizing ? 1000 : showColorPicker ? 900 : 'auto',
     background: currentTheme.background,
@@ -931,8 +931,8 @@ const KeralaStickyNoteDemo = () => {
       className={`
         min-h-screen p-8 relative overflow-hidden transition-all duration-500
         ${globalDarkMode
-          ? 'bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900'
-          : 'bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50'
+        ? 'bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900'
+        : 'bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50'
         }
       `}
     >
@@ -982,7 +982,7 @@ const KeralaStickyNoteDemo = () => {
         <div className='text-center mb-16'>
           <h1
             className={`text-6xl font-bold mb-6 transition-colors duration-500 ${globalDarkMode ? 'text-emerald-200' : 'text-emerald-900'
-              }`}
+            }`}
             style={{
               fontFamily: '"Noto Sans Malayalam", sans-serif',
               letterSpacing: '-0.025em',
@@ -993,7 +993,7 @@ const KeralaStickyNoteDemo = () => {
           </h1>
           <p
             className={`mb-10 text-xl transition-colors duration-500 ${globalDarkMode ? 'text-emerald-300' : 'text-emerald-700'
-              }`}
+            }`}
             style={{
               fontFamily: '"Noto Sans Malayalam", sans-serif',
             }}
@@ -1007,8 +1007,8 @@ const KeralaStickyNoteDemo = () => {
                 px-8 py-4 rounded-xl font-medium text-lg transform hover:scale-105 
                 transition-all duration-300 shadow-lg hover:shadow-xl border-2
                 ${globalDarkMode
-                  ? 'bg-gradient-to-r from-emerald-700 to-teal-700 text-emerald-100 border-emerald-600 hover:from-emerald-600 hover:to-teal-600'
-                  : 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-emerald-500 hover:from-emerald-500 hover:to-teal-500'
+                ? 'bg-gradient-to-r from-emerald-700 to-teal-700 text-emerald-100 border-emerald-600 hover:from-emerald-600 hover:to-teal-600'
+                : 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-emerald-500 hover:from-emerald-500 hover:to-teal-500'
                 }
               `}
               style={{
@@ -1028,8 +1028,8 @@ const KeralaStickyNoteDemo = () => {
               className={`
                 px-6 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 border-2
                 ${globalDarkMode
-                  ? 'bg-gradient-to-r from-teal-700 to-cyan-700 text-teal-100 border-teal-600 hover:from-teal-600 hover:to-cyan-600'
-                  : 'bg-gradient-to-r from-teal-200 to-cyan-200 text-teal-800 border-teal-400 hover:from-teal-100 hover:to-cyan-100'
+                ? 'bg-gradient-to-r from-teal-700 to-cyan-700 text-teal-100 border-teal-600 hover:from-teal-600 hover:to-cyan-600'
+                : 'bg-gradient-to-r from-teal-200 to-cyan-200 text-teal-800 border-teal-400 hover:from-teal-100 hover:to-cyan-100'
                 }
               `}
               style={{

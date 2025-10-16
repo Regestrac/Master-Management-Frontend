@@ -357,7 +357,7 @@ const PaperTornStickyNote = ({
     width: `${dimensions.width}px`,
     height: `${dimensions.height}px`,
     transform: `translate(${position.x}px, ${position.y}px) ${isDragging ? 'scale(1.05) rotate(-1deg)' : isHovered ? 'scale(1.02)' : 'rotate(0.5deg)'
-      }`,
+    }`,
     transition: isDragging || resizeState.isResizing ? 'none' : 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     zIndex: isDragging || resizeState.isResizing ? 1000 : 'auto',
     filter: `drop-shadow(3px 6px 12px ${currentTheme.shadowColor})`,

@@ -452,7 +452,7 @@ const MatrixStickyNote = ({
     width: `${dimensions.width}px`,
     height: `${dimensions.height}px`,
     transform: `translate(${position.x}px, ${position.y}px) ${isDragging ? 'scale(1.02)' : ''
-      }`,
+    }`,
     transition: isDragging || resizeState.isResizing ? 'none' : 'all 0.2s ease-out',
     zIndex: isDragging || resizeState.isResizing ? 1000 : showColorPicker ? 900 : 'auto',
     background: currentTheme.background,
@@ -822,8 +822,8 @@ const MatrixStickyNoteDemo = () => {
       className={`
         min-h-screen p-8 relative overflow-hidden transition-all duration-500 font-mono
         ${globalDarkMode
-          ? 'bg-black'
-          : 'bg-gray-900'
+        ? 'bg-black'
+        : 'bg-gray-900'
         }
       `}
     >
@@ -867,7 +867,7 @@ const MatrixStickyNoteDemo = () => {
         <div className='text-center mb-16'>
           <h1
             className={`text-6xl font-bold mb-6 transition-colors duration-500 font-mono ${globalDarkMode ? 'text-green-400' : 'text-green-500'
-              }`}
+            }`}
             style={{
               letterSpacing: '0.1em',
               textShadow: globalDarkMode ? '0 0 20px rgba(0, 255, 65, 0.8)' : '0 0 10px rgba(0, 255, 65, 0.5)',
@@ -876,7 +876,7 @@ const MatrixStickyNoteDemo = () => {
             MATRIX_NOTES
           </h1>
           <p className={`mb-10 text-xl font-mono transition-colors duration-500 ${globalDarkMode ? 'text-green-300' : 'text-green-400'
-            }`}
+          }`}
           >
             &gt; DIGITAL_RAIN • TERMINAL_INTERFACE • CYBER_REALITY
           </p>
@@ -887,8 +887,8 @@ const MatrixStickyNoteDemo = () => {
                 px-8 py-4 border-2 font-mono text-lg transform hover:scale-105 
                 transition-all duration-300 relative overflow-hidden
                 ${globalDarkMode
-                  ? 'bg-black border-green-500 text-green-400 hover:bg-green-900'
-                  : 'bg-gray-900 border-green-400 text-green-300 hover:bg-green-800'
+                ? 'bg-black border-green-500 text-green-400 hover:bg-green-900'
+                : 'bg-gray-900 border-green-400 text-green-300 hover:bg-green-800'
                 }
               `}
               style={{
@@ -906,8 +906,8 @@ const MatrixStickyNoteDemo = () => {
               className={`
                 px-6 py-3 border-2 font-mono transition-all duration-300 transform hover:scale-105
                 ${globalDarkMode
-                  ? 'bg-black border-blue-500 text-blue-400 hover:bg-blue-900'
-                  : 'bg-gray-900 border-blue-400 text-blue-300 hover:bg-blue-800'
+                ? 'bg-black border-blue-500 text-blue-400 hover:bg-blue-900'
+                : 'bg-gray-900 border-blue-400 text-blue-300 hover:bg-blue-800'
                 }
               `}
               style={{
