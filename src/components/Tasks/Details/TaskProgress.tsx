@@ -32,15 +32,15 @@ const getEstimatedTime = (targetValue?: number | null, targetType?: string | nul
 };
 
 const getTaskProgress = (progress: number, total: number, targetType?: string | null) => {
+  let taskProgress = Math.min(progress, 100);
+
   if (!targetType) {
-    return progress;
+    taskProgress = Math.min(progress, 100);
+  } else if (['hours', 'days', 'weeks', 'months'].includes(targetType)) {
+    taskProgress = Math.min((progress / total) * 100, 100);
   }
 
-  if (['hours', 'days', 'weeks', 'months'].includes(targetType)) {
-    return (progress / total) * 100;
-  }
-
-  return progress;
+  return taskProgress;
 };
 
 const getProgressLabel = (progress: number, timeSpend: number, targetType?: string | null) => {
