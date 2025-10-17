@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { CheckSquare, Plus, Trash2 } from 'lucide-react';
+import { CheckSquare, Plus, Trash2, CheckCircle2 } from 'lucide-react';
 import dayjs from 'dayjs';
 import { useNavigate, useParams, useSearchParams, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -18,6 +18,7 @@ import { createTask, deleteTask, getSubTasks, updateTask } from 'services/tasks'
 
 import Input from 'components/Shared/Input';
 import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
+import ProgressBar from 'components/Tasks/Details/SubTasks/ProgressBar';
 import GenerateSubtasksButtons from 'components/Tasks/ai/GenerateSubtasksButtons';
 
 type SubTaskType = {
@@ -27,6 +28,9 @@ type SubTaskType = {
   due_date?: string;
   parent_id: number;
   status: StatusType;
+  progress?: number;
+  checklist_completed?: number;
+  checklist_total?: number;
 };
 
 type GeneratedTaskType = {
@@ -132,7 +136,7 @@ const SubTasks = () => {
             <GenerateSubtasksButtons generatedTasks={generatedTasks} setGeneratedTasks={setGeneratedTasks} />
             <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               {subtasks.length ? (
-                Math.round((subtasks.filter((st) => st.status === 'completed').length / subtasks.length) * 100) || 0 + '% Complete'
+                (Math.round((subtasks.filter((st) => st.status === 'completed').length / subtasks.length) * 100) || 0) + '% Complete'
               ) : 'No subtasks'}
             </span>
           </div>
@@ -224,25 +228,56 @@ const SubTasks = () => {
                     className='font-medium'
                     placeholder='Enter subtask title...'
                   />
-                  <div className='flex items-center space-x-4 mt-1 text-sm'>
-                    {/* Status Badge */}
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(subtask.status)}`}>
-                      {subtask.status?.toUpperCase()}
-                    </span>
-                    {subtask.due_date && (
-                      <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Due:
-                        {' '}
-                        {dayjs(subtask.due_date).format('MMM DD, YYYY')}
+                  <div className='mt-2 space-y-2'>
+                    <div className='flex items-center space-x-3'>
+                      <span className={`text-xs font-medium min-w-[4rem] ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        Progress:
                       </span>
-                    )}
-                    {subtask.status === 'completed' && subtask.completed_at && (
-                      <span className='text-green-600 dark:text-green-400'>
-                        Completed:
-                        {' '}
-                        {dayjs(subtask.completed_at).format('MMM DD, YYYY')}
+                      <ProgressBar
+                        progress={subtask.progress || 0}
+                        size='sm'
+                        showPercentage
+                        darkMode={darkMode}
+                        className='flex-1'
+                      />
+                    </div>
+
+                    {/* Metadata Row */}
+                    <div className='flex items-center space-x-4 text-sm'>
+                      {/* Status Badge */}
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(subtask.status)}`}>
+                        {subtask.status?.toUpperCase()}
                       </span>
-                    )}
+
+                      {/* Checklist Count */}
+                      {typeof subtask.checklist_total === 'number' && subtask.checklist_total > 0 && (
+                        <div className='flex items-center space-x-1'>
+                          <CheckCircle2 className='w-3 h-3 text-blue-500' />
+                          <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {subtask.checklist_completed || 0}
+                            /
+                            {subtask.checklist_total}
+                            {' '}
+                            checklist
+                          </span>
+                        </div>
+                      )}
+
+                      {subtask.due_date && (
+                        <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          Due:
+                          {' '}
+                          {dayjs(subtask.due_date).format('MMM DD, YYYY')}
+                        </span>
+                      )}
+                      {subtask.status === 'completed' && subtask.completed_at && (
+                        <span className='text-green-600 dark:text-green-400'>
+                          Completed:
+                          {' '}
+                          {dayjs(subtask.completed_at).format('MMM DD, YYYY')}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
