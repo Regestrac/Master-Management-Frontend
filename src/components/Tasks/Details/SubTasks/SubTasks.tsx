@@ -46,7 +46,7 @@ const SubTasks = () => {
   const parentTaskId = useTaskStore((state) => state.currentTaskDetails?.parent_id);
   const taskType = useTaskStore((state) => state.currentTaskDetails.type);
 
-  const subtasksFetchedRef = useRef(false);
+  const prevTaskIdRef = useRef('');
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -106,13 +106,13 @@ const SubTasks = () => {
   };
 
   useEffect(() => {
-    if (!parentTaskId && id && !subtasksFetchedRef.current) {
+    if (!parentTaskId && id && id !== prevTaskIdRef.current) {
       getSubTasks(id).then((res) => {
         setSubtasks(res?.data || []);
       }).catch((err) => {
         toast.error(err?.error || 'Failed to fetch subtasks');
       });
-      subtasksFetchedRef.current = true;
+      prevTaskIdRef.current = id;
     }
   }, [id, parentTaskId]);
 
