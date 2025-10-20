@@ -51,3 +51,9 @@ export const generateTags = (taskId: string, data: object) => postHandler({
   path: `tasks/${taskId}/generate-tags`,
   body: JSON.stringify(data),
 });
+
+export const updateTaskTimeSpend = (taskId: string, timeSpend: number) => postHandler({
+  path: `tasks/${taskId}`,
+  method: 'PATCH',
+  body: JSON.stringify({ time_spend: timeSpend }),
+});
