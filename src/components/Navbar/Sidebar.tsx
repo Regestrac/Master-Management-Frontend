@@ -25,7 +25,7 @@ const Sidebar = () => {
 
   const getCurrentMenuStatus = (menuItem: string) => {
     if (pathname.includes(menuItem)) {
-      return 'bg-primary-500 text-white';
+      return 'bg-primary-600 text-white';
     }
     return darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100';
   };

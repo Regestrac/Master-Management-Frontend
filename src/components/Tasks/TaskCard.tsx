@@ -221,6 +221,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
                   e.stopPropagation();
                   handleToggleTimer(task?.id);
                 }}
+                aria-label={`${activeTask === task?.id ? 'Pause' : 'Start'} timer`}
                 className={`p-3 rounded-lg transition-colors ${activeTask === task?.id
                   ? 'bg-red-500 hover:bg-red-600 text-white'
                   : 'bg-green-500 hover:bg-green-600 text-white'}`}

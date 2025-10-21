@@ -171,7 +171,7 @@ const ActiveGoals = () => {
     <div>
       <div className='flex items-center justify-between mb-6'>
         <h3 className='text-xl font-bold'>Active Goals</h3>
-        <button className='text-primary-500 hover:text-primary-600 text-sm font-medium' onClick={handleViewAllGoals}>View All</button>
+        <button className='text-primary-400 hover:text-primary-500 text-sm font-medium' onClick={handleViewAllGoals}>View All</button>
       </div>
 
       <div className='space-y-4'>
@@ -230,7 +230,7 @@ const ActiveGoals = () => {
                       {formatDuration(goal.time_spend)}
                     </span>
                     <button
-                      className='text-primary-500 hover:text-primary-600 font-medium'
+                      className='text-primary-400 hover:text-primary-500 font-medium'
                       onClick={(e) => handleToggleTimer(e, goal.id)}
                     >
                       {isActive ? 'Stop' : 'Continue'}
