@@ -38,9 +38,9 @@ const CreateTaskForm = () => {
     name: 'subtasks',
   });
 
-  const onSubmit = (data: TaskFormData) => {
-    console.log('Submitted:', data);
+  const onSubmit = (_data: TaskFormData) => {
     // Handle submission here
+    // TODO: Implement task creation logic
   };
 
   return (
@@ -51,18 +51,22 @@ const CreateTaskForm = () => {
       <h2 className='text-xl font-bold'>Create New Task or Goal</h2>
 
       <div>
-        <label className='block font-semibold'>Title</label>
+        <label htmlFor='task-title' className='block font-semibold'>Title</label>
         <input
+          id='task-title'
           {...register('title')}
           className='mt-1 w-full rounded-md border dark:border-gray-700 bg-gray-100 dark:bg-gray-800 p-2'
           placeholder='e.g., Learn React'
+          aria-describedby={errors.title ? 'title-error' : undefined}
+          aria-invalid={errors.title ? 'true' : 'false'}
         />
-        {errors.title && <p className='text-red-500 text-sm'>{errors.title.message}</p>}
+        {errors.title && <p id='title-error' className='text-red-500 text-sm' role='alert'>{errors.title.message}</p>}
       </div>
 
       <div>
-        <label className='block font-semibold'>Description</label>
+        <label htmlFor='task-description' className='block font-semibold'>Description</label>
         <textarea
+          id='task-description'
           {...register('description')}
           className='mt-1 w-full rounded-md border dark:border-gray-700 bg-gray-100 dark:bg-gray-800 p-2'
           rows={3}
@@ -71,8 +75,9 @@ const CreateTaskForm = () => {
       </div>
 
       <div>
-        <label className='block font-semibold'>Deadline</label>
+        <label htmlFor='task-deadline' className='block font-semibold'>Deadline</label>
         <input
+          id='task-deadline'
           type='date'
           {...register('deadline')}
           className='mt-1 w-full rounded-md border dark:border-gray-700 bg-gray-100 dark:bg-gray-800 p-2'
@@ -80,12 +85,13 @@ const CreateTaskForm = () => {
       </div>
 
       <div>
-        <label className='block font-semibold'>Frequency</label>
+        <label htmlFor='task-frequency' className='block font-semibold'>Frequency</label>
         <select
+          id='task-frequency'
           {...register('frequency')}
           className='mt-1 w-full rounded-md border dark:border-gray-700 bg-gray-100 dark:bg-gray-800 p-2'
         >
-          <option value=''>Select</option>
+          <option value=''>Select frequency</option>
           <option value='daily'>Daily</option>
           <option value='alternate'>Alternate Days</option>
           <option value='weekly'>Weekly</option>
@@ -94,41 +100,49 @@ const CreateTaskForm = () => {
       </div>
 
       <div>
-        <label className='block font-semibold'>Days Per Week (optional)</label>
+        <label htmlFor='days-per-week' className='block font-semibold'>Days Per Week (optional)</label>
         <input
+          id='days-per-week'
           type='number'
           {...register('daysPerWeek', { valueAsNumber: true })}
           className='mt-1 w-full rounded-md border dark:border-gray-700 bg-gray-100 dark:bg-gray-800 p-2'
           min={1}
           max={7}
+          aria-describedby='days-per-week-help'
         />
+        <p id='days-per-week-help' className='text-xs text-gray-500 mt-1'>Enter a number between 1 and 7</p>
       </div>
 
       <div>
         <label className='block font-semibold mb-2'>Subtasks</label>
-        {fields.map((field, index) => (
-          <div key={field.id} className='flex items-center gap-2 mb-2'>
-            <input
-              {...register(`subtasks.${index}.title`)}
-              placeholder={`Subtask ${index + 1}`}
-              className='flex-1 p-2 rounded-md border dark:border-gray-700 bg-gray-100 dark:bg-gray-800'
-            />
-            <button
-              type='button'
-              onClick={() => remove(index)}
-              className='text-red-500 hover:text-red-700'
-            >
-              ✕
-            </button>
-          </div>
-        ))}
-        <button
-          type='button'
-          onClick={() => append({ title: '', done: false })}
-          className='text-blue-600 hover:text-blue-800 text-sm'
-        >
-          + Add Subtask
-        </button>
+        <div role='group' aria-labelledby='subtasks-label'>
+          <span id='subtasks-label' className='sr-only'>Subtasks list</span>
+          {fields.map((field, index) => (
+            <div key={field.id} className='flex items-center gap-2 mb-2'>
+              <input
+                {...register(`subtasks.${index}.title`)}
+                placeholder={`Subtask ${index + 1}`}
+                className='flex-1 p-2 rounded-md border dark:border-gray-700 bg-gray-100 dark:bg-gray-800'
+              />
+              <button
+                type='button'
+                onClick={() => remove(index)}
+                className='text-red-500 hover:text-red-700'
+                aria-label={`Remove subtask ${index + 1}`}
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          <button
+            type='button'
+            onClick={() => append({ title: '', done: false })}
+            className='text-blue-600 hover:text-blue-800 text-sm'
+            aria-label='Add new subtask'
+          >
+            + Add Subtask
+          </button>
+        </div>
       </div>
 
       <button

@@ -21,7 +21,7 @@ const Navbar = () => {
               <img
                 className='logo-image'
                 src='/src/assets/logo.png'
-                alt='Logo'
+                alt='Master Management - Task and Goal Management Platform Logo'
               />
               <span className='logo-text'>
                 Master Management

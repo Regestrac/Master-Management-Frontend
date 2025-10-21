@@ -53,9 +53,13 @@ const WorkspaceModal = () => {
           {activeTab === 'create' ? 'Create New Workspace' : 'Join Workspace'}
         </h2>
 
-        <div className={clsx('flex gap-2 border-b mb-4', darkMode ? 'border-gray-700' : 'border-gray-200')}>
+        <div className={clsx('flex gap-2 border-b mb-4', darkMode ? 'border-gray-700' : 'border-gray-200')} role='tablist' aria-label='Workspace options'>
           <button
             type='button'
+            role='tab'
+            aria-selected={activeTab === 'create'}
+            aria-controls='create-panel'
+            id='create-tab'
             onClick={() => setActiveTab('create')}
             className={clsx('flex-1 py-2 px-1 text-center text-sm transition border-b-2',
               activeTab === 'create'
@@ -70,6 +74,10 @@ const WorkspaceModal = () => {
           </button>
           <button
             type='button'
+            role='tab'
+            aria-selected={activeTab === 'join'}
+            aria-controls='join-panel'
+            id='join-tab'
             onClick={() => setActiveTab('join')}
             className={clsx('flex-1 py-2 px-1 text-center text-sm transition border-b-2',
               activeTab === 'join'
@@ -84,78 +92,80 @@ const WorkspaceModal = () => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className='mt-2'>
-          {activeTab === 'create' ? (
-            <div className='mb-4'>
-              <label htmlFor='ws-name' className={clsx('block text-sm font-medium mb-2', darkMode ? 'text-gray-300' : 'text-gray-700')}>
-                Workspace Name
-              </label>
-              <input
-                id='ws-name'
-                type='text'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className={clsx('w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2',
-                  darkMode ? 'bg-gray-700 border border-gray-600 text-white focus:ring-primary-500' : 'bg-white border border-gray-300 focus:ring-primary-500')}
-                placeholder='Enter workspace name'
-                disabled={loading}
-                required
-              />
-            </div>
-          ) : (
-            <div className='mb-4'>
-              <label htmlFor='ws-invite' className={clsx('block text-sm font-medium mb-2', darkMode ? 'text-gray-300' : 'text-gray-700')}>
-                Invite Code
-              </label>
-              <input
-                id='ws-invite'
-                type='text'
-                value={inviteCode}
-                onChange={(e) => setInviteCode(e.target.value)}
-                className={clsx('w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2',
-                  darkMode ? 'bg-gray-700 border border-gray-600 text-white focus:ring-primary-500' : 'bg-white border border-gray-300 focus:ring-primary-500')}
-                placeholder='Enter invite code'
-                disabled={loading}
-                required
-              />
-              <p className={clsx('mt-1 text-xs', darkMode ? 'text-gray-400' : 'text-gray-500')}>Ask the workspace admin for the invite code</p>
-            </div>
-          )}
+        <div role='tabpanel' id={activeTab === 'create' ? 'create-panel' : 'join-panel'} aria-labelledby={activeTab === 'create' ? 'create-tab' : 'join-tab'}>
+          <form onSubmit={handleSubmit} className='mt-2'>
+            {activeTab === 'create' ? (
+              <div className='mb-4'>
+                <label htmlFor='ws-name' className={clsx('block text-sm font-medium mb-2', darkMode ? 'text-gray-300' : 'text-gray-700')}>
+                  Workspace Name
+                </label>
+                <input
+                  id='ws-name'
+                  type='text'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className={clsx('w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2',
+                    darkMode ? 'bg-gray-700 border border-gray-600 text-white focus:ring-primary-500' : 'bg-white border border-gray-300 focus:ring-primary-500')}
+                  placeholder='Enter workspace name'
+                  disabled={loading}
+                  required
+                />
+              </div>
+            ) : (
+              <div className='mb-4'>
+                <label htmlFor='ws-invite' className={clsx('block text-sm font-medium mb-2', darkMode ? 'text-gray-300' : 'text-gray-700')}>
+                  Invite Code
+                </label>
+                <input
+                  id='ws-invite'
+                  type='text'
+                  value={inviteCode}
+                  onChange={(e) => setInviteCode(e.target.value)}
+                  className={clsx('w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2',
+                    darkMode ? 'bg-gray-700 border border-gray-600 text-white focus:ring-primary-500' : 'bg-white border border-gray-300 focus:ring-primary-500')}
+                  placeholder='Enter invite code'
+                  disabled={loading}
+                  required
+                />
+                <p className={clsx('mt-1 text-xs', darkMode ? 'text-gray-400' : 'text-gray-500')}>Ask the workspace admin for the invite code</p>
+              </div>
+            )}
 
-          {error && (
-            <div className={clsx('mb-4 p-3 text-sm rounded-md', darkMode ? 'bg-red-900/30 text-red-300' : 'bg-red-100 text-red-700')}>
-              {error}
-            </div>
-          )}
+            {error && (
+              <div className={clsx('mb-4 p-3 text-sm rounded-md', darkMode ? 'bg-red-900/30 text-red-300' : 'bg-red-100 text-red-700')}>
+                {error}
+              </div>
+            )}
 
-          <div className='mt-6 flex justify-end gap-3'>
-            <button
-              type='button'
-              onClick={close}
-              className={clsx('px-4 py-2 text-sm font-medium rounded', darkMode
-                ? 'text-gray-300 bg-gray-700 hover:bg-gray-600'
-                : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50')}
-              disabled={loading}
-            >
-              Cancel
-            </button>
-            <button
-              type='submit'
-              className={clsx('px-4 py-2 text-sm font-medium text-white rounded shadow inline-flex items-center gap-2', darkMode
-                ? 'bg-primary-700 hover:bg-primary-800'
-                : 'bg-primary-600 hover:bg-primary-700')}
-              disabled={loading || (activeTab === 'create' ? !name.trim() : !inviteCode.trim())}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className='w-4 h-4 animate-spin' />
-                  {' '}
-                  Processing...
-                </>
-              ) : (activeTab === 'create' ? 'Create Workspace' : 'Join Workspace')}
-            </button>
-          </div>
-        </form>
+            <div className='mt-6 flex justify-end gap-3'>
+              <button
+                type='button'
+                onClick={close}
+                className={clsx('px-4 py-2 text-sm font-medium rounded', darkMode
+                  ? 'text-gray-300 bg-gray-700 hover:bg-gray-600'
+                  : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50')}
+                disabled={loading}
+              >
+                Cancel
+              </button>
+              <button
+                type='submit'
+                className={clsx('px-4 py-2 text-sm font-medium text-white rounded shadow inline-flex items-center gap-2', darkMode
+                  ? 'bg-primary-700 hover:bg-primary-800'
+                  : 'bg-primary-600 hover:bg-primary-700')}
+                disabled={loading || (activeTab === 'create' ? !name.trim() : !inviteCode.trim())}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className='w-4 h-4 animate-spin' />
+                    {' '}
+                    Processing...
+                  </>
+                ) : (activeTab === 'create' ? 'Create Workspace' : 'Join Workspace')}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </ModalWrapper>
   );

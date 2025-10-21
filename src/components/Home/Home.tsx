@@ -133,7 +133,7 @@ const Home = () => {
                 <img
                   className='logo-image'
                   src='/src/assets/logo.png'
-                  alt='Logo'
+                  alt='Master Management - Task and Goal Management Platform Logo'
                 />
                 <span className='text-xl font-bold text-gray-900'>Master Management</span>
               </Link>
@@ -161,6 +161,9 @@ const Home = () => {
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className='md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors'
+              aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={isMenuOpen}
+              aria-controls='mobile-menu'
             >
               {isMenuOpen ? <X className='w-6 h-6' /> : <Menu className='w-6 h-6' />}
             </button>
@@ -168,7 +171,7 @@ const Home = () => {
 
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div className='md:hidden border-t border-gray-200 py-4'>
+            <div id='mobile-menu' className='md:hidden border-t border-gray-200 py-4' role='navigation' aria-label='Mobile navigation menu'>
               <div className='flex flex-col space-y-4'>
                 <a href='#features' className='text-gray-600 hover:text-gray-900 transition-colors'>Features</a>
                 <a href='#pricing' className='text-gray-600 hover:text-gray-900 transition-colors'>Pricing</a>
@@ -224,7 +227,7 @@ const Home = () => {
               <div className='absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl transform rotate-3 scale-105 opacity-20' />
               <img
                 src='src/assets/dashboard-preview.png'
-                alt='Master Management Dashboard'
+                alt='Master Management Dashboard interface showing task management, goal tracking, and analytics features'
                 className='relative rounded-2xl shadow-2xl w-full'
               />
               <div className='absolute -top-4 -right-4 bg-gradient-to-r from-green-400 to-emerald-500 text-white px-4 py-2 rounded-lg shadow-lg'>
