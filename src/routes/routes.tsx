@@ -1,35 +1,39 @@
+import { lazy, Suspense } from 'react';
+
 import { RouteObject } from 'react-router-dom';
 
-import Authentication from 'components/Authentication';
-import Login from 'components/Authentication/login';
-import Signup from 'components/Authentication/Signup';
-import Dashboard from 'components/Dashboard/Dashboard';
+// Eagerly loaded components (critical for initial render)
 import Home from 'components/Home/Home';
 import RootLayout from 'components/Layout/RootLayout';
 import SidebarOnlyLayout from 'components/Layout/SidebarOnlyLayout';
-import Profile from 'components/Profile/Profile';
-import Settings from 'components/Settings/Settings';
-import NotFound from 'components/Shared/NotFound';
-import TermsOfService from 'components/Resources/TermsOfService';
-import PrivacyPolicy from 'components/Resources/PrivacyPolicy';
-import StyleGuide from 'components/StyleGuide';
-import Tasks from 'components/Tasks/Tasks';
-import TaskManagementAppDesign from 'components/StyleGuide/TaskManagementAppDesign';
-import TaskDetail from 'components/Tasks/Details/TaskDetails';
-import Goals from 'components/Goals/Goals';
-import WorkspaceHome from 'components/Workspace/WorkspaceHome';
-import WorkspaceDetail from 'components/Workspace/WorkspaceDetail';
-import CreateTaskForm from 'components/Tasks/CreateTaskForm';
 import RootLayoutWrapper from 'components/Layout/RootLayoutWrapper';
-import Analytics from 'components/Analytics/Analytics';
-import Calendar from 'components/Calendar/Calendar';
-import BugReport from 'components/Resources/BugReport';
-import FeatureRequest from 'components/Resources/FeatureRequest';
-import Documentation from 'components/Resources/Documentation';
-import ChangeLog from 'components/Resources/ChangeLog';
-import Support from 'components/Resources/Support';
-import Community from 'components/Resources/Community';
 import AuthenticatedLayout from 'components/Layout/AuthenticatedLayout';
+import NotFound from 'components/Shared/NotFound';
+import LoadingSpinner from 'components/Shared/LoadingSpinner';
+
+// Lazy loaded components for code splitting
+const Authentication = lazy(() => import('components/Authentication'));
+const Login = lazy(() => import('components/Authentication/login'));
+const Signup = lazy(() => import('components/Authentication/Signup'));
+const Dashboard = lazy(() => import('components/Dashboard/Dashboard'));
+const Profile = lazy(() => import('components/Profile/Profile'));
+const Settings = lazy(() => import('components/Settings/Settings'));
+const TermsOfService = lazy(() => import('components/Resources/TermsOfService'));
+const PrivacyPolicy = lazy(() => import('components/Resources/PrivacyPolicy'));
+const Tasks = lazy(() => import('components/Tasks/Tasks'));
+const TaskDetail = lazy(() => import('components/Tasks/Details/TaskDetails'));
+const Goals = lazy(() => import('components/Goals/Goals'));
+const WorkspaceHome = lazy(() => import('components/Workspace/WorkspaceHome'));
+const WorkspaceDetail = lazy(() => import('components/Workspace/WorkspaceDetail'));
+const CreateTaskForm = lazy(() => import('components/Tasks/CreateTaskForm'));
+const Analytics = lazy(() => import('components/Analytics/Analytics'));
+const Calendar = lazy(() => import('components/Calendar/Calendar'));
+const BugReport = lazy(() => import('components/Resources/BugReport'));
+const FeatureRequest = lazy(() => import('components/Resources/FeatureRequest'));
+const Documentation = lazy(() => import('components/Resources/Documentation'));
+const ChangeLog = lazy(() => import('components/Resources/ChangeLog'));
+const Support = lazy(() => import('components/Resources/Support'));
+const Community = lazy(() => import('components/Resources/Community'));
 
 const routes: RouteObject[] = [
   {
@@ -41,31 +45,59 @@ const routes: RouteObject[] = [
       },
       {
         path: '/legal/terms',
-        element: <TermsOfService />,
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <TermsOfService />
+          </Suspense>
+        ),
       },
       {
         path: '/legal/privacy',
-        element: <PrivacyPolicy />,
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <PrivacyPolicy />
+          </Suspense>
+        ),
       },
       {
         path: '/documentation',
-        element: <Documentation />,
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Documentation />
+          </Suspense>
+        ),
       },
       {
         path: '/changelog',
-        element: <ChangeLog />,
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <ChangeLog />
+          </Suspense>
+        ),
       },
       {
         path: '/auth',
-        element: <Authentication />,
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Authentication />
+          </Suspense>
+        ),
         children: [
           {
             path: '/auth/login',
-            element: <Login />,
+            element: (
+              <Suspense fallback={<LoadingSpinner />}>
+                <Login />
+              </Suspense>
+            ),
           },
           {
             path: '/auth/signup',
-            element: <Signup />,
+            element: (
+              <Suspense fallback={<LoadingSpinner />}>
+                <Signup />
+              </Suspense>
+            ),
           },
         ],
       },
@@ -77,23 +109,43 @@ const routes: RouteObject[] = [
             children: [
               {
                 path: '/dashboard',
-                element: <Dashboard />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Dashboard />
+                  </Suspense>
+                ),
               },
               {
                 path: '/tasks',
-                element: <Tasks />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Tasks />
+                  </Suspense>
+                ),
               },
               {
                 path: '/goals',
-                element: <Goals />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Goals />
+                  </Suspense>
+                ),
               },
               {
                 path: '/workspace',
-                element: <WorkspaceHome />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <WorkspaceHome />
+                  </Suspense>
+                ),
               },
               {
                 path: '/workspace/:id',
-                element: <WorkspaceDetail />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <WorkspaceDetail />
+                  </Suspense>
+                ),
               },
             ],
           },
@@ -102,47 +154,91 @@ const routes: RouteObject[] = [
             children: [
               {
                 path: '/analytics',
-                element: <Analytics />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Analytics />
+                  </Suspense>
+                ),
               },
               {
                 path: '/calendar',
-                element: <Calendar />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Calendar />
+                  </Suspense>
+                ),
               },
               {
                 path: '/profile',
-                element: <Profile />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Profile />
+                  </Suspense>
+                ),
               },
               {
                 path: '/settings',
-                element: <Settings />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Settings />
+                  </Suspense>
+                ),
               },
               {
                 path: '/support',
-                element: <Support />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Support />
+                  </Suspense>
+                ),
               },
               {
                 path: '/community',
-                element: <Community />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Community />
+                  </Suspense>
+                ),
               },
               {
                 path: '/feature-request',
-                element: <FeatureRequest />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <FeatureRequest />
+                  </Suspense>
+                ),
               },
               {
                 path: '/bug-report',
-                element: <BugReport />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <BugReport />
+                  </Suspense>
+                ),
               },
               {
                 path: '/tasks/:id',
-                element: <TaskDetail />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <TaskDetail />
+                  </Suspense>
+                ),
               },
               {
                 path: '/goals/:id',
-                element: <TaskDetail />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <TaskDetail />
+                  </Suspense>
+                ),
               },
               {
                 path: '/task/create',
-                element: <CreateTaskForm />,
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <CreateTaskForm />
+                  </Suspense>
+                ),
               },
             ],
           },
@@ -151,14 +247,6 @@ const routes: RouteObject[] = [
       {
         path: '/not-found',
         element: <NotFound />,
-      },
-      {
-        path: '/style-guide',
-        element: <StyleGuide />,
-      },
-      {
-        path: '/app-design',
-        element: <TaskManagementAppDesign />,
       },
     ],
   },
