@@ -154,6 +154,7 @@ const Checklist = () => {
           />
           <button
             onClick={addChecklistItem}
+            aria-label='Add checklist'
             className='px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors'
           >
             <Plus className='w-4 h-4' />
@@ -188,6 +189,7 @@ const Checklist = () => {
               <div className='flex items-center space-x-3 flex-1'>
                 <button
                   onClick={() => toggleChecklistItem(item.id)}
+                  aria-label='Toggle checklist'
                   className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${item.completed
                     ? 'bg-primary-500 border-primary-500'
                     : darkMode
@@ -224,6 +226,7 @@ const Checklist = () => {
               </div>
               <button
                 onClick={() => removeChecklistItem(item.id)}
+                aria-label='Remove checklist'
                 className={`p-1 rounded transition-colors ${darkMode ? 'hover:bg-gray-700 text-red-400' : 'hover:bg-gray-100 text-red-500'}`}
               >
                 <Trash2 className='w-3 h-3' />

@@ -58,6 +58,7 @@ const getProgressLabel = (progress: number, timeSpend: number, targetType?: stri
 const TaskProgress = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
+  const progress = useTaskStore((state) => state.currentTaskDetails.progress || 0);
 
   const estimatedTime = getEstimatedTime(taskDetails?.target_value, taskDetails?.target_type);
   const taskProgress = getTaskProgress(taskDetails?.time_spend, estimatedTime.value, taskDetails?.target_type);
@@ -69,7 +70,7 @@ const TaskProgress = () => {
         <span className={`font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
           Progress:
           {' '}
-          {taskProgress?.toFixed(2)}
+          {progress?.toFixed(2)}
           %
         </span>
         <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -81,7 +82,7 @@ const TaskProgress = () => {
       <div className={`w-full h-2 rounded-full ${darkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
         <div
           className='h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-500'
-          style={{ width: `${taskProgress}%` }}
+          style={{ width: `${progress}%` }}
         />
       </div>
     </div>

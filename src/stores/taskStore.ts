@@ -36,6 +36,7 @@ type TaskDetailsType = TaskType & {
   notes: StickyNotesType[]
   tags: string[];
   comments: CommentsType[];
+  progress: number;
 };
 
 type TasksStateType = {

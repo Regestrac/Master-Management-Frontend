@@ -158,6 +158,7 @@ const SubTasks = () => {
             />
             <button
               onClick={handleSubmit(addSubtask)}
+              aria-label='Add Subtask'
               className='px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors'
             >
               <Plus className='w-4 h-4' />
