@@ -70,7 +70,7 @@ export const getStatusColor = (status: StatusType) => {
     case 'todo':
       return 'text-blue-400 bg-blue-400/10';
     case 'inprogress':
-      return 'text-purple-400 bg-purple-600/20';
+      return 'text-purple-300 bg-purple-500/20';
     case 'paused':
       return 'text-gray-400 bg-gray-400/10';
     case 'pending':

@@ -54,7 +54,23 @@ const PerformanceOptimizer = () => {
     const registerServiceWorker = async () => {
       if ('serviceWorker' in navigator && import.meta.env.PROD) {
         try {
-          await navigator.serviceWorker.register('/sw.js');
+          const registration = await navigator.serviceWorker.register('/sw.js');
+
+          // Check for updates on page load
+          registration.update();
+
+          // Handle service worker updates
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            if (newWorker) {
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
+                  // New service worker activated, reload to get fresh content
+                  window.location.reload();
+                }
+              });
+            }
+          });
         } catch {
           // Service worker registration failed - fail silently in production
         }

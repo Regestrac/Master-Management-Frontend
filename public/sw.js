@@ -1,11 +1,8 @@
 // Service Worker for caching and performance optimization
-const CACHE_NAME = 'master-management-v1';
+// Use timestamp to ensure cache is invalidated on new builds
+const CACHE_VERSION = 'v1';
+const CACHE_NAME = `master-management-${CACHE_VERSION}-${Date.now()}`;
 const STATIC_CACHE_URLS = [
-  '/',
-  '/dashboard',
-  '/tasks',
-  '/goals',
-  '/workspace',
   '/master-management-icon.png',
   '/robots.txt',
 ];
@@ -42,46 +39,67 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event - serve from cache with network fallback
+// Fetch event - use network-first for HTML, cache-first for assets
 self.addEventListener('fetch', (event) => {
   // Skip cross-origin requests
   if (!event.request.url.startsWith(self.location.origin)) {
     return;
   }
 
+  const { request } = event;
+
+  // Network-first strategy for HTML and navigation requests
+  if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          // Cache the new HTML response
+          if (response && response.status === 200) {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, responseToCache);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          // Fallback to cache if network fails
+          return caches.match(request).then((cachedResponse) => {
+            return cachedResponse || caches.match('/');
+          });
+        })
+    );
+    return;
+  }
+
+  // Cache-first strategy for static assets (CSS, JS, images, fonts)
   event.respondWith(
-    caches.match(event.request)
+    caches.match(request)
       .then((cachedResponse) => {
-        // Return cached version if available
         if (cachedResponse) {
           return cachedResponse;
         }
 
-        // Otherwise fetch from network
-        return fetch(event.request)
+        // Fetch from network and cache
+        return fetch(request)
           .then((response) => {
             // Don't cache non-successful responses
             if (!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
 
-            // Clone the response
+            // Clone and cache the response
             const responseToCache = response.clone();
-
-            // Cache the response
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              });
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, responseToCache);
+            });
 
             return response;
+          })
+          .catch(() => {
+            // Return cached version if available
+            return caches.match(request);
           });
-      })
-      .catch(() => {
-        // Return offline page for navigation requests
-        if (event.request.mode === 'navigate') {
-          return caches.match('/');
-        }
       })
   );
 });
