@@ -12,8 +12,7 @@ import {
   stopTimer,
   getCurrentSessionTime,
   syncWithApiTime,
-  saveTimerState,
-  type TimerStateType,
+  TimerStateType,
 } from 'helpers/timerUtils';
 
 import { useProfileStore } from 'stores/profileStore';
@@ -32,23 +31,36 @@ type TimerPropsType = {
 const Timer = ({ isRunning, taskId, apiTimeSpend }: TimerPropsType) => {
   const [displayTime, setDisplayTime] = useState<string>('00:00:00');
   const [timerState, setTimerState] = useState<TimerStateType | null>(null);
+  const [initialized, setInitialized] = useState<boolean>(false);
+
+  const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Initialize timer state when component mounts or taskId changes
   useEffect(() => {
-    const state = syncWithApiTime(taskId, apiTimeSpend);
-    setTimerState(state);
+    // Load existing timer state from localStorage or create new one
+    const existingState = getTimerState(taskId);
 
-    // Calculate initial display time
-    const totalSessionTime = state.isRunning ? getCurrentSessionTime(state) : 0;
-    const totalDisplayTime = apiTimeSpend + state.totalTime + totalSessionTime;
-    setDisplayTime(formatTime(totalDisplayTime));
+    if (existingState) {
+      // Timer state exists in localStorage
+      setTimerState(existingState);
+    } else {
+      // Create new timer state synced with API time
+      const newState = syncWithApiTime(taskId, apiTimeSpend);
+      setTimerState(newState);
+    }
+
+    setInitialized(true);
   }, [taskId, apiTimeSpend]);
 
   // Update timer display
   const updateDisplay = useCallback(() => {
-    if (!timerState) { return; }
+    if (!timerState) {
+      // Show API time if no timer state yet
+      setDisplayTime(formatTime(apiTimeSpend));
+      return;
+    }
 
     const currentSessionTime = timerState.isRunning ? getCurrentSessionTime(timerState) : 0;
     const totalDisplayTime = apiTimeSpend + timerState.totalTime + currentSessionTime;
@@ -57,11 +69,11 @@ const Timer = ({ isRunning, taskId, apiTimeSpend }: TimerPropsType) => {
 
   // Handle timer start/stop based on isRunning prop
   useEffect(() => {
-    if (!timerState) { return; }
+    if (!initialized || !timerState) { return; }
 
     if (isRunning && !timerState.isRunning) {
       // Start timer
-      const newState = startTimer(taskId, apiTimeSpend);
+      const newState = startTimer(taskId, 0); // Start with 0 session time
       setTimerState(newState);
     } else if (!isRunning && timerState.isRunning) {
       // Stop timer and sync with API
@@ -69,29 +81,37 @@ const Timer = ({ isRunning, taskId, apiTimeSpend }: TimerPropsType) => {
 
       if (newState) {
         setTimerState(newState);
+
         // Sync with API when timer stops
         const totalSessionTime = newState.totalTime;
         if (totalSessionTime > 0) {
           // Calculate the total time that should be in the API
           const newApiTimeSpend = apiTimeSpend + totalSessionTime;
           updateTaskTimeSpend(taskId.toString(), newApiTimeSpend).then(() => {
-            // Clear local session time after successful sync
-            const state = getTimerState(taskId);
-            if (state) {
-              state.totalTime = 0; // Reset session time since it's now in API
-              saveTimerState(state);
-            }
+            // Update the task details with new time
+            updateCurrentTaskDetails({ time_spend: newApiTimeSpend });
+
+            // Reset local session time after successful sync
+            const resetState: TimerStateType = {
+              taskId,
+              startTime: Date.now(),
+              totalTime: 0,
+              isRunning: false,
+              lastUpdateTime: Date.now(),
+            };
+            setTimerState(resetState);
           }).catch(() => {
             // API sync failed, but timer state is preserved locally
+            toast.error('Failed to sync timer with server');
           });
         }
       }
     }
-  }, [isRunning, timerState, taskId, apiTimeSpend]);
+  }, [isRunning, taskId, apiTimeSpend, updateCurrentTaskDetails, timerState, initialized]);
 
   // Set up interval for running timer
   useEffect(() => {
-    if (isRunning && timerState?.isRunning) {
+    if (isRunning) {
       intervalRef.current = setInterval(() => {
         updateDisplay();
       }, 1000);
@@ -107,12 +127,12 @@ const Timer = ({ isRunning, taskId, apiTimeSpend }: TimerPropsType) => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning, timerState?.isRunning, updateDisplay]);
+  }, [isRunning, updateDisplay]);
 
   // Handle visibility change (tab becomes active/inactive)
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (!document.hidden && timerState?.isRunning) {
+      if (!document.hidden && isRunning && timerState) {
         // Tab became active, update timer state from localStorage
         const updatedState = getTimerState(taskId);
         if (updatedState) {
@@ -126,29 +146,14 @@ const Timer = ({ isRunning, taskId, apiTimeSpend }: TimerPropsType) => {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [taskId, timerState?.isRunning, updateDisplay]);
+  }, [taskId, isRunning, updateDisplay, timerState]);
 
-  // Handle page unload (save current state)
+  // Update display when API time changes
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (timerState?.isRunning) {
-        // Update the timer state one final time before page unloads
-        const updatedState = getTimerState(taskId);
-        if (updatedState) {
-          const currentSessionTime = getCurrentSessionTime(updatedState);
-          updatedState.totalTime += currentSessionTime;
-          updatedState.startTime = Date.now(); // Reset start time for next session
-          // Note: We can't reliably save to localStorage in beforeunload,
-          // but the visibilitychange handler should have handled most cases
-        }
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [taskId, timerState]);
+    if (initialized) {
+      updateDisplay();
+    }
+  }, [apiTimeSpend, initialized, updateDisplay]);
 
   // Update display when timer state changes
   useEffect(() => {

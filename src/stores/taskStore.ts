@@ -44,7 +44,7 @@ type TasksStateType = {
   recentTasks: TaskType[];
   shouldStartTimer: boolean;
   currentTaskDetails: TaskDetailsType;
-  updateCurrentTaskDetails: (_task: TaskDetailsType) => void;
+  updateCurrentTaskDetails: (_task: Partial<TaskDetailsType>) => void;
   addTask: (_newTask: TaskType | TaskType[], _type?: 'merge' | 'replace') => void;
   updateTask: (_task: Partial<TaskType> & { id: number; }) => void;
   deleteTask: (_id: number) => void;
@@ -58,7 +58,7 @@ export const useTaskStore = create<TasksStateType>()((set) => ({
   recentTasks: [],
   shouldStartTimer: false,
   currentTaskDetails: {} as TaskDetailsType,
-  updateCurrentTaskDetails: (task) => set({ currentTaskDetails: task }),
+  updateCurrentTaskDetails: (task) => set((state) => ({ currentTaskDetails: { ...state.currentTaskDetails, ...task } })),
   addTask: (newTask, type) => set((state) => {
     if (type === 'replace') {
       return { tasks: Array.isArray(newTask) ? newTask : [newTask] };

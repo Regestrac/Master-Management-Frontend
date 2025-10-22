@@ -23,6 +23,31 @@ export const formatTime = (totalSeconds: number): string => {
 };
 
 /**
+ * Save timer state to localStorage
+ */
+export const saveTimerState = (state: TimerStateType): void => {
+  try {
+    localStorage.setItem(`timer_${state.taskId}`, JSON.stringify({
+      ...state,
+      lastUpdateTime: Date.now(),
+    }));
+  } catch {
+    // Silent error handling for timer state
+  }
+};
+
+/**
+ * Remove timer state from localStorage
+ */
+export const removeTimerState = (taskId: number): void => {
+  try {
+    localStorage.removeItem(`timer_${taskId}`);
+  } catch {
+    // Silent error handling for timer state
+  }
+};
+
+/**
  * Parse time_spend from API (assuming it's in seconds) and add current session time
  */
 // export const calculateTotalTime = (apiTimeSpend: number, sessionTime: number): number => {
@@ -41,17 +66,8 @@ export const getTimerState = (taskId: number): TimerStateType | null => {
 
     const state: TimerStateType = JSON.parse(stored);
 
-    // Calculate time elapsed since last update if timer was running
-    if (state.isRunning && state.lastUpdateTime) {
-      const now = Date.now();
-      const elapsedSinceLastUpdate = Math.floor((now - state.lastUpdateTime) / 1000);
-      state.totalTime += elapsedSinceLastUpdate;
-      state.lastUpdateTime = now;
-
-      // Update localStorage with calculated time
-      localStorage.setItem(`timer_${taskId}`, JSON.stringify(state));
-    }
-
+    // Return state as-is without modifying totalTime
+    // The current session time is calculated separately using startTime
     return state;
   } catch {
     // Silent error handling for timer state
@@ -71,20 +87,6 @@ export const getCurrentSessionTime = (state: TimerStateType): number => {
 };
 
 /**
- * Save timer state to localStorage
- */
-export const saveTimerState = (state: TimerStateType): void => {
-  try {
-    localStorage.setItem(`timer_${state.taskId}`, JSON.stringify({
-      ...state,
-      lastUpdateTime: Date.now(),
-    }));
-  } catch {
-    // Silent error handling for timer state
-  }
-};
-
-/**
  * Clear timer state from localStorage
  */
 // export const clearTimerState = (taskId: number): void => {
@@ -98,13 +100,13 @@ export const saveTimerState = (state: TimerStateType): void => {
 /**
  * Start timer for a task
  */
-export const startTimer = (taskId: number, _initialTimeSpend: number = 0): TimerStateType => {
+export const startTimer = (taskId: number, initialTimeSpend: number = 0): TimerStateType => {
   const existingState = getTimerState(taskId);
 
   const state: TimerStateType = {
     taskId,
     startTime: Date.now(),
-    totalTime: existingState?.totalTime || 0,
+    totalTime: initialTimeSpend || existingState?.totalTime || 0,
     isRunning: true,
     lastUpdateTime: Date.now(),
   };
@@ -125,12 +127,12 @@ export const stopTimer = (taskId: number): TimerStateType | null => {
 
   if (state.isRunning) {
     const now = Date.now();
-    // const sessionTime = dayjs(now).diff(dayjs(state.startTime), 'second');
-    // state.totalTime += sessionTime;
+    const sessionTime = Math.floor((now - state.startTime) / 1000);
+    state.totalTime += sessionTime;
     state.isRunning = false;
     state.lastUpdateTime = now;
 
-    saveTimerState(state);
+    removeTimerState(taskId);
   }
 
   return state;
@@ -185,7 +187,7 @@ export const syncWithApiTime = (taskId: number, _apiTimeSpend: number): TimerSta
       isRunning: false,
       lastUpdateTime: Date.now(),
     };
-    saveTimerState(state);
+    // saveTimerState(state);
     return state;
   }
 
