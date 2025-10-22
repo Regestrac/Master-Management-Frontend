@@ -69,6 +69,7 @@ const Checklist = () => {
     }
     updateChecklist(cid, { completed: !item.completed }).then((updated) => {
       updateTaskDetails({ ...taskDetails, checklists: taskDetails.checklists.map((c) => (c.id === cid ? { ...c, ...updated?.data } : c)) });
+      updateTaskDetails({ progress: updated?.progress });
     }).catch((err) => {
       toast.error(err?.error || 'Could not update checklist item');
     });
@@ -78,7 +79,7 @@ const Checklist = () => {
     const deleteChecklist = () => {
       deleteChecklistApi(cid).then((res) => {
         toast.success(res?.message || 'Checklist item deleted successfully');
-        updateTaskDetails({ ...taskDetails, checklists: taskDetails.checklists.filter((c) => c.id !== cid) });
+        updateTaskDetails({ ...taskDetails, checklists: taskDetails.checklists.filter((c) => c.id !== cid), progress: res?.progress });
       }).catch((err) => {
         toast.error(err?.error || 'Could not delete checklist item');
       });
@@ -100,7 +101,7 @@ const Checklist = () => {
       return;
     }
     saveChecklist({ task_id: taskDetails.id, title }).then((created) => {
-      updateTaskDetails({ ...taskDetails, checklists: [...taskDetails.checklists, created?.data] });
+      updateTaskDetails({ ...taskDetails, checklists: [...taskDetails.checklists, created?.data], progress: created?.progress });
       setNewChecklistItem('');
     }).catch((err) => {
       toast.error(err?.error || 'Could not add checklist item');

@@ -45,6 +45,7 @@ const SubTasks = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const parentTaskId = useTaskStore((state) => state.currentTaskDetails?.parent_id);
   const taskType = useTaskStore((state) => state.currentTaskDetails.type);
+  const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
 
   const prevTaskIdRef = useRef('');
 
@@ -71,6 +72,7 @@ const SubTasks = () => {
       createTask(payload).then((res) => {
         toast.success(res?.message || 'Successfully created task');
         setSubtasks([...subtasks, { ...payload, id: res?.data?.id }]);
+        updateTaskDetails({ progress: res?.parent_progress });
         // addTask({ id: res?.data?.id, title: formData?.title || '', status: 'todo' as const, timeSpend: 0 });
         setValue('title', '');
       }).catch((err) => {
@@ -83,6 +85,7 @@ const SubTasks = () => {
     deleteTask(id).then((res) => {
       toast.success(res?.message || 'Successfully deleted sub task');
       setSubtasks(subtasks.filter((st) => st.id !== id));
+      updateTaskDetails({ progress: res?.parent_progress });
     }).catch((err) => {
       toast.error(err?.error || 'Failed to delete sub task');
     });
