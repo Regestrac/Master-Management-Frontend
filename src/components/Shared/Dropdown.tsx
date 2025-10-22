@@ -15,7 +15,7 @@ type DropdownOption<T> = {
    * Should be a valid hex code or tailwind class (should start with bg-).
    *
    * @example
-   * '#ff0000' or 'bg-red-500' or 'bg-primary'
+   * '#ff0000' or 'bg-red-500' or 'bg-primary-500'
    */
   color?: string; // Optional for color dot
   /**
@@ -30,7 +30,7 @@ type DropdownOption<T> = {
    * Should be a valid hex code or tailwind class (should start with bg-).
    *
    * @example
-   * '#ff0000' or 'bg-red-500' or 'bg-primary'
+   * '#ff0000' or 'bg-red-500' or 'bg-primary-500'
    */
   bgColor?: string;
   disabled?: boolean;

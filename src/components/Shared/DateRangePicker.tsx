@@ -294,7 +294,7 @@ const DateRangePicker = memo(({
       const category = getDateCategory(date);
       return (
         <div className='flex items-center gap-2'>
-          <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary dark:bg-primary/20'>
+          <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-500/10 text-primary-500 dark:bg-primary-500/20'>
             {category}
           </span>
           <span>{formatDate(date)}</span>
@@ -310,7 +310,7 @@ const DateRangePicker = memo(({
         const category = getDateCategory(range.startDate);
         return (
           <div className='flex items-center gap-2'>
-            <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary dark:bg-primary/20'>
+            <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-500/10 text-primary-500 dark:bg-primary-500/20'>
               {category}
             </span>
             <span>{formatDate(range.startDate)}</span>
@@ -326,7 +326,7 @@ const DateRangePicker = memo(({
       return (
         <div className='flex items-center gap-2'>
           {category && (
-            <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary dark:bg-primary/20'>
+            <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-500/10 text-primary-500 dark:bg-primary-500/20'>
               {category}
             </span>
           )}

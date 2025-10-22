@@ -1,6 +1,6 @@
 .app-container {
   min-height: 100vh;
-  background-color: var(--color-primary-bg);
+  background-color: var(--color-neutral-800);
   transition: background-color 0.3s ease;
 }
 

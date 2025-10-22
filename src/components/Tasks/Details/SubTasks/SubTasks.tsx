@@ -169,7 +169,7 @@ const SubTasks = () => {
         {/* Subtasks list */}
         <div className='space-y-3'>
           {generatedTasks.length ? (
-            <ul className='space-y-2 bg-secondary-bg rounded-xl p-2 mb-4'>
+            <ul className='space-y-2 bg-neutral-900 rounded-xl p-2 mb-4'>
               <div className='text-sm text-gray-500 mb-2'>
                 {generatedTasks.length}
                 &nbsp;tasks (with description) generated:

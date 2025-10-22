@@ -10,42 +10,47 @@
 @import './components/shared/DateRangePicker.css';
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.5;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-display: swap;
 }
 
 body {
-  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: var(--color-text);
-  background-color: var(--color-primary-bg);
-}
-
-/* Better text rendering */
-body {
+  background-color: var(--color-neutral-800);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Optimize rendering performance */
+* {
+  box-sizing: border-box;
+}
+
+/* Reduce layout shifts */
+img,
+video,
+iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Improve scrolling performance */
+* {
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Color themes for tailwind */
 @theme {
-  --color-primary: '#4f46e5';
-  --color-hover-primary: '#4338ca';
-  --color-hover-secondary: 'rgba(75, 85, 99, 0.1)';
-  --color-text: '#e5e7eb';
-  --color-text-light: '#9ca3af';
-  --color-border: 'rgba(75, 85, 99, 0.2)';
-  --color-border-navbar: 'rgba(55, 65, 81, 0.3)';
-  --color-primary-bg: '#1f2937';
-  --color-secondary-bg: '#111827';
-  --color-active-bg: 'rgba(79, 70, 229, 0.1)';
-  --color-navbar-bg: 'rgba(17, 24, 39, 0.95)';
-  --color-mobile-menu-bg: '#1e1e1e';
-
   --color-primary-50: #F4EEFE;
   --color-primary-100: #EBE1FE;
   --color-primary-200: #D7BEFC;

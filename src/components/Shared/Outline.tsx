@@ -15,7 +15,7 @@ type OutlineProps = {
    *  [
    *    '#4802D0',     // Hex codes
    *    'bg-red-500',  // tailwind class (should start with bg)
-   *    'bg-primary'   // custom variable declared (should start with bg so var --primary should be given as 'bg-primary')
+   *    'bg-primary-500'   // custom variable declared (should start with bg so var --primary-500 should be given as 'bg-primary-500')
    *  ]
    *
    */
@@ -92,7 +92,7 @@ const Outline = ({
 
   return (
     <div style={gradientStyle} className={`${variant}-outline ${className}`}>
-      <div style={innerStyle} className={clsx('w-full h-full', darkMode ? 'bg-primary-bg' : 'bg-white')}>
+      <div style={innerStyle} className={clsx('w-full h-full', darkMode ? 'bg-neutral-800' : 'bg-white')}>
         {React.cloneElement(child, {
           ref: childRef,
           style: {

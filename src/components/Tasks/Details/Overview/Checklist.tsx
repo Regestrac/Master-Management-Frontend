@@ -166,7 +166,7 @@ const Checklist = () => {
         <div className='space-y-2'>
           {!isEmpty(generatedChecklist) && (
             <Outline colors={['bg-primary', 'bg-primary-500']} width='2px' variant='rotate' animationDuration='2s'>
-              <div className='space-y-2 bg-secondary-bg p-2 rounded-xl'>
+              <div className='space-y-2 bg-neutral-900 p-2 rounded-xl'>
                 {Array.isArray(generatedChecklist) && generatedChecklist?.map((item) => (
                   <div
                     key={item.id}
