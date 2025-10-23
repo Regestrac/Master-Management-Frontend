@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import dayjs from 'dayjs';
-import { Archive, ArrowLeft, Check, CheckSquare, Copy, Eraser, MoreVertical, MoveRight, Star, Trash2, X } from 'lucide-react';
+import { Archive, ArrowLeft, Check, CheckSquare, Copy, Eraser, Moon, MoreVertical, MoveRight, Star, Sun, Trash2, X } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -14,11 +14,17 @@ import { navigateBack } from 'helpers/navigationUtils';
 import { useTaskStore } from 'stores/taskStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
-import { updateTask } from 'services/tasks';
+import { updateTask, getCategories } from 'services/tasks';
+import { updateTheme } from 'services/settings';
 
 import DropDown from 'components/Shared/Dropdown';
 import { DatePicker } from 'components/Shared/DatePicker';
 import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
+import TaskCategory from 'components/Tasks/Details/TaskCategory';
+
+type DueDateFormType = {
+  due_date: Date | null;
+};
 
 const TARGET_TYPE_OPTIONS = [
   { label: 'Repetition', value: 'repetition' },
@@ -50,24 +56,36 @@ const moreOptions = [
   { label: 'Delete Task', value: 'delete_task', bgColor: 'text-red-600 bg-red-500/20', icon: <Trash2 className='w-4 h-4' /> },
 ];
 
-type DueDateForm = {
-  due_date: Date | null;
-};
+const defaultCategories = [
+  'Personal',
+  'Work',
+  'Health',
+  'Education',
+  'Entertainment',
+  'Hobbies',
+  'Other',
+];
 
 const TaskHeader = () => {
   const [editingField, setEditingField] = useState<any>(null);
   const [tempValues, setTempValues] = useState({} as Record<string, string>);
+  const [categories, setCategories] = useState<string[]>(defaultCategories);
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
   const updateTaskState = useTaskStore((state) => state.updateTask);
   const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
+  const updateSettings = useSettingsStore((state) => state.updateSettings);
 
-  const methods = useForm<DueDateForm>({
+  const shouldFetchCategoriesRef = useRef(true);
+
+  const methods = useForm<DueDateFormType>({
     defaultValues: {
       due_date: taskDetails?.due_date ? new Date(taskDetails.due_date) : null,
     },
   });
+
+  const { setValue } = methods;
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -164,6 +182,41 @@ const TaskHeader = () => {
   const handleMoreOptionSelect = (_option: any) => {
   };
 
+  useEffect(() => {
+    setValue('due_date', taskDetails?.due_date ? new Date(taskDetails.due_date) : null);
+  }, [setValue, taskDetails?.due_date]);
+
+  useEffect(() => {
+    // Fetch categories on component mount
+    if (shouldFetchCategoriesRef.current) {
+      getCategories().then((res) => {
+        if (res?.categories) {
+          setCategories(res.categories);
+        }
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to fetch categories');
+      });
+      shouldFetchCategoriesRef.current = false;
+    }
+  }, []);
+
+  const handleCategoryChange = (category: string | null) => {
+    if (taskDetails?.category !== category) {
+      handleUpdateTask(taskDetails?.id?.toString(), { category: category || '' });
+      updateTaskState({ id: taskDetails?.id, category: category || '' });
+      updateCurrentTaskDetails({ ...taskDetails, category: category || '' });
+    }
+  };
+
+  const updateAppTheme = () => {
+    updateSettings({ theme: darkMode ? 'light' : 'dark' });
+    updateTheme({ theme: darkMode ? 'light' : 'dark' }).then((res) => {
+      updateSettings({ theme: res?.theme });
+    }).catch((err) => {
+      toast.error(err?.error);
+    });
+  };
+
   return (
     <FormProvider {...methods}>
       <div className='flex items-center justify-between 2xl:me-12'>
@@ -200,6 +253,14 @@ const TaskHeader = () => {
                     priority
                   </span>
                 </DropDown>
+
+                <TaskCategory
+                  value={taskDetails?.category || ''}
+                  categories={categories}
+                  onChange={handleCategoryChange}
+                  onCreateCategory={handleCategoryChange}
+                  placeholder='Add category'
+                />
 
                 {/* Target Configuration Display */}
                 {taskDetails?.type === 'goal' && (
@@ -265,13 +326,6 @@ const TaskHeader = () => {
                     </div>
                   </div>
                 )}
-                {taskDetails?.due_date ? (
-                  <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Due
-                    {' '}
-                    {dayjs(taskDetails.due_date).format('MMM DD, YYYY')}
-                  </span>
-                ) : null}
 
                 {/* Due Date with DatePicker */}
                 <div className='flex items-center space-x-2'>
@@ -299,11 +353,21 @@ const TaskHeader = () => {
           </div>
         </div>
 
-        <DropDown options={moreOptions} onSelect={handleMoreOptionSelect} hideClear value={null}>
-          <div className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}>
-            <MoreVertical className='w-5 h-5' />
-          </div>
-        </DropDown>
+        <div className='flex items-center space-x-2'>
+          <button
+            onClick={updateAppTheme}
+            className={`p-2 rounded-lg ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
+            aria-label='Theme'
+          >
+            {darkMode ? <Sun className='w-5 h-5' /> : <Moon className='w-5 h-5' />}
+          </button>
+          <DropDown options={moreOptions} onSelect={handleMoreOptionSelect} hideClear value={null}>
+            <div className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}>
+              <MoreVertical className='w-5 h-5' />
+            </div>
+          </DropDown>
+        </div>
+
       </div>
     </FormProvider>
   );

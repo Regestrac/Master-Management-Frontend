@@ -57,3 +57,12 @@ export const updateTaskTimeSpend = (taskId: string, timeSpend: number) => postHa
   method: 'PATCH',
   body: JSON.stringify({ time_spend: timeSpend }),
 });
+
+export const getCategories = () => getHandler({
+  path: 'tasks/categories',
+});
+
+export const createCategory = (categoryName: string) => postHandler({
+  path: 'tasks/categories',
+  body: JSON.stringify({ name: categoryName }),
+});
