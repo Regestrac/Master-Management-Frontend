@@ -7,9 +7,10 @@ import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { StatusType } from 'helpers/sharedTypes';
+import { StatusType, TaskType } from 'helpers/sharedTypes';
 import { getStatusColor } from 'helpers/utils';
 import { navigateWithHistory } from 'helpers/navigationUtils';
+import { STATUS_OPTIONS } from 'helpers/configs';
 
 import { useTaskStore } from 'stores/taskStore';
 import { useSettingsStore } from 'stores/settingsStore';
@@ -20,6 +21,7 @@ import Input from 'components/Shared/Input';
 import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
 import ProgressBar from 'components/Tasks/Details/SubTasks/ProgressBar';
 import GenerateSubtasksButtons from 'components/Tasks/ai/GenerateSubtasksButtons';
+import Dropdown from 'components/Shared/Dropdown';
 
 type SubTaskType = {
   title: string;
@@ -46,6 +48,7 @@ const SubTasks = () => {
   const parentTaskId = useTaskStore((state) => state.currentTaskDetails?.parent_id);
   const taskType = useTaskStore((state) => state.currentTaskDetails.type);
   const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
+  const updateTaskState = useTaskStore((state) => state.updateTask);
 
   const prevTaskIdRef = useRef('');
 
@@ -106,6 +109,25 @@ const SubTasks = () => {
       st.id === subtaskId ? { ...st, title: newTitle } : st,
     ));
     toast.success('Subtask title updated successfully');
+  };
+
+  const handleUpdateTask = (id: string, payload: object) => {
+    updateTask(id, payload).then((res) => {
+      updateTaskDetails({ progress: res?.parent_progress });
+      setSubtasks(subtasks.map((st) => st.id === Number(id) ? { ...st, ...payload } : st));
+      toast.success(res?.message || 'Updated successfully');
+    }).catch((err) => {
+      toast.error(err?.error || 'Failed to update task');
+    });
+  };
+
+  const handleStatusSelect = (value: string | null, id: number) => {
+    const currStatus = subtasks.find((st) => st.id === id)?.status;
+
+    if (id && currStatus !== value) {
+      handleUpdateTask(id.toString(), { status: value });
+      updateTaskState({ id, status: value as TaskType['status'] });
+    }
   };
 
   useEffect(() => {
@@ -208,9 +230,9 @@ const SubTasks = () => {
             <div
               key={subtask.id}
               onClick={() => handleSubtaskClick(subtask.id)}
-              className={clsx('flex items-center justify-between p-4 rounded-lg border transition-colors cursor-pointer',
+              className={clsx(
+                'flex items-center justify-between p-4 rounded-lg border transition-colors cursor-pointer',
                 darkMode ? 'border-gray-700' : 'border-gray-200',
-                subtask.status === 'completed' ? 'opacity-75' : '',
               )}
             >
               <div className='flex items-center space-x-3 flex-1'>
@@ -249,9 +271,17 @@ const SubTasks = () => {
                     {/* Metadata Row */}
                     <div className='flex items-center space-x-4 text-sm'>
                       {/* Status Badge */}
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(subtask.status)}`}>
-                        {subtask.status?.toUpperCase()}
-                      </span>
+                      <Dropdown
+                        options={STATUS_OPTIONS}
+                        onSelect={(value) => handleStatusSelect(value, subtask?.id)}
+                        value={subtask?.status}
+                        hideClear
+                        isMulti={false}
+                      >
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium cursor-grab ${getStatusColor(subtask?.status)}`}>
+                          {subtask?.status?.toUpperCase()}
+                        </span>
+                      </Dropdown>
 
                       {/* Checklist Count */}
                       {typeof subtask.checklist_total === 'number' && subtask.checklist_total > 0 && (
