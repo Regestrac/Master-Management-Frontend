@@ -105,3 +105,5 @@ export const ANALYTICS_RETENTION_OPTIONS: SelectOptionType[] = [
   { label: '2 years', value: '730' },
   { label: 'Forever', value: 'forever' },
 ];
+
+export const AI_BUTTON_STYLE = 'bg-linear-to-r from-blue-600 to-secondary-600';

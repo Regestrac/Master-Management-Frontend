@@ -2,8 +2,10 @@ import { Dispatch, SetStateAction, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import clsx from 'clsx';
 
 import { parseMarkdownJson } from 'helpers/utils';
+import { AI_BUTTON_STYLE } from 'helpers/configs';
 
 import { useTaskStore } from 'stores/taskStore';
 
@@ -82,7 +84,10 @@ const GenerateChecklistButton = ({ generatedChecklist, setGeneratedChecklist }: 
           <button
             type='button'
             onClick={handleAcceptGeneration}
-            className='px-2 py-1 text-xs bg-blue-600 text-primary-50 rounded hover:bg-neutral-300/20 transition-colors duration-200 cursor-pointer'
+            className={clsx(
+              'px-2 py-1 text-xs text-primary-50 rounded transition-colors duration-200 cursor-pointer',
+              AI_BUTTON_STYLE,
+            )}
           >
             Accept
           </button>
@@ -99,7 +104,11 @@ const GenerateChecklistButton = ({ generatedChecklist, setGeneratedChecklist }: 
           type='button'
           onClick={handleGenerateChecklist}
           disabled={isLoading}
-          className={`px-2 py-1 text-xs bg-blue-600 text-primary-50 rounded hover:bg-hover-blue-600 transition-colors duration-200 ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+          className={clsx(
+            'px-2 py-1 text-xs text-primary-50 rounded transition-colors duration-200',
+            AI_BUTTON_STYLE,
+            isLoading ? 'cursor-not-allowed' : 'cursor-pointer',
+          )}
         >
           Generate ✨
           {isLoading ? <FadingCircles radius={2} /> : null}
