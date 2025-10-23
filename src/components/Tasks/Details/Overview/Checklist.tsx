@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Check, List, Plus, Trash2 } from 'lucide-react';
+import clsx from 'clsx';
 
 import { isEmpty } from 'helpers/utils';
 
@@ -142,24 +143,26 @@ const Checklist = () => {
       </div>
       <div className='p-6'>
         {/* Add new checklist item */}
-        <div className='flex space-x-2 mb-6'>
+        <div className='flex space-x-2 mb-6 w-full min-[1024px]:flex-col min-[1080px]:flex-row min-[1024px]:space-y-2 min-[1080px]:space-y-0'>
           <input
             type='text'
             value={newChecklistItem}
             onChange={(e) => setNewChecklistItem(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && addChecklistItem()}
             placeholder='Add a checklist item...'
-            className={`flex-1 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary-500 ${darkMode
-              ? 'bg-gray-700 border-gray-600 text-white'
-              : 'bg-white border-gray-300'}`}
+            className={clsx(
+              'flex-1 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary-500 w-full min-[1080px]:w-[calc(100%-4rem)]',
+              darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300',
+            )}
             aria-label='New checklist item'
           />
           <button
             onClick={addChecklistItem}
             aria-label='Add checklist item'
-            className='px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors'
+            className='flex items-center gap-2 justify-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors'
           >
             <Plus className='w-4 h-4' />
+            <span className='min-[1080px]:hidden'>Add Checklist</span>
           </button>
         </div>
 
@@ -186,61 +189,63 @@ const Checklist = () => {
           {taskDetails.checklists?.map((item) => (
             <div
               key={item.id}
-              className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${darkMode ? 'border-gray-700' : 'border-gray-200'} ${item.completed ? 'opacity-75' : ''}`}
+              className={clsx(
+                'flex items-center space-x-3 justify-between p-3 rounded-lg border transition-colors',
+                darkMode ? 'border-gray-700' : 'border-gray-200',
+                item.completed ? 'opacity-75' : '',
+              )}
             >
-              <div className='flex items-center space-x-3 flex-1'>
-                <button
-                  onClick={() => toggleChecklistItem(item.id)}
-                  aria-label={`${item.completed ? 'Mark as incomplete' : 'Mark as complete'}: ${item.title}`}
-                  className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${item.completed
-                    ? 'bg-primary-500 border-primary-500'
-                    : darkMode
-                      ? 'border-gray-500 hover:border-primary-500'
-                      : 'border-gray-300 hover:border-primary-500'}`}
-                >
-                  {item.completed && <Check className='w-2.5 h-2.5 text-white' />}
-                </button>
-                {editingId === item.id ? (
-                  <input
-                    value={editingValue}
-                    onChange={(e) => setEditingValue(e.target.value)}
-                    onBlur={() => saveEdit(item.id)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        saveEdit(item.id);
-                      } else if (e.key === 'Escape') {
-                        setEditingId(null);
-                      }
-                    }}
-                    className={`${item.completed ? 'line-through' : ''} flex-1 bg-transparent outline-none border-none`}
-                  />
-                ) : (
-                  <p
-                    role='button'
-                    tabIndex={0}
-                    onClick={() => !item.completed && startEditing(item.id, item.title)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        if (!item.completed) {
-                          startEditing(item.id, item.title);
-                        }
-                      }
-                    }}
-                    className={`${item.completed ? 'line-through' : ''} ${!item.completed ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 rounded px-1' : ''}`}
-                    aria-label={`Edit checklist item: ${item.title}${item.completed ? ' (completed)' : ''}`}
-                  >
-                    {item.title}
-                  </p>
+              <button
+                onClick={() => toggleChecklistItem(item.id)}
+                aria-label={`${item.completed ? 'Mark as incomplete' : 'Mark as complete'}: ${item.title}`}
+                className={clsx(
+                  'min-w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ',
+                  item.completed ? 'bg-primary-500 border-primary-500'
+                    : darkMode ? 'border-gray-500 hover:border-primary-500' : 'border-gray-300 hover:border-primary-500',
                 )}
-              </div>
+              >
+                {item.completed && <Check className='text-white' />}
+              </button>
+              {editingId === item.id ? (
+                <input
+                  value={editingValue}
+                  onChange={(e) => setEditingValue(e.target.value)}
+                  onBlur={() => saveEdit(item.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      saveEdit(item.id);
+                    } else if (e.key === 'Escape') {
+                      setEditingId(null);
+                    }
+                  }}
+                  className={`${item.completed ? 'line-through' : ''} flex-1 bg-transparent outline-none border-none`}
+                />
+              ) : (
+                <p
+                  role='button'
+                  tabIndex={0}
+                  onClick={() => !item.completed && startEditing(item.id, item.title)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      if (!item.completed) {
+                        startEditing(item.id, item.title);
+                      }
+                    }
+                  }}
+                  className={item.completed ? 'line-through' : 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 rounded px-1'}
+                  aria-label={`Edit checklist item: ${item.title}${item.completed ? ' (completed)' : ''}`}
+                >
+                  {item.title}
+                </p>
+              )}
               <button
                 onClick={() => removeChecklistItem(item.id)}
                 aria-label={`Remove checklist item: ${item.title}`}
                 className={`p-1 rounded transition-colors ${darkMode ? 'hover:bg-gray-700 text-red-400' : 'hover:bg-gray-100 text-red-500'}`}
               >
-                <Trash2 className='w-3 h-3' />
+                <Trash2 className='w-4 h-4' />
               </button>
             </div>
           ))}
