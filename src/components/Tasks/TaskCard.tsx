@@ -47,6 +47,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
   const activeTask = useProfileStore((state) => state.data.active_task);
   const updateProfile = useProfileStore((state) => state.updateProfile);
   const updateVisibility = useModalStore((state) => state.updateVisibility);
+  const updateRecentTaskData = useTaskStore((state) => state.updateRecentTaskData);
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -99,6 +100,9 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
     if (task?.status !== value) {
       handleUpdateTask(task?.id?.toString(), { status: value });
       updateTaskState({ id: task?.id, status: value as TaskType['status'] });
+      if (pathname.includes('/dashboard')) {
+        updateRecentTaskData({ id: task?.id, status: value as TaskType['status'] });
+      }
     }
   };
 
@@ -112,7 +116,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
   };
 
   return (
-    <Outline colors={['bg-primary-500', 'bg-secondary-500']} width='3px' variant='rotate' disabled={activeTask !== task?.id}>
+    <Outline key={task?.id} colors={['bg-primary-500', 'bg-secondary-500']} width='3px' variant='rotate' disabled={activeTask !== task?.id}>
       <div
         className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer`}
         onClick={handleTaskClick}
