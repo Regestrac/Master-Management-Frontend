@@ -14,7 +14,7 @@ import { createGoal } from 'services/goals';
 
 import Dropdown from 'components/Shared/Dropdown';
 import Input from 'components/Shared/Input';
-import { DatePicker } from 'components/Shared/DatePicker';
+import DatePicker from 'components/Shared/DatePicker';
 
 type CreateGoalFormDataType = {
   new_goal_title: string;
@@ -224,25 +224,25 @@ const CreateGoalCard = ({ handleCancel, view }: CreateGoalCardPropsType) => {
             </div>
           </Dropdown>
         </div>
+      </div>
+    </div>
+  );
 
-        {/* Due Date */}
-        <div className={view === 'grid' ? 'space-x-2 flex' : 'space-y-1'}>
-          <label className={clsx(
-            'text-xs font-medium',
-            view === 'grid' ? 'flex items-center h-full' : 'block',
-            darkMode ? 'text-gray-400' : 'text-gray-600',
-          )}
-          >
-            Due Date
-          </label>
-          <div className='flex-1'>
-            <DatePicker
-              name='due_date'
-              placeholder='Set due date'
-              className='text-sm'
-            />
-          </div>
-        </div>
+  const renderDueDatePicker = () => (
+    <div className='w-full'>
+      <label className={clsx(
+        'text-xs font-medium',
+        darkMode ? 'text-gray-400' : 'text-gray-600',
+      )}
+      >
+        Due Date
+      </label>
+      <div className='w-full'>
+        <DatePicker
+          name='due_date'
+          placeholder='Set due date'
+          className='text-sm'
+        />
       </div>
     </div>
   );
@@ -258,7 +258,10 @@ const CreateGoalCard = ({ handleCancel, view }: CreateGoalCardPropsType) => {
         placeholder='Goal title...'
         className='font-semibold text-lg cursor-text outline-none p-0! border-none focus:ring-0! bg-transparent'
       />
-      {renderStatusPill()}
+      <div className={clsx('flex items-center justify-center gap-2', view === 'grid' ? 'w-full' : 'gap-6 w-full max-w-[340px]')}>
+        {renderStatusPill()}
+        {renderDueDatePicker()}
+      </div>
     </div>
   );
 

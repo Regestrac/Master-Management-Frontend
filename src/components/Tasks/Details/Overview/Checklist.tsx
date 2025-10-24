@@ -204,7 +204,7 @@ const Checklist = () => {
                     : darkMode ? 'border-gray-500 hover:border-primary-500' : 'border-gray-300 hover:border-primary-500',
                 )}
               >
-                {item.completed && <Check className='text-white' />}
+                {item.completed && <Check className='text-white w-3 h-3' />}
               </button>
               {editingId === item.id ? (
                 <input
