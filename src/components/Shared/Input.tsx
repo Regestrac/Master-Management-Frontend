@@ -62,6 +62,7 @@ const Input = ({ name, label, icon, type = 'text', onBlur, id, hideResizeIndicat
           <textarea
             {...field}
             {...props}
+            value={field.value || ''}
             id={id || name}
             rows={hideResizeIndicator ? 1 : props.rows || 4}
             className={`w-full ${icon ? 'pl-10 pr-4' : 'px-4'} py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors?.[name]
@@ -90,6 +91,7 @@ const Input = ({ name, label, icon, type = 'text', onBlur, id, hideResizeIndicat
           <input
             {...field}
             {...props}
+            value={field.value || ''}
             id={id || name}
             type={showPassword ? 'text' : type}
             className={`w-full ${icon ? 'pl-10' : 'pl-4'} ${type === 'password' ? 'pr-10' : icon ? 'pr-4' : 'pr-4'} py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors?.[name]
