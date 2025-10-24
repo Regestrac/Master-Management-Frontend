@@ -18,7 +18,7 @@ import { updateTask, getCategories } from 'services/tasks';
 import { updateTheme } from 'services/settings';
 
 import DropDown from 'components/Shared/Dropdown';
-import { DatePicker } from 'components/Shared/DatePicker';
+import DatePicker from 'components/Shared/DatePicker';
 import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
 import TaskCategory from 'components/Tasks/Details/TaskCategory';
 

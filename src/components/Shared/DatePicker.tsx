@@ -1,4 +1,4 @@
-import { useRef, useCallback, useMemo, memo, useState } from 'react';
+import { useRef, useCallback, useMemo, useState } from 'react';
 
 import { useController, useFormContext } from 'react-hook-form';
 import { Calendar } from 'lucide-react';
@@ -40,7 +40,7 @@ const convertDateToDateObject = (_date: Date | null): DateObject | null => {
   return new DateObject(_date);
 };
 
-const DatePickerComponent = ({
+const DatePicker = ({
   name,
   label,
   placeholder = 'Select date',
@@ -54,8 +54,10 @@ const DatePickerComponent = ({
   maxDate,
   onChange,
 }: DatePickerProps) => {
-  const { settings } = useSettingsStore();
   const [isOpen, setIsOpen] = useState(false);
+
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
+
   const calendarRef = useRef<any>(null);
 
   const { control } = useFormContext();
@@ -66,7 +68,7 @@ const DatePickerComponent = ({
   } = useController({
     name,
     control,
-    rules: { required: required ? 'This field is required' : false },
+    rules: { required: required ? 'This field is required!' : false },
   });
 
   // Memoize the date value to prevent unnecessary re-renders
@@ -148,9 +150,7 @@ const DatePickerComponent = ({
           onClick={toggleCalendar}
           className={clsx(
             'flex items-center justify-between w-full px-3 py-2 border rounded-lg cursor-pointer transition-colors',
-            'bg-white dark:bg-gray-800',
-            'border-gray-300 dark:border-gray-600',
-            'hover:border-gray-400 dark:hover:border-gray-500',
+            darkMode ? 'bg-gray-800 border-gray-600 hover:border-gray-500' : 'bg-white border-gray-300 hover:border-gray-400',
             'focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500',
             {
               'opacity-50 cursor-not-allowed': disabled,
@@ -162,8 +162,8 @@ const DatePickerComponent = ({
             className={clsx(
               'text-sm',
               value
-                ? 'text-gray-900 dark:text-gray-100'
-                : 'text-gray-500 dark:text-gray-400',
+                ? darkMode ? 'text-gray-100' : 'text-gray-900'
+                : darkMode ? 'text-gray-400' : 'text-gray-500',
             )}
           >
             {value ? dateValue?.format(getFormat()) : placeholder}
@@ -188,7 +188,7 @@ const DatePickerComponent = ({
                 format={getFormat()}
                 className={clsx(
                   'rmdp-calendar',
-                  settings.theme === 'dark' ? 'rmdp-dark' : '',
+                  darkMode ? 'rmdp-dark' : '',
                 )}
                 calendarPosition='bottom-left'
                 {...pickerConfig}
@@ -206,8 +206,5 @@ const DatePickerComponent = ({
     </div>
   );
 };
-
-// Memoize the component to prevent unnecessary re-renders
-export const DatePicker = memo(DatePickerComponent) as typeof DatePickerComponent;
 
 export default DatePicker;

@@ -13,7 +13,7 @@ import { createTask } from 'services/tasks';
 
 import Dropdown from 'components/Shared/Dropdown';
 import Input from 'components/Shared/Input';
-import { DatePicker } from 'components/Shared/DatePicker';
+import DatePicker from 'components/Shared/DatePicker';
 
 type CreateTaskFormDataType = {
   new_task_title: string;
