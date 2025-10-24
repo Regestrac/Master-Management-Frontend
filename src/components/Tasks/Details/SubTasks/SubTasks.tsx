@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { StatusType, TaskType } from 'helpers/sharedTypes';
+import { TaskType } from 'helpers/sharedTypes';
 import { getStatusColor } from 'helpers/utils';
 import { navigateWithHistory } from 'helpers/navigationUtils';
 import { STATUS_OPTIONS } from 'helpers/configs';
@@ -23,32 +23,21 @@ import ProgressBar from 'components/Tasks/Details/SubTasks/ProgressBar';
 import GenerateSubtasksButtons from 'components/Tasks/ai/GenerateSubtasksButtons';
 import Dropdown from 'components/Shared/Dropdown';
 
-type SubTaskType = {
-  title: string;
-  id: number;
-  completed_at?: string;
-  due_date?: string;
-  parent_id: number;
-  status: StatusType;
-  progress?: number;
-  checklist_completed?: number;
-  checklist_total?: number;
-};
-
 type GeneratedTaskType = {
   title: string;
   description: string;
 };
 
 const SubTasks = () => {
-  const [subtasks, setSubtasks] = useState<SubTaskType[]>([]);
   const [generatedTasks, setGeneratedTasks] = useState<GeneratedTaskType[]>([]);
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const parentTaskId = useTaskStore((state) => state.currentTaskDetails?.parent_id);
   const taskType = useTaskStore((state) => state.currentTaskDetails.type);
-  const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
+  const subtasks = useTaskStore((state) => state.currentTaskDetails.subtasks);
+  const currentTaskId = useTaskStore((state) => state.currentTaskDetails.id);
   const updateTaskState = useTaskStore((state) => state.updateTask);
+  const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
 
   const prevTaskIdRef = useRef('');
 
@@ -71,12 +60,11 @@ const SubTasks = () => {
         time_spend: 0,
         parent_id: Number(id),
         type: taskType,
-      };
+      } as any;
       createTask(payload).then((res) => {
         toast.success(res?.message || 'Successfully created task');
-        setSubtasks([...subtasks, { ...payload, id: res?.data?.id }]);
+        updateTaskDetails({ subtasks: [...subtasks, { ...payload, id: res?.data?.id }] });
         updateTaskDetails({ progress: res?.parent_progress });
-        // addTask({ id: res?.data?.id, title: formData?.title || '', status: 'todo' as const, timeSpend: 0 });
         setValue('title', '');
       }).catch((err) => {
         toast.error(err?.error || 'Failed to create task');
@@ -87,7 +75,7 @@ const SubTasks = () => {
   const removeSubtask = (id: number) => {
     deleteTask(id).then((res) => {
       toast.success(res?.message || 'Successfully deleted sub task');
-      setSubtasks(subtasks.filter((st) => st.id !== id));
+      updateTaskDetails({ subtasks: subtasks.filter((st) => st.id !== id) });
       updateTaskDetails({ progress: res?.parent_progress });
     }).catch((err) => {
       toast.error(err?.error || 'Failed to delete sub task');
@@ -105,16 +93,22 @@ const SubTasks = () => {
 
   const handleSubtaskTitleSave = async (subtaskId: number, newTitle: string) => {
     await updateTask(subtaskId.toString(), { title: newTitle });
-    setSubtasks(subtasks.map((st) =>
-      st.id === subtaskId ? { ...st, title: newTitle } : st,
-    ));
+    updateTaskDetails({
+      subtasks: subtasks.map((st) =>
+        st.id === subtaskId ? { ...st, title: newTitle } : st,
+      ),
+    });
     toast.success('Subtask title updated successfully');
   };
 
   const handleUpdateTask = (id: string, payload: object) => {
     updateTask(id, payload).then((res) => {
       updateTaskDetails({ progress: res?.parent_progress });
-      setSubtasks(subtasks.map((st) => st.id === Number(id) ? { ...st, ...payload } : st));
+      updateTaskDetails({
+        subtasks: subtasks.map((st) =>
+          st.id === Number(id) ? { ...st, ...payload } : st,
+        ),
+      });
       toast.success(res?.message || 'Updated successfully');
     }).catch((err) => {
       toast.error(err?.error || 'Failed to update task');
@@ -131,15 +125,16 @@ const SubTasks = () => {
   };
 
   useEffect(() => {
-    if (!parentTaskId && id && id !== prevTaskIdRef.current) {
+    if (!parentTaskId && id && id !== prevTaskIdRef.current && currentTaskId === Number(id)) {
+      updateTaskDetails({ subtasks: [] });
       getSubTasks(id).then((res) => {
-        setSubtasks(res?.data || []);
+        updateTaskDetails({ subtasks: res?.data || [] });
       }).catch((err) => {
         toast.error(err?.error || 'Failed to fetch subtasks');
       });
       prevTaskIdRef.current = id;
     }
-  }, [id, parentTaskId]);
+  }, [id, parentTaskId, updateTaskDetails, currentTaskId]);
 
   if (parentTaskId) {
     return null;
@@ -152,16 +147,16 @@ const SubTasks = () => {
           <h3 className='text-lg font-semibold flex items-center'>
             <CheckSquare className='w-5 h-5 mr-2' />
             Subtasks (
-            {subtasks.filter((st) => st.status === 'completed').length}
+            {subtasks?.filter((st) => st.status === 'completed').length}
             /
-            {subtasks.length}
+            {subtasks?.length}
             )
           </h3>
           <div className='flex flex-row gap-4 text-sm'>
             <GenerateSubtasksButtons generatedTasks={generatedTasks} setGeneratedTasks={setGeneratedTasks} />
             <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              {subtasks.length ? (
-                (Math.round((subtasks.filter((st) => st.status === 'completed').length / subtasks.length) * 100) || 0) + '% Complete'
+              {subtasks?.length ? (
+                (Math.round((subtasks?.filter((st) => st.status === 'completed').length / subtasks?.length) * 100) || 0) + '% Complete'
               ) : 'No subtasks'}
             </span>
           </div>
@@ -193,13 +188,13 @@ const SubTasks = () => {
 
         {/* Subtasks list */}
         <div className='space-y-3'>
-          {generatedTasks.length ? (
+          {generatedTasks?.length ? (
             <ul className='space-y-2 bg-neutral-900 rounded-xl p-2 mb-4'>
               <div className='text-sm text-gray-500 mb-2'>
-                {generatedTasks.length}
+                {generatedTasks?.length}
                 &nbsp;tasks (with description) generated:
               </div>
-              {generatedTasks.map((subtask) => (
+              {generatedTasks?.map((subtask) => (
                 <div
                   key={subtask.title}
                   className={clsx('flex items-center justify-between p-4 rounded-lg border transition-colors',
@@ -226,7 +221,7 @@ const SubTasks = () => {
               ))}
             </ul>
           ) : null}
-          {subtasks.map((subtask) => (
+          {subtasks?.map((subtask) => (
             <div
               key={subtask.id}
               onClick={() => handleSubtaskClick(subtask.id)}

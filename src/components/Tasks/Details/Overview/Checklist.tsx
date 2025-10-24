@@ -174,7 +174,10 @@ const Checklist = () => {
                 {Array.isArray(generatedChecklist) && generatedChecklist?.map((item) => (
                   <div
                     key={item.id}
-                    className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}
+                    className={clsx(
+                      'flex items-center justify-between p-3 rounded-lg border transition-colors',
+                      darkMode ? 'border-gray-700' : 'border-gray-200',
+                    )}
                   >
                     <div className='flex items-center space-x-3 flex-1'>
                       <p>

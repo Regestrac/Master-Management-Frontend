@@ -28,7 +28,15 @@ type CommentsType = {
   avatar?: string;
 };
 
+type SubtaskType = TaskDetailsType & {
+  parent_id: number;
+  checklist_completed: number;
+  checklist_total: number;
+  completed_at?: string;
+};
+
 type TaskDetailsType = TaskType & {
+  id: number;
   startedAt: string;
   description: string;
   parent_id: number;
@@ -37,6 +45,7 @@ type TaskDetailsType = TaskType & {
   tags: string[];
   comments: CommentsType[];
   progress: number;
+  subtasks: SubtaskType[];
 };
 
 type TasksStateType = {

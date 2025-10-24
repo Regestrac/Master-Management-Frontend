@@ -24,6 +24,8 @@ const GenerateSubtasksButtons = ({ generatedTasks, setGeneratedTasks }: PropsTyp
 
   const title = useTaskStore((state) => state.currentTaskDetails?.title);
   const description = useTaskStore((state) => state.currentTaskDetails?.description);
+  const subtasks = useTaskStore((state) => state.currentTaskDetails.subtasks);
+  const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
 
   const { id } = useParams();
 
@@ -42,9 +44,18 @@ const GenerateSubtasksButtons = ({ generatedTasks, setGeneratedTasks }: PropsTyp
   };
 
   const handleAcceptGeneration = () => {
-    setShowConfirmation(false);
-    if (id && generatedTasks.length) {
-      saveSubTasks(id, generatedTasks).then((res) => {
+    const payload = generatedTasks.map((task) => ({
+      title: task.title,
+      description: task.description,
+      status: 'todo' as const,
+      time_spend: 0,
+      parent_id: Number(id),
+    }));
+    if (id && payload.length) {
+      saveSubTasks(id, payload).then((res) => {
+        updateTaskDetails({ subtasks: [...subtasks, ...res.data] });
+        setShowConfirmation(false);
+        setGeneratedTasks([]);
         toast.success(res?.message || 'Subtasks saved successfully');
       }).catch((err) => {
         toast.error(err?.error || 'Failed to save subtasks');
@@ -56,6 +67,7 @@ const GenerateSubtasksButtons = ({ generatedTasks, setGeneratedTasks }: PropsTyp
     setShowConfirmation(false);
     setGeneratedTasks([]);
   };
+
   return (
     <div className='flex gap-2 mb-0'>
       {showConfirmation ? (
