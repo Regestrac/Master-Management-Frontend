@@ -21,18 +21,18 @@ const PerformanceOptimizer = () => {
       // document.head.appendChild(fontLink);
 
       // Preload critical images
-      const criticalImages = [
-        '/src/assets/logo.png',
-        '/master-management-icon.png',
-      ];
+      // const criticalImages = [
+      //   '/src/assets/logo.png',
+      //   '/master-management-icon.png',
+      // ];
 
-      criticalImages.forEach((src) => {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'image';
-        link.href = src;
-        document.head.appendChild(link);
-      });
+      // criticalImages.forEach((src) => {
+      //   const link = document.createElement('link');
+      //   link.rel = 'preload';
+      //   link.as = 'image';
+      //   link.href = src;
+      //   document.head.appendChild(link);
+      // });
     };
 
     // Enable lazy loading for images

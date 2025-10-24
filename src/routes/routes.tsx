@@ -11,6 +11,8 @@ import AuthenticatedLayout from 'components/Layout/AuthenticatedLayout';
 import NotFound from 'components/Shared/NotFound';
 import LoadingSpinner from 'components/Shared/LoadingSpinner';
 
+import { DashboardSkeleton, GoalSkeleton, TaskSkeleton, WorkspaceSkeleton } from './loaders';
+
 // Lazy loaded components for code splitting
 const Authentication = lazy(() => import('components/Authentication'));
 const Login = lazy(() => import('components/Authentication/login'));
@@ -110,7 +112,7 @@ const routes: RouteObject[] = [
               {
                 path: '/dashboard',
                 element: (
-                  <Suspense fallback={<LoadingSpinner />}>
+                  <Suspense fallback={<DashboardSkeleton />}>
                     <Dashboard />
                   </Suspense>
                 ),
@@ -118,7 +120,7 @@ const routes: RouteObject[] = [
               {
                 path: '/tasks',
                 element: (
-                  <Suspense fallback={<LoadingSpinner />}>
+                  <Suspense fallback={<TaskSkeleton />}>
                     <Tasks />
                   </Suspense>
                 ),
@@ -126,7 +128,7 @@ const routes: RouteObject[] = [
               {
                 path: '/goals',
                 element: (
-                  <Suspense fallback={<LoadingSpinner />}>
+                  <Suspense fallback={<GoalSkeleton />}>
                     <Goals />
                   </Suspense>
                 ),
@@ -134,7 +136,7 @@ const routes: RouteObject[] = [
               {
                 path: '/workspace',
                 element: (
-                  <Suspense fallback={<LoadingSpinner />}>
+                  <Suspense fallback={<WorkspaceSkeleton />}>
                     <WorkspaceHome />
                   </Suspense>
                 ),
