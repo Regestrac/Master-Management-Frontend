@@ -72,9 +72,17 @@ const Timer = ({ isRunning, taskId, apiTimeSpend }: TimerPropsType) => {
     if (!initialized || !timerState) { return; }
 
     if (isRunning && !timerState.isRunning) {
-      // Start timer
-      const newState = startTimer(taskId, 0); // Start with 0 session time
-      setTimerState(newState);
+      // Start timer only if it wasn't already running
+      // This prevents resetting startTime when revisiting the page
+      const existingState = getTimerState(taskId);
+      if (existingState && existingState.isRunning) {
+        // Timer is already running in localStorage, just use that state
+        setTimerState(existingState);
+      } else {
+        // Start a new timer session
+        const newState = startTimer(taskId, timerState.totalTime);
+        setTimerState(newState);
+      }
     } else if (!isRunning && timerState.isRunning) {
       // Stop timer and sync with API
       const newState = stopTimer(taskId);
