@@ -10,6 +10,7 @@ import RootLayoutWrapper from 'components/Layout/RootLayoutWrapper';
 import AuthenticatedLayout from 'components/Layout/AuthenticatedLayout';
 import NotFound from 'components/Shared/NotFound';
 import LoadingSpinner from 'components/Shared/LoadingSpinner';
+import TaskDetailsRevamp from 'components/StyleGuide/TaskDetailsRevamp';
 
 import { DashboardSkeleton, GoalSkeleton, TaskSkeleton, WorkspaceSkeleton } from './loaders';
 
@@ -223,6 +224,14 @@ const routes: RouteObject[] = [
                 element: (
                   <Suspense fallback={<LoadingSpinner />}>
                     <TaskDetail />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/tasks/:id/v2',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <TaskDetailsRevamp />
                   </Suspense>
                 ),
               },

@@ -77,7 +77,7 @@ export const WorkspaceSkeleton = () => (
 
 export const WorkspaceDetailSkeleton = () => (
   <div className='space-y-8 min-h-[calc(100vh-165px)]'>
-    <div className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer'>
+    <div className='flex items-center gap-2 text-sm text-gray-600 cursor-pointer'>
       <ArrowLeft className='w-4 h-4' />
       Back To Workspaces
     </div>
