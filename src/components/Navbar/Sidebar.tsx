@@ -19,6 +19,7 @@ const navbarItems = [
 const Sidebar = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const showNavbar = useNavbarStore((state) => state.showNavbar);
+  const toggleNavbar = useNavbarStore((state) => state.setShowNavbar);
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -33,40 +34,61 @@ const Sidebar = () => {
   const handleNavLinkClick = (id: string) => {
     navigate(`/${id}`);
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+
+    // Close sidebar on mobile after navigation
+    if (window.innerWidth < 1024) { // lg breakpoint
+      toggleNavbar(false);
+    }
+  };
+
+  const handleOverlayClick = () => {
+    toggleNavbar(false);
   };
 
   return (
-    <div className={clsx(
-      'fixed left-0 top-0 h-full w-70 border-r transition-colors duration-300 z-[60]',
-      showNavbar ? 'translate transition-transform duration-700' : '-translate-x-full transition-transform duration-700',
-      darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
-    )}
-    >
-      <div className='p-6'>
-        <div className='flex items-center space-x-3 mb-8'>
-          <div className='w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center'>
-            <Target className='w-6 h-6 text-white' />
-          </div>
-          <h1 className='text-xl font-bold'>Master Management</h1>
-        </div>
+    <>
+      {/* Mobile Overlay */}
+      {showNavbar && (
+        <div
+          className='fixed inset-0 bg-black/50 z-[59] lg:hidden'
+          onClick={handleOverlayClick}
+          aria-label='Close sidebar'
+        />
+      )}
 
-        <nav className='space-y-2'>
-          {navbarItems.map(({ id, icon: Icon, label }) => (
-            <button
-              key={id}
-              onClick={() => handleNavLinkClick(id)}
-              className={clsx(
-                'w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors cursor-pointer',
-                getCurrentMenuStatus(id),
-              )}
-            >
-              <Icon className='w-5 h-5' />
-              <span>{label}</span>
-            </button>
-          ))}
-        </nav>
+      {/* Sidebar */}
+      <div className={clsx(
+        'fixed left-0 top-0 h-full w-70 border-r transition-colors duration-300 z-[60]',
+        showNavbar ? 'translate transition-transform duration-700' : '-translate-x-full transition-transform duration-700',
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
+      )}
+      >
+        <div className='p-6'>
+          <div className='flex items-center space-x-3 mb-8'>
+            <div className='w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center'>
+              <Target className='w-6 h-6 text-white' />
+            </div>
+            <h1 className='text-xl font-bold'>Master Management</h1>
+          </div>
+
+          <nav className='space-y-2'>
+            {navbarItems.map(({ id, icon: Icon, label }) => (
+              <button
+                key={id}
+                onClick={() => handleNavLinkClick(id)}
+                className={clsx(
+                  'w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors cursor-pointer',
+                  getCurrentMenuStatus(id),
+                )}
+              >
+                <Icon className='w-5 h-5' />
+                <span>{label}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

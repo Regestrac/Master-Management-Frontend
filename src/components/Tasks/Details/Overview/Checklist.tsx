@@ -209,40 +209,42 @@ const Checklist = () => {
               >
                 {item.completed && <Check className='text-white w-3 h-3' />}
               </button>
-              {editingId === item.id ? (
-                <input
-                  value={editingValue}
-                  onChange={(e) => setEditingValue(e.target.value)}
-                  onBlur={() => saveEdit(item.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      saveEdit(item.id);
-                    } else if (e.key === 'Escape') {
-                      setEditingId(null);
-                    }
-                  }}
-                  className={`${item.completed ? 'line-through' : ''} flex-1 bg-transparent outline-none border-none`}
-                />
-              ) : (
-                <p
-                  role='button'
-                  tabIndex={0}
-                  onClick={() => !item.completed && startEditing(item.id, item.title)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      if (!item.completed) {
-                        startEditing(item.id, item.title);
+              <div className='w-full'>
+                {editingId === item.id ? (
+                  <input
+                    value={editingValue}
+                    onChange={(e) => setEditingValue(e.target.value)}
+                    onBlur={() => saveEdit(item.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        saveEdit(item.id);
+                      } else if (e.key === 'Escape') {
+                        setEditingId(null);
                       }
-                    }
-                  }}
-                  className={item.completed ? 'line-through' : 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 rounded px-1'}
-                  aria-label={`Edit checklist item: ${item.title}${item.completed ? ' (completed)' : ''}`}
-                >
-                  {item.title}
-                </p>
-              )}
+                    }}
+                    className={`${item.completed ? 'line-through' : ''} flex-1 bg-transparent outline-none border-none`}
+                  />
+                ) : (
+                  <p
+                    role='button'
+                    tabIndex={0}
+                    onClick={() => !item.completed && startEditing(item.id, item.title)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (!item.completed) {
+                          startEditing(item.id, item.title);
+                        }
+                      }
+                    }}
+                    className={item.completed ? 'line-through' : 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 rounded px-1'}
+                    aria-label={`Edit checklist item: ${item.title}${item.completed ? ' (completed)' : ''}`}
+                  >
+                    {item.title}
+                  </p>
+                )}
+              </div>
               <button
                 onClick={() => removeChecklistItem(item.id)}
                 aria-label={`Remove checklist item: ${item.title}`}
