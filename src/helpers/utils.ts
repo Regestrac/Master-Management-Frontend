@@ -59,7 +59,7 @@ export const getPriorityColor = (priority: PriorityType) => {
     case 'low':
       return 'bg-green-500';
     default:
-      return 'bg-gray-500';
+      return 'bg-gray-400';
   }
 };
 

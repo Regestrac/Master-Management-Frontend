@@ -264,8 +264,8 @@ const TaskHeader = () => {
 
                 {/* Target Configuration Display */}
                 {taskDetails?.type === 'goal' && (
-                  <div className={`flex items-center space-x-2 px-2 py-1 rounded-lg w-full sm:w-auto ${darkMode ? 'bg-blue-900/30 border border-blue-700/50' : 'bg-blue-50 border border-blue-200'}`}>
-                    <span className='w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0' />
+                  <div className={`flex items-center space-x-2 px-2 py-1 rounded-lg w-full sm:w-auto ${darkMode ? 'bg-primary-900/40 border border-primary-700/50' : 'bg-primary-50 border border-primary-200'}`}>
+                    <span className='w-1.5 h-1.5 rounded-full bg-primary-500 flex-shrink-0' />
                     <div className='flex flex-wrap items-center gap-1 text-xs'>
                       {/* Target Value - Always show for goals */}
                       {editingField === 'targetValue' ? (
@@ -274,7 +274,7 @@ const TaskHeader = () => {
                             type='number'
                             value={tempValues.targetValue || ''}
                             onChange={(e) => setTempValues((prev) => ({ ...prev, targetValue: e.target.value }))}
-                            className={`w-16 px-1 py-0.5 text-xs rounded border focus:outline-none focus:ring-1 focus:ring-blue-500 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                            className={`w-16 px-1 py-0.5 text-xs rounded border focus:outline-none focus:ring-1 focus:ring-primary-500 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
                             placeholder='0'
                           />
                           <button onClick={() => saveField('targetValue')} className='text-green-500 hover:text-green-600 flex-shrink-0'>
@@ -288,7 +288,7 @@ const TaskHeader = () => {
                         <button
                           onClick={() => startEditing('targetValue', taskDetails.target_value || '')}
                           className={`font-medium hover:underline whitespace-nowrap ${taskDetails?.target_value
-                            ? (darkMode ? 'text-blue-300' : 'text-blue-700')
+                            ? (darkMode ? 'text-primary-400' : 'text-primary-600')
                             : (darkMode ? 'text-gray-500' : 'text-gray-400')}`}
                         >
                           {taskDetails.target_value || 'Set target'}
@@ -299,7 +299,7 @@ const TaskHeader = () => {
                       <DropDown options={TARGET_TYPE_OPTIONS} onSelect={handleTargetTypeChange} value={taskDetails?.target_type} isMulti={false}>
                         <span
                           className={`font-medium cursor-pointer hover:underline whitespace-nowrap ${taskDetails?.target_type
-                            ? (darkMode ? 'text-blue-300' : 'text-blue-700')
+                            ? (darkMode ? 'text-primary-400' : 'text-primary-600')
                             : (darkMode ? 'text-gray-500' : 'text-gray-400')}`}
                         >
                           {taskDetails?.target_type
@@ -310,11 +310,11 @@ const TaskHeader = () => {
                       </DropDown>
 
                       {/* Target Frequency - Always show for goals */}
-                      <span className={`flex-shrink-0 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>•</span>
+                      <span className={`flex-shrink-0 ${darkMode ? 'text-primary-400' : 'text-primary-600'}`}>•</span>
                       <DropDown options={TARGET_FREQUENCY_OPTIONS} onSelect={handleTargetFrequencyChange} value={taskDetails?.target_frequency} isMulti={false}>
                         <span
                           className={`font-medium cursor-pointer hover:underline whitespace-nowrap ${taskDetails?.target_frequency
-                            ? (darkMode ? 'text-blue-300' : 'text-blue-700')
+                            ? (darkMode ? 'text-primary-400' : 'text-primary-600')
                             : (darkMode ? 'text-gray-500' : 'text-gray-400')}`}
                         >
                           {taskDetails?.target_frequency
