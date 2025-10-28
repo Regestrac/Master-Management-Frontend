@@ -13,6 +13,7 @@ type PropsType = {
   rows?: number;
   onBlur?: (_value: string) => void;
   icon?: ReactNode;
+  ref?: React.RefObject<HTMLTextAreaElement | null>;
   onClick?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['onClick'];
   style?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['style'];
   autoFocus?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['autoFocus'];
@@ -20,7 +21,17 @@ type PropsType = {
   hideResizeIndicator?: boolean;
 };
 
-const Input = ({ name, label, icon, type = 'text', onBlur, id, hideResizeIndicator = false, ...props }: PropsType) => {
+const Input = ({
+  name,
+  label,
+  icon,
+  type = 'text',
+  onBlur,
+  id,
+  hideResizeIndicator = false,
+  ref: textAreaRef,
+  ...props
+}: PropsType) => {
   const [showPassword, setShowPassword] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -80,6 +91,9 @@ const Input = ({ name, label, icon, type = 'text', onBlur, id, hideResizeIndicat
             } : undefined}
             ref={(ref) => {
               textareaRef.current = ref;
+              if (textAreaRef) {
+                textAreaRef.current = ref;
+              }
               if (ref && hideResizeIndicator) {
                 // Set initial height on mount
                 ref.style.height = 'auto';
