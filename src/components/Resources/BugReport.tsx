@@ -305,7 +305,7 @@ const BugReport = () => {
             </div>
 
             {/* Submit Button */}
-            <div className='flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-gray-200 dark:border-gray-700'>
+            <div className={`flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
               <div className={`flex items-center gap-2 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 <AlertCircle className='h-4 w-4' />
                 <span>Fields marked with * are required</span>

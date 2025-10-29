@@ -4,10 +4,12 @@ import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import clsx from 'clsx';
 
 import { LANGUAGE_OPTIONS, TIME_ZONE_OPTIONS } from 'helpers/configs';
 
 import { useProfileStore } from 'stores/profileStore';
+import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateProfile } from 'services/profile';
 
@@ -48,6 +50,7 @@ const Profile = () => {
     email,
     ...userData
   } = useProfileStore((state) => state?.data);
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const shouldResetForm = useRef(true);
 
@@ -122,7 +125,7 @@ const Profile = () => {
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
           {/* Profile Sidebar - Limited scroll container */}
           <div className='lg:col-span-1'>
-            <div className='h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent no-scrollbar'>
+            <div className={clsx('h-[calc(100vh-8rem)] overflow-y-auto no-scrollbar', darkMode ? 'scrollbar-thumb-gray-600' : 'scrollbar-thumb-gray-300')}>
               <div className='space-y-6'>
                 <ProfileInfoCard />
                 <QuickStats />
@@ -133,7 +136,7 @@ const Profile = () => {
 
           {/* Main Profile Content - Independent scroll container */}
           <div className='lg:col-span-2'>
-            <div className='h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent no-scrollbar'>
+            <div className={clsx('h-[calc(100vh-8rem)] overflow-y-auto no-scrollbar', darkMode ? 'scrollbar-thumb-gray-600' : 'scrollbar-thumb-gray-300')}>
               <FormProvider {...methods}>
                 <div className='space-y-8 pb-8'>
                   <PersonalInformation />

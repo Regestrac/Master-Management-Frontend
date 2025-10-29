@@ -57,7 +57,7 @@ const HelpAndSupport = () => {
         ))}
       </div>
 
-      {/* <div className='mt-6 pt-6 border-t border-gray-200 dark:border-gray-700'>
+      {/* <div className={clsx('mt-6 pt-6 border-t', darkMode ? 'border-gray-700' : 'border-gray-200')}>
         <div className='flex items-center justify-between'>
           <div>
             <h6 className='font-medium'>App Version</h6>

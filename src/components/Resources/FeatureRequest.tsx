@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 
-import { Lightbulb, AlertCircle, Send, Star, Users, Target, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
+import { Lightbulb, AlertCircle, Send, Star, Users, Target, ArrowLeft } from 'lucide-react';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
-interface FeatureRequestForm {
+type FeatureRequestForm = {
   title: string;
   description: string;
   priority: 'low' | 'medium' | 'high' | 'critical';
@@ -15,7 +16,7 @@ interface FeatureRequestForm {
   businessValue: string;
   acceptanceCriteria: string;
   additionalNotes: string;
-}
+};
 
 const FeatureRequest = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
@@ -87,15 +88,15 @@ const FeatureRequest = () => {
   };
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={clsx('min-h-screen', darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900')}>
       {/* Header */}
-      <header className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} sm:ml-70 border-b shadow-sm fixed top-0 left-0 right-0 z-50`}>
+      <header className={clsx('sm:ml-70 border-b shadow-sm fixed top-0 left-0 right-0 z-50', darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200')}>
         <div className='max-w-4xl mx-auto px-6 py-4'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center space-x-4'>
               <button
                 onClick={handleBack}
-                className={`flex items-center space-x-2 ${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors`}
+                className={clsx('flex items-center space-x-2 transition-colors', darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900')}
                 aria-label='Go back'
               >
                 <ArrowLeft className='w-5 h-5' />
@@ -108,7 +109,7 @@ const FeatureRequest = () => {
               </div>
               <div>
                 <h1 className='text-xl font-bold'>Feature Request</h1>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Master Management</p>
+                <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-600')}>Master Management</p>
               </div>
             </div>
           </div>
@@ -117,9 +118,9 @@ const FeatureRequest = () => {
 
       {/* Content */}
       <main className='max-w-4xl mx-auto px-6 pt-24 pb-8'>
-        <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-8 border shadow-sm`}>
+        <div className={clsx('rounded-xl p-8 border shadow-sm', darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200')}>
           <div className='mb-6'>
-            <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>
+            <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-600')}>
               Share your ideas to help us improve the product. Provide detailed information about your feature request.
             </p>
           </div>
@@ -136,7 +137,7 @@ const FeatureRequest = () => {
                 required
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
-                className={`w-full px-4 py-2.5 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'} focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors`}
+                className={clsx('w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors', darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900')}
                 placeholder='Brief title for the feature request'
               />
             </div>
@@ -153,7 +154,7 @@ const FeatureRequest = () => {
                     required
                     value={formData.priority}
                     onChange={(e) => handleInputChange('priority', e.target.value)}
-                    className={`w-full px-4 py-2.5 pl-10 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'} focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors`}
+                    className={clsx('w-full px-4 py-2.5 pl-10 rounded-lg border focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors', darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900')}
                   >
                     <option value='low'>Low Priority</option>
                     <option value='medium'>Medium Priority</option>
@@ -174,7 +175,7 @@ const FeatureRequest = () => {
                   id='category'
                   value={formData.category}
                   onChange={(e) => handleInputChange('category', e.target.value)}
-                  className={`w-full px-4 py-2.5 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'} focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors`}
+                  className={clsx('w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors', darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900')}
                   placeholder='e.g., UI/UX, Performance, Integration'
                 />
               </div>
@@ -279,7 +280,7 @@ const FeatureRequest = () => {
             </div>
 
             {/* Submit Button */}
-            <div className='flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-gray-200 dark:border-gray-700'>
+            <div className={clsx('flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t', darkMode ? 'border-gray-700' : 'border-gray-200')}>
               <div className={`flex items-center gap-2 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 <AlertCircle className='h-4 w-4' />
                 <span>Fields marked with * are required</span>

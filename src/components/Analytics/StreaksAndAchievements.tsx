@@ -27,7 +27,7 @@ const StreaksAndAchievements = () => {
         ))}
       </div>
 
-      <div className='mt-6 pt-6 border-t border-gray-200 dark:border-gray-700'>
+      <div className={`mt-6 pt-6 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
         <h5 className='font-medium mb-3'>Recent Badges</h5>
         <div className='flex flex-wrap gap-2'>
           {['Week Warrior', 'Goal Crusher', 'Focus Master', 'Consistency King'].map((badge, index) => (

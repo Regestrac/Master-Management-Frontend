@@ -43,7 +43,7 @@ const LeaveWorkspaceModal = () => {
           <p className={clsx('text-sm', darkMode ? 'text-gray-300' : 'text-gray-700')}>
             Are you sure you want to leave
             {' '}
-            <span className='font-medium text-primary-600 dark:text-primary-400'>
+            <span className={`font-medium ${darkMode ? 'text-primary-400' : 'text-primary-600'}`}>
               {workspaceName || 'this workspace'}
             </span>
             ?

@@ -1,8 +1,14 @@
+import clsx from 'clsx';
+
+import { useSettingsStore } from 'stores/settingsStore';
+
 import Skeleton from 'components/Shared/Skeleton';
 
 const PersonalInformationSkeleton = () => {
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
+
   return (
-    <div className='bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm'>
+    <div className={clsx('border rounded-xl p-6 shadow-sm', darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200')}>
       <div className='mb-6'>
         <Skeleton height={28} width={200} />
       </div>

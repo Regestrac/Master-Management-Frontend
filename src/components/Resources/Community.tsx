@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
-interface ForumPost {
+type ForumPost = {
   id: string;
   title: string;
   content: string;
@@ -35,15 +35,158 @@ interface ForumPost {
   views: number;
   isSticky?: boolean;
   isSolved?: boolean;
-}
+};
 
-interface Category {
+type Category = {
   id: string;
   name: string;
   description: string;
   postCount: number;
   color: string;
-}
+};
+
+const categories: Category[] = [
+  {
+    id: 'all',
+    name: 'All Posts',
+    description: 'View all community discussions',
+    postCount: 156,
+    color: 'bg-purple-500',
+  },
+  {
+    id: 'general',
+    name: 'General Discussion',
+    description: 'General topics and conversations',
+    postCount: 45,
+    color: 'bg-blue-500',
+  },
+  {
+    id: 'help',
+    name: 'Help & Support',
+    description: 'Get help with using the platform',
+    postCount: 32,
+    color: 'bg-green-500',
+  },
+  {
+    id: 'features',
+    name: 'Feature Requests',
+    description: 'Suggest new features and improvements',
+    postCount: 28,
+    color: 'bg-orange-500',
+  },
+  {
+    id: 'tips',
+    name: 'Tips & Tricks',
+    description: 'Share productivity tips and best practices',
+    postCount: 41,
+    color: 'bg-pink-500',
+  },
+  {
+    id: 'announcements',
+    name: 'Announcements',
+    description: 'Official updates and news',
+    postCount: 10,
+    color: 'bg-red-500',
+  },
+];
+
+const forumPosts: ForumPost[] = [
+  {
+    id: '1',
+    title: 'Welcome to the Master Management Community!',
+    content: 'We\'re excited to launch our community forum where users can connect, share tips, and help each other succeed with productivity management.',
+    author: {
+      name: 'Admin Team',
+      avatar: '👨‍💼',
+      role: 'admin',
+    },
+    category: 'announcements',
+    tags: ['welcome', 'community', 'announcement'],
+    createdAt: '2024-10-08T10:00:00Z',
+    replies: 24,
+    likes: 89,
+    views: 342,
+    isSticky: true,
+  },
+  {
+    id: '2',
+    title: 'How to maximize productivity with focus sessions?',
+    content: 'I\'ve been using the focus sessions feature for a month now, and I\'d love to share some tips that have really helped me stay productive...',
+    author: {
+      name: 'Sarah Johnson',
+      avatar: '👩‍💻',
+      role: 'member',
+    },
+    category: 'tips',
+    tags: ['focus', 'productivity', 'tips'],
+    createdAt: '2024-10-07T15:30:00Z',
+    replies: 12,
+    likes: 45,
+    views: 156,
+  },
+  {
+    id: '3',
+    title: 'Calendar sync not working with Google Calendar',
+    content: 'I\'m having trouble syncing my tasks with Google Calendar. The integration was working fine last week, but now it seems to have stopped...',
+    author: {
+      name: 'Mike Chen',
+      avatar: '👨‍🔧',
+      role: 'member',
+    },
+    category: 'help',
+    tags: ['calendar', 'sync', 'google', 'bug'],
+    createdAt: '2024-10-07T09:15:00Z',
+    replies: 8,
+    likes: 12,
+    views: 89,
+    isSolved: true,
+  },
+  {
+    id: '4',
+    title: 'Feature Request: Dark mode for mobile app',
+    content: 'Would love to see dark mode support for the mobile version of the app. The web version looks great in dark mode!',
+    author: {
+      name: 'Alex Rivera',
+      avatar: '🌙',
+      role: 'member',
+    },
+    category: 'features',
+    tags: ['mobile', 'dark-mode', 'ui'],
+    createdAt: '2024-10-06T20:45:00Z',
+    replies: 15,
+    likes: 67,
+    views: 203,
+  },
+  {
+    id: '5',
+    title: 'Best practices for goal setting and tracking',
+    content: 'After using the platform for 6 months, here are my top recommendations for setting up effective goals and tracking progress...',
+    author: {
+      name: 'Emma Wilson',
+      avatar: '🎯',
+      role: 'moderator',
+    },
+    category: 'tips',
+    tags: ['goals', 'tracking', 'best-practices'],
+    createdAt: '2024-10-06T14:20:00Z',
+    replies: 19,
+    likes: 78,
+    views: 234,
+  },
+];
+
+const getRoleColor = (role: string, darkMode: boolean) => {
+  switch (role) {
+    case 'admin': return darkMode ? 'text-red-500 bg-red-900/20' : 'text-red-500 bg-red-100';
+    case 'moderator': return darkMode ? 'text-purple-500 bg-purple-900/20' : 'text-purple-500 bg-purple-100';
+    default: return darkMode ? 'text-gray-500 bg-gray-700/20' : 'text-gray-500 bg-gray-100';
+  }
+};
+
+const getCategoryColor = (categories: Category[], categoryId: string) => {
+  const category = categories.find((c) => c.id === categoryId);
+  return category?.color || 'bg-gray-500';
+};
 
 const Community = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
@@ -62,149 +205,6 @@ const Community = () => {
     } else {
       navigate('/');
     }
-  };
-
-  const categories: Category[] = [
-    {
-      id: 'all',
-      name: 'All Posts',
-      description: 'View all community discussions',
-      postCount: 156,
-      color: 'bg-purple-500',
-    },
-    {
-      id: 'general',
-      name: 'General Discussion',
-      description: 'General topics and conversations',
-      postCount: 45,
-      color: 'bg-blue-500',
-    },
-    {
-      id: 'help',
-      name: 'Help & Support',
-      description: 'Get help with using the platform',
-      postCount: 32,
-      color: 'bg-green-500',
-    },
-    {
-      id: 'features',
-      name: 'Feature Requests',
-      description: 'Suggest new features and improvements',
-      postCount: 28,
-      color: 'bg-orange-500',
-    },
-    {
-      id: 'tips',
-      name: 'Tips & Tricks',
-      description: 'Share productivity tips and best practices',
-      postCount: 41,
-      color: 'bg-pink-500',
-    },
-    {
-      id: 'announcements',
-      name: 'Announcements',
-      description: 'Official updates and news',
-      postCount: 10,
-      color: 'bg-red-500',
-    },
-  ];
-
-  const forumPosts: ForumPost[] = [
-    {
-      id: '1',
-      title: 'Welcome to the Master Management Community!',
-      content: 'We\'re excited to launch our community forum where users can connect, share tips, and help each other succeed with productivity management.',
-      author: {
-        name: 'Admin Team',
-        avatar: '👨‍💼',
-        role: 'admin',
-      },
-      category: 'announcements',
-      tags: ['welcome', 'community', 'announcement'],
-      createdAt: '2024-10-08T10:00:00Z',
-      replies: 24,
-      likes: 89,
-      views: 342,
-      isSticky: true,
-    },
-    {
-      id: '2',
-      title: 'How to maximize productivity with focus sessions?',
-      content: 'I\'ve been using the focus sessions feature for a month now, and I\'d love to share some tips that have really helped me stay productive...',
-      author: {
-        name: 'Sarah Johnson',
-        avatar: '👩‍💻',
-        role: 'member',
-      },
-      category: 'tips',
-      tags: ['focus', 'productivity', 'tips'],
-      createdAt: '2024-10-07T15:30:00Z',
-      replies: 12,
-      likes: 45,
-      views: 156,
-    },
-    {
-      id: '3',
-      title: 'Calendar sync not working with Google Calendar',
-      content: 'I\'m having trouble syncing my tasks with Google Calendar. The integration was working fine last week, but now it seems to have stopped...',
-      author: {
-        name: 'Mike Chen',
-        avatar: '👨‍🔧',
-        role: 'member',
-      },
-      category: 'help',
-      tags: ['calendar', 'sync', 'google', 'bug'],
-      createdAt: '2024-10-07T09:15:00Z',
-      replies: 8,
-      likes: 12,
-      views: 89,
-      isSolved: true,
-    },
-    {
-      id: '4',
-      title: 'Feature Request: Dark mode for mobile app',
-      content: 'Would love to see dark mode support for the mobile version of the app. The web version looks great in dark mode!',
-      author: {
-        name: 'Alex Rivera',
-        avatar: '🌙',
-        role: 'member',
-      },
-      category: 'features',
-      tags: ['mobile', 'dark-mode', 'ui'],
-      createdAt: '2024-10-06T20:45:00Z',
-      replies: 15,
-      likes: 67,
-      views: 203,
-    },
-    {
-      id: '5',
-      title: 'Best practices for goal setting and tracking',
-      content: 'After using the platform for 6 months, here are my top recommendations for setting up effective goals and tracking progress...',
-      author: {
-        name: 'Emma Wilson',
-        avatar: '🎯',
-        role: 'moderator',
-      },
-      category: 'tips',
-      tags: ['goals', 'tracking', 'best-practices'],
-      createdAt: '2024-10-06T14:20:00Z',
-      replies: 19,
-      likes: 78,
-      views: 234,
-    },
-  ];
-
-  const getRoleColor = (role: string) => {
-    switch (role) {
-      case 'admin': return 'text-red-500 bg-red-100 dark:bg-red-900/20';
-      case 'moderator': return 'text-purple-500 bg-purple-100 dark:bg-purple-900/20';
-      default: return 'text-gray-500 bg-gray-100 dark:bg-gray-700';
-    }
-  };
-
-  const getCategoryColor = (categoryId: string) => {
-    const category = categories.find((c) => c.id === categoryId);
-    return category?.color || 'bg-gray-500';
   };
 
   const filteredPosts = forumPosts.filter((post) => {
@@ -381,7 +381,7 @@ const Community = () => {
                             {post.title}
                           </h3>
                           {post.isSolved && (
-                            <span className='px-2 py-0.5 bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 text-xs font-medium rounded'>
+                            <span className={`px-2 py-0.5 text-xs font-medium rounded ${darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-100 text-green-800 '}`}>
                               Solved
                             </span>
                           )}
@@ -389,12 +389,12 @@ const Community = () => {
                         <div className='flex items-center gap-2 text-sm text-gray-500 mb-2'>
                           <User className='h-3 w-3' />
                           <span>{post.author.name}</span>
-                          <span className={`px-2 py-0.5 rounded text-xs font-medium ${getRoleColor(post.author.role)}`}>
+                          <span className={`px-2 py-0.5 rounded text-xs font-medium ${getRoleColor(post.author.role, darkMode)}`}>
                             {post.author.role}
                           </span>
                           <Calendar className='h-3 w-3 ml-2' />
                           <span>{new Date(post.createdAt).toLocaleDateString()}</span>
-                          <div className={`w-2 h-2 rounded-full ${getCategoryColor(post.category)} ml-2`} />
+                          <div className={`w-2 h-2 rounded-full ${getCategoryColor(categories, post.category)} ml-2`} />
                           <span className='capitalize'>{post.category}</span>
                         </div>
                       </div>

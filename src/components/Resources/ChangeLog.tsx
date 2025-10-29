@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 
 import { Calendar, Tag, ChevronDown, ChevronRight, GitCommit, Zap, Bug, Plus, ArrowUp, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
-interface ChangeLogEntry {
+type ChangeLogEntry = {
   version: string;
   date: string;
   type: 'major' | 'minor' | 'patch';
@@ -14,7 +15,36 @@ interface ChangeLogEntry {
     title: string;
     description: string;
   }[];
-}
+};
+
+const getVersionTypeColor = (type: string, darkMode: boolean) => {
+  switch (type) {
+    case 'major': return darkMode ? 'bg-red-900/20 text-red-400' : 'bg-red-100 text-red-800';
+    case 'minor': return darkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-100 text-blue-800';
+    case 'patch': return darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-100 text-green-800';
+    default: return darkMode ? 'bg-gray-900/20 text-gray-400' : 'bg-gray-100 text-gray-800';
+  }
+};
+
+const getChangeIcon = (type: string) => {
+  switch (type) {
+    case 'feature': return <Plus className='h-4 w-4 text-green-500' />;
+    case 'improvement': return <ArrowUp className='h-4 w-4 text-blue-500' />;
+    case 'bugfix': return <Bug className='h-4 w-4 text-orange-500' />;
+    case 'breaking': return <Zap className='h-4 w-4 text-red-500' />;
+    default: return <GitCommit className='h-4 w-4 text-gray-500' />;
+  }
+};
+
+const getChangeTypeClass = (type: string, darkMode: boolean) => {
+  switch (type) {
+    case 'feature': return darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-100 text-green-800';
+    case 'improvement': return darkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-100 text-blue-800';
+    case 'bugfix': return darkMode ? 'bg-orange-900/20 text-orange-400' : 'bg-orange-100 text-orange-800';
+    case 'breaking': return darkMode ? 'bg-red-900/20 text-red-400' : 'bg-red-100 text-red-800';
+    default: return 'bg-gray-100 text-gray-800';
+  }
+};
 
 const ChangeLog = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
@@ -22,7 +52,7 @@ const ChangeLog = () => {
   const [expandedVersions, setExpandedVersions] = useState<Set<string>>(new Set(['2.1.0']));
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
 
   const handleBack = () => {
@@ -41,25 +71,6 @@ const ChangeLog = () => {
       newExpanded.add(version);
     }
     setExpandedVersions(newExpanded);
-  };
-
-  const getChangeIcon = (type: string) => {
-    switch (type) {
-      case 'feature': return <Plus className='h-4 w-4 text-green-500' />;
-      case 'improvement': return <ArrowUp className='h-4 w-4 text-blue-500' />;
-      case 'bugfix': return <Bug className='h-4 w-4 text-orange-500' />;
-      case 'breaking': return <Zap className='h-4 w-4 text-red-500' />;
-      default: return <GitCommit className='h-4 w-4 text-gray-500' />;
-    }
-  };
-
-  const getVersionTypeColor = (type: string) => {
-    switch (type) {
-      case 'major': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
-      case 'minor': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
-      case 'patch': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
-    }
   };
 
   const changeLogData: ChangeLogEntry[] = [
@@ -240,7 +251,7 @@ const ChangeLog = () => {
                           v
                           {entry.version}
                         </span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getVersionTypeColor(entry.type)}`}>
+                        <span className={clsx('px-2 py-1 rounded-full text-xs font-medium', getVersionTypeColor(entry.type, darkMode))}>
                           {entry.type.toUpperCase()}
                         </span>
                       </div>
@@ -264,13 +275,7 @@ const ChangeLog = () => {
                             <div className='flex items-center gap-2 mb-1'>
                               <h4 className='font-medium text-sm'>{change.title}</h4>
                               <span
-                                className={`px-2 py-0.5 rounded text-xs font-medium ${change.type === 'feature'
-                                  ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
-                                  : change.type === 'improvement'
-                                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
-                                    : change.type === 'bugfix'
-                                      ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400'
-                                      : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'}`}
+                                className={clsx('px-2 py-0.5 rounded text-xs font-medium', getChangeTypeClass(change.type, darkMode))}
                               >
                                 {change.type}
                               </span>

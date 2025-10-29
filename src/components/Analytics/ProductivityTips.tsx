@@ -43,16 +43,16 @@ const ProductivityTips = () => {
         ].map((insight, index) => (
           <div
             key={index}
-            className={`p-4 rounded-lg border-l-4 ${insight.type === 'tip' ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' :
-              insight.type === 'warning' ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20' :
-                insight.type === 'success' ? 'border-green-500 bg-green-50 dark:bg-green-900/20' :
-                  'border-purple-500 bg-purple-50 dark:bg-purple-900/20'}`}
+            className={`p-4 rounded-lg border-l-4 ${insight.type === 'tip' ? `border-blue-500 ${darkMode ? 'bg-blue-900/20' : 'bg-blue-50'}` :
+              insight.type === 'warning' ? `border-yellow-500 ${darkMode ? 'bg-yellow-900/20' : 'bg-yellow-50'}` :
+                insight.type === 'success' ? `border-green-500 ${darkMode ? 'bg-green-900/20' : 'bg-green-50'}` :
+                  `border-purple-500 ${darkMode ? 'bg-purple-900/20' : 'bg-purple-50'}`}`}
           >
             <div className='flex items-start space-x-3'>
               <span className='text-lg'>{insight.icon}</span>
               <div className='flex-1'>
                 <h6 className='font-medium text-sm mb-1'>{insight.title}</h6>
-                <p className='text-xs text-gray-600 dark:text-gray-400 mb-2'>{insight.message}</p>
+                <p className={`text-xs mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{insight.message}</p>
                 <button className={`text-xs font-medium px-2 py-1 rounded ${insight.type === 'tip' ? 'text-blue-600 hover:bg-blue-100' :
                   insight.type === 'warning' ? 'text-yellow-600 hover:bg-yellow-100' :
                     insight.type === 'success' ? 'text-green-600 hover:bg-green-100' :
