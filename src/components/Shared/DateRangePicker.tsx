@@ -294,7 +294,13 @@ const DateRangePicker = memo(({
       const category = getDateCategory(date);
       return (
         <div className='flex items-center gap-2'>
-          <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-500/10 text-primary-500 dark:bg-primary-500/20'>
+          <span
+            className={clsx(
+              'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
+              darkMode ? 'bg-primary-500/20' : 'bg-primary-500/10',
+              'text-primary-500',
+            )}
+          >
             {category}
           </span>
           <span>{formatDate(date)}</span>
@@ -310,7 +316,12 @@ const DateRangePicker = memo(({
         const category = getDateCategory(range.startDate);
         return (
           <div className='flex items-center gap-2'>
-            <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-500/10 text-primary-500 dark:bg-primary-500/20'>
+            <span
+              className={clsx(
+                'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
+                darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700',
+              )}
+            >
               {category}
             </span>
             <span>{formatDate(range.startDate)}</span>
@@ -326,7 +337,12 @@ const DateRangePicker = memo(({
       return (
         <div className='flex items-center gap-2'>
           {category && (
-            <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-500/10 text-primary-500 dark:bg-primary-500/20'>
+            <span
+              className={clsx(
+                'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
+                darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700',
+              )}
+            >
               {category}
             </span>
           )}
@@ -338,7 +354,7 @@ const DateRangePicker = memo(({
     }
 
     return null;
-  }, []);
+  }, [darkMode]);
 
   // Function to check if current date range matches a preset
   const getActivePreset = useCallback(() => {
@@ -515,9 +531,14 @@ const DateRangePicker = memo(({
   }, [isOpen]);
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
+    <div className={clsx('relative', className)} ref={dropdownRef}>
       {label && (
-        <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+        <label
+          className={clsx(
+            'block text-sm font-medium mb-2',
+            darkMode ? 'text-gray-300' : 'text-gray-700',
+          )}
+        >
           {label}
         </label>
       )}
@@ -527,13 +548,24 @@ const DateRangePicker = memo(({
         ref={triggerRef}
         type='button'
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-between px-4 py-3 rounded-lg border transition-colors ${fieldState.error
-          ? 'border-red-500 focus:ring-red-500'
-          : darkMode
-            ? 'border-gray-600 focus:ring-primary-500 bg-gray-800 text-gray-300'
-            : 'border-gray-300 focus:ring-primary-500 bg-white text-gray-800'}`}
+        className={clsx(
+          'w-full flex items-center justify-between px-4 py-3 rounded-lg border transition-colors',
+          fieldState.error
+            ? 'border-red-500 focus:ring-red-500'
+            : [
+              'focus:ring-primary-500',
+              darkMode
+                ? 'border-gray-600 bg-gray-800 text-gray-300'
+                : 'border-gray-300 bg-white text-gray-800',
+            ],
+        )}
       >
-        <span className={formatDateRange(dateRange) ? '' : darkMode ? 'text-gray-500' : 'text-gray-600'}>
+        <span
+          className={clsx({
+            'text-gray-500': darkMode && !formatDateRange(dateRange),
+            'text-gray-600': !darkMode && !formatDateRange(dateRange),
+          })}
+        >
           {formatDateRange(dateRange) || placeholder}
         </span>
         <Calendar className='w-5 h-5' />
@@ -554,15 +586,24 @@ const DateRangePicker = memo(({
           )}
           style={dropdownStyle}
         >
-          <div className={isSmallScreen ? 'flex flex-col' : 'flex w-fit'}>
+          <div className={clsx(
+            isSmallScreen ? 'flex flex-col' : 'flex w-fit',
+          )}
+          >
             {/* Presets Sidebar */}
-            <div className={clsx(
-              'p-4',
-              darkMode ? 'border-gray-600' : 'border-gray-200',
-              isSmallScreen ? 'w-full border-b' : 'w-52 border-r flex-shrink-0',
-            )}
+            <div
+              className={clsx(
+                'p-4',
+                darkMode ? 'border-gray-600' : 'border-gray-200',
+                isSmallScreen ? 'w-full border-b' : 'w-52 border-r flex-shrink-0',
+              )}
             >
-              <h4 className={`text-sm font-medium mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              <h4
+                className={clsx(
+                  'text-sm font-medium mb-3',
+                  darkMode ? 'text-gray-300' : 'text-gray-700',
+                )}
+              >
                 Quick Select
               </h4>
               <div className='space-y-1'>
@@ -578,11 +619,14 @@ const DateRangePicker = memo(({
                         handlePresetClick(preset);
                         setIsOpen(false);
                       }}
-                      className={`w-full text-left px-3 py-2 text-sm rounded transition-colors ${isActive
-                        ? 'bg-primary-500 text-white'
-                        : darkMode
-                          ? 'text-gray-300 hover:bg-gray-700'
-                          : 'text-gray-700 hover:bg-gray-100'}`}
+                      className={clsx(
+                        'w-full text-left px-3 py-2 text-sm rounded transition-colors',
+                        isActive
+                          ? 'bg-primary-500 text-white'
+                          : darkMode
+                            ? 'text-gray-300 hover:bg-gray-700'
+                            : 'text-gray-700 hover:bg-gray-100',
+                      )}
                     >
                       {preset.label}
                     </button>
@@ -597,8 +641,13 @@ const DateRangePicker = memo(({
             </div>
 
             {/* Date Picker */}
-            <div className={`${isSmallScreen ? 'w-full' : 'w-fit flex-shrink-0'} p-4`}>
-              <div className={darkMode ? 'rmdp-dark' : ''}>
+            <div
+              className={clsx(
+                isSmallScreen ? 'w-full' : 'w-fit flex-shrink-0',
+                'p-4',
+              )}
+            >
+              <div className={clsx(darkMode && 'rmdp-dark')}>
                 <RMDPCalendar
                   {...pickerConfig}
                   value={currentValues}
@@ -623,9 +672,10 @@ const DateRangePicker = memo(({
                     handleApply();
                     setIsOpen(false);
                   }}
-                  className={`w-full px-4 py-2 rounded-md text-sm font-medium transition-colors ${darkMode
-                    ? 'bg-primary-500 hover:bg-primary-600 text-white'
-                    : 'bg-primary-500 hover:bg-primary-600 text-white'}`}
+                  className={clsx(
+                    'w-full px-4 py-2 rounded-md text-sm font-medium transition-colors',
+                    'bg-primary-500 hover:bg-primary-600 text-white',
+                  )}
                 >
                   Apply
                 </button>

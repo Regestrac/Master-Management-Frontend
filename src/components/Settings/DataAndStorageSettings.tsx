@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { toast } from 'react-toastify';
+import clsx from 'clsx';
 
 import { ANALYTICS_RETENTION_OPTIONS, TASK_RETENTION_OPTIONS } from 'helpers/configs';
 
@@ -69,7 +70,12 @@ const DataAndStorageSettings = () => {
   const storageUsedPercentage = (totalBytes / storageLimitBytes) * 100;
 
   return (
-    <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
+    <div
+      className={clsx(
+        'rounded-xl p-6 border shadow-sm',
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
+      )}
+    >
       <h4 className='text-xl font-bold mb-6 flex items-center'>
         <span className='text-2xl mr-3'>💾</span>
         Data & Storage
@@ -81,22 +87,22 @@ const DataAndStorageSettings = () => {
           <h5 className='font-semibold mb-4'>Storage Usage</h5>
           {isLoading ? (
             <div className='space-y-4'>
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-750' : 'bg-gray-50'} animate-pulse`}>
-                <div className='h-6 bg-gray-300 dark:bg-gray-600 rounded w-1/2 mb-2' />
-                <div className='h-3 bg-gray-300 dark:bg-gray-600 rounded' />
+              <div className={clsx('p-4 rounded-lg animate-pulse', darkMode ? 'bg-gray-750' : 'bg-gray-50')}>
+                <div className={clsx('h-6 rounded w-1/2 mb-2', darkMode ? 'bg-gray-600' : 'bg-gray-300')} />
+                <div className={clsx('h-3 rounded', darkMode ? 'bg-gray-600' : 'bg-gray-300')} />
               </div>
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 bg-gray-750' : 'border-gray-200 bg-gray-50'} animate-pulse`}>
-                    <div className='h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4 mb-2' />
-                    <div className='h-1 bg-gray-300 dark:bg-gray-600 rounded' />
+                  <div key={i} className={clsx('p-3 rounded-lg border animate-pulse', darkMode ? 'border-gray-700 bg-gray-750' : 'border-gray-200 bg-gray-50')}>
+                    <div className={clsx('h-4 rounded w-3/4 mb-2', darkMode ? 'bg-gray-600' : 'bg-gray-300')} />
+                    <div className={clsx('h-1 rounded', darkMode ? 'bg-gray-600' : 'bg-gray-300')} />
                   </div>
                 ))}
               </div>
             </div>
           ) : (
             <div className='space-y-4'>
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-750' : 'bg-gray-50'}`}>
+              <div className={clsx('p-4 rounded-lg', darkMode ? 'bg-gray-750' : 'bg-gray-50')}>
                 <div className='flex items-center justify-between mb-2'>
                   <span className='font-medium'>Total Storage Used</span>
                   <span className='text-lg font-bold'>
@@ -105,13 +111,13 @@ const DataAndStorageSettings = () => {
                     {formatBytes(storageLimitBytes)}
                   </span>
                 </div>
-                <div className={`w-full h-3 ${darkMode ? 'bg-gray-600' : 'bg-gray-200'} rounded-full overflow-hidden`}>
+                <div className={clsx('w-full h-3 rounded-full overflow-hidden', darkMode ? 'bg-gray-600' : 'bg-gray-200')}>
                   <div
                     className='h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-300'
                     style={{ width: `${Math.min(storageUsedPercentage, 100)}%` }}
                   />
                 </div>
-                <div className='mt-2 text-xs text-gray-500 dark:text-gray-400'>
+                <div className={clsx('mt-2 text-xs', darkMode ? 'text-gray-400' : 'text-gray-500')}>
                   {storageUsedPercentage.toFixed(2)}
                   % of storage used
                 </div>
@@ -124,7 +130,7 @@ const DataAndStorageSettings = () => {
                   { label: 'Workspaces', size: formatBytes(workspacesBytes), percentage: calculatePercentage(workspacesBytes), color: 'bg-purple-500', bytes: workspacesBytes },
                   { label: 'Others', size: formatBytes(othersBytes), percentage: calculatePercentage(othersBytes), color: 'bg-pink-500', bytes: othersBytes },
                 ].filter((item) => item.bytes > 0).map((item, index) => (
-                  <div key={index} className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 bg-gray-750' : 'border-gray-200 bg-gray-50'}`}>
+                  <div key={index} className={clsx('p-3 rounded-lg border', darkMode ? 'border-gray-700 bg-gray-750' : 'border-gray-200 bg-gray-50')}>
                     <div className='flex items-center justify-between mb-2'>
                       <div className='flex items-center space-x-2'>
                         <div className={`w-3 h-3 rounded-full ${item.color}`} />
@@ -132,10 +138,10 @@ const DataAndStorageSettings = () => {
                       </div>
                       <span className='text-sm font-medium'>{item.size}</span>
                     </div>
-                    <div className={`w-full h-1 ${darkMode ? 'bg-gray-600' : 'bg-gray-200'} rounded-full`}>
+                    <div className={clsx('w-full h-1 rounded-full', darkMode ? 'bg-gray-600' : 'bg-gray-200')}>
                       <div className={`h-1 ${item.color} rounded-full transition-all duration-300`} style={{ width: `${item.percentage}%` }} />
                     </div>
-                    <div className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                    <div className={clsx('mt-1 text-xs', darkMode ? 'text-gray-400' : 'text-gray-500')}>
                       {item.percentage.toFixed(1)}
                       % of total
                     </div>
@@ -156,19 +162,34 @@ const DataAndStorageSettings = () => {
               description='Sync data across all your devices'
             />
             <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-              <button className='flex flex-col items-center p-4 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors'>
+              <button
+                className={clsx(
+                  'flex flex-col items-center p-4 border border-blue-500 text-blue-500 rounded-lg transition-colors',
+                  darkMode ? 'hover:bg-blue-900/20' : 'hover:bg-blue-50',
+                )}
+              >
                 <svg className='w-8 h-8 mb-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                   <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10' />
                 </svg>
                 <span className='text-sm font-medium'>Backup Now</span>
               </button>
-              <button className='flex flex-col items-center p-4 border border-green-500 text-green-500 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors'>
+              <button
+                className={clsx(
+                  'flex flex-col items-center p-4 border border-green-500 text-green-500 rounded-lg transition-colors',
+                  darkMode ? 'hover:bg-green-900/20' : 'hover:bg-green-50',
+                )}
+              >
                 <svg className='w-8 h-8 mb-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                   <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' />
                 </svg>
                 <span className='text-sm font-medium'>Restore</span>
               </button>
-              <button className='flex flex-col items-center p-4 border border-purple-500 text-purple-500 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors'>
+              <button
+                className={clsx(
+                  'flex flex-col items-center p-4 border border-purple-500 text-purple-500 rounded-lg transition-colors',
+                  darkMode ? 'hover:bg-purple-900/20' : 'hover:bg-purple-50',
+                )}
+              >
                 <svg className='w-8 h-8 mb-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                   <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15' />
                 </svg>

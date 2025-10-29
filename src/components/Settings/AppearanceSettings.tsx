@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import clsx from 'clsx';
 import { toast } from 'react-toastify';
 
 import { setPrimaryPalette } from 'helpers/themeHelpers';
@@ -121,7 +122,12 @@ const AppearanceSettings = () => {
   };
 
   return (
-    <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
+    <div
+      className={clsx(
+        'rounded-xl p-6 border shadow-sm',
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
+      )}
+    >
       <h4 className='text-xl font-bold mb-6 flex items-center'>
         <span className='text-2xl mr-3'>🎨</span>
         Appearance & Themes
@@ -134,9 +140,13 @@ const AppearanceSettings = () => {
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
             <button
               onClick={handleSetLight}
-              className={`p-4 rounded-lg border-2 transition-all ${themeMode === 'light'
-                ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-                : 'border-gray-300 dark:border-gray-600 hover:border-primary-500'}`}
+              className={clsx(
+                'p-4 rounded-lg border-2 transition-all',
+                themeMode === 'light'
+                  ? 'border-primary-500 bg-primary-50 hover:border-primary-500'
+                  : 'border-gray-300 hover:border-primary-500',
+                darkMode && themeMode !== 'light' && 'bg-primary-900/20 border-gray-600',
+              )}
             >
               <div className='w-full h-20 bg-white border border-gray-300 rounded mb-3 flex items-center justify-center'>
                 <div className='w-8 h-8 bg-gray-200 rounded' />
@@ -145,9 +155,14 @@ const AppearanceSettings = () => {
             </button>
             <button
               onClick={handleSetDark}
-              className={`p-4 rounded-lg border-2 transition-all ${themeMode === 'dark'
-                ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-                : 'border-gray-300 dark:border-gray-600 hover:border-primary-500'}`}
+              className={clsx(
+                'p-4 rounded-lg border-2 transition-all',
+                themeMode === 'dark'
+                  ? 'border-primary-500 hover:border-primary-500'
+                  : 'border-gray-300 hover:border-primary-500',
+                darkMode && themeMode === 'dark' ? 'bg-primary-900/20' : 'bg-primary-50',
+                darkMode && themeMode !== 'dark' && 'border-gray-600',
+              )}
             >
               <div className='w-full h-20 bg-gray-800 border border-gray-600 rounded mb-3 flex items-center justify-center'>
                 <div className='w-8 h-8 bg-gray-600 rounded' />
@@ -156,9 +171,14 @@ const AppearanceSettings = () => {
             </button>
             <button
               onClick={handleSetAuto}
-              className={`p-4 rounded-lg border-2 transition-all ${themeMode === 'auto'
-                ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-                : 'border-gray-300 dark:border-gray-600 hover:border-primary-500'}`}
+              className={clsx(
+                'p-4 rounded-lg border-2 transition-all',
+                themeMode === 'auto'
+                  ? 'border-primary-500 hover:border-primary-500'
+                  : 'border-gray-300 hover:border-primary-500',
+                darkMode && themeMode === 'auto' ? 'bg-primary-900/20' : 'bg-primary-50',
+                darkMode && themeMode !== 'auto' && 'border-gray-600',
+              )}
             >
               <div className='w-full h-20 bg-gradient-to-r from-white to-gray-800 border border-gray-400 rounded mb-3 flex items-center justify-center'>
                 <div className='w-8 h-8 bg-gradient-to-r from-gray-200 to-gray-600 rounded' />
@@ -175,9 +195,15 @@ const AppearanceSettings = () => {
             {accentColorOptions?.map((colorOption, index) => (
               <button
                 key={index}
-                className={`w-12 h-12 rounded-lg border-2 transition-all ${colorOption.name === accentColor
-                  ? 'border-gray-900 dark:border-white scale-110'
-                  : 'border-gray-300 dark:border-gray-600 hover:scale-105'}`}
+                className={clsx(
+                  'w-12 h-12 rounded-lg border-2 transition-all',
+                  colorOption.name === accentColor
+                    ? 'scale-110'
+                    : 'hover:scale-105',
+                  colorOption.name === accentColor
+                    ? darkMode ? 'border-white' : 'border-gray-900'
+                    : darkMode ? 'border-gray-600' : 'border-gray-300',
+                )}
                 style={{ backgroundColor: colorOption.color }}
                 title={colorOption.name}
                 onClick={() => handleAccentChange(colorOption.name)}

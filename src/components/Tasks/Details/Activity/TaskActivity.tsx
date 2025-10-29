@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { CheckSquare, Edit3, History, MessageSquare, Plus, User } from 'lucide-react';
+import clsx from 'clsx';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
@@ -67,9 +68,15 @@ const history = [
 
 const TaskActivity = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
+
   return (
-    <div className={`rounded-xl border transition-colors ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-      <div className='p-6 border-b border-gray-200 dark:border-gray-700'>
+    <div
+      className={clsx(
+        'rounded-xl border transition-colors',
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
+      )}
+    >
+      <div className={clsx('p-6 border-b', darkMode ? 'border-gray-700' : 'border-gray-200')}>
         <h3 className='text-lg font-semibold flex items-center'>
           <History className='w-5 h-5 mr-2' />
           Activity Log
@@ -80,29 +87,46 @@ const TaskActivity = () => {
           {history.map((entry) => (
             <div
               key={entry.id}
-              className={`flex space-x-4 p-4 rounded-lg border transition-colors ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}
+              className={clsx(
+                'flex space-x-4 p-4 rounded-lg border transition-colors',
+                darkMode ? 'border-gray-700' : 'border-gray-200',
+              )}
             >
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${entry.type === 'created' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' :
-                entry.type === 'updated' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' :
-                  entry.type === 'progress' ? 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400' :
-                    entry.type === 'assignment' ? 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400' :
-                      'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'}`}
+              <div
+                className={clsx(
+                  'w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0',
+                  entry.type === 'created' && [
+                    darkMode ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-600',
+                  ],
+                  entry.type === 'updated' && [
+                    darkMode ? 'bg-blue-900/30 text-blue-400' : 'bg-blue-100 text-blue-600',
+                  ],
+                  entry.type === 'progress' && [
+                    darkMode ? 'bg-purple-900/30 text-purple-400' : 'bg-purple-100 text-purple-600',
+                  ],
+                  entry.type === 'assignment' && [
+                    darkMode ? 'bg-orange-900/30 text-orange-400' : 'bg-orange-100 text-orange-600',
+                  ],
+                  !['created', 'updated', 'progress', 'assignment'].includes(entry.type) && [
+                    darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-600',
+                  ],
+                )}
               >
                 {getActionIcon(entry.type)}
               </div>
               <div className='flex-1'>
                 <div className='flex items-center space-x-2 mb-1'>
                   <p className='font-medium'>{entry.action}</p>
-                  <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <span className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-600')}>
                     by
                     {' '}
                     {entry.user}
                   </span>
                 </div>
-                <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
+                <p className={clsx('text-sm mb-2', darkMode ? 'text-gray-300' : 'text-gray-700')}>
                   {entry.details}
                 </p>
-                <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                <p className='text-xs text-gray-500'>
                   {dayjs(entry.timestamp).format('MMM DD, hh:mm A')}
                 </p>
               </div>

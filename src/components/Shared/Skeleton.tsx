@@ -1,5 +1,9 @@
 import React, { useEffect } from 'react';
 
+import clsx from 'clsx';
+
+import { useSettingsStore } from 'stores/settingsStore';
+
 export type SkeletonVariant = 'pulse' | 'shimmer';
 
 export type SkeletonProps = {
@@ -37,6 +41,8 @@ const Skeleton: React.FC<SkeletonProps> = ({
   variant = 'shimmer',
   durationMs,
 }) => {
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
+
   useEffect(() => {
     ensureSkeletonStyles();
   }, []);
@@ -49,12 +55,12 @@ const Skeleton: React.FC<SkeletonProps> = ({
   };
 
   // Resolve animation styles based on variant
-  const baseClass = 'bg-gray-200 dark:bg-gray-700 overflow-hidden';
+  const baseClass = clsx('overflow-hidden', darkMode ? 'bg-gray-700' : 'bg-gray-200');
 
   if (variant === 'pulse') {
     return (
       <div
-        className={`animate-pulse ${baseClass} ${className}`}
+        className={clsx('animate-pulse', baseClass, className)}
         style={inlineStyle}
       />
     );
@@ -70,7 +76,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
   // adapt colors for dark mode via currentColor overlay trick is tricky; keep base dark bg via baseClass
   return (
     <div
-      className={`${baseClass} ${className}`}
+      className={clsx(baseClass, className)}
       style={{ ...inlineStyle, ...shimmerStyle }}
     />
   );

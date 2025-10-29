@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
 import {
   Mail,
   Phone,
@@ -15,7 +17,6 @@ import {
   ExternalLink,
   ArrowLeft,
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
@@ -136,7 +137,8 @@ const Support = () => {
       contact: 'support@mastermanagement.com',
       responseTime: '24 hours',
       color: 'text-blue-500',
-      bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+      bgColor: (isDark: boolean) => isDark ? 'bg-blue-900/20' : 'bg-blue-50',
+      borderColor: (isDark: boolean) => isDark ? 'border-blue-800/50' : 'border-blue-200',
     },
     {
       icon: <MessageCircle className='h-6 w-6' />,
@@ -145,7 +147,8 @@ const Support = () => {
       contact: 'Available 9 AM - 6 PM EST',
       responseTime: 'Instant',
       color: 'text-green-500',
-      bgColor: 'bg-green-50 dark:bg-green-900/20',
+      bgColor: (isDark: boolean) => isDark ? 'bg-green-900/20' : 'bg-green-50',
+      borderColor: (isDark: boolean) => isDark ? 'border-green-800/50' : 'border-green-200',
     },
     {
       icon: <Phone className='h-6 w-6' />,
@@ -154,7 +157,8 @@ const Support = () => {
       contact: '+1 (555) 123-4567',
       responseTime: 'Business hours',
       color: 'text-purple-500',
-      bgColor: 'bg-purple-50 dark:bg-purple-900/20',
+      bgColor: (isDark: boolean) => isDark ? 'bg-purple-900/20' : 'bg-purple-50',
+      borderColor: (isDark: boolean) => isDark ? 'border-purple-800/50' : 'border-purple-200',
     },
   ];
 
@@ -180,15 +184,23 @@ const Support = () => {
   ];
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={clsx('min-h-screen', darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900')}>
       {/* Header */}
-      <header className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} sm:ml-70 border-b shadow-sm fixed top-0 left-0 right-0 z-50`}>
+      <header
+        className={clsx(
+          'sm:ml-70 border-b shadow-sm fixed top-0 left-0 right-0 z-50',
+          darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
+        )}
+      >
         <div className='max-w-4xl mx-auto px-6 py-4'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center space-x-4'>
               <button
                 onClick={handleBack}
-                className={`flex items-center space-x-2 ${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors`}
+                className={clsx(
+                  'flex items-center space-x-2 transition-colors',
+                  darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900',
+                )}
                 aria-label='Go back'
               >
                 <ArrowLeft className='w-5 h-5' />
@@ -201,7 +213,7 @@ const Support = () => {
               </div>
               <div>
                 <h1 className='text-xl font-bold'>Help & Support</h1>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Master Management</p>
+                <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-600')}>Master Management</p>
               </div>
             </div>
           </div>
@@ -210,9 +222,14 @@ const Support = () => {
 
       {/* Content */}
       <main className='max-w-6xl mx-auto px-6 pt-24 pb-8'>
-        <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-8 border shadow-sm`}>
+        <div
+          className={clsx(
+            'rounded-xl p-8 border shadow-sm',
+            darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
+          )}
+        >
           <div className='mb-8'>
-            <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>
+            <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-600')}>
               Get the help you need to make the most of Master Management. We're here to support you every step of the way.
             </p>
           </div>
@@ -224,13 +241,17 @@ const Support = () => {
               {supportChannels.map((channel, index) => (
                 <div
                   key={index}
-                  className={`${channel.bgColor} rounded-lg p-4 border ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}
+                  className={clsx(
+                    'rounded-lg p-4 border',
+                    channel.bgColor(darkMode),
+                    channel.borderColor(darkMode),
+                  )}
                 >
-                  <div className={`${channel.color} mb-3`}>
+                  <div className={clsx(channel.color, 'mb-3')}>
                     {channel.icon}
                   </div>
                   <h3 className='font-semibold mb-1'>{channel.title}</h3>
-                  <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>
+                  <p className={clsx('text-sm mb-2', darkMode ? 'text-gray-400' : 'text-gray-600')}>
                     {channel.description}
                   </p>
                   <p className='font-medium text-sm mb-1'>{channel.contact}</p>
@@ -250,7 +271,7 @@ const Support = () => {
           {/* Contact Form */}
           <div className='mb-8'>
             <h2 className='text-xl font-semibold mb-4'>Send us a Message</h2>
-            <div className={`${darkMode ? 'bg-gray-700/50' : 'bg-gray-50'} rounded-lg p-6`}>
+            <div className={clsx('rounded-lg p-6', darkMode ? 'bg-gray-700/50' : 'bg-gray-50')}>
               <form onSubmit={handleSubmit} className='space-y-4'>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                   <div>
@@ -263,7 +284,10 @@ const Support = () => {
                       required
                       value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
-                      className={`w-full px-4 py-2.5 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'} focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors`}
+                      className={clsx(
+                        'w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors',
+                        darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900',
+                      )}
                       placeholder='Your full name'
                     />
                   </div>
@@ -277,7 +301,10 @@ const Support = () => {
                       required
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className={`w-full px-4 py-2.5 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'} focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors`}
+                      className={clsx(
+                        'w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors',
+                        darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900',
+                      )}
                       placeholder='your.email@example.com'
                     />
                   </div>
@@ -308,7 +335,10 @@ const Support = () => {
                       required
                       value={formData.category}
                       onChange={(e) => handleInputChange('category', e.target.value)}
-                      className={`w-full px-4 py-2.5 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'} focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors`}
+                      className={clsx(
+                        'w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors',
+                        darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900',
+                      )}
                     >
                       <option value='general'>General Inquiry</option>
                       <option value='technical'>Technical Support</option>
@@ -325,7 +355,10 @@ const Support = () => {
                       id='priority'
                       value={formData.priority}
                       onChange={(e) => handleInputChange('priority', e.target.value)}
-                      className={`w-full px-4 py-2.5 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'} focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors`}
+                      className={clsx(
+                        'w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors',
+                        darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900',
+                      )}
                     >
                       <option value='low'>Low</option>
                       <option value='medium'>Medium</option>
@@ -345,7 +378,10 @@ const Support = () => {
                     rows={5}
                     value={formData.message}
                     onChange={(e) => handleInputChange('message', e.target.value)}
-                    className={`w-full px-4 py-2.5 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'} focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors resize-none`}
+                    className={clsx(
+                      'w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors resize-none',
+                      darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900',
+                    )}
                     placeholder='Please provide detailed information about your inquiry...'
                   />
                 </div>
@@ -385,7 +421,12 @@ const Support = () => {
                 <a
                   key={index}
                   href={link.link}
-                  className={`${darkMode ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-700' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'} rounded-lg p-4 border transition-colors group`}
+                  className={clsx(
+                    'rounded-lg p-4 border transition-colors group',
+                    darkMode
+                      ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-700'
+                      : 'bg-gray-50 border-gray-200 hover:bg-gray-100',
+                  )}
                 >
                   <div className='flex items-center gap-3'>
                     <div className='text-purple-500'>
@@ -395,7 +436,7 @@ const Support = () => {
                       <h3 className='font-medium group-hover:text-purple-500 transition-colors'>
                         {link.title}
                       </h3>
-                      <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-600')}>
                         {link.description}
                       </p>
                     </div>
@@ -413,11 +454,17 @@ const Support = () => {
               {faqs.map((faq) => (
                 <div
                   key={faq.id}
-                  className={`${darkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200'} rounded-lg border`}
+                  className={clsx(
+                    'rounded-lg border',
+                    darkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200',
+                  )}
                 >
                   <button
                     onClick={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
-                    className={`w-full p-4 text-left hover:${darkMode ? 'bg-gray-700' : 'bg-gray-100'} transition-colors rounded-lg`}
+                    className={clsx(
+                      'w-full p-4 text-left transition-colors rounded-lg',
+                      darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100',
+                    )}
                   >
                     <div className='flex items-center justify-between'>
                       <h3 className='font-medium'>{faq.question}</h3>
@@ -430,7 +477,7 @@ const Support = () => {
                   </button>
                   {expandedFAQ === faq.id && (
                     <div className='px-4 pb-4'>
-                      <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-600')}>
                         {faq.answer}
                       </p>
                     </div>
@@ -441,12 +488,17 @@ const Support = () => {
           </div>
 
           {/* Office Hours */}
-          <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700/30 border-gray-600' : 'bg-blue-50 border-blue-200'} border`}>
+          <div
+            className={clsx(
+              'p-4 rounded-lg border',
+              darkMode ? 'bg-gray-700/30 border-gray-600' : 'bg-blue-50 border-blue-200',
+            )}
+          >
             <div className='flex items-start gap-3'>
               <MapPin className='h-5 w-5 text-blue-500 mt-0.5' />
               <div>
                 <h3 className='font-medium text-sm mb-1'>Support Hours</h3>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-600')}>
                   Monday - Friday: 9:00 AM - 6:00 PM EST
                   <br />
                   Saturday: 10:00 AM - 4:00 PM EST

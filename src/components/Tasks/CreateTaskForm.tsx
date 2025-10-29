@@ -1,6 +1,9 @@
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import clsx from 'clsx';
+
+import { useSettingsStore } from 'stores/settingsStore';
 
 const taskFormSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
@@ -18,6 +21,8 @@ const taskFormSchema = z.object({
 type TaskFormData = z.infer<typeof taskFormSchema>;
 
 const CreateTaskForm = () => {
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
+
   const {
     register,
     handleSubmit,
@@ -46,7 +51,10 @@ const CreateTaskForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className='bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 max-w-xl mx-auto rounded-2xl shadow-md p-6 space-y-6'
+      className={clsx(
+        'max-w-xl mx-auto rounded-2xl shadow-md p-6 space-y-6',
+        darkMode ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-900',
+      )}
     >
       <h2 className='text-xl font-bold'>Create New Task or Goal</h2>
 
@@ -55,7 +63,10 @@ const CreateTaskForm = () => {
         <input
           id='task-title'
           {...register('title')}
-          className='mt-1 w-full rounded-md border dark:border-gray-700 bg-gray-100 dark:bg-gray-800 p-2'
+          className={clsx(
+            'mt-1 w-full rounded-md border p-2',
+            darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-300 bg-gray-100',
+          )}
           placeholder='e.g., Learn React'
           aria-describedby={errors.title ? 'title-error' : undefined}
           aria-invalid={errors.title ? 'true' : 'false'}
@@ -68,7 +79,10 @@ const CreateTaskForm = () => {
         <textarea
           id='task-description'
           {...register('description')}
-          className='mt-1 w-full rounded-md border dark:border-gray-700 bg-gray-100 dark:bg-gray-800 p-2'
+          className={clsx(
+            'mt-1 w-full rounded-md border p-2',
+            darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-300 bg-gray-100',
+          )}
           rows={3}
           placeholder='Describe the goal or task'
         />
@@ -80,7 +94,10 @@ const CreateTaskForm = () => {
           id='task-deadline'
           type='date'
           {...register('deadline')}
-          className='mt-1 w-full rounded-md border dark:border-gray-700 bg-gray-100 dark:bg-gray-800 p-2'
+          className={clsx(
+            'mt-1 w-full rounded-md border p-2',
+            darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-300 bg-gray-100',
+          )}
         />
       </div>
 
@@ -89,7 +106,10 @@ const CreateTaskForm = () => {
         <select
           id='task-frequency'
           {...register('frequency')}
-          className='mt-1 w-full rounded-md border dark:border-gray-700 bg-gray-100 dark:bg-gray-800 p-2'
+          className={clsx(
+            'mt-1 w-full rounded-md border p-2',
+            darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-300 bg-gray-100',
+          )}
         >
           <option value=''>Select frequency</option>
           <option value='daily'>Daily</option>
@@ -105,7 +125,10 @@ const CreateTaskForm = () => {
           id='days-per-week'
           type='number'
           {...register('daysPerWeek', { valueAsNumber: true })}
-          className='mt-1 w-full rounded-md border dark:border-gray-700 bg-gray-100 dark:bg-gray-800 p-2'
+          className={clsx(
+            'mt-1 w-full rounded-md border p-2',
+            darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-300 bg-gray-100',
+          )}
           min={1}
           max={7}
           aria-describedby='days-per-week-help'
@@ -122,7 +145,10 @@ const CreateTaskForm = () => {
               <input
                 {...register(`subtasks.${index}.title`)}
                 placeholder={`Subtask ${index + 1}`}
-                className='flex-1 p-2 rounded-md border dark:border-gray-700 bg-gray-100 dark:bg-gray-800'
+                className={clsx(
+                  'flex-1 p-2 rounded-md border',
+                  darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-300 bg-gray-100',
+                )}
               />
               <button
                 type='button'

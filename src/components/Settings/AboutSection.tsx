@@ -18,7 +18,7 @@ const AboutSection = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   return (
-    <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
+    <div className={clsx('rounded-xl p-6 border shadow-sm', darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200')}>
       <h4 className='text-xl font-bold mb-6 flex items-center'>
         <span className='text-2xl mr-3'>ℹ️</span>
         About Master Management
@@ -31,7 +31,7 @@ const AboutSection = () => {
             MM
           </div>
           <h5 className='text-2xl font-bold mb-2'>Master Management</h5>
-          <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+          <p className={clsx(darkMode ? 'text-gray-400' : 'text-gray-600')}>
             The ultimate productivity suite for modern professionals
           </p>
           <div className='flex items-center justify-center space-x-4 text-sm mt-4'>
@@ -82,11 +82,11 @@ const AboutSection = () => {
         </div>
 
         {/* Credits */}
-        <div className='text-center pt-6 border-t border-gray-200 dark:border-gray-700'>
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>
+        <div className={clsx('text-center pt-6 border-t', darkMode ? 'border-gray-700' : 'border-gray-200')}>
+          <p className={clsx('text-sm mb-2', darkMode ? 'text-gray-400' : 'text-gray-600')}>
             Made with ❤️ by the Master Management Team
           </p>
-          <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+          <p className={clsx('text-xs', darkMode ? 'text-gray-500' : 'text-gray-500')}>
             © 2025 Master Management. All rights reserved.
           </p>
         </div>

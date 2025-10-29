@@ -139,7 +139,7 @@ const DatePicker = ({
   return (
     <div className={clsx('relative', className)}>
       {label && (
-        <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+        <label className={clsx('block text-sm font-medium mb-2', darkMode ? 'text-gray-300' : 'text-gray-700')}>
           {label}
           {required && <span className='text-red-500 ml-1'>*</span>}
         </label>
@@ -150,21 +150,23 @@ const DatePicker = ({
           onClick={toggleCalendar}
           className={clsx(
             'flex items-center justify-between w-full px-3 py-2 border rounded-lg cursor-pointer transition-colors',
-            darkMode ? 'bg-gray-800 border-gray-600 hover:border-gray-500' : 'bg-white border-gray-300 hover:border-gray-400',
-            'focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500',
-            {
+            clsx({
+              'bg-gray-800 border-gray-600 hover:border-gray-500': darkMode,
+              'bg-white border-gray-300 hover:border-gray-400': !darkMode,
               'opacity-50 cursor-not-allowed': disabled,
-              'border-red-500 dark:border-red-400': displayError,
-            },
+              'border-red-500': displayError && !darkMode,
+              'border-red-400': displayError && darkMode,
+              'focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500': true,
+            }),
           )}
         >
           <span
-            className={clsx(
-              'text-sm',
-              value
-                ? darkMode ? 'text-gray-100' : 'text-gray-900'
-                : darkMode ? 'text-gray-400' : 'text-gray-500',
-            )}
+            className={clsx('text-sm', {
+              'text-gray-100': darkMode && value,
+              'text-gray-900': !darkMode && value,
+              'text-gray-400': darkMode && !value,
+              'text-gray-500': !darkMode && !value,
+            })}
           >
             {value ? dateValue?.format(getFormat()) : placeholder}
           </span>
@@ -186,10 +188,7 @@ const DatePicker = ({
                 value={dateValue}
                 onChange={handleDateChange}
                 format={getFormat()}
-                className={clsx(
-                  'rmdp-calendar',
-                  darkMode ? 'rmdp-dark' : '',
-                )}
+                className={clsx('rmdp-calendar', { 'rmdp-dark': darkMode })}
                 calendarPosition='bottom-left'
                 {...pickerConfig}
               />
@@ -199,7 +198,7 @@ const DatePicker = ({
       </div>
 
       {displayError && (
-        <p className='mt-1 text-sm text-red-600 dark:text-red-400'>
+        <p className={clsx('mt-1 text-sm', darkMode ? 'text-red-400' : 'text-red-600')}>
           {displayError}
         </p>
       )}
