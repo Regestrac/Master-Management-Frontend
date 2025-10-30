@@ -115,7 +115,7 @@ const TaskDescription = () => {
           <Input
             ref={textareaRef}
             name='description'
-            label='Description'
+            label=''
             type='textarea'
             rows={6}
             placeholder='Enter task description...'
