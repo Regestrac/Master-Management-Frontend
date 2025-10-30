@@ -140,7 +140,7 @@ const GoalCard = ({ goal, view }: GoalCardPropsType) => {
 
     return (
       <DropDown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={goal?.status} hideClear isMulti={false}>
-        <span className={`px-3 py-1 rounded-full text-sm font-medium cursor-grab ${getStatusColor(goal?.status)}`}>
+        <span className={`px-3 py-1 rounded-full text-sm font-medium cursor-grab ${getStatusColor(goal?.status, darkMode)}`}>
           {goal?.status?.toUpperCase()}
         </span>
       </DropDown>

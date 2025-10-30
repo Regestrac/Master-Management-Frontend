@@ -63,21 +63,38 @@ export const getPriorityColor = (priority: PriorityType) => {
   }
 };
 
-export const getStatusColor = (status: StatusType) => {
-  switch (status) {
-    case 'completed':
-      return 'text-green-400 bg-green-400/10';
-    case 'todo':
-      return 'text-blue-400 bg-blue-400/10';
-    case 'inprogress':
-      return 'text-purple-300 bg-purple-500/20';
-    case 'paused':
-      return 'text-gray-400 bg-gray-400/10';
-    case 'pending':
-      return 'text-yellow-400 bg-yellow-400/10';
-    default:
-      return 'text-gray-400 bg-gray-400/10';
-  }
+export const getStatusColor = (status: StatusType, darkMode: boolean) => {
+  const baseStyles = {
+    completed: {
+      light: 'text-green-700 bg-green-100',
+      dark: 'text-green-400 bg-green-500/20',
+    },
+    todo: {
+      light: 'text-blue-700 bg-blue-100',
+      dark: 'text-blue-400 bg-blue-500/20',
+    },
+    inprogress: {
+      light: 'text-purple-700 bg-purple-100',
+      dark: 'text-purple-400 bg-purple-500/20',
+    },
+    paused: {
+      light: 'text-gray-700 bg-gray-200',
+      dark: 'text-gray-300 bg-gray-400/30',
+    },
+    pending: {
+      light: 'text-yellow-700 bg-yellow-100',
+      dark: 'text-yellow-300 bg-yellow-500/20',
+    },
+    default: {
+      light: 'text-gray-700 bg-gray-200',
+      dark: 'text-gray-300 bg-gray-400/30',
+    },
+  };
+
+  const statusKey: keyof typeof baseStyles = status || 'default';
+  const mode = darkMode ? 'dark' : 'light';
+
+  return baseStyles[statusKey]?.[mode] || baseStyles.default[mode];
 };
 
 export const isHexColor = (color: string): boolean => {

@@ -170,7 +170,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
                       </p> */}
                 <div className='flex flex-wrap items-center gap-4 text-sm'>
                   <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={task?.status} hideClear isMulti={false}>
-                    <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(task?.status)}`}>
+                    <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(task?.status, darkMode)}`}>
                       {task?.status?.toUpperCase()}
                     </span>
                   </Dropdown>

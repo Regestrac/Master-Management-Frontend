@@ -143,7 +143,7 @@ const CreateGoalCard = ({ handleCancel, view }: CreateGoalCardPropsType) => {
 
   const renderStatusPill = () => (
     <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={status} hideClear isMulti={false}>
-      <span className={`px-3 py-1 rounded-full text-sm font-medium cursor-grab ${getStatusColor(status!)}`}>
+      <span className={`px-3 py-1 rounded-full text-sm font-medium cursor-grab ${getStatusColor(status!, darkMode)}`}>
         {status?.toUpperCase()}
       </span>
     </Dropdown>

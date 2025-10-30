@@ -87,7 +87,7 @@ const CreateTaskCard = ({ handleCancel }: { handleCancel: () => void }) => {
               />
               <div className='flex items-center gap-2 flex-wrap'>
                 <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={status} hideClear isMulti={false}>
-                  <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(status!)}`}>
+                  <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(status!, darkMode)}`}>
                     {status?.toUpperCase()}
                   </span>
                 </Dropdown>

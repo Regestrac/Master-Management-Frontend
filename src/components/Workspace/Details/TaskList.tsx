@@ -222,7 +222,7 @@ const TaskList = () => {
                         <span
                           className={clsx(
                             'inline-block max-w-full truncate text-xs px-3 py-1 rounded-xl transition',
-                            getStatusColor(task.status as StatusType),
+                            getStatusColor(task.status as StatusType, darkMode),
                           )}
                         >
                           {task.status?.toUpperCase()}

@@ -34,7 +34,7 @@ const TaskStatus = () => {
           <span className={clsx('text-sm font-medium', darkMode ? 'text-gray-300' : 'text-gray-700')}>
             Current Status
           </span>
-          <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(taskDetails.status)}`}>
+          <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(taskDetails.status, darkMode)}`}>
             {taskDetails.status?.toUpperCase()}
           </span>
         </div>

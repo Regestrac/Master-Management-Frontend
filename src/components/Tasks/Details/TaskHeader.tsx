@@ -242,7 +242,7 @@ const TaskHeader = () => {
               />
               <div className='flex flex-wrap items-center gap-2 mt-1'>
                 <DropDown options={STATUS_OPTIONS} onSelect={handleStatusChange} hideClear value={taskDetails?.status} isMulti={false}>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusColor(taskDetails.status)}`}>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusColor(taskDetails.status, darkMode)}`}>
                     {taskDetails?.status?.toUpperCase()}
                   </span>
                 </DropDown>

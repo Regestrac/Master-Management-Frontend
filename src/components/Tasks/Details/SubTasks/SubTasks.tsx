@@ -285,7 +285,7 @@ const SubTasks = () => {
                         hideClear
                         isMulti={false}
                       >
-                        <span className={clsx('px-3 py-1 rounded-full text-xs font-medium cursor-grab', getStatusColor(subtask?.status))}>
+                        <span className={clsx('px-3 py-1 rounded-full text-xs font-medium cursor-grab', getStatusColor(subtask?.status, darkMode))}>
                           {subtask?.status?.toUpperCase()}
                         </span>
                       </Dropdown>
