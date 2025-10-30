@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { CheckSquare, Plus, Trash2 } from 'lucide-react';
+import { CheckCircle2, CheckSquare, Plus, Trash2 } from 'lucide-react';
 import dayjs from 'dayjs';
 import { useNavigate, useParams, useSearchParams, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -289,13 +289,30 @@ const SubTasks = () => {
                           {subtask?.status?.toUpperCase()}
                         </span>
                       </Dropdown>
-                      <span className={clsx(darkMode ? 'text-gray-400' : 'text-gray-600')}>
-                        Due:
-                        {' '}
-                        {dayjs(subtask.due_date).format('MMM DD, YYYY')}
-                      </span>
+
+                      {/* Checklist Count */}
+                      {typeof subtask.checklist_total === 'number' && subtask.checklist_total > 0 && (
+                        <div className='flex items-center space-x-1'>
+                          <CheckCircle2 className='w-3 h-3 text-blue-500' />
+                          <span className={clsx('text-xs', darkMode ? 'text-gray-400' : 'text-gray-600')}>
+                            {subtask.checklist_completed || 0}
+                            /
+                            {subtask.checklist_total}
+                            {' '}
+                            checklist
+                          </span>
+                        </div>
+                      )}
+
+                      {subtask.due_date ? (
+                        <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                          Due:
+                          {' '}
+                          {dayjs(subtask.due_date).format('MMM DD, YYYY')}
+                        </span>
+                      ) : null}
                       {subtask.status === 'completed' && subtask.completed_at && (
-                        <span className={clsx(darkMode ? 'text-green-400' : 'text-green-600')}>
+                        <span className={darkMode ? 'text-green-400' : 'text-green-600'}>
                           Completed:
                           {' '}
                           {dayjs(subtask.completed_at).format('MMM DD, YYYY')}

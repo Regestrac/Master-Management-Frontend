@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
 import { Pause, Play } from 'lucide-react';
+import clsx from 'clsx';
 
 import {
   formatTime,
@@ -192,14 +193,17 @@ const TaskTimer = () => {
   };
 
   return (
-    <div className='flex flex-row items-center justify-end gap-2'>
-      <span className={`text-xs sm:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+    <div className='flex flex-row items-center justify-end gap-2 2xl:me-12'>
+      <span className={clsx('text-xs sm:text-sm', darkMode ? 'text-gray-400' : 'text-gray-600')}>
         Created on&nbsp;
         {taskDetails?.created_at ? dayjs(taskDetails.created_at).format('MMM DD, YYYY') : null}
       </span>
       <div
         onClick={() => toggleTimer(taskDetails.id)}
-        className={`flex items-center cursor-pointer space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-colors ${activeTask === Number(id) ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'} text-white`}
+        className={clsx(
+          'flex items-center cursor-pointer space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-colors text-white',
+          activeTask === Number(id) ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600',
+        )}
       >
         {activeTask === Number(id) ? <Pause className='w-4 h-4' /> : <Play className='w-4 h-4' />}
         <Timer

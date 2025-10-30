@@ -79,9 +79,7 @@ const TaskDescription = () => {
   };
 
   useEffect(() => {
-    if (description) {
-      adjustTextareaHeight();
-    }
+    adjustTextareaHeight();
   }, [adjustTextareaHeight, description]);
 
   useEffect(() => {
