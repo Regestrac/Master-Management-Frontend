@@ -52,7 +52,7 @@ const PerformanceOptimizer = () => {
 
     // Register service worker for caching
     const registerServiceWorker = async () => {
-      if ('serviceWorker' in navigator && import.meta.env.PROD) {
+      if (navigator.serviceWorker) {
         try {
           const registration = await navigator.serviceWorker.register('/sw.js');
 

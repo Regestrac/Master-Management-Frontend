@@ -1,55 +1,52 @@
 // Service Worker for caching and performance optimization
 // Use timestamp to ensure cache is invalidated on new builds
-const CACHE_VERSION = 'v1';
-const CACHE_NAME = `master-management-${CACHE_VERSION}-${Date.now()}`;
-const STATIC_CACHE_URLS = [
-  '/master-management-icon.png',
-  '/robots.txt',
+const CACHE_NAME = 'master-management-v1';
+const FILES_TO_CACHE = [
+  './master-management-icon.png',
+  './robots.txt',
+  './../index.html',
+  './../styles/index.css',
 ];
 
 // Install event - cache static resources
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(STATIC_CACHE_URLS);
-      })
-      .then(() => {
-        return self.skipWaiting();
-      })
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(FILES_TO_CACHE);
+    }).then(() => {
+      return self.skipWaiting();
+    })
   );
 });
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys()
-      .then((cacheNames) => {
-        return Promise.all(
-          cacheNames.map((cacheName) => {
-            if (cacheName !== CACHE_NAME) {
-              return caches.delete(cacheName);
-            }
-          })
-        );
-      })
-      .then(() => {
-        return self.clients.claim();
-      })
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(() => {
+      return self.clients.claim();
+    })
   );
 });
 
 // Fetch event - use network-first for HTML, cache-first for assets
 self.addEventListener('fetch', (event) => {
   // Skip cross-origin requests
-  if (!event.request.url.startsWith(self.location.origin)) {
+  if (!event?.request?.url.startsWith(self.location.origin)) {
     return;
   }
 
-  const { request } = event;
+  const request = event?.request;
 
   // Network-first strategy for HTML and navigation requests
-  if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
+  if (request?.mode === 'navigate' || request?.headers.get('accept')?.includes('text/html')) {
     event.respondWith(
       fetch(request)
         .then((response) => {
@@ -64,9 +61,7 @@ self.addEventListener('fetch', (event) => {
         })
         .catch(() => {
           // Fallback to cache if network fails
-          return caches.match(request).then((cachedResponse) => {
-            return cachedResponse || caches.match('/');
-          });
+          return caches.match(request).then((cachedResponse) => cachedResponse || caches.match('/'));
         })
     );
     return;
