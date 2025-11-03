@@ -39,7 +39,7 @@ const Checklist = () => {
 
   const { id } = useParams();
 
-  const shouldFetchChecklist = useRef(true);
+  const prevTaskIdRef = useRef('');
 
   const startEditing = (cid: number, title: string) => {
     setEditingId(cid);
@@ -110,13 +110,13 @@ const Checklist = () => {
   };
 
   useEffect(() => {
-    if (id && shouldFetchChecklist.current && taskDetails.id) {
+    if (id && prevTaskIdRef.current !== id && taskDetails.id) {
       getChecklists(`task_id=${id}`).then((res) => {
         updateTaskDetails({ ...taskDetails, checklists: res?.data });
       }).catch((err) => {
         toast.error(err?.error || 'Failed to load checklist');
       });
-      shouldFetchChecklist.current = false;
+      prevTaskIdRef.current = id;
     }
   }, [id, taskDetails, updateTaskDetails]);
 
@@ -207,7 +207,7 @@ const Checklist = () => {
                 onClick={() => toggleChecklistItem(item.id)}
                 aria-label={`${item.completed ? 'Mark as incomplete' : 'Mark as complete'}: ${item.title}`}
                 className={clsx(
-                  'min-w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ',
+                  'min-w-4 h-4 rounded border-2 flex items-center justify-center transition-colors cursor-pointer',
                   item.completed ? 'bg-primary-500 border-primary-500'
                     : darkMode ? 'border-gray-500 hover:border-primary-500' : 'border-gray-300 hover:border-primary-500',
                 )}

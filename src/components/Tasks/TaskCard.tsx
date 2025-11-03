@@ -39,6 +39,17 @@ const formatDate = (dateString: string) => {
   return `${diffDays} days left`;
 };
 
+const TaskCardWrapper = ({ isActive, children }: { isActive: boolean; children: React.ReactNode }) => {
+  if (isActive) {
+    return (
+      <Outline colors={['bg-primary-500', 'bg-secondary-500']} width='3px' variant='rotate' disabled={false}>
+        {children as React.ReactElement}
+      </Outline>
+    );
+  }
+  return children;
+};
+
 const TaskCard = ({ task }: TaskCardPropsType) => {
   const [editName, setEditName] = useState(false);
 
@@ -116,7 +127,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
   };
 
   return (
-    <Outline key={task?.id} colors={['bg-primary-500', 'bg-secondary-500']} width='3px' variant='rotate' disabled={activeTask !== task?.id}>
+    <TaskCardWrapper key={task?.id} isActive={activeTask === task?.id}>
       <div
         className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer`}
         onClick={handleTaskClick}
@@ -310,7 +321,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
                   </div>
                 )} */}
       </div>
-    </Outline>
+    </TaskCardWrapper>
   );
 };
 

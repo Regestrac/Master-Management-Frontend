@@ -125,7 +125,7 @@ const SubTasks = () => {
   };
 
   useEffect(() => {
-    if (!parentTaskId && id && id !== prevTaskIdRef.current && currentTaskId === Number(id)) {
+    if (!parentTaskId && id && id !== prevTaskIdRef.current && currentTaskId) {
       updateTaskDetails({ subtasks: [] });
       getSubTasks(id).then((res) => {
         updateTaskDetails({ subtasks: res?.data || [] });
