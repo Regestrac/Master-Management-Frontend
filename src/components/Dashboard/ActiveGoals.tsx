@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Clock, Flame } from 'lucide-react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FormProvider, useForm } from 'react-hook-form';
 
 import { formatDuration } from 'helpers/utils';
 import { navigateWithHistory } from 'helpers/navigationUtils';
@@ -18,7 +17,7 @@ import { updateActiveTask } from 'services/profile';
 
 import GoalSkeleton from 'components/Dashboard/GoalSkeleton';
 import QuickActions from 'components/Dashboard/QuickActions';
-import Input from 'components/Shared/Input';
+import InlineEditableTitle from 'components/Shared/InlineEditableTitle';
 import Outline from 'components/Shared/Outline';
 
 type ActiveGoalType = {
@@ -38,13 +37,6 @@ type GoalCardWrapperPropsType = {
   children: React.ReactNode;
 };
 
-type GoalTitleEditorPropsType = {
-  goal: ActiveGoalType;
-  isEditing: boolean;
-  onStartEdit: (_e: React.MouseEvent) => void;
-  onFinishEdit: (_title: string) => void;
-};
-
 const GoalCardWrapper = ({ isActive, children }: GoalCardWrapperPropsType) => {
   if (isActive) {
     return (
@@ -56,50 +48,9 @@ const GoalCardWrapper = ({ isActive, children }: GoalCardWrapperPropsType) => {
   return children;
 };
 
-const GoalTitleEditor = ({ goal, isEditing, onStartEdit, onFinishEdit }: GoalTitleEditorPropsType) => {
-  const methods = useForm({
-    defaultValues: {
-      title: goal.title,
-    },
-  });
-
-  useEffect(() => {
-    methods.reset({ title: goal.title });
-  }, [goal.title, methods]);
-
-  if (isEditing) {
-    return (
-      <FormProvider {...methods}>
-        <Input
-          name='title'
-          label=''
-          type='textarea'
-          hideResizeIndicator
-          className='font-semibold mb-1 cursor-text outline-none p-0! border-none focus:ring-0!'
-          onClick={(e) => e.stopPropagation()}
-          autoFocus
-          onBlur={(value) => {
-            onFinishEdit(value);
-          }}
-        />
-      </FormProvider>
-    );
-  }
-
-  return (
-    <h4
-      className='font-semibold mb-2 cursor-text hover:opacity-80 transition-opacity'
-      onClick={onStartEdit}
-    >
-      {goal.title}
-    </h4>
-  );
-};
-
 const ActiveGoals = () => {
   const [goals, setGoals] = useState<ActiveGoalType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [editingGoalId, setEditingGoalId] = useState<number | null>(null);
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const activeTask = useProfileStore((state) => state.data.active_task);
@@ -182,7 +133,6 @@ const ActiveGoals = () => {
         ) : (
           goals?.map((goal) => {
             const isActive = activeTask === goal.id;
-            const isEditing = editingGoalId === goal.id;
 
             return (
               <GoalCardWrapper key={goal.id} goal={goal} isActive={isActive}>
@@ -191,20 +141,18 @@ const ActiveGoals = () => {
                   onClick={() => handleGoalClick(goal.id)}
                 >
                   <div className='mb-4'>
-                    <GoalTitleEditor
-                      goal={goal}
-                      isEditing={isEditing}
-                      onStartEdit={(e) => {
-                        e.stopPropagation();
-                        setEditingGoalId(goal.id);
-                      }}
-                      onFinishEdit={(title) => {
-                        if (title !== goal.title) {
-                          handleUpdateGoalTitle(goal.id, title);
-                        }
-                        setEditingGoalId(null);
-                      }}
-                    />
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <InlineEditableTitle
+                        title={goal.title}
+                        onSave={async (newTitle) => {
+                          if (newTitle.trim() !== goal.title) {
+                            await handleUpdateGoalTitle(goal.id, newTitle);
+                          }
+                        }}
+                        className='font-semibold mb-2 cursor-text hover:opacity-80 transition-opacity'
+                        fontSize='text-base'
+                      />
+                    </div>
                     <div className='flex items-center justify-between text-sm mb-2'>
                       <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {goal?.progress?.toFixed(1) || 0}
