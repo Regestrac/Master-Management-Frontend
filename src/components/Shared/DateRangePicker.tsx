@@ -401,6 +401,8 @@ const DateRangePicker = memo(({
     if (onApply) {
       onApply(dateRange);
     }
+    // Close the picker when Apply is clicked
+    setIsOpen(false);
   }, [dateRange, onApply]);
 
   // Get current date values for react-multi-date-picker
@@ -586,10 +588,7 @@ const DateRangePicker = memo(({
           )}
           style={dropdownStyle}
         >
-          <div className={clsx(
-            isSmallScreen ? 'flex flex-col' : 'flex w-fit',
-          )}
-          >
+          <div className={clsx(isSmallScreen ? 'flex flex-col' : 'flex w-fit')}>
             {/* Presets Sidebar */}
             <div
               className={clsx(
@@ -615,10 +614,7 @@ const DateRangePicker = memo(({
                     <button
                       key={preset.label}
                       type='button'
-                      onClick={() => {
-                        handlePresetClick(preset);
-                        setIsOpen(false);
-                      }}
+                      onClick={() => handlePresetClick(preset)}
                       className={clsx(
                         'w-full text-left px-3 py-2 text-sm rounded transition-colors',
                         isActive
@@ -641,12 +637,7 @@ const DateRangePicker = memo(({
             </div>
 
             {/* Date Picker */}
-            <div
-              className={clsx(
-                isSmallScreen ? 'w-full' : 'w-fit flex-shrink-0',
-                'p-4',
-              )}
-            >
+            <div className={clsx(isSmallScreen ? 'w-full' : 'w-fit flex-shrink-0', 'p-4 flex flex-col justify-between')}>
               <div className={clsx(darkMode && 'rmdp-dark')}>
                 <RMDPCalendar
                   {...pickerConfig}
@@ -660,11 +651,16 @@ const DateRangePicker = memo(({
               </div>
 
               {/* Apply Button */}
-              <div className={clsx(
-                'mt-4 pt-4 border-t',
-                isSmallScreen ? 'pb-4' : '',
-                darkMode ? 'border-gray-600' : 'border-gray-200',
-              )}
+              <div
+                className={clsx(
+                  'sticky bottom-0 bg-inherit pt-4 border-t',
+                  isSmallScreen ? 'pb-4' : '',
+                  darkMode ? 'border-gray-600' : 'border-gray-200',
+                )}
+                style={{
+                  // Add a subtle shadow to make the sticky footer more visible
+                  boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)',
+                }}
               >
                 <button
                   type='button'
