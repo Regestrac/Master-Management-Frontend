@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { CheckCircle2, CheckSquare, Plus, Trash2 } from 'lucide-react';
 import dayjs from 'dayjs';
@@ -35,22 +35,19 @@ const SubTasks = () => {
   const parentTaskId = useTaskStore((state) => state.currentTaskDetails?.parent_id);
   const taskType = useTaskStore((state) => state.currentTaskDetails.type);
   const subtasks = useTaskStore((state) => state.currentTaskDetails.subtasks);
-  const currentTaskId = useTaskStore((state) => state.currentTaskDetails.id);
   const updateTaskState = useTaskStore((state) => state.updateTask);
   const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
-
-  const prevTaskIdRef = useRef('');
-
   const { id } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
 
   const methods = useForm({
     defaultValues: { title: '' },
   });
 
-  const { handleSubmit, setValue } = methods;
+  const { handleSubmit, setValue, reset } = methods;
 
   const addSubtask = (formData: { title: string; }) => {
     if (formData?.title && id) {
@@ -124,18 +121,42 @@ const SubTasks = () => {
     }
   };
 
+  // Fetch subtasks when task ID changes or when coming back from a subtask
   useEffect(() => {
-    if (!parentTaskId && id && id !== prevTaskIdRef.current && currentTaskId) {
-      updateTaskDetails({ subtasks: [] });
-      getSubTasks(id).then((res) => {
-        updateTaskDetails({ subtasks: res?.data || [] });
-      }).catch((err) => {
-        toast.error(err?.error || 'Failed to fetch subtasks');
-      });
-      prevTaskIdRef.current = id;
-    }
-  }, [id, parentTaskId, updateTaskDetails, currentTaskId]);
+    const fetchSubtasks = async () => {
+      if (!id) { return; }
 
+      try {
+        setIsLoading(true);
+        // Clear previous subtasks immediately to prevent showing wrong data
+        updateTaskDetails({ subtasks: [] });
+
+        const res = await getSubTasks(id);
+        updateTaskDetails({
+          subtasks: Array.isArray(res?.data) ? res.data : [],
+        });
+      } catch (err: any) {
+        toast.error(err?.error || 'Failed to fetch subtasks');
+        updateTaskDetails({ subtasks: [] });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // Always fetch when ID changes, regardless of previous ID
+    if (id) {
+      fetchSubtasks();
+    }
+
+    // No need to clear on cleanup as we want to keep the data
+  }, [id, updateTaskDetails]);
+
+  // Reset form when task changes
+  useEffect(() => {
+    reset({ title: '' });
+  }, [id, reset]);
+
+  // Don't show subtasks if this is a subtask itself
   if (parentTaskId) {
     return null;
   }
@@ -194,6 +215,11 @@ const SubTasks = () => {
 
         {/* Subtasks list */}
         <div className='space-y-3'>
+          {isLoading && (
+            <div className='text-center py-4 text-gray-500'>
+              Loading subtasks...
+            </div>
+          )}
           {generatedTasks?.length ? (
             <ul className={clsx('space-y-2 rounded-xl p-2 mb-4', darkMode ? 'bg-gray-800' : 'bg-gray-50')}>
               <div className={clsx('text-sm mb-2', darkMode ? 'text-gray-400' : 'text-gray-500')}>
