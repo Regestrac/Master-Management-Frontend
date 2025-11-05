@@ -1,10 +1,24 @@
+import clsx from 'clsx';
+import { Link } from 'react-router-dom';
+
 import { useSettingsStore } from 'stores/settingsStore';
+
+const resourceAndSupportItems = [
+  { label: 'Documentation', symbol: '📚', path: '/documentation' },
+  { label: 'Changelog', symbol: '📝', path: '/changelog' },
+  { label: 'Support', symbol: '💬', path: '/support' },
+  { label: 'Community', symbol: '👥', path: '/community' },
+  { label: 'Feature Requests', symbol: '💡', path: '/feature-request' },
+  { label: 'Bug Reports', symbol: '🐛', path: '/bug-report' },
+  { label: 'Privacy Policy', symbol: '🔒', path: '/legal/privacy' },
+  { label: 'Terms of Service', symbol: '📄', path: '/legal/terms' },
+];
 
 const AboutSection = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   return (
-    <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
+    <div className={clsx('rounded-xl p-6 border shadow-sm', darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200')}>
       <h4 className='text-xl font-bold mb-6 flex items-center'>
         <span className='text-2xl mr-3'>ℹ️</span>
         About Master Management
@@ -14,21 +28,21 @@ const AboutSection = () => {
         {/* App Info */}
         <div className='text-center'>
           <div className='w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4'>
-            TF
+            MM
           </div>
           <h5 className='text-2xl font-bold mb-2'>Master Management</h5>
-          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-4`}>
+          <p className={clsx(darkMode ? 'text-gray-400' : 'text-gray-600')}>
             The ultimate productivity suite for modern professionals
           </p>
-          <div className='flex items-center justify-center space-x-4 text-sm'>
-            <span className={`px-3 py-1 rounded-full ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
+          <div className='flex items-center justify-center space-x-4 text-sm mt-4'>
+            <span className={clsx('px-3 py-1 rounded-full', darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600')}>
               Version 2.1.4
             </span>
           </div>
         </div>
 
         {/* Feature Highlights */}
-        <div className='mb-8'>
+        {/* <div className='mb-8'>
           <h6 className='font-semibold mb-4'>What's New in v2.1.4</h6>
           <div className='space-y-3'>
             {[
@@ -45,36 +59,34 @@ const AboutSection = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Links */}
         <div>
           <h6 className='font-semibold mb-4'>Resources & Support</h6>
           <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-            {[
-              { title: 'Documentation', icon: '📚', link: '#' },
-              { title: 'Changelog', icon: '📝', link: '#' },
-              { title: 'Support', icon: '💬', link: '#' },
-              { title: 'Community', icon: '👥', link: '#' },
-              { title: 'Feature Requests', icon: '💡', link: '#' },
-              { title: 'Bug Reports', icon: '🐛', link: '#' },
-              { title: 'Privacy Policy', icon: '🔒', link: '#' },
-              { title: 'Terms of Service', icon: '📄', link: '#' },
-            ].map((resource, index) => (
-              <button key={index} className={`p-3 rounded-lg border ${darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'} transition-colors text-left`}>
-                <div className='text-2xl mb-2'>{resource.icon}</div>
-                <div className='text-sm font-medium'>{resource.title}</div>
-              </button>
+            {resourceAndSupportItems.map((item, index) => (
+              <Link
+                to={item.path}
+                key={index}
+                className={clsx(
+                  'p-3 rounded-lg border transition-colors text-left',
+                  darkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50',
+                )}
+              >
+                <div className='text-2xl mb-2'>{item.symbol}</div>
+                <div className='text-sm font-medium'>{item.label}</div>
+              </Link>
             ))}
           </div>
         </div>
 
         {/* Credits */}
-        <div className='text-center pt-6 border-t border-gray-200 dark:border-gray-700'>
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>
+        <div className={clsx('text-center pt-6 border-t', darkMode ? 'border-gray-700' : 'border-gray-200')}>
+          <p className={clsx('text-sm mb-2', darkMode ? 'text-gray-400' : 'text-gray-600')}>
             Made with ❤️ by the Master Management Team
           </p>
-          <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+          <p className={clsx('text-xs', darkMode ? 'text-gray-500' : 'text-gray-500')}>
             © 2025 Master Management. All rights reserved.
           </p>
         </div>

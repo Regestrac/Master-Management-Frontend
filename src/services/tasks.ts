@@ -51,3 +51,18 @@ export const generateTags = (taskId: string, data: object) => postHandler({
   path: `tasks/${taskId}/generate-tags`,
   body: JSON.stringify(data),
 });
+
+export const updateTaskTimeSpend = (taskId: string, timeSpend: number) => postHandler({
+  path: `tasks/${taskId}`,
+  method: 'PATCH',
+  body: JSON.stringify({ time_spend: timeSpend }),
+});
+
+export const getCategories = () => getHandler({
+  path: 'tasks/categories',
+});
+
+export const createCategory = (categoryName: string) => postHandler({
+  path: 'tasks/categories',
+  body: JSON.stringify({ name: categoryName }),
+});

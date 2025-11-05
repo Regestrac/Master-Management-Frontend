@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PlusCircle, Users, AlertCircle } from 'lucide-react';
+import clsx from 'clsx';
 
 import { Workspace } from 'helpers/sharedTypes';
 import { debounce } from 'helpers/utils';
@@ -95,12 +96,17 @@ const WorkspaceHome = () => {
       {isLoading ? (
         <WorkspaceSkeleton count={6} />
       ) : error ? (
-        <div className='p-4 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 flex items-start gap-2'>
+        <div
+          className={clsx(
+            'p-4 rounded-lg flex items-start gap-2',
+            darkMode ? 'bg-red-900/20 text-red-300' : 'bg-red-50 text-red-700',
+          )}
+        >
           <AlertCircle className='w-5 h-5 mt-0.5 flex-shrink-0' />
           <span>{error}</span>
         </div>
       ) : workspaces?.length === 0 ? (
-        <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+        <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
           You are not part of any workspace yet. Use the button above to create or join one.
         </p>
       ) : (
@@ -109,12 +115,13 @@ const WorkspaceHome = () => {
             <li
               key={ws.id}
               onClick={() => navigate(`/workspace/${ws.id}`)}
-              className={`cursor-pointer p-6 rounded-xl border transition-colors ${darkMode
-                ? 'border-gray-700 hover:bg-gray-700/50'
-                : 'border-gray-200 hover:bg-gray-50'}`}
+              className={clsx(
+                'cursor-pointer p-6 rounded-xl border transition-colors',
+                darkMode ? 'border-gray-700 hover:bg-gray-700/50' : 'border-gray-200 hover:bg-gray-50',
+              )}
             >
               <h3 className='font-medium text-lg'>{ws.name}</h3>
-              <p className='text-sm mt-1 text-gray-500 dark:text-gray-400'>
+              <p className={clsx('text-sm mt-1', darkMode ? 'text-gray-400' : 'text-gray-500')}>
                 {ws.type === 'personal' ? 'Personal workspace' : 'Team workspace'}
               </p>
             </li>

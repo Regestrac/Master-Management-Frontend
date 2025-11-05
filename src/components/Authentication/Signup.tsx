@@ -247,15 +247,15 @@ const Signup: React.FC = () => {
                 <span className='ml-3 text-sm text-gray-600'>
                   I agree to the
                   {' '}
-                  <a href='#' className='text-purple-600 hover:text-purple-500 font-medium'>
+                  <Link to='/legal/terms' className='text-purple-600 hover:text-purple-500 font-medium'>
                     Terms of Service
-                  </a>
+                  </Link>
                   {' '}
                   and
                   {' '}
-                  <a href='#' className='text-purple-600 hover:text-purple-500 font-medium'>
+                  <Link to='/legal/privacy' className='text-purple-600 hover:text-purple-500 font-medium'>
                     Privacy Policy
-                  </a>
+                  </Link>
                 </span>
               </label>
               {agreeToTermsError ? (

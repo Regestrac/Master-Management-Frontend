@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Check, List, Plus, Trash2 } from 'lucide-react';
+import clsx from 'clsx';
 
 import { isEmpty } from 'helpers/utils';
 
@@ -38,7 +39,7 @@ const Checklist = () => {
 
   const { id } = useParams();
 
-  const shouldFetchChecklist = useRef(true);
+  const prevTaskIdRef = useRef('');
 
   const startEditing = (cid: number, title: string) => {
     setEditingId(cid);
@@ -69,6 +70,7 @@ const Checklist = () => {
     }
     updateChecklist(cid, { completed: !item.completed }).then((updated) => {
       updateTaskDetails({ ...taskDetails, checklists: taskDetails.checklists.map((c) => (c.id === cid ? { ...c, ...updated?.data } : c)) });
+      updateTaskDetails({ progress: updated?.progress });
     }).catch((err) => {
       toast.error(err?.error || 'Could not update checklist item');
     });
@@ -78,7 +80,7 @@ const Checklist = () => {
     const deleteChecklist = () => {
       deleteChecklistApi(cid).then((res) => {
         toast.success(res?.message || 'Checklist item deleted successfully');
-        updateTaskDetails({ ...taskDetails, checklists: taskDetails.checklists.filter((c) => c.id !== cid) });
+        updateTaskDetails({ ...taskDetails, checklists: taskDetails.checklists.filter((c) => c.id !== cid), progress: res?.progress });
       }).catch((err) => {
         toast.error(err?.error || 'Could not delete checklist item');
       });
@@ -100,7 +102,7 @@ const Checklist = () => {
       return;
     }
     saveChecklist({ task_id: taskDetails.id, title }).then((created) => {
-      updateTaskDetails({ ...taskDetails, checklists: [...taskDetails.checklists, created?.data] });
+      updateTaskDetails({ ...taskDetails, checklists: [...taskDetails.checklists, created?.data], progress: created?.progress });
       setNewChecklistItem('');
     }).catch((err) => {
       toast.error(err?.error || 'Could not add checklist item');
@@ -108,21 +110,26 @@ const Checklist = () => {
   };
 
   useEffect(() => {
-    if (id && shouldFetchChecklist.current && taskDetails.id) {
+    if (id && prevTaskIdRef.current !== id && taskDetails.id) {
       getChecklists(`task_id=${id}`).then((res) => {
         updateTaskDetails({ ...taskDetails, checklists: res?.data });
       }).catch((err) => {
         toast.error(err?.error || 'Failed to load checklist');
       });
-      shouldFetchChecklist.current = false;
+      prevTaskIdRef.current = id;
     }
   }, [id, taskDetails, updateTaskDetails]);
 
   return (
-    <div className={`rounded-xl border transition-colors ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-      <div className='p-6 border-b border-gray-200 dark:border-gray-700'>
+    <div
+      className={clsx(
+        'rounded-xl border transition-colors',
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
+      )}
+    >
+      <div className={clsx('p-6 border-b', darkMode ? 'border-gray-700' : 'border-gray-200')}>
         <div className='flex items-center justify-between'>
-          <h3 className='text-lg font-semibold flex items-center'>
+          <h3 className='text-md font-semibold flex items-center'>
             <List className='w-5 h-5 mr-2' />
             Checklist (
             {taskDetails.checklists?.filter((item) => item.completed).length || 0}
@@ -132,7 +139,7 @@ const Checklist = () => {
           </h3>
           <div className='text-sm flex items-center gap-3'>
             <GenerateChecklistButton generatedChecklist={generatedChecklist} setGeneratedChecklist={setGeneratedChecklist} />
-            <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            <span className={clsx('text-xs', darkMode ? 'text-gray-400' : 'text-gray-600')}>
               {Math.round((taskDetails.checklists?.filter((item) => item.completed).length / taskDetails.checklists?.length) * 100) || 0}
               % Complete
             </span>
@@ -141,22 +148,26 @@ const Checklist = () => {
       </div>
       <div className='p-6'>
         {/* Add new checklist item */}
-        <div className='flex space-x-2 mb-6'>
+        <div className='flex space-x-2 mb-6 w-full min-[1024px]:flex-col min-[1080px]:flex-row min-[1024px]:space-y-2 min-[1080px]:space-y-0'>
           <input
             type='text'
             value={newChecklistItem}
             onChange={(e) => setNewChecklistItem(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && addChecklistItem()}
             placeholder='Add a checklist item...'
-            className={`flex-1 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary-500 ${darkMode
-              ? 'bg-gray-700 border-gray-600 text-white'
-              : 'bg-white border-gray-300'}`}
+            className={clsx(
+              'flex-1 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary-500 w-full min-[1080px]:w-[calc(100%-4rem)]',
+              darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300',
+            )}
+            aria-label='New checklist item'
           />
           <button
             onClick={addChecklistItem}
-            className='px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors'
+            aria-label='Add checklist item'
+            className='flex items-center gap-2 justify-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors'
           >
             <Plus className='w-4 h-4' />
+            <span className='min-[1080px]:hidden'>Add Checklist</span>
           </button>
         </div>
 
@@ -164,11 +175,14 @@ const Checklist = () => {
         <div className='space-y-2'>
           {!isEmpty(generatedChecklist) && (
             <Outline colors={['bg-primary', 'bg-primary-500']} width='2px' variant='rotate' animationDuration='2s'>
-              <div className='space-y-2 bg-secondary-bg p-2 rounded-xl'>
+              <div className={clsx('space-y-2 p-2 rounded-xl', darkMode ? 'bg-neutral-900' : 'bg-gray-100')}>
                 {Array.isArray(generatedChecklist) && generatedChecklist?.map((item) => (
                   <div
                     key={item.id}
-                    className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}
+                    className={clsx(
+                      'flex items-center justify-between p-3 rounded-lg border transition-colors',
+                      darkMode ? 'border-gray-700' : 'border-gray-200',
+                    )}
                   >
                     <div className='flex items-center space-x-3 flex-1'>
                       <p>
@@ -183,19 +197,24 @@ const Checklist = () => {
           {taskDetails.checklists?.map((item) => (
             <div
               key={item.id}
-              className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${darkMode ? 'border-gray-700' : 'border-gray-200'} ${item.completed ? 'opacity-75' : ''}`}
+              className={clsx(
+                'flex items-center space-x-3 justify-between p-3 rounded-lg border transition-colors',
+                darkMode ? 'border-gray-700' : 'border-gray-200',
+                item.completed ? 'opacity-75' : '',
+              )}
             >
-              <div className='flex items-center space-x-3 flex-1'>
-                <button
-                  onClick={() => toggleChecklistItem(item.id)}
-                  className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${item.completed
-                    ? 'bg-primary-500 border-primary-500'
-                    : darkMode
-                      ? 'border-gray-500 hover:border-primary-500'
-                      : 'border-gray-300 hover:border-primary-500'}`}
-                >
-                  {item.completed && <Check className='w-2.5 h-2.5 text-white' />}
-                </button>
+              <button
+                onClick={() => toggleChecklistItem(item.id)}
+                aria-label={`${item.completed ? 'Mark as incomplete' : 'Mark as complete'}: ${item.title}`}
+                className={clsx(
+                  'min-w-4 h-4 rounded border-2 flex items-center justify-center transition-colors cursor-pointer',
+                  item.completed ? 'bg-primary-500 border-primary-500'
+                    : darkMode ? 'border-gray-500 hover:border-primary-500' : 'border-gray-300 hover:border-primary-500',
+                )}
+              >
+                {item.completed && <Check className='text-white w-3 h-3' />}
+              </button>
+              <div className='w-full'>
                 {editingId === item.id ? (
                   <input
                     value={editingValue}
@@ -209,14 +228,29 @@ const Checklist = () => {
                         setEditingId(null);
                       }
                     }}
-                    className={`${item.completed ? 'line-through' : ''} flex-1 bg-transparent outline-none border-none`}
+                    className={clsx(
+                      'flex-1 bg-transparent outline-none border-none',
+                      item.completed && 'line-through',
+                    )}
                   />
                 ) : (
                   <p
                     role='button'
                     tabIndex={0}
                     onClick={() => !item.completed && startEditing(item.id, item.title)}
-                    className={`${item.completed ? 'line-through' : ''}`}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (!item.completed) {
+                          startEditing(item.id, item.title);
+                        }
+                      }
+                    }}
+                    className={clsx(
+                      item.completed ? 'line-through' : 'cursor-pointer rounded px-1',
+                      !item.completed && (darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'),
+                    )}
+                    aria-label={`Edit checklist item: ${item.title}${item.completed ? ' (completed)' : ''}`}
                   >
                     {item.title}
                   </p>
@@ -224,9 +258,13 @@ const Checklist = () => {
               </div>
               <button
                 onClick={() => removeChecklistItem(item.id)}
-                className={`p-1 rounded transition-colors ${darkMode ? 'hover:bg-gray-700 text-red-400' : 'hover:bg-gray-100 text-red-500'}`}
+                aria-label={`Remove checklist item: ${item.title}`}
+                className={clsx(
+                  'p-1 rounded transition-colors',
+                  darkMode ? 'hover:bg-gray-700 text-red-400' : 'hover:bg-gray-100 text-red-500',
+                )}
               >
-                <Trash2 className='w-3 h-3' />
+                <Trash2 className='w-4 h-4' />
               </button>
             </div>
           ))}

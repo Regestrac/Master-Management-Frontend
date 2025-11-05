@@ -3,9 +3,10 @@ import { ToastContainer } from 'react-toastify';
 
 import useCustomNavigation from 'hooks/useCustomNavigation';
 
-import routes from 'routes/routes';
-
 import Modals from 'components/Modals';
+import PerformanceOptimizer from 'components/Performance/PerformanceOptimizer';
+
+import routes from 'src/routes/routes';
 
 function App() {
   useCustomNavigation();
@@ -14,6 +15,7 @@ function App() {
 
   return (
     <>
+      <PerformanceOptimizer />
 
       {appRoutes}
 

@@ -285,7 +285,7 @@ const ProductivityTrendChart = () => {
           </svg>
         </div>
 
-        <div className='flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-700'>
+        <div className={`flex items-center justify-between mt-4 pt-4 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
           <div className='flex items-center space-x-4 text-sm'>
             <div className='flex items-center space-x-2'>
               <div className='w-3 h-3 bg-primary-500 rounded-full' />

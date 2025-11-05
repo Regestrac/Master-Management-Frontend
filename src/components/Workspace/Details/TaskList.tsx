@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Plus, UserPlus } from 'lucide-react';
 
 import { StatusType, Task } from 'helpers/sharedTypes';
 import { STATUS_OPTIONS } from 'helpers/configs';
 import { getStatusColor, debounce } from 'helpers/utils';
+import { navigateWithHistory } from 'helpers/navigationUtils';
 
 import useWorkspaceStore from 'stores/workspaceStore';
-import { useNavbarStore } from 'stores/navbarStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
 import { getWorkspaceTasks } from 'services/workspace';
@@ -37,10 +37,9 @@ const TaskList = () => {
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const members = useWorkspaceStore((state) => state.members);
-  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const navigate = useNavigate();
-
+  const { pathname } = useLocation();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -150,8 +149,12 @@ const TaskList = () => {
   }, []);
 
   const handleTaskClick = (taskId: number) => {
-    updatePrevPath(`/workspace/${id}`);
-    navigate(`/tasks/${taskId}`);
+    navigateWithHistory(
+      navigate,
+      `/tasks/${taskId}`,
+      pathname,
+      searchParams,
+    );
   };
 
   return (
@@ -162,7 +165,12 @@ const TaskList = () => {
         <>
           <div className='flex items-center gap-2 mb-3'>
             <h3 className='text-sm font-medium opacity-80'>All tasks</h3>
-            <span className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>
+            <span
+              className={clsx(
+                'text-xs px-2 py-1 rounded',
+                darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700',
+              )}
+            >
               {tasks.length}
             </span>
             <div className='flex items-center justify-end gap-2 flex-1'>
@@ -189,7 +197,9 @@ const TaskList = () => {
               />
             )}
             {tasks.length < 1 ? (
-              <p className='text-gray-400 dark:text-gray-600'>No tasks yet.</p>
+              <p className={darkMode ? 'text-gray-600' : 'text-gray-400'}>
+                No tasks yet.
+              </p>
             ) : (
               tasks.map((task) => (
                 <li
@@ -212,7 +222,7 @@ const TaskList = () => {
                         <span
                           className={clsx(
                             'inline-block max-w-full truncate text-xs px-3 py-1 rounded-xl transition',
-                            getStatusColor(task.status as StatusType),
+                            getStatusColor(task.status as StatusType, darkMode),
                           )}
                         >
                           {task.status?.toUpperCase()}
@@ -248,16 +258,17 @@ const TaskList = () => {
                                   key={`assignee-${task.id}-${userId}`}
                                   member={member}
                                   size='sm'
-                                  className='border-gray-700 dark:border-white'
+                                  className={clsx('border-2', darkMode ? 'border-white' : 'border-gray-700')}
                                 />
                               );
                             })}
                           </div>
                         ) : (
-                          <div className={clsx(
-                            'w-8 h-8 rounded-full border-2 border-dashed flex items-center justify-center',
-                            darkMode ? 'border-gray-600 text-gray-500' : 'border-gray-300 text-gray-400',
-                          )}
+                          <div
+                            className={clsx(
+                              'w-8 h-8 rounded-full border-2 border-dashed flex items-center justify-center',
+                              darkMode ? 'border-gray-600 text-gray-500' : 'border-gray-300 text-gray-400',
+                            )}
                           >
                             <UserPlus size={14} />
                           </div>
@@ -266,7 +277,7 @@ const TaskList = () => {
                     </Dropdown>
                   </div>
 
-                  <span className='text-xs whitespace-nowrap text-gray-600 dark:text-gray-300'>
+                  <span className={clsx('text-xs whitespace-nowrap', darkMode ? 'text-gray-300' : 'text-gray-600')}>
                     {formatDueDate(task.due_date)}
                   </span>
                 </li>

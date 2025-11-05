@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { z } from 'zod';
@@ -40,7 +40,9 @@ const Login: React.FC = () => {
     resolver: zodResolver(schema),
   });
 
-  const { handleSubmit, setValue, getValues } = methods;
+  const { handleSubmit, setValue, control } = methods;
+
+  const { remember_me } = useWatch({ control });
 
   const onLoginSubmit = (formData: LoginType) => {
     setError(null); // Reset error state before login attempt
@@ -140,7 +142,7 @@ const Login: React.FC = () => {
               <label className='flex items-center'>
                 <input
                   type='checkbox'
-                  checked={getValues('remember_me')}
+                  checked={remember_me}
                   onChange={(e) => setValue('remember_me', e.target.checked)}
                   className='h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded'
                 />
@@ -174,11 +176,15 @@ const Login: React.FC = () => {
             <p className='text-sm text-gray-500'>
               By signing in, you agree to our
               {' '}
-              <a href='#' className='text-purple-600 hover:text-purple-500'>Terms of Service</a>
+              <Link to='/legal/terms' className='text-purple-600 hover:text-purple-500'>
+                Terms of Service
+              </Link>
               {' '}
               and
               {' '}
-              <a href='#' className='text-purple-600 hover:text-purple-500'>Privacy Policy</a>
+              <Link to='/legal/privacy' className='text-purple-600 hover:text-purple-500'>
+                Privacy Policy
+              </Link>
             </p>
           </div>
         </div>

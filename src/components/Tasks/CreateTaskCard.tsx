@@ -13,12 +13,14 @@ import { createTask } from 'services/tasks';
 
 import Dropdown from 'components/Shared/Dropdown';
 import Input from 'components/Shared/Input';
+import DatePicker from 'components/Shared/DatePicker';
 
 type CreateTaskFormDataType = {
   new_task_title: string;
   status: StatusType;
   priority: PriorityType | null;
-}
+  due_date: Date | null;
+};
 
 const CreateTaskCard = ({ handleCancel }: { handleCancel: () => void }) => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
@@ -29,6 +31,7 @@ const CreateTaskCard = ({ handleCancel }: { handleCancel: () => void }) => {
       new_task_title: '',
       status: 'todo',
       priority: null,
+      due_date: null,
     },
   });
 
@@ -43,6 +46,7 @@ const CreateTaskCard = ({ handleCancel }: { handleCancel: () => void }) => {
       priority: formData?.priority,
       time_spend: 0,
       type: 'task',
+      due_date: formData?.due_date ? formData.due_date.toISOString().split('T')[0] : null,
     };
     createTask(payload).then((res) => {
       toast.success(res?.message || 'Successfully created task');
@@ -81,11 +85,20 @@ const CreateTaskCard = ({ handleCancel }: { handleCancel: () => void }) => {
                 placeholder='Enter title...'
                 className='font-semibold text-lg cursor-text outline-none p-0! text-white border-none focus:ring-0!'
               />
-              <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={status} hideClear isMulti={false}>
-                <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(status!)}`}>
-                  {status?.toUpperCase()}
-                </span>
-              </Dropdown>
+              <div className='flex items-center gap-2 flex-wrap'>
+                <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={status} hideClear isMulti={false}>
+                  <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(status!, darkMode)}`}>
+                    {status?.toUpperCase()}
+                  </span>
+                </Dropdown>
+                <div className='min-w-[140px]'>
+                  <DatePicker
+                    name='due_date'
+                    placeholder='Set due date'
+                    className='text-sm'
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </FormProvider>

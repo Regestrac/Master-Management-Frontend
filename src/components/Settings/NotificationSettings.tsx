@@ -1,72 +1,69 @@
-import { useState } from 'react';
-
 import { useSettingsStore } from 'stores/settingsStore';
 
 import Switch from 'components/Shared/Switch';
 
-interface NotificationSetting {
+type NotificationSettingType = {
   id: string;
+  name: string;
   title: string;
   description: string;
   enabled: boolean;
   frequency: string;
-}
+};
+
+const notifications: NotificationSettingType[] = [
+  {
+    id: 'task-reminders',
+    name: 'taskReminder',
+    title: 'Task Reminders',
+    description: 'Get notified when tasks are due',
+    enabled: true,
+    frequency: 'immediate',
+  },
+  {
+    id: 'goal-progress',
+    name: 'goalProgress',
+    title: 'Goal Progress Updates',
+    description: 'Weekly summaries of your goal progress',
+    enabled: true,
+    frequency: 'weekly',
+  },
+  {
+    id: 'focus-session-breaks',
+    name: 'sessionBreaks',
+    title: 'Focus Session Breaks',
+    description: 'Reminders to take breaks during focus sessions',
+    enabled: true,
+    frequency: 'session',
+  },
+  {
+    id: 'daily-summary',
+    name: 'dailySummary',
+    title: 'Daily Summary',
+    description: 'End-of-day productivity report',
+    enabled: true,
+    frequency: 'daily',
+  },
+  {
+    id: 'streak-milestones',
+    name: 'milestone',
+    title: 'Streak Milestones',
+    description: 'Celebrate your productivity streaks',
+    enabled: true,
+    frequency: 'milestone',
+  },
+  {
+    id: 'new-features',
+    name: 'newFeature',
+    title: 'New Features',
+    description: 'Updates about new Master Management features',
+    enabled: true,
+    frequency: 'every release',
+  },
+];
 
 const NotificationSettings = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
-
-  const [notifications, setNotifications] = useState<NotificationSetting[]>([
-    {
-      id: 'task-reminders',
-      title: 'Task Reminders',
-      description: 'Get notified when tasks are due',
-      enabled: true,
-      frequency: 'immediate',
-    },
-    {
-      id: 'goal-progress',
-      title: 'Goal Progress Updates',
-      description: 'Weekly summaries of your goal progress',
-      enabled: true,
-      frequency: 'weekly',
-    },
-    {
-      id: 'focus-session-breaks',
-      title: 'Focus Session Breaks',
-      description: 'Reminders to take breaks during focus sessions',
-      enabled: true,
-      frequency: 'session',
-    },
-    {
-      id: 'daily-summary',
-      title: 'Daily Summary',
-      description: 'End-of-day productivity report',
-      enabled: false,
-      frequency: 'daily',
-    },
-    {
-      id: 'streak-milestones',
-      title: 'Streak Milestones',
-      description: 'Celebrate your productivity streaks',
-      enabled: true,
-      frequency: 'milestone',
-    },
-    {
-      id: 'new-features',
-      title: 'New Features',
-      description: 'Updates about new Master Management features',
-      enabled: false,
-      frequency: 'as-needed',
-    },
-  ]);
-
-  const handleToggle = (id: string, value: boolean) => {
-    setNotifications((prev) =>
-      prev.map((notif) =>
-        notif.id === id ? { ...notif, enabled: value } : notif,
-      ),
-    );
-  };
 
   return (
     <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm`}>
@@ -88,9 +85,9 @@ const NotificationSettings = () => {
                 </div>
               </div>
               <Switch
-                name={`${notification.id}-switch`}
-                onChange={(value) => handleToggle(notification.id, value)}
+                name={notification?.name}
                 className='mt-1'
+                disabled={!notification?.enabled}
               />
             </div>
           </div>

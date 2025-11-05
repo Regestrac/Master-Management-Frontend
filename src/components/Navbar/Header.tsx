@@ -102,12 +102,16 @@ const Header = () => {
             />
           </div>
         ) : null}
-        <button className={`p-2 rounded-lg ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
+        <button
+          className={`p-2 rounded-lg ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
+          aria-label='Notification'
+        >
           <Bell className='w-5 h-5' />
         </button>
         <button
           onClick={updateAppTheme}
           className={`p-2 rounded-lg ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
+          aria-label='Theme'
         >
           {darkMode ? <Sun className='w-5 h-5' /> : <Moon className='w-5 h-5' />}
         </button>

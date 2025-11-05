@@ -49,7 +49,7 @@ const ManageMembersModal = () => {
           >
             <div className='flex items-center gap-3'>
               {m.avatar_url ? (
-                <div className='w-8 h-8 rounded-full overflow-hidden border border-gray-300 dark:border-gray-600 flex items-center justify-center'>
+                <div className={clsx('w-8 h-8 rounded-full overflow-hidden border flex items-center justify-center', darkMode ? 'border-gray-600' : 'border-gray-300')}>
                   <img src={m.avatar_url} alt={m.name} className='w-full h-full object-cover ring-2' />
                 </div>
               ) : (
@@ -82,7 +82,7 @@ const ManageMembersModal = () => {
                 </button>
               </div>
             ) : (
-              <span className='text-xs px-2 py-1 rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'>
+              <span className={clsx('text-xs px-2 py-1 rounded', darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600')}>
                 {m.role}
               </span>
             )}

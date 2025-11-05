@@ -28,7 +28,15 @@ type CommentsType = {
   avatar?: string;
 };
 
+type SubtaskType = TaskDetailsType & {
+  parent_id: number;
+  checklist_completed: number;
+  checklist_total: number;
+  completed_at?: string;
+};
+
 type TaskDetailsType = TaskType & {
+  id: number;
   startedAt: string;
   description: string;
   parent_id: number;
@@ -36,28 +44,31 @@ type TaskDetailsType = TaskType & {
   notes: StickyNotesType[]
   tags: string[];
   comments: CommentsType[];
+  progress: number;
+  subtasks: SubtaskType[];
 };
 
 type TasksStateType = {
   tasks: TaskType[];
-  recentTasks: TaskType[];
   shouldStartTimer: boolean;
   currentTaskDetails: TaskDetailsType;
-  updateCurrentTaskDetails: (_task: TaskDetailsType) => void;
+  recentTaskData: Partial<TaskType>;
+  updateCurrentTaskDetails: (_task: Partial<TaskDetailsType>) => void;
   addTask: (_newTask: TaskType | TaskType[], _type?: 'merge' | 'replace') => void;
   updateTask: (_task: Partial<TaskType> & { id: number; }) => void;
   deleteTask: (_id: number) => void;
-  updateRecentTask: (_task: TaskType | TaskType[]) => void;
   updateStartTimer: (_value: boolean) => void;
   updateStartedAt: (_time: string) => void;
+  updateRecentTaskData: (_task: Partial<TaskType> & { id: number; }) => void;
+  clearRecentTaskData: () => void;
 };
 
 export const useTaskStore = create<TasksStateType>()((set) => ({
   tasks: [],
-  recentTasks: [],
   shouldStartTimer: false,
   currentTaskDetails: {} as TaskDetailsType,
-  updateCurrentTaskDetails: (task) => set({ currentTaskDetails: task }),
+  recentTaskData: {},
+  updateCurrentTaskDetails: (task) => set((state) => ({ currentTaskDetails: { ...state.currentTaskDetails, ...task } })),
   addTask: (newTask, type) => set((state) => {
     if (type === 'replace') {
       return { tasks: Array.isArray(newTask) ? newTask : [newTask] };
@@ -79,11 +90,8 @@ export const useTaskStore = create<TasksStateType>()((set) => ({
   deleteTask: (id) => set((state) => ({
     tasks: state.tasks.filter((task) => task.id !== id),
   })),
-  updateRecentTask: (updatedTask) => set((state) => {
-    const filtered = !Array.isArray(updatedTask) ? state.recentTasks.filter((task: TaskType) => task.id !== updatedTask.id) : [];
-    const updatedRecentTasks = !Array.isArray(updatedTask) ? [updatedTask, ...filtered].slice(0, 5) : [];
-    return { recentTasks: Array.isArray(updatedTask) ? updatedTask : updatedRecentTasks };
-  }),
   updateStartTimer: (value) => set({ shouldStartTimer: value }),
   updateStartedAt: (value) => set((state) => ({ currentTaskDetails: { ...state.currentTaskDetails, startedAt: value } })),
+  updateRecentTaskData: (updatedTask) => set(() => ({ recentTaskData: updatedTask })),
+  clearRecentTaskData: () => set(() => ({ recentTaskData: {} })),
 }));

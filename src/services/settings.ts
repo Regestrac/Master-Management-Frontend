@@ -29,3 +29,7 @@ export const updateTheme = (data: object) => postHandler({
   body: JSON.stringify(data),
   method: 'PATCH',
 });
+
+export const getStorageUsage = () => getHandler({
+  path: 'settings/storage',
+});

@@ -1,4 +1,5 @@
 import { CheckSquare, Clock, Play, Plus, Target, User } from 'lucide-react';
+import clsx from 'clsx';
 
 import { useSettingsStore } from 'stores/settingsStore';
 
@@ -7,17 +8,33 @@ const MainCalendar = () => {
 
   return (
     <div className='lg:col-span-3'>
-      <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl border shadow-sm overflow-hidden`}>
+      <div className={clsx(
+        'rounded-xl border shadow-sm overflow-hidden',
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
+      )}
+      >
         {/* Calendar Header */}
-        <div className={`px-6 py-4 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} flex items-center justify-between`}>
+        <div className={clsx(
+          'px-6 py-4 border-b flex items-center justify-between',
+          darkMode ? 'border-gray-700' : 'border-gray-200',
+        )}
+        >
           <div className='flex items-center space-x-4'>
-            <button className={`p-2 rounded-lg ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} transition-colors`}>
+            <button className={clsx(
+              'p-2 rounded-lg transition-colors',
+              darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100',
+            )}
+            >
               <svg className='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                 <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 19l-7-7 7-7' />
               </svg>
             </button>
             <h3 className='text-xl font-bold'>June 2025</h3>
-            <button className={`p-2 rounded-lg ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} transition-colors`}>
+            <button className={clsx(
+              'p-2 rounded-lg transition-colors',
+              darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100',
+            )}
+            >
               <svg className='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                 <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
               </svg>
@@ -33,7 +50,13 @@ const MainCalendar = () => {
           {/* Days of Week Header */}
           <div className='grid grid-cols-7 gap-4 mb-4'>
             {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day) => (
-              <div key={day} className={`py-3 text-center font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <div
+                key={day}
+                className={clsx(
+                  'py-3 text-center font-medium',
+                  darkMode ? 'text-gray-400' : 'text-gray-600',
+                )}
+              >
                 {day.slice(0, 3)}
               </div>
             ))}
@@ -75,23 +98,35 @@ const MainCalendar = () => {
               return (
                 <div
                   key={i}
-                  className={`min-h-32 p-2 border rounded-lg transition-all hover:shadow-md cursor-pointer ${isToday
-                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-                    : isCurrentMonth
-                      ? `${darkMode ? 'border-gray-700 bg-gray-750 hover:bg-gray-700' : 'border-gray-200 bg-white hover:bg-gray-50'}`
-                      : `${darkMode ? 'border-gray-800 bg-gray-800' : 'border-gray-100 bg-gray-50'}`} ${isWeekend ? 'opacity-75' : ''}`}
+                  className={clsx(
+                    'min-h-32 p-2 border rounded-lg transition-all hover:shadow-md cursor-pointer',
+                    isToday && [darkMode ? 'bg-primary-900/20' : 'bg-primary-50', 'border-primary-500'],
+                    !isToday && isCurrentMonth && [
+                      darkMode ? 'border-gray-700 bg-gray-750 hover:bg-gray-700' : 'border-gray-200 bg-white hover:bg-gray-50',
+                    ],
+                    !isToday && !isCurrentMonth && [
+                      darkMode ? 'border-gray-800 bg-gray-800' : 'border-gray-100 bg-gray-50',
+                    ],
+                    isWeekend && 'opacity-75',
+                  )}
                 >
                   <div className='flex items-center justify-between mb-2'>
-                    <span className={`text-sm font-medium ${isToday
-                      ? 'text-primary-600'
-                      : isCurrentMonth
-                        ? ''
-                        : `${darkMode ? 'text-gray-600' : 'text-gray-400'}`}`}
+                    <span className={clsx(
+                      'text-sm font-medium',
+                      isToday && 'text-primary-600',
+                      !isToday && !isCurrentMonth && [
+                        darkMode ? 'text-gray-600' : 'text-gray-400',
+                      ],
+                    )}
                     >
                       {dayNumber > 0 ? (dayNumber <= 30 ? dayNumber : dayNumber - 30) : 26 + dayNumber}
                     </span>
                     {events.length > 0 && (
-                      <span className={`text-xs px-1 py-0.5 rounded ${darkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-200 text-gray-600'}`}>
+                      <span className={clsx(
+                        'text-xs px-1 py-0.5 rounded',
+                        darkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-200 text-gray-600',
+                      )}
+                      >
                         {events.length}
                       </span>
                     )}
@@ -116,7 +151,11 @@ const MainCalendar = () => {
                       </div>
                     ))}
                     {events.length > 3 && (
-                      <div className={`text-xs p-1 rounded ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
+                      <div className={clsx(
+                        'text-xs p-1 rounded',
+                        darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600',
+                      )}
+                      >
                         +
                         {events.length - 3}
                         {' '}
@@ -137,18 +176,26 @@ const MainCalendar = () => {
       </div>
 
       {/* Today's Schedule */}
-      <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 border shadow-sm mt-6`}>
+      <div className={clsx(
+        'rounded-xl p-6 border shadow-sm mt-6',
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
+      )}
+      >
         <div className='flex items-center justify-between mb-6'>
           <div>
             <h4 className='text-xl font-bold mb-1'>Today's Schedule</h4>
-            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            <p className={clsx(
+              'text-sm',
+              darkMode ? 'text-gray-400' : 'text-gray-600',
+            )}
+            >
               Thursday, June 27, 2025 • 3 events
             </p>
           </div>
           <div className='flex items-center space-x-2'>
             <div className='flex items-center space-x-1 text-sm'>
               <div className='w-2 h-2 bg-green-500 rounded-full' />
-              <span className={darkMode ? 'text-gray-300' : 'text-gray-700'}>Available</span>
+              <span className={clsx(darkMode ? 'text-gray-300' : 'text-gray-700')}>Available</span>
             </div>
             <button className='p-2 rounded-lg bg-primary-500 text-white hover:bg-primary-600 transition-colors'>
               <Clock className='w-4 h-4' />
@@ -167,19 +214,32 @@ const MainCalendar = () => {
                 <span className='text-sm text-gray-500'>9:00 AM - 12:00 PM</span>
               </div>
               <div className='space-y-2'>
-                <div className='flex items-center justify-between p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800'>
+                <div className={clsx(
+                  'flex items-center justify-between p-3 rounded-lg border',
+                  darkMode
+                    ? 'bg-blue-900/20 border-blue-800'
+                    : 'bg-blue-50 border-blue-200',
+                )}
+                >
                   <div className='flex items-center space-x-3'>
                     <div className='w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center'>
                       <CheckSquare className='w-4 h-4 text-white' />
                     </div>
                     <div>
                       <h6 className='font-medium'>Design System Update</h6>
-                      <p className='text-sm text-gray-600 dark:text-gray-400'>High priority task</p>
+                      <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-600')}>
+                        High priority task
+                      </p>
                     </div>
                   </div>
                   <div className='flex items-center space-x-2'>
                     <span className='text-sm bg-blue-100 text-blue-600 px-2 py-1 rounded'>2.5h</span>
-                    <button className='p-1 rounded hover:bg-blue-100 dark:hover:bg-blue-800'>
+                    <button
+                      className={clsx(
+                        'p-1 rounded',
+                        darkMode ? 'hover:bg-blue-800' : 'hover:bg-blue-100',
+                      )}
+                    >
                       <Play className='w-4 h-4 text-blue-600' />
                     </button>
                   </div>
@@ -197,19 +257,31 @@ const MainCalendar = () => {
                 <span className='text-sm text-gray-500'>2:00 PM - 4:00 PM</span>
               </div>
               <div className='space-y-2'>
-                <div className='flex items-center justify-between p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800'>
+                <div className={clsx(
+                  'flex items-center justify-between p-3 rounded-lg border',
+                  darkMode
+                    ? 'bg-green-900/20 border-green-800'
+                    : 'bg-green-50 border-green-200',
+                )}
+                >
                   <div className='flex items-center space-x-3'>
                     <div className='w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center'>
                       <User className='w-4 h-4 text-white' />
                     </div>
                     <div>
                       <h6 className='font-medium'>Design Review Meeting</h6>
-                      <p className='text-sm text-gray-600 dark:text-gray-400'>With Sarah, Mike, and Alex</p>
+                      <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-600')}>
+                        With Sarah, Mike, and Alex
+                      </p>
                     </div>
                   </div>
                   <div className='flex items-center space-x-2'>
                     <span className='text-sm bg-green-100 text-green-600 px-2 py-1 rounded'>1h</span>
-                    <button className='p-1 rounded hover:bg-green-100 dark:hover:bg-green-800'>
+                    <button className={clsx(
+                      'p-1 rounded',
+                      darkMode ? 'hover:bg-green-800' : 'hover:bg-green-100',
+                    )}
+                    >
                       <svg className='w-4 h-4 text-green-600' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z' />
                       </svg>
@@ -229,19 +301,31 @@ const MainCalendar = () => {
                 <span className='text-sm text-gray-500'>4:00 PM - 6:00 PM</span>
               </div>
               <div className='space-y-2'>
-                <div className='flex items-center justify-between p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800'>
+                <div className={clsx(
+                  'flex items-center justify-between p-3 rounded-lg border',
+                  darkMode
+                    ? 'bg-purple-900/20 border-purple-800'
+                    : 'bg-purple-50 border-purple-200',
+                )}
+                >
                   <div className='flex items-center space-x-3'>
                     <div className='w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center'>
                       <Target className='w-4 h-4 text-white' />
                     </div>
                     <div>
                       <h6 className='font-medium'>React Advanced Patterns</h6>
-                      <p className='text-sm text-gray-600 dark:text-gray-400'>Goal progress session</p>
+                      <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-600')}>
+                        Goal progress session
+                      </p>
                     </div>
                   </div>
                   <div className='flex items-center space-x-2'>
                     <span className='text-sm bg-purple-100 text-purple-600 px-2 py-1 rounded'>2h</span>
-                    <button className='p-1 rounded hover:bg-purple-100 dark:hover:bg-purple-800'>
+                    <button className={clsx(
+                      'p-1 rounded',
+                      darkMode ? 'hover:bg-purple-800' : 'hover:bg-purple-100',
+                    )}
+                    >
                       <Play className='w-4 h-4 text-purple-600' />
                     </button>
                   </div>
@@ -258,7 +342,11 @@ const MainCalendar = () => {
                 <h5 className='font-semibold text-gray-600'>Free Time</h5>
                 <span className='text-sm text-gray-500'>6:00 PM - 9:00 PM</span>
               </div>
-              <div className='p-3 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600'>
+              <div className={clsx(
+                'p-3 rounded-lg border-2 border-dashed',
+                darkMode ? 'border-gray-600' : 'border-gray-300',
+              )}
+              >
                 <div className='text-center'>
                   <p className='text-sm text-gray-500 mb-2'>Available for scheduling</p>
                   <button className='text-primary-500 hover:text-primary-600 text-sm font-medium'>
@@ -271,7 +359,11 @@ const MainCalendar = () => {
         </div>
 
         {/* Schedule Actions */}
-        <div className='flex items-center justify-between mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 flex-wrap gap-6'>
+        <div className={clsx(
+          'flex items-center justify-between mt-6 pt-6 border-t flex-wrap gap-6',
+          darkMode ? 'border-gray-700' : 'border-gray-200',
+        )}
+        >
           <div className='flex items-center space-x-4 text-sm'>
             <div className='flex items-center space-x-2'>
               <Clock className='w-4 h-4 text-blue-500' />
@@ -287,7 +379,14 @@ const MainCalendar = () => {
             </div>
           </div>
           <div className='flex space-x-2'>
-            <button className='px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm'>
+            <button
+              className={clsx(
+                'px-4 py-2 border rounded-lg transition-colors text-sm',
+                darkMode
+                  ? 'border-gray-600 hover:bg-gray-700'
+                  : 'border-gray-300 hover:bg-gray-50',
+              )}
+            >
               Reschedule
             </button>
             <button className='px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors text-sm'>

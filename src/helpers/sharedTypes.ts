@@ -4,6 +4,10 @@ export type StatusType = 'completed' | 'todo' | 'inprogress' | 'pending' | 'paus
 
 export type PriorityType = 'high' | 'normal' | 'low';
 
+export type TargetType = 'repetition' | 'hours' | 'days' | 'weeks' | 'months' | 'sessions' | 'points' | 'percentage';
+
+export type TargetFrequency = 'daily' | 'alternate_days' | 'weekly' | 'monthly' | 'custom';
+
 export type TaskType = {
   id: number;
   title: string;
@@ -15,6 +19,9 @@ export type TaskType = {
   due_date: string;
   category: string;
   type: 'goal' | 'task';
+  target_value?: number | null;
+  target_type?: TargetType | null;
+  target_frequency?: TargetFrequency | null;
 };
 
 export type SelectOptionType = {

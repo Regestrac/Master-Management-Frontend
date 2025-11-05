@@ -13,6 +13,7 @@ type PropsType = {
   rows?: number;
   onBlur?: (_value: string) => void;
   icon?: ReactNode;
+  ref?: React.RefObject<HTMLTextAreaElement | null>;
   onClick?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['onClick'];
   style?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['style'];
   autoFocus?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['autoFocus'];
@@ -20,7 +21,17 @@ type PropsType = {
   hideResizeIndicator?: boolean;
 };
 
-const Input = ({ name, label, icon, type = 'text', onBlur, id, hideResizeIndicator = false, ...props }: PropsType) => {
+const Input = ({
+  name,
+  label,
+  icon,
+  type = 'text',
+  onBlur,
+  id,
+  hideResizeIndicator = false,
+  ref: textAreaRef,
+  ...props
+}: PropsType) => {
   const [showPassword, setShowPassword] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -62,9 +73,10 @@ const Input = ({ name, label, icon, type = 'text', onBlur, id, hideResizeIndicat
           <textarea
             {...field}
             {...props}
+            value={field.value || ''}
             id={id || name}
             rows={hideResizeIndicator ? 1 : props.rows || 4}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors?.[name]
+            className={`w-full ${icon ? 'pl-10 pr-4' : 'px-4'} py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors?.[name]
               ? 'border-red-300 focus:ring-red-500'
               : 'border-gray-300 focus:ring-primary-500'} ${props.className || ''}`}
             style={{
@@ -79,6 +91,9 @@ const Input = ({ name, label, icon, type = 'text', onBlur, id, hideResizeIndicat
             } : undefined}
             ref={(ref) => {
               textareaRef.current = ref;
+              if (textAreaRef) {
+                textAreaRef.current = ref;
+              }
               if (ref && hideResizeIndicator) {
                 // Set initial height on mount
                 ref.style.height = 'auto';
@@ -90,9 +105,10 @@ const Input = ({ name, label, icon, type = 'text', onBlur, id, hideResizeIndicat
           <input
             {...field}
             {...props}
+            value={field.value || ''}
             id={id || name}
             type={showPassword ? 'text' : type}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors?.[name]
+            className={`w-full ${icon ? 'pl-10' : 'pl-4'} ${type === 'password' ? 'pr-10' : icon ? 'pr-4' : 'pr-4'} py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors?.[name]
               ? 'border-red-300 focus:ring-red-500'
               : 'border-gray-300 focus:ring-primary-500'} ${props.className || ''}`}
             onBlur={handleOnBlur}

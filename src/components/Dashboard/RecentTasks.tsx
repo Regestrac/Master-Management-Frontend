@@ -3,24 +3,22 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { TaskType } from 'helpers/sharedTypes';
+
+import { useTaskStore } from 'stores/taskStore';
+
 import { getRecentTasks } from 'services/dashboard';
 
 import TaskCard from 'components/Tasks/TaskCard';
 import TaskSkeleton from 'components/Dashboard/TaskSkeleton';
 
-type RecentTaskType = {
-  id: number;
-  last_accessed_at: string;
-  status: 'completed' | 'todo' | 'inprogress' | 'pending' | 'paused';
-  time_spend: number;
-  title: string;
-  streak: number;
-  priority: 'high' | 'normal' | 'low';
-};
-
 const RecentTasks = () => {
-  const [recentTasks, setRecentTasks] = useState<RecentTaskType[]>([]);
+  const [recentTasks, setRecentTasks] = useState<TaskType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const recentTaskData = useTaskStore((state) => state.recentTaskData);
+  const clearRecentTaskData = useTaskStore((state) => state.clearRecentTaskData);
+
   const navigate = useNavigate();
 
   const shouldFetchRecentTasksRef = useRef(true);
@@ -28,6 +26,13 @@ const RecentTasks = () => {
   const handleViewAllTask = () => {
     navigate('/tasks');
   };
+
+  useEffect(() => {
+    if (recentTaskData.id) {
+      setRecentTasks((prev) => prev.map((task) => task.id === recentTaskData.id ? { ...task, ...recentTaskData } : task));
+      clearRecentTaskData();
+    }
+  }, [clearRecentTaskData, recentTaskData]);
 
   useEffect(() => {
     if (shouldFetchRecentTasksRef.current) {
@@ -51,7 +56,7 @@ const RecentTasks = () => {
           <Plus className='w-4 h-4' />
           <span>Add Task</span>
         </button> */}
-        <button className='text-primary-500 hover:text-primary-600 text-sm font-medium' onClick={handleViewAllTask}>View All</button>
+        <button className='text-primary-300 hover:text-primary-400 text-sm font-medium' onClick={handleViewAllTask}>View All</button>
       </div>
 
       <div className='space-y-4'>
@@ -61,7 +66,7 @@ const RecentTasks = () => {
           ))
         ) : (
           recentTasks.map((task) => (
-            <TaskCard key={task.id} task={task as any} />
+            <TaskCard key={task.id} task={task} />
           ))
         )}
       </div>

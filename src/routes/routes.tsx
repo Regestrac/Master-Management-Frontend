@@ -1,26 +1,42 @@
+import { lazy, Suspense } from 'react';
+
 import { RouteObject } from 'react-router-dom';
 
-import Authentication from 'components/Authentication';
-import Login from 'components/Authentication/login';
-import Signup from 'components/Authentication/Signup';
-import Dashboard from 'components/Dashboard/Dashboard';
+// Eagerly loaded components (critical for initial render)
 import Home from 'components/Home/Home';
 import RootLayout from 'components/Layout/RootLayout';
 import SidebarOnlyLayout from 'components/Layout/SidebarOnlyLayout';
-import Profile from 'components/Profile/Profile';
-import Settings from 'components/Settings/Settings';
-import NotFound from 'components/Shared/NotFound';
-import StyleGuide from 'components/StyleGuide';
-import Tasks from 'components/Tasks/Tasks';
-import TaskManagementAppDesign from 'components/StyleGuide/TaskManagementAppDesign';
-import TaskDetail from 'components/Tasks/Details/TaskDetails';
-import Goals from 'components/Goals/Goals';
-import WorkspaceHome from 'components/Workspace/WorkspaceHome';
-import WorkspaceDetail from 'components/Workspace/WorkspaceDetail';
-import CreateTaskForm from 'components/Tasks/CreateTaskForm';
 import RootLayoutWrapper from 'components/Layout/RootLayoutWrapper';
-import Analytics from 'components/Analytics/Analytics';
-import Calendar from 'components/Calendar/Calendar';
+import AuthenticatedLayout from 'components/Layout/AuthenticatedLayout';
+import NotFound from 'components/Shared/NotFound';
+import LoadingSpinner from 'components/Shared/LoadingSpinner';
+import TaskDetailsRevamp from 'components/StyleGuide/TaskDetailsRevamp';
+
+import { DashboardSkeleton, GoalSkeleton, TaskSkeleton, WorkspaceSkeleton } from './loaders';
+
+// Lazy loaded components for code splitting
+const Authentication = lazy(() => import('components/Authentication'));
+const Login = lazy(() => import('components/Authentication/login'));
+const Signup = lazy(() => import('components/Authentication/Signup'));
+const Dashboard = lazy(() => import('components/Dashboard/Dashboard'));
+const Profile = lazy(() => import('components/Profile/Profile'));
+const Settings = lazy(() => import('components/Settings/Settings'));
+const TermsOfService = lazy(() => import('components/Resources/TermsOfService'));
+const PrivacyPolicy = lazy(() => import('components/Resources/PrivacyPolicy'));
+const Tasks = lazy(() => import('components/Tasks/Tasks'));
+const TaskDetail = lazy(() => import('components/Tasks/Details/TaskDetails'));
+const Goals = lazy(() => import('components/Goals/Goals'));
+const WorkspaceHome = lazy(() => import('components/Workspace/WorkspaceHome'));
+const WorkspaceDetail = lazy(() => import('components/Workspace/WorkspaceDetail'));
+const CreateTaskForm = lazy(() => import('components/Tasks/CreateTaskForm'));
+const Analytics = lazy(() => import('components/Analytics/Analytics'));
+const Calendar = lazy(() => import('components/Calendar/Calendar'));
+const BugReport = lazy(() => import('components/Resources/BugReport'));
+const FeatureRequest = lazy(() => import('components/Resources/FeatureRequest'));
+const Documentation = lazy(() => import('components/Resources/Documentation'));
+const ChangeLog = lazy(() => import('components/Resources/ChangeLog'));
+const Support = lazy(() => import('components/Resources/Support'));
+const Community = lazy(() => import('components/Resources/Community'));
 
 const routes: RouteObject[] = [
   {
@@ -31,88 +47,217 @@ const routes: RouteObject[] = [
         element: <Home />,
       },
       {
+        path: '/legal/terms',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <TermsOfService />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/legal/privacy',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <PrivacyPolicy />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/documentation',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Documentation />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/changelog',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <ChangeLog />
+          </Suspense>
+        ),
+      },
+      {
         path: '/auth',
-        element: <Authentication />,
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Authentication />
+          </Suspense>
+        ),
         children: [
           {
             path: '/auth/login',
-            element: <Login />,
+            element: (
+              <Suspense fallback={<LoadingSpinner />}>
+                <Login />
+              </Suspense>
+            ),
           },
           {
             path: '/auth/signup',
-            element: <Signup />,
+            element: (
+              <Suspense fallback={<LoadingSpinner />}>
+                <Signup />
+              </Suspense>
+            ),
           },
         ],
       },
       {
-        element: <RootLayout />,
+        element: <AuthenticatedLayout />,
         children: [
           {
-            path: '/dashboard',
-            element: <Dashboard />,
+            element: <RootLayout />,
+            children: [
+              {
+                path: '/dashboard',
+                element: (
+                  <Suspense fallback={<DashboardSkeleton />}>
+                    <Dashboard />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/tasks',
+                element: (
+                  <Suspense fallback={<TaskSkeleton />}>
+                    <Tasks />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/goals',
+                element: (
+                  <Suspense fallback={<GoalSkeleton />}>
+                    <Goals />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/workspace',
+                element: (
+                  <Suspense fallback={<WorkspaceSkeleton />}>
+                    <WorkspaceHome />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/workspace/:id',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <WorkspaceDetail />
+                  </Suspense>
+                ),
+              },
+            ],
           },
           {
-            path: '/tasks',
-            element: <Tasks />,
-          },
-          {
-            path: '/goals',
-            element: <Goals />,
-          },
-          {
-            path: '/workspace',
-            element: <WorkspaceHome />,
-          },
-          {
-            path: '/workspace/:id',
-            element: <WorkspaceDetail />,
+            element: <SidebarOnlyLayout />,
+            children: [
+              {
+                path: '/analytics',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Analytics />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/calendar',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Calendar />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/profile',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Profile />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/settings',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Settings />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/support',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Support />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/community',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Community />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/feature-request',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <FeatureRequest />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/bug-report',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <BugReport />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/tasks/:id',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <TaskDetail />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/tasks/:id/v2',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <TaskDetailsRevamp />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/goals/:id',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <TaskDetail />
+                  </Suspense>
+                ),
+              },
+              {
+                path: '/task/create',
+                element: (
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <CreateTaskForm />
+                  </Suspense>
+                ),
+              },
+            ],
           },
         ],
-      },
-      {
-        element: <SidebarOnlyLayout />,
-        children: [
-          {
-            path: '/analytics',
-            element: <Analytics />,
-          },
-          {
-            path: '/calendar',
-            element: <Calendar />,
-          },
-          {
-            path: '/profile',
-            element: <Profile />,
-          },
-          {
-            path: '/settings',
-            element: <Settings />,
-          },
-        ],
-      },
-      {
-        path: '/tasks/:id',
-        element: <TaskDetail />,
-      },
-      {
-        path: '/goals/:id',
-        element: <TaskDetail />,
-      },
-      {
-        path: 'task/create',
-        element: <CreateTaskForm />,
       },
       {
         path: '/not-found',
         element: <NotFound />,
-      },
-      {
-        path: '/style-guide',
-        element: <StyleGuide />,
-      },
-      {
-        path: '/app-design',
-        element: <TaskManagementAppDesign />,
       },
     ],
   },

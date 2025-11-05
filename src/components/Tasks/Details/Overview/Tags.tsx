@@ -33,15 +33,14 @@ const Tags = () => {
 
   const normalise = (tag: string) => tag.trim().toLowerCase();
 
-  const saveTags = useCallback((type: 'add' | 'remove') => {
-    if (id && taskDetails?.tags?.length > 0) {
-      updateTask(id, { tags: taskDetails?.tags }).then(() => {
-        toast.success(`Tag ${type === 'add' ? 'added' : 'removed'}`);
-      }).catch((err) => {
-        toast.error(err?.error || 'Failed to update tags!');
-      });
-    };
-  }, [id, taskDetails?.tags]);
+  const saveTags = useCallback((tagsToSave: string[], type: 'add' | 'remove') => {
+    if (!id) { return; }
+    updateTask(id, { tags: tagsToSave }).then(() => {
+      toast.success(`Tag ${type === 'add' ? 'added' : 'removed'}`);
+    }).catch((err) => {
+      toast.error(err?.error || 'Failed to update tags!');
+    });
+  }, [id]);
 
   const addTag = (newTag: string) => {
     const trimmed = normalise(newTag);
@@ -52,15 +51,16 @@ const Tags = () => {
     }
     const updatedTags = [...tags, newTag.trim()];
     updateTaskDetails({ ...taskDetails, tags: updatedTags });
-    saveTags('add');
+    saveTags(updatedTags, 'add');
     setInput('');
     focusInput();
     setError('');
   };
 
   const removeTag = (tagToRemove: string) => {
-    updateTaskDetails({ ...taskDetails, tags: tags?.filter((t) => t !== tagToRemove) });
-    saveTags('remove');
+    const updated = tags?.filter((t) => t !== tagToRemove) || [];
+    updateTaskDetails({ ...taskDetails, tags: updated });
+    saveTags(updated, 'remove');
   };
 
   const startAdding = () => {

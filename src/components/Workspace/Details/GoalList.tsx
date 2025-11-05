@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Plus } from 'lucide-react';
 
 import { Goal, StatusType } from 'helpers/sharedTypes';
 import { getStatusColor, debounce } from 'helpers/utils';
 import { STATUS_OPTIONS } from 'helpers/configs';
+import { navigateWithHistory } from 'helpers/navigationUtils';
 
 import useWorkspaceStore from 'stores/workspaceStore';
-import { useNavbarStore } from 'stores/navbarStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
 import { getWorkspaceGoals } from 'services/workspace';
@@ -29,10 +29,9 @@ const GoalList = () => {
 
   const members = useWorkspaceStore((state) => state.members);
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
-  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
 
   const navigate = useNavigate();
-
+  const { pathname } = useLocation();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -135,8 +134,12 @@ const GoalList = () => {
   }, []);
 
   const handleGoalClick = (goalId: number) => {
-    updatePrevPath(`/workspace/${id}`);
-    navigate(`/goals/${goalId}`);
+    navigateWithHistory(
+      navigate,
+      `/goals/${goalId}`,
+      pathname,
+      searchParams,
+    );
   };
 
   return (
@@ -147,7 +150,12 @@ const GoalList = () => {
         <>
           <div className='flex items-center gap-2 mb-3'>
             <h3 className='text-sm font-medium opacity-80'>All goals</h3>
-            <span className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>
+            <span
+              className={clsx(
+                'text-xs px-2 py-1 rounded',
+                darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700',
+              )}
+            >
               {goals.length}
             </span>
             <div className='flex items-center justify-end gap-2 flex-1'>
@@ -156,7 +164,9 @@ const GoalList = () => {
                 onClick={() => setIsVisible(true)}
                 className={clsx(
                   'inline-flex items-center gap-1 text-xs px-2 py-1 rounded border transition cursor-pointer',
-                  darkMode ? 'border-gray-700 text-primary-300 hover:bg-gray-900' : 'border-gray-200 text-primary-700 hover:bg-gray-100',
+                  darkMode
+                    ? 'border-gray-700 text-primary-300 hover:bg-gray-900'
+                    : 'border-gray-200 text-primary-700 hover:bg-gray-100',
                 )}
                 title='Create goal'
               >
@@ -174,7 +184,7 @@ const GoalList = () => {
               />
             )}
             {goals.length < 1 && !isVisible ? (
-              <p className='text-gray-400 dark:text-gray-600'>No goals yet.</p>
+              <p className={clsx(darkMode ? 'text-gray-600' : 'text-gray-400')}>No goals yet.</p>
             ) : (
               goals.map((goal) => (
                 <li
@@ -182,7 +192,9 @@ const GoalList = () => {
                   onClick={() => handleGoalClick(goal.id)}
                   className={clsx(
                     'group flex items-center gap-4 rounded-lg border px-4 py-3 shadow-sm hover:shadow transition cursor-pointer',
-                    darkMode ? 'border-gray-700 bg-gray-800 hover:bg-gray-700' : 'border-gray-200 bg-gray-50 hover:bg-gray-100',
+                    darkMode
+                      ? 'border-gray-700 bg-gray-800 hover:bg-gray-700 text-gray-300'
+                      : 'border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-700',
                   )}
                 >
                   <div className='flex items-center gap-3 min-w-0 flex-1'>
@@ -197,7 +209,7 @@ const GoalList = () => {
                         <span
                           className={clsx(
                             'inline-block max-w-full truncate text-xs px-3 py-1 rounded-xl transition',
-                            getStatusColor(goal.status as StatusType),
+                            getStatusColor(goal.status as StatusType, darkMode),
                           )}
                         >
                           {goal.status?.toUpperCase()}
@@ -232,13 +244,22 @@ const GoalList = () => {
                                   key={`assignee-${goal.id}-${userId}`}
                                   member={member}
                                   size='sm'
-                                  className='border-gray-700 dark:border-white'
+                                  className={clsx(
+                                    darkMode ? 'border-white' : 'border-gray-700',
+                                  )}
                                 />
                               );
                             })}
                           </div>
                         ) : (
-                          <div className='text-xs text-gray-500 dark:text-gray-400 px-2 py-1 rounded border border-dashed border-gray-300 dark:border-gray-600'>
+                          <div
+                            className={clsx(
+                              'text-xs px-2 py-1 rounded border border-dashed',
+                              darkMode
+                                ? 'text-gray-400 border-gray-600'
+                                : 'text-gray-500 border-gray-300',
+                            )}
+                          >
                             Assign
                           </div>
                         )}

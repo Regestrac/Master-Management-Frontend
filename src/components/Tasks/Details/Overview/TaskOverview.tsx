@@ -11,16 +11,17 @@ import TaskDescription from 'components/Tasks/Details/Overview/TaskDescription';
 import Checklist from 'components/Tasks/Details/Overview/Checklist';
 import Tags from 'components/Tasks/Details/Overview/Tags';
 import SubTasks from 'components/Tasks/Details/SubTasks/SubTasks';
+import TaskStatus from 'components/Tasks/Details/Overview/TaskStatus';
 
 const TaskOverview = () => {
   const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
 
-  const shouldFetchTask = useRef(true);
+  const prevTaskIdRef = useRef('');
 
   const { id } = useParams();
 
   useEffect(() => {
-    if (id && shouldFetchTask.current) {
+    if (id && prevTaskIdRef.current !== id) {
       getTask(id).then((fetchedTask) => {
         updateCurrentTaskDetails(fetchedTask?.data);
         // setIsLoading(false);
@@ -28,7 +29,7 @@ const TaskOverview = () => {
         toast.error(err?.error || 'Failed to fetch task details.');
         // setIsLoading(false);
       });
-      shouldFetchTask.current = false;
+      prevTaskIdRef.current = id;
     }
   }, [id, updateCurrentTaskDetails]);
 
@@ -42,11 +43,18 @@ const TaskOverview = () => {
         <Checklist />
         {/* <StickyNotes /> */}
         <Tags />
+        <TaskStatus />
       </div>
 
       {/* Attachments */}
-      {/* <div className={`rounded-xl border transition-colors ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-        <div className='p-6 border-b border-gray-200 dark:border-gray-700'>
+      {/* <div className={clsx(
+        'rounded-xl border transition-colors',
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+      )}>
+        <div className={clsx(
+          'p-6 border-b',
+          darkMode ? 'border-gray-700' : 'border-gray-200'
+        )}>
           <div className='flex items-center justify-between'>
             <h3 className='text-lg font-semibold flex items-center'>
               <Paperclip className='w-5 h-5 mr-2' />
@@ -65,15 +73,21 @@ const TaskOverview = () => {
             {taskData.attachments.map((attachment) => (
               <div
                 key={attachment.id}
-                className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${darkMode ? 'border-gray-700 hover:bg-gray-750' : 'border-gray-200 hover:bg-gray-50'}`}
+                className={clsx(
+                  'flex items-center justify-between p-3 rounded-lg border transition-colors',
+                  darkMode ? 'border-gray-700 hover:bg-gray-750' : 'border-gray-200 hover:bg-gray-50'
+                )}
               >
                 <div className='flex items-center space-x-3'>
-                  <div className='w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center'>
-                    <Paperclip className='w-5 h-5 text-blue-600 dark:text-blue-400' />
+                  <div className={clsx(
+                    'w-10 h-10 rounded-lg flex items-center justify-center',
+                    darkMode ? 'bg-blue-900/30' : 'bg-blue-100'
+                  )}>
+                    <Paperclip className={clsx('w-5 h-5', darkMode ? 'text-blue-400' : 'text-blue-600')} />
                   </div>
                   <div>
                     <p className='font-medium'>{attachment.name}</p>
-                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-600')}>
                       {attachment.type}
                       {' '}
                       •
@@ -85,12 +99,18 @@ const TaskOverview = () => {
                   </div>
                 </div>
                 <div className='flex items-center space-x-2'>
-                  <button className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}>
+                  <button className={clsx(
+                    'p-2 rounded-lg transition-colors',
+                    darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
+                  )}>
                     <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                       <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' />
                     </svg>
                   </button>
-                  <button className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-gray-700 text-red-400' : 'hover:bg-gray-100 text-red-500'}`}>
+                  <button className={clsx(
+                    'p-2 rounded-lg transition-colors',
+                    darkMode ? 'hover:bg-gray-700 text-red-400' : 'hover:bg-gray-100 text-red-500'
+                  )}>
                     <Trash2 className='w-4 h-4' />
                   </button>
                 </div>

@@ -3,17 +3,17 @@ import { useState } from 'react';
 import { Calendar, Clock, Flame, Pause, Play } from 'lucide-react';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { TaskType } from 'helpers/sharedTypes';
-import { formatTimeElapsed, getPriorityColor, getStatusColor } from 'helpers/utils';
+import { formatDuration, getPriorityColor, getStatusColor } from 'helpers/utils';
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
+import { navigateWithHistory } from 'helpers/navigationUtils';
 
 import { useTaskStore } from 'stores/taskStore';
 import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
-import { useNavbarStore } from 'stores/navbarStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
 import { updateTask } from 'services/tasks';
@@ -39,6 +39,17 @@ const formatDate = (dateString: string) => {
   return `${diffDays} days left`;
 };
 
+const TaskCardWrapper = ({ isActive, children }: { isActive: boolean; children: React.ReactNode }) => {
+  if (isActive) {
+    return (
+      <Outline colors={['bg-primary-500', 'bg-secondary-500']} width='3px' variant='rotate' disabled={false}>
+        {children as React.ReactElement}
+      </Outline>
+    );
+  }
+  return children;
+};
+
 const TaskCard = ({ task }: TaskCardPropsType) => {
   const [editName, setEditName] = useState(false);
 
@@ -47,10 +58,11 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
   const activeTask = useProfileStore((state) => state.data.active_task);
   const updateProfile = useProfileStore((state) => state.updateProfile);
   const updateVisibility = useModalStore((state) => state.updateVisibility);
-  const updatePrevPath = useNavbarStore((state) => state.updatePrevPath);
+  const updateRecentTaskData = useTaskStore((state) => state.updateRecentTaskData);
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
 
   const methods = useForm({
     defaultValues: {
@@ -99,16 +111,23 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
     if (task?.status !== value) {
       handleUpdateTask(task?.id?.toString(), { status: value });
       updateTaskState({ id: task?.id, status: value as TaskType['status'] });
+      if (pathname.includes('/dashboard')) {
+        updateRecentTaskData({ id: task?.id, status: value as TaskType['status'] });
+      }
     }
   };
 
   const handleTaskClick = () => {
-    updatePrevPath(pathname.includes('dashboard') ? '/dashboard' : '/tasks');
-    navigate(`/tasks/${task?.id}`);
+    navigateWithHistory(
+      navigate,
+      `/tasks/${task?.id}`,
+      pathname,
+      searchParams,
+    );
   };
 
   return (
-    <Outline colors={['bg-primary-500', 'bg-secondary-500']} width='3px' variant='rotate' disabled={activeTask !== task?.id}>
+    <TaskCardWrapper key={task?.id} isActive={activeTask === task?.id}>
       <div
         className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer`}
         onClick={handleTaskClick}
@@ -162,7 +181,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
                       </p> */}
                 <div className='flex flex-wrap items-center gap-4 text-sm'>
                   <Dropdown options={STATUS_OPTIONS} onSelect={handleStatusSelect} value={task?.status} hideClear isMulti={false}>
-                    <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(task?.status)}`}>
+                    <span className={`px-3 py-1 rounded-full font-medium cursor-grab ${getStatusColor(task?.status, darkMode)}`}>
                       {task?.status?.toUpperCase()}
                     </span>
                   </Dropdown>
@@ -173,7 +192,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
                   )}
                   <span className={` cursor-default ${darkMode ? 'text-gray-400' : 'text-gray-600'} flex items-center`}>
                     <Clock className='w-4 h-4 mr-1' />
-                    {formatTimeElapsed(task?.time_spend)}
+                    {formatDuration(task?.time_spend)}
                   </span>
                   {task?.due_date && (
                     <span className={` cursor-default ${darkMode ? 'text-gray-400' : 'text-gray-600'} flex items-center`}>
@@ -217,6 +236,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
                   e.stopPropagation();
                   handleToggleTimer(task?.id);
                 }}
+                aria-label={`${activeTask === task?.id ? 'Pause' : 'Start'} timer`}
                 className={`p-3 rounded-lg transition-colors ${activeTask === task?.id
                   ? 'bg-red-500 hover:bg-red-600 text-white'
                   : 'bg-green-500 hover:bg-green-600 text-white'}`}
@@ -301,7 +321,7 @@ const TaskCard = ({ task }: TaskCardPropsType) => {
                   </div>
                 )} */}
       </div>
-    </Outline>
+    </TaskCardWrapper>
   );
 };
 

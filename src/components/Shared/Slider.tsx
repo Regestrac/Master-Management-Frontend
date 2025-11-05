@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { useController } from 'react-hook-form';
 import clsx from 'clsx';
 
@@ -31,13 +29,11 @@ const Slider = ({
   onChange,
 }: SliderPropsType) => {
   const { field } = useController({ name });
-  const [currentValue, setCurrentValue] = useState(field.value || min);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (disabled) { return; }
 
     const newValue = Number(event.target.value);
-    setCurrentValue(newValue);
     field.onChange(newValue);
 
     if (onChange) {
@@ -58,7 +54,7 @@ const Slider = ({
           {label}
           {showValue && (
             <span className='ml-2 text-gray-500'>
-              {currentValue}
+              {field?.value}
               {unit}
             </span>
           )}
@@ -73,7 +69,7 @@ const Slider = ({
           step={step}
           name={name}
           id={name}
-          value={currentValue}
+          value={field?.value}
           onChange={handleChange}
           disabled={disabled}
           className={clsx(
@@ -92,7 +88,7 @@ const Slider = ({
           style={{
             background: disabled
               ? '#e5e7eb'
-              : `linear-gradient(to right, var(--color-primary-500) 0%, var(--color-primary-500) ${((currentValue - min) / (max - min)) * 100}%, #e5e7eb ${((currentValue - min) / (max - min)) * 100}%, #e5e7eb 100%)`,
+              : `linear-gradient(to right, var(--color-primary-500) 0%, var(--color-primary-500) ${((field?.value - min) / (max - min)) * 100}%, #e5e7eb ${((field?.value - min) / (max - min)) * 100}%, #e5e7eb 100%)`,
           }}
         />
       </div>

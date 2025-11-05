@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import clsx from 'clsx';
+
+import { AI_BUTTON_STYLE } from 'helpers/configs';
 
 import FadingCircles from 'icons/FadingCircles';
 
@@ -57,14 +60,17 @@ const GenerateDescriptionButtons = () => {
           <button
             type='button'
             onClick={handleAcceptGeneration}
-            className='px-2 py-1 text-xs bg-blue-600 text-text rounded hover:bg-hover-secondary transition-colors duration-200 cursor-pointer'
+            className={clsx(
+              'px-2 py-1 text-xs text-primary-50 rounded transition-colors duration-200 cursor-pointer',
+              AI_BUTTON_STYLE,
+            )}
           >
             Accept
           </button>
           <button
             type='button'
             onClick={handleRejectGeneration}
-            className='px-2 py-1 text-xs outline-1 text-text rounded hover:outline-1 hover:bg-hover-secondary transition-colors duration-200 cursor-pointer'
+            className='px-2 py-1 text-xs outline-1 text-primary-50 rounded hover:outline-1 hover:bg-neutral-300/20 transition-colors duration-200 cursor-pointer'
           >
             Close
           </button>
@@ -74,7 +80,11 @@ const GenerateDescriptionButtons = () => {
           type='button'
           onClick={handleGenerateDescription}
           disabled={isLoading}
-          className={`px-2 py-1 text-xs bg-blue-600 text-text rounded hover:bg-hover-blue-600 transition-colors duration-200 ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+          className={clsx(
+            'px-2 py-1 text-xs text-primary-50 rounded transition-colors duration-200',
+            AI_BUTTON_STYLE,
+            isLoading ? 'cursor-not-allowed' : 'cursor-pointer',
+          )}
         >
           Generate ✨
           {isLoading ? <FadingCircles radius={2} /> : null}

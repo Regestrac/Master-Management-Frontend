@@ -451,7 +451,7 @@ const OrigamiStickyNote = ({
     transform: `translate(${position.x}px, ${position.y}px) ${isDragging ? 'scale(1.05) rotate(2deg)' :
       isHovered ? 'scale(1.02) rotate(0.5deg)' :
         'rotate(0deg)'
-      }${foldAnimation ? ' rotateY(10deg)' : ''}`,
+    }${foldAnimation ? ' rotateY(10deg)' : ''}`,
     transition: isDragging || resizeState.isResizing ? 'none' : 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     zIndex: isDragging || resizeState.isResizing ? 1000 : showColorPicker ? 900 : 'auto',
     backgroundColor: currentTheme.primary,
@@ -792,8 +792,8 @@ const OrigamiStickyNoteDemo = () => {
       className={`
         min-h-screen p-8 relative overflow-hidden transition-all duration-500
         ${globalDarkMode
-          ? 'bg-gradient-to-br from-slate-800 via-gray-900 to-slate-900'
-          : 'bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50'
+        ? 'bg-gradient-to-br from-slate-800 via-gray-900 to-slate-900'
+        : 'bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50'
         }
       `}
     >
@@ -826,7 +826,7 @@ const OrigamiStickyNoteDemo = () => {
           <div
             key={i}
             className={`absolute opacity-10 ${globalDarkMode ? 'bg-white' : 'bg-amber-200'
-              }`}
+            }`}
             style={{
               width: `${60 + i * 20}px`,
               height: `${60 + i * 20}px`,
@@ -844,7 +844,7 @@ const OrigamiStickyNoteDemo = () => {
         <div className='text-center mb-16'>
           <h1
             className={`text-6xl font-bold mb-6 transition-colors duration-500 ${globalDarkMode ? 'text-amber-200' : 'text-amber-900'
-              }`}
+            }`}
             style={{
               fontFamily: '"Caveat", cursive',
               letterSpacing: '-0.025em',
@@ -854,7 +854,7 @@ const OrigamiStickyNoteDemo = () => {
           </h1>
           <p
             className={`mb-10 text-xl transition-colors duration-500 ${globalDarkMode ? 'text-amber-300' : 'text-amber-700'
-              }`}
+            }`}
             style={{ fontFamily: '"Caveat", cursive' }}
           >
             Authentic • Textured • Handcrafted • Natural
@@ -866,8 +866,8 @@ const OrigamiStickyNoteDemo = () => {
                 px-8 py-4 rounded-lg font-medium text-lg transform hover:scale-105 
                 transition-all duration-300 shadow-lg hover:shadow-xl
                 ${globalDarkMode
-                  ? 'bg-amber-700 text-amber-100 hover:bg-amber-600'
-                  : 'bg-amber-500 text-white hover:bg-amber-600'
+                ? 'bg-amber-700 text-amber-100 hover:bg-amber-600'
+                : 'bg-amber-500 text-white hover:bg-amber-600'
                 }
               `}
               style={{
@@ -884,8 +884,8 @@ const OrigamiStickyNoteDemo = () => {
               className={`
                 px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105
                 ${globalDarkMode
-                  ? 'bg-slate-600 text-slate-100 hover:bg-slate-500'
-                  : 'bg-slate-200 text-slate-800 hover:bg-slate-300'
+                ? 'bg-slate-600 text-slate-100 hover:bg-slate-500'
+                : 'bg-slate-200 text-slate-800 hover:bg-slate-300'
                 }
               `}
               style={{

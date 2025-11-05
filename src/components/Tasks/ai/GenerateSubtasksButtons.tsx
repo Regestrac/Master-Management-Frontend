@@ -2,8 +2,10 @@ import { Dispatch, SetStateAction, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import clsx from 'clsx';
 
 import { parseJsonArray } from 'helpers/utils';
+import { AI_BUTTON_STYLE } from 'helpers/configs';
 
 import { useTaskStore } from 'stores/taskStore';
 
@@ -22,6 +24,8 @@ const GenerateSubtasksButtons = ({ generatedTasks, setGeneratedTasks }: PropsTyp
 
   const title = useTaskStore((state) => state.currentTaskDetails?.title);
   const description = useTaskStore((state) => state.currentTaskDetails?.description);
+  const subtasks = useTaskStore((state) => state.currentTaskDetails.subtasks);
+  const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
 
   const { id } = useParams();
 
@@ -40,9 +44,18 @@ const GenerateSubtasksButtons = ({ generatedTasks, setGeneratedTasks }: PropsTyp
   };
 
   const handleAcceptGeneration = () => {
-    setShowConfirmation(false);
-    if (id && generatedTasks.length) {
-      saveSubTasks(id, generatedTasks).then((res) => {
+    const payload = generatedTasks.map((task) => ({
+      title: task.title,
+      description: task.description,
+      status: 'todo' as const,
+      time_spend: 0,
+      parent_id: Number(id),
+    }));
+    if (id && payload.length) {
+      saveSubTasks(id, payload).then((res) => {
+        updateTaskDetails({ subtasks: [...subtasks, ...res.data] });
+        setShowConfirmation(false);
+        setGeneratedTasks([]);
         toast.success(res?.message || 'Subtasks saved successfully');
       }).catch((err) => {
         toast.error(err?.error || 'Failed to save subtasks');
@@ -54,6 +67,7 @@ const GenerateSubtasksButtons = ({ generatedTasks, setGeneratedTasks }: PropsTyp
     setShowConfirmation(false);
     setGeneratedTasks([]);
   };
+
   return (
     <div className='flex gap-2 mb-0'>
       {showConfirmation ? (
@@ -61,14 +75,17 @@ const GenerateSubtasksButtons = ({ generatedTasks, setGeneratedTasks }: PropsTyp
           <button
             type='button'
             onClick={handleAcceptGeneration}
-            className='px-2 py-1 text-xs bg-blue-600 text-text rounded hover:bg-hover-secondary transition-colors duration-200 cursor-pointer'
+            className={clsx(
+              'px-2 py-1 text-xs text-primary-50 rounded transition-colors duration-200 cursor-pointer',
+              AI_BUTTON_STYLE,
+            )}
           >
             Accept
           </button>
           <button
             type='button'
             onClick={handleRejectGeneration}
-            className='px-2 py-1 text-xs outline-1 text-text rounded hover:outline-1 hover:bg-hover-secondary transition-colors duration-200 cursor-pointer'
+            className='px-2 py-1 text-xs outline-1 text-primary-50 rounded hover:outline-1 hover:bg-neutral-300/20 transition-colors duration-200 cursor-pointer'
           >
             Close
           </button>
@@ -78,7 +95,11 @@ const GenerateSubtasksButtons = ({ generatedTasks, setGeneratedTasks }: PropsTyp
           type='button'
           onClick={handleGenerateSubtasks}
           disabled={isLoading}
-          className={`px-2 py-1 text-xs bg-blue-600 text-text rounded hover:bg-hover-blue-600 transition-colors duration-200 ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+          className={clsx(
+            'px-2 py-1 text-xs text-primary-50 rounded transition-colors duration-200',
+            AI_BUTTON_STYLE,
+            isLoading ? 'cursor-not-allowed' : 'cursor-pointer',
+          )}
         >
           Generate ✨
           {isLoading ? <FadingCircles radius={2} /> : null}

@@ -19,95 +19,6 @@ export const capitalize = (word: string): string => {
 };
 
 /**
- * Converts a time duration from seconds into a formatted string.
- *
- * - If the duration is less than 24 hours: "HH:MM:SS"
- * - If the duration is 24 hours or more: "X day(s) HH:MM:SS"
- *
- * @param {number} totalSeconds - The total duration in seconds. Must be non-negative.
- * @returns {string} A formatted time string.
- *
- * @example
- * formatDuration(3661);    // "01:01:01"
- * formatDuration(86400);   // "1 day 00:00:00"
- * formatDuration(90061);   // "1 day 01:01:01"
- */
-export function formatDuration(totalSeconds: number) {
-  if (totalSeconds < 0) { return 'Invalid time'; }
-
-  const seconds = totalSeconds % 60;
-  const totalMinutes = Math.floor(totalSeconds / 60);
-  const minutes = totalMinutes % 60;
-  const totalHours = Math.floor(totalMinutes / 60);
-  const hours = totalHours % 24;
-  const days = Math.floor(totalHours / 24);
-
-  const pad = (num: number) => String(num).padStart(2, '0');
-
-  const time = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-
-  if (days > 0) {
-    return `${days} ${days === 1 ? 'day' : 'days'} ${time}`;
-  } else {
-    return time;
-  }
-}
-
-/**
- * Formats a given time duration in seconds into a human-readable string.
- *
- * The function returns a string representing the largest appropriate time unit:
- * - "Not started" if seconds is 0
- * - "Less than 1 min" if less than 60 seconds
- * - "X min(s)" if less than 60 minutes
- * - "X hour(s)" if less than 24 hours
- * - "X day(s)" if less than 7 days
- * - "X week(s)" if less than 4 weeks
- * - "X month(s)" if less than 12 months
- * - "X year(s)" otherwise
- *
- * @param seconds - The elapsed time in seconds.
- * @returns A human-readable string representing the elapsed time.
- */
-export const formatTimeElapsed = (seconds: number) => {
-  if (seconds === 0) {
-    return 'Not started';
-  }
-
-  if (seconds < 60) {
-    return 'Less than 1 min';
-  }
-
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) {
-    return `${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
-  }
-
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) {
-    return `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
-  }
-
-  const days = Math.floor(hours / 24);
-  if (days < 7) {
-    return `${days} ${days === 1 ? 'day' : 'days'}`;
-  }
-
-  const weeks = Math.floor(days / 7);
-  if (weeks < 4) {
-    return `${weeks} ${weeks === 1 ? 'week' : 'weeks'}`;
-  }
-
-  const months = Math.floor(days / 30);
-  if (months < 12) {
-    return `${months} ${months === 1 ? 'month' : 'months'}`;
-  }
-
-  const years = Math.floor(days / 365);
-  return `${years} ${years === 1 ? 'year' : 'years'}`;
-};
-
-/**
  * Creates a debounced function that delays invoking `func` until after
  * `wait` milliseconds have elapsed since the last time the debounced function was invoked.
  *
@@ -148,25 +59,42 @@ export const getPriorityColor = (priority: PriorityType) => {
     case 'low':
       return 'bg-green-500';
     default:
-      return 'bg-gray-500';
+      return 'bg-gray-400';
   }
 };
 
-export const getStatusColor = (status: StatusType) => {
-  switch (status) {
-    case 'completed':
-      return 'text-green-400 bg-green-400/10';
-    case 'todo':
-      return 'text-blue-400 bg-blue-400/10';
-    case 'inprogress':
-      return 'text-purple-600 bg-purple-600/20';
-    case 'paused':
-      return 'text-gray-400 bg-gray-400/10';
-    case 'pending':
-      return 'text-yellow-400 bg-yellow-400/10';
-    default:
-      return 'text-gray-400 bg-gray-400/10';
-  }
+export const getStatusColor = (status: StatusType, darkMode: boolean) => {
+  const baseStyles = {
+    completed: {
+      light: 'text-green-700 bg-green-100',
+      dark: 'text-green-400 bg-green-500/20',
+    },
+    todo: {
+      light: 'text-blue-700 bg-blue-100',
+      dark: 'text-blue-400 bg-blue-500/20',
+    },
+    inprogress: {
+      light: 'text-purple-700 bg-purple-100',
+      dark: 'text-purple-400 bg-purple-500/20',
+    },
+    paused: {
+      light: 'text-gray-700 bg-gray-200',
+      dark: 'text-gray-300 bg-gray-400/30',
+    },
+    pending: {
+      light: 'text-yellow-700 bg-yellow-100',
+      dark: 'text-yellow-300 bg-yellow-500/20',
+    },
+    default: {
+      light: 'text-gray-700 bg-gray-200',
+      dark: 'text-gray-300 bg-gray-400/30',
+    },
+  };
+
+  const statusKey: keyof typeof baseStyles = status || 'default';
+  const mode = darkMode ? 'dark' : 'light';
+
+  return baseStyles[statusKey]?.[mode] || baseStyles.default[mode];
 };
 
 export const isHexColor = (color: string): boolean => {
@@ -310,7 +238,7 @@ export const generateRandomColor = (key: string) => {
   return `#${hex}`.toUpperCase();
 };
 
-export const formatDurationInSeconds = (seconds: number): string => {
+export const formatDuration = (seconds: number): string => {
   if (!seconds || seconds <= 0) {
     return '0s';
   }

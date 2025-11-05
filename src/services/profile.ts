@@ -15,3 +15,7 @@ export const updateActiveTask = (data: object) => postHandler({
   body: JSON.stringify(data),
   method: 'PATCH',
 });
+
+export const getMonthlyStats = () => getHandler({
+  path: 'profile/monthly-stats',
+});

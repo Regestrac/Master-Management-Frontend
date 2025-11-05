@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import clsx from 'clsx';
 import { Edit, Plus, StickyNote, X } from 'lucide-react';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
@@ -111,8 +112,13 @@ const StickyNotes = () => {
   };
 
   return (
-    <div className={`rounded-xl border transition-colors ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-      <div className='p-6 border-b border-gray-200 dark:border-gray-700'>
+    <div
+      className={clsx(
+        'rounded-xl border transition-colors',
+        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
+      )}
+    >
+      <div className={clsx('p-6 border-b', darkMode ? 'border-gray-700' : 'border-gray-200')}>
         <div className='flex items-center justify-between'>
           <h3 className='text-lg font-semibold flex items-center'>
             <StickyNote className='w-5 h-5 mr-2' />
@@ -133,21 +139,22 @@ const StickyNotes = () => {
         {/* Add Sticky Note Form */}
         {showStickyNoteForm && (
           <FormProvider {...methods}>
-            <div className='mb-6 p-4 border rounded-lg border-gray-300 dark:border-gray-600'>
+            <div className={clsx('mb-6 p-4 border rounded-lg', darkMode ? 'border-gray-600' : 'border-gray-300')}>
               <div className='space-y-4'>
                 <Input
                   name='text'
                   label=''
                   type='textarea'
                   placeholder='Write your note here...'
-                  className={`w-full h-24 p-3 rounded-lg border resize-none focus:outline-none focus:ring-2 focus:ring-purple-500 ${darkMode
-                    ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'bg-white border-gray-300'}`}
+                  className={clsx(
+                    'w-full h-24 p-3 rounded-lg border resize-none focus:outline-none focus:ring-2 focus:ring-purple-500',
+                    darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300',
+                  )}
                 />
 
                 {/* Color Picker */}
                 <div className='flex items-center space-x-4'>
-                  <span className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <span className={clsx('text-sm font-medium', darkMode ? 'text-gray-300' : 'text-gray-700')}>
                     Color:
                   </span>
                   <div className='flex space-x-2'>
@@ -158,9 +165,10 @@ const StickyNotes = () => {
                           setValue('bg_color', color.bg);
                           setValue('text_color', color.text);
                         }}
-                        className={`w-6 h-6 rounded-full transition-all cursor-pointer ${bg_color === color.bg
-                          ? 'border-2 border-neutral-500 outline-primary-500 outline-2'
-                          : 'border-none'}`}
+                        className={clsx(
+                          'w-6 h-6 rounded-full transition-all cursor-pointer',
+                          bg_color === color.bg ? 'border-2 border-neutral-500 outline-primary-500 outline-2' : 'border-none',
+                        )}
                         style={{ backgroundColor: color.bg }}
                         title={color.name}
                       />
@@ -177,9 +185,12 @@ const StickyNotes = () => {
                   </button>
                   <button
                     onClick={handleCancelNote}
-                    className={`px-4 py-2 rounded-lg border transition-colors ${darkMode
-                      ? 'border-gray-600 hover:bg-gray-700'
-                      : 'border-gray-300 hover:bg-gray-50'}`}
+                    className={clsx(
+                      'px-4 py-2 rounded-lg border transition-colors',
+                      darkMode
+                        ? 'border-gray-600 hover:bg-gray-700'
+                        : 'border-gray-300 hover:bg-gray-50',
+                    )}
                   >
                     Cancel
                   </button>

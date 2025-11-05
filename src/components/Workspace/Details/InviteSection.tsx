@@ -4,6 +4,8 @@ import { Copy } from 'lucide-react';
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
 
+import { copyToClipboard } from 'helpers/utils';
+
 import { useSettingsStore } from 'stores/settingsStore';
 
 type InviteSectionProps = {
@@ -16,7 +18,7 @@ const InviteSection = ({ inviteCode, onLeaveWorkspace }: InviteSectionProps) => 
 
   const handleCopyInvite = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(inviteCode);
+      copyToClipboard(inviteCode);
       toast.success('Invite code copied to clipboard');
     } catch {
       toast.error('Failed to copy invite code');

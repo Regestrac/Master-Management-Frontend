@@ -1,3 +1,7 @@
+import clsx from 'clsx';
+
+import { useSettingsStore } from 'stores/settingsStore';
+
 import Skeleton from 'components/Shared/Skeleton';
 
 type GoalListSkeletonProps = {
@@ -5,6 +9,7 @@ type GoalListSkeletonProps = {
 };
 
 const GoalListSkeleton = ({ count = 8 }: GoalListSkeletonProps) => {
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   return (
     <div id='tab-panel-goals' role='tabpanel' aria-labelledby='tab-goals'>
       <div className='flex items-center gap-2 mb-3'>
@@ -18,7 +23,10 @@ const GoalListSkeleton = ({ count = 8 }: GoalListSkeletonProps) => {
         {Array.from({ length: count }).map((_, index) => (
           <li
             key={index}
-            className='group flex items-center gap-4 rounded-lg border px-4 py-3 shadow-sm border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800'
+            className={clsx(
+              'group flex items-center gap-4 rounded-lg border px-4 py-3 shadow-sm',
+              darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50',
+            )}
           >
             <div className='flex items-center gap-3 min-w-0 flex-1'>
               {/* Status skeleton */}

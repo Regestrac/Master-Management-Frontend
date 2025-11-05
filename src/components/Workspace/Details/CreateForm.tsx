@@ -1,5 +1,9 @@
 import React, { useState, useCallback } from 'react';
 
+import clsx from 'clsx';
+
+import { useSettingsStore } from 'stores/settingsStore';
+
 type CreateFormProps = {
   placeholder?: string;
   onSubmit: (_title: string) => void;
@@ -8,6 +12,8 @@ type CreateFormProps = {
 
 const CreateForm = ({ onSubmit, onCancle, placeholder = 'Enter Title' }: CreateFormProps) => {
   const [title, setTitle] = useState('');
+
+  const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
 
   const handleSubmit = useCallback(() => {
     const trimmedTitle = title.trim();
@@ -39,7 +45,12 @@ const CreateForm = ({ onSubmit, onCancle, placeholder = 'Enter Title' }: CreateF
         onChange={(e) => setTitle(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className='flex-1 text-sm px-3 py-2 rounded border outline-none bg-white border-gray-300 text-gray-900 placeholder-gray-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400'
+        className={clsx(
+          'flex-1 text-sm px-3 py-2 rounded border outline-none',
+          darkMode
+            ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400'
+            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500',
+        )}
         autoFocus
       />
       <button
@@ -52,7 +63,10 @@ const CreateForm = ({ onSubmit, onCancle, placeholder = 'Enter Title' }: CreateF
       <button
         type='button'
         onClick={handleCancel}
-        className='text-xs px-3 py-2 rounded border border-gray-300 text-gray-700 dark:border-gray-700 dark:text-gray-300'
+        className={clsx(
+          'text-xs px-3 py-2 rounded border',
+          darkMode ? 'border-gray-700 text-gray-300' : 'border-gray-300 text-gray-700',
+        )}
       >
         Cancel
       </button>
