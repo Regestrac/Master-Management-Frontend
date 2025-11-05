@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 import dayjs from 'dayjs';
-import { Archive, ArrowLeft, Check, CheckSquare, Copy, Eraser, Moon, MoreVertical, MoveRight, Star, Sun, Trash2, X } from 'lucide-react';
+import { Archive, ArrowLeft, Check, CheckSquare, Copy, Eraser, Moon, MoreVertical, MoveRight, Star, Sun, Trash2 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -70,6 +70,7 @@ const TaskHeader = () => {
   const [editingField, setEditingField] = useState<any>(null);
   const [tempValues, setTempValues] = useState({} as Record<string, string>);
   const [categories, setCategories] = useState<string[]>(defaultCategories);
+  const targetValueRef = useRef<HTMLDivElement>(null);
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
@@ -146,31 +147,96 @@ const TaskHeader = () => {
     setTempValues((prev) => ({ ...prev, [field]: currentValue }));
   };
 
-  const saveField = (field: any) => {
+  const saveField = useCallback((field: any) => {
     const value = tempValues[field];
+    let shouldSave = false;
+
     if (field === 'targetValue') {
-      handleUpdateTask(taskDetails?.id?.toString(), { target_value: value ? Number(value) : null });
-      updateTaskState({ id: taskDetails?.id, target_value: value ? Number(value) : null });
-      updateCurrentTaskDetails({ ...taskDetails, target_value: value ? Number(value) : null });
+      const newValue = value ? Number(value) : null;
+      if (newValue !== taskDetails.target_value) {
+        handleUpdateTask(taskDetails?.id?.toString(), { target_value: newValue });
+        updateTaskState({ id: taskDetails?.id, target_value: newValue });
+        updateCurrentTaskDetails({ ...taskDetails, target_value: newValue });
+        shouldSave = true;
+      }
     } else if (field === 'dueDate') {
-      handleUpdateTask(taskDetails?.id?.toString(), { due_date: value });
-      updateTaskState({ id: taskDetails?.id, due_date: value });
-      updateCurrentTaskDetails({ ...taskDetails, due_date: value });
+      if (value !== taskDetails.due_date) {
+        handleUpdateTask(taskDetails?.id?.toString(), { due_date: value });
+        updateTaskState({ id: taskDetails?.id, due_date: value });
+        updateCurrentTaskDetails({ ...taskDetails, due_date: value });
+        shouldSave = true;
+      }
     } else if (field === 'title') {
-      if (value && value.trim()) {
-        handleUpdateTask(taskDetails?.id?.toString(), { title: value.trim() });
-        updateTaskState({ id: taskDetails?.id, title: value.trim() });
-        updateCurrentTaskDetails({ ...taskDetails, title: value.trim() });
+      const newTitle = value?.trim();
+      if (newTitle && newTitle !== taskDetails.title) {
+        handleUpdateTask(taskDetails?.id?.toString(), { title: newTitle });
+        updateTaskState({ id: taskDetails?.id, title: newTitle });
+        updateCurrentTaskDetails({ ...taskDetails, title: newTitle });
+        shouldSave = true;
       }
     }
+
     setEditingField(null);
     setTempValues((prev) => ({ ...prev, [field]: undefined }));
-  };
 
-  const cancelEditing = () => {
+    if (shouldSave) {
+      toast.success('Changes saved');
+    } else {
+      toast.info('No changes to save');
+    }
+  }, [taskDetails, tempValues, updateCurrentTaskDetails, updateTaskState]);
+
+  const cancelEditing = useCallback(() => {
     setEditingField(null);
     setTempValues({});
-  };
+  }, []);
+
+  // Handle click outside to close the popup
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (targetValueRef.current && !targetValueRef.current.contains(event.target as Node)) {
+        if (editingField === 'targetValue') {
+          const value = tempValues.targetValue;
+          if (value && !isNaN(Number(value)) && Number(value) > 0) {
+            // Only save if the value is different from the current one
+            if (Number(value) !== taskDetails.target_value) {
+              saveField('targetValue');
+            } else {
+              cancelEditing();
+            }
+          } else {
+            cancelEditing();
+          }
+        }
+      }
+    };
+
+    // Handle Escape key
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        cancelEditing();
+      } else if (event.key === 'Enter' && editingField === 'targetValue') {
+        const value = tempValues.targetValue;
+        if (value && !isNaN(Number(value)) && Number(value) > 0) {
+          // Only save if the value is different from the current one
+          if (Number(value) !== taskDetails.target_value) {
+            saveField('targetValue');
+          } else {
+            cancelEditing();
+          }
+        } else {
+          cancelEditing();
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [editingField, tempValues, cancelEditing, saveField, taskDetails.target_value]);
 
   const handleTitleSave = async (newTitle: string) => {
     await updateTask(taskDetails?.id?.toString(), { title: newTitle });
@@ -264,36 +330,64 @@ const TaskHeader = () => {
 
                 {/* Target Configuration Display */}
                 {taskDetails?.type === 'goal' && (
-                  <div className={`flex items-center space-x-2 px-2 py-1 rounded-lg w-full sm:w-auto ${darkMode ? 'bg-primary-900/40 border border-primary-700/50' : 'bg-primary-50 border border-primary-200'}`}>
+                  <div className={`relative flex items-center space-x-2 px-2 py-1 rounded-lg w-full sm:w-auto ${darkMode ? 'bg-primary-900/40 border border-primary-700/50' : 'bg-primary-50 border border-primary-200'}`}>
                     <span className='w-1.5 h-1.5 rounded-full bg-primary-500 flex-shrink-0' />
                     <div className='flex flex-wrap items-center gap-1 text-xs'>
                       {/* Target Value - Always show for goals */}
-                      {editingField === 'targetValue' ? (
-                        <div className='flex items-center gap-1'>
-                          <input
-                            type='number'
-                            value={tempValues.targetValue || ''}
-                            onChange={(e) => setTempValues((prev) => ({ ...prev, targetValue: e.target.value }))}
-                            className={`w-16 px-1 py-0.5 text-xs rounded border focus:outline-none focus:ring-1 focus:ring-primary-500 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
-                            placeholder='0'
-                          />
-                          <button onClick={() => saveField('targetValue')} className='text-green-500 hover:text-green-600 flex-shrink-0'>
-                            <Check className='w-3 h-3' />
-                          </button>
-                          <button onClick={cancelEditing} className='text-red-500 hover:text-red-600 flex-shrink-0'>
-                            <X className='w-3 h-3' />
-                          </button>
-                        </div>
-                      ) : (
+                      <div className='relative'>
                         <button
-                          onClick={() => startEditing('targetValue', taskDetails.target_value || '')}
-                          className={`font-medium hover:underline whitespace-nowrap ${taskDetails?.target_value
-                            ? (darkMode ? 'text-primary-400' : 'text-primary-600')
-                            : (darkMode ? 'text-gray-500' : 'text-gray-400')}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            startEditing('targetValue', taskDetails.target_value || '');
+                          }}
+                          className={`px-2 py-1 text-xs rounded-md transition-colors whitespace-nowrap ${darkMode ? 'hover:bg-gray-700/50' : 'hover:bg-gray-100'} ${taskDetails?.target_value ? (darkMode ? 'text-primary-300' : 'text-primary-700') : (darkMode ? 'text-gray-400' : 'text-gray-500')}`}
                         >
                           {taskDetails.target_value || 'Set target'}
                         </button>
-                      )}
+
+                        {/* Popup for editing */}
+                        {editingField === 'targetValue' && (
+                          <div
+                            ref={targetValueRef}
+                            className={`absolute z-10 mt-1 p-2 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}
+                            style={{ width: '220px' }}
+                          >
+                            <div className='flex items-center gap-2'>
+                              <input
+                                type='number'
+                                value={tempValues.targetValue || ''}
+                                onChange={(e) => setTempValues((prev) => ({ ...prev, targetValue: e.target.value }))}
+                                className={`no-spinners w-full px-3 py-1.5 text-sm rounded-md border focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                                placeholder='Enter target value'
+                                autoFocus
+                                min='1'
+                                step='1'
+                                onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
+                                onWheel={(e) => e.currentTarget.blur()}
+                              />
+                              <button
+                                onClick={() => {
+                                  const value = tempValues.targetValue;
+                                  if (value && !isNaN(Number(value)) && Number(value) > 0) {
+                                    // Only save if the value is different from the current one
+                                    if (Number(value) !== taskDetails.target_value) {
+                                      saveField('targetValue');
+                                    } else {
+                                      cancelEditing();
+                                    }
+                                  } else {
+                                    cancelEditing();
+                                  }
+                                }}
+                                className={`p-1.5 rounded-md ${darkMode ? 'text-green-400 hover:bg-gray-700' : 'text-green-600 hover:bg-gray-100'}`}
+                                aria-label='Save'
+                              >
+                                <Check className='w-4 h-4' />
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
 
                       {/* Target Type - Always show for goals */}
                       <DropDown options={TARGET_TYPE_OPTIONS} onSelect={handleTargetTypeChange} value={taskDetails?.target_type} isMulti={false}>
