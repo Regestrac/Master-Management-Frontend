@@ -69,7 +69,7 @@ const Checklist = () => {
       return;
     }
     updateChecklist(cid, { completed: !item.completed }).then((updated) => {
-      updateTaskDetails({ ...taskDetails, checklists: taskDetails.checklists.map((c) => (c.id === cid ? { ...c, ...updated?.data } : c)) });
+      updateTaskDetails({ checklists: taskDetails.checklists.map((c) => (c.id === cid ? { ...c, ...updated?.data } : c)) });
       updateTaskDetails({ progress: updated?.progress });
     }).catch((err) => {
       toast.error(err?.error || 'Could not update checklist item');
@@ -80,7 +80,7 @@ const Checklist = () => {
     const deleteChecklist = () => {
       deleteChecklistApi(cid).then((res) => {
         toast.success(res?.message || 'Checklist item deleted successfully');
-        updateTaskDetails({ ...taskDetails, checklists: taskDetails.checklists.filter((c) => c.id !== cid), progress: res?.progress });
+        updateTaskDetails({ checklists: taskDetails.checklists.filter((c) => c.id !== cid), progress: res?.progress });
       }).catch((err) => {
         toast.error(err?.error || 'Could not delete checklist item');
       });
@@ -102,7 +102,7 @@ const Checklist = () => {
       return;
     }
     saveChecklist({ task_id: taskDetails.id, title }).then((created) => {
-      updateTaskDetails({ ...taskDetails, checklists: [...taskDetails.checklists, created?.data], progress: created?.progress });
+      updateTaskDetails({ checklists: [...taskDetails.checklists, created?.data], progress: created?.progress });
       setNewChecklistItem('');
     }).catch((err) => {
       toast.error(err?.error || 'Could not add checklist item');
@@ -112,7 +112,7 @@ const Checklist = () => {
   useEffect(() => {
     if (id && prevTaskIdRef.current !== id && taskDetails.id) {
       getChecklists(`task_id=${id}`).then((res) => {
-        updateTaskDetails({ ...taskDetails, checklists: res?.data });
+        updateTaskDetails({ checklists: res?.data });
       }).catch((err) => {
         toast.error(err?.error || 'Failed to load checklist');
       });

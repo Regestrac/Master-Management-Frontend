@@ -30,6 +30,7 @@ type GeneratedTaskType = {
 
 const SubTasks = () => {
   const [generatedTasks, setGeneratedTasks] = useState<GeneratedTaskType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const parentTaskId = useTaskStore((state) => state.currentTaskDetails?.parent_id);
@@ -37,17 +38,19 @@ const SubTasks = () => {
   const subtasks = useTaskStore((state) => state.currentTaskDetails.subtasks);
   const updateTaskState = useTaskStore((state) => state.updateTask);
   const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
+
   const { id } = useParams();
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
-  const [isLoading, setIsLoading] = useState(false);
+
+  const [searchParams] = useSearchParams();
+
+  const navigate = useNavigate();
 
   const methods = useForm({
     defaultValues: { title: '' },
   });
 
-  const { handleSubmit, setValue, reset } = methods;
+  const { handleSubmit, setValue } = methods;
 
   const addSubtask = (formData: { title: string; }) => {
     if (formData?.title && id) {
@@ -126,10 +129,10 @@ const SubTasks = () => {
     const fetchSubtasks = async () => {
       if (!id) { return; }
 
+      updateTaskDetails({ subtasks: [] });
       try {
         setIsLoading(true);
         // Clear previous subtasks immediately to prevent showing wrong data
-        updateTaskDetails({ subtasks: [] });
 
         const res = await getSubTasks(id);
         updateTaskDetails({
@@ -144,17 +147,12 @@ const SubTasks = () => {
     };
 
     // Always fetch when ID changes, regardless of previous ID
-    if (id) {
+    if (id && parentTaskId) {
       fetchSubtasks();
     }
 
     // No need to clear on cleanup as we want to keep the data
-  }, [id, updateTaskDetails]);
-
-  // Reset form when task changes
-  useEffect(() => {
-    reset({ title: '' });
-  }, [id, reset]);
+  }, [id, parentTaskId, updateTaskDetails]);
 
   // Don't show subtasks if this is a subtask itself
   if (parentTaskId) {

@@ -73,7 +73,7 @@ const StickyNotes = () => {
         updateNote(formData.id, payload).then((res) => {
           toast.success(res?.message);
           const finalNotesData = taskDetails.notes.map((item) => item.id === formData.id ? res?.data : item);
-          updateCurrentTaskDetails({ ...taskDetails, notes: finalNotesData });
+          updateCurrentTaskDetails({ notes: finalNotesData });
           handleCancelNote();
         }).catch((err) => {
           toast.error(err?.error);
@@ -81,7 +81,7 @@ const StickyNotes = () => {
       } else {
         createNote(payload).then((res) => {
           toast.success(res?.message);
-          updateCurrentTaskDetails({ ...taskDetails, notes: [...taskDetails.notes, res?.data] });
+          updateCurrentTaskDetails({ notes: [...taskDetails.notes, res?.data] });
           handleCancelNote();
         }).catch((err) => {
           toast.error(err?.error);
@@ -105,7 +105,7 @@ const StickyNotes = () => {
     // TODO: Need to add confirmation
     deleteNote(noteId).then((res) => {
       toast.success(res?.message);
-      updateCurrentTaskDetails({ ...taskDetails, notes: taskDetails.notes.filter((item) => item.id !== noteId) });
+      updateCurrentTaskDetails({ notes: taskDetails.notes.filter((item) => item.id !== noteId) });
     }).catch((err) => {
       toast.error(err?.error);
     });

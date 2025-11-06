@@ -69,7 +69,7 @@ const GenerateTagsButton = ({ generatedTags, setGeneratedTags }: GenerateTagsBut
     };
 
     updateTask(id, payload).then(() => {
-      updateTaskDetails({ ...taskDetails, tags: payload.tags });
+      updateTaskDetails({ tags: payload.tags });
       toast.success('Tags saved');
       setGeneratedTags([]);
       setShowConfirmation(false);

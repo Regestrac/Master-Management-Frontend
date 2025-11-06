@@ -107,14 +107,14 @@ const TaskHeader = () => {
     const formattedDate = date ? dayjs(date).format('YYYY-MM-DD') : '';
     handleUpdateTask(taskDetails?.id?.toString(), { due_date: formattedDate || null });
     updateTaskState({ id: taskDetails?.id, due_date: formattedDate || '' });
-    updateCurrentTaskDetails({ ...taskDetails, due_date: formattedDate || '' });
+    updateCurrentTaskDetails({ due_date: formattedDate || '' });
   };
 
   const handlePriorityChange = (value: string | null) => {
     if (taskDetails?.priority !== value) {
       handleUpdateTask(taskDetails?.id?.toString(), { priority: value || '' });
       updateTaskState({ id: taskDetails?.id, priority: value as TaskType['priority'] });
-      updateCurrentTaskDetails({ ...taskDetails, priority: value as TaskType['priority'] });
+      updateCurrentTaskDetails({ priority: value as TaskType['priority'] });
     }
   };
 
@@ -122,7 +122,7 @@ const TaskHeader = () => {
     if (taskDetails?.status !== value) {
       handleUpdateTask(taskDetails?.id?.toString(), { status: value });
       updateTaskState({ id: taskDetails?.id, status: value as TaskType['status'] });
-      updateCurrentTaskDetails({ ...taskDetails, status: value as TaskType['status'] });
+      updateCurrentTaskDetails({ status: value as TaskType['status'] });
     }
   };
 
@@ -130,7 +130,7 @@ const TaskHeader = () => {
     if (taskDetails?.target_type !== value) {
       handleUpdateTask(taskDetails?.id?.toString(), { target_type: value });
       updateTaskState({ id: taskDetails?.id, target_type: value as TargetType });
-      updateCurrentTaskDetails({ ...taskDetails, target_type: value as TargetType });
+      updateCurrentTaskDetails({ target_type: value as TargetType });
     }
   };
 
@@ -138,7 +138,7 @@ const TaskHeader = () => {
     if (taskDetails?.target_frequency !== value) {
       handleUpdateTask(taskDetails?.id?.toString(), { target_frequency: value });
       updateTaskState({ id: taskDetails?.id, target_frequency: value as TargetFrequency });
-      updateCurrentTaskDetails({ ...taskDetails, target_frequency: value as TargetFrequency });
+      updateCurrentTaskDetails({ target_frequency: value as TargetFrequency });
     }
   };
 
@@ -156,14 +156,14 @@ const TaskHeader = () => {
       if (newValue !== taskDetails.target_value) {
         handleUpdateTask(taskDetails?.id?.toString(), { target_value: newValue });
         updateTaskState({ id: taskDetails?.id, target_value: newValue });
-        updateCurrentTaskDetails({ ...taskDetails, target_value: newValue });
+        updateCurrentTaskDetails({ target_value: newValue });
         shouldSave = true;
       }
     } else if (field === 'dueDate') {
       if (value !== taskDetails.due_date) {
         handleUpdateTask(taskDetails?.id?.toString(), { due_date: value });
         updateTaskState({ id: taskDetails?.id, due_date: value });
-        updateCurrentTaskDetails({ ...taskDetails, due_date: value });
+        updateCurrentTaskDetails({ due_date: value });
         shouldSave = true;
       }
     } else if (field === 'title') {
@@ -171,7 +171,7 @@ const TaskHeader = () => {
       if (newTitle && newTitle !== taskDetails.title) {
         handleUpdateTask(taskDetails?.id?.toString(), { title: newTitle });
         updateTaskState({ id: taskDetails?.id, title: newTitle });
-        updateCurrentTaskDetails({ ...taskDetails, title: newTitle });
+        updateCurrentTaskDetails({ title: newTitle });
         shouldSave = true;
       }
     }
@@ -241,7 +241,7 @@ const TaskHeader = () => {
   const handleTitleSave = async (newTitle: string) => {
     await updateTask(taskDetails?.id?.toString(), { title: newTitle });
     updateTaskState({ id: taskDetails?.id, title: newTitle });
-    updateCurrentTaskDetails({ ...taskDetails, title: newTitle });
+    updateCurrentTaskDetails({ title: newTitle });
     toast.success('Task title updated successfully');
   };
 
@@ -270,7 +270,7 @@ const TaskHeader = () => {
     if (taskDetails?.category !== category) {
       handleUpdateTask(taskDetails?.id?.toString(), { category: category || '' });
       updateTaskState({ id: taskDetails?.id, category: category || '' });
-      updateCurrentTaskDetails({ ...taskDetails, category: category || '' });
+      updateCurrentTaskDetails({ category: category || '' });
     }
   };
 
