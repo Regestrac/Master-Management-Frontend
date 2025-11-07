@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { CheckCircle2, CheckSquare, Plus, Trash2 } from 'lucide-react';
 import dayjs from 'dayjs';
-import { useNavigate, useParams, useSearchParams, useLocation } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
 import clsx from 'clsx';
@@ -33,13 +33,15 @@ const SubTasks = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
+  const id = useTaskStore((state) => state.currentTaskDetails?.id);
   const parentTaskId = useTaskStore((state) => state.currentTaskDetails?.parent_id);
   const taskType = useTaskStore((state) => state.currentTaskDetails.type);
   const subtasks = useTaskStore((state) => state.currentTaskDetails.subtasks);
   const updateTaskState = useTaskStore((state) => state.updateTask);
   const updateTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
 
-  const { id } = useParams();
+  const prevTaskIdRef = useRef<number>(null);
+
   const { pathname } = useLocation();
 
   const [searchParams] = useSearchParams();
@@ -105,9 +107,7 @@ const SubTasks = () => {
     updateTask(id, payload).then((res) => {
       updateTaskDetails({ progress: res?.parent_progress });
       updateTaskDetails({
-        subtasks: subtasks.map((st) =>
-          st.id === Number(id) ? { ...st, ...payload } : st,
-        ),
+        subtasks: subtasks.map((st) => st.id === Number(id) ? { ...st, ...payload } : st),
       });
       toast.success(res?.message || 'Updated successfully');
     }).catch((err) => {
@@ -134,7 +134,7 @@ const SubTasks = () => {
         setIsLoading(true);
         // Clear previous subtasks immediately to prevent showing wrong data
 
-        const res = await getSubTasks(id);
+        const res = await getSubTasks(id.toString());
         updateTaskDetails({
           subtasks: Array.isArray(res?.data) ? res.data : [],
         });
@@ -147,8 +147,9 @@ const SubTasks = () => {
     };
 
     // Always fetch when ID changes, regardless of previous ID
-    if (id && parentTaskId) {
+    if (id && prevTaskIdRef.current !== id && !parentTaskId) {
       fetchSubtasks();
+      prevTaskIdRef.current = id;
     }
 
     // No need to clear on cleanup as we want to keep the data
