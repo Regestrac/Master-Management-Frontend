@@ -5,21 +5,19 @@ import { Plus, Minus, Check } from 'lucide-react';
 import { useTaskStore } from 'stores/taskStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
-interface TargetProgressTrackerProps {
+type TargetProgressTrackerPropsType = {
   taskId: string;
-  targetType?: string; // Made optional since we're not using it
   currentProgress: number;
   targetValue: number;
   onProgressUpdate?: (_newProgress: number) => void;
-}
+};
 
 const TargetProgressTracker = ({
   taskId,
-  targetType: _targetType, // Rename to indicate it's not used
   currentProgress,
   targetValue,
   onProgressUpdate,
-}: TargetProgressTrackerProps) => {
+}: TargetProgressTrackerPropsType) => {
   const [isLoading, setIsLoading] = useState(false);
   const { updateTaskProgress: updateProgressInStore } = useTaskStore();
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
