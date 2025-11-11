@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { Plus, Minus, Check } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 import { useTaskStore } from 'stores/taskStore';
 import { useSettingsStore } from 'stores/settingsStore';
@@ -55,10 +56,7 @@ const TargetProgressTracker = ({
         onProgressUpdate(progressValue);
       }
     } catch (error) {
-      // Using console.error for error logging is acceptable here
-      // as it's important for debugging
-      // eslint-disable-next-line no-console
-      console.error('Error updating progress:', error);
+      toast.error('Error updating progress: ' + error);
     } finally {
       setIsLoading(false);
     }

@@ -87,7 +87,8 @@ const getProgressLabel = (progress: number, timeSpend: number, targetType?: stri
 const TaskProgress = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
-  const { updateTaskProgress: updateProgressInStore } = useTaskStore();
+  const updateProgressInStore = useTaskStore((state) => state.updateTaskProgress);
+
   const progress = taskDetails?.progress || 0;
   const timeSpend = taskDetails?.time_spend || 0;
   const targetValue = taskDetails?.target_value || 1; // Prevent division by zero
@@ -121,7 +122,8 @@ const TaskProgress = () => {
         <span className={`font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
           Progress:
           {' '}
-          {isTimeBased ? formatDuration(timeSpend) : `${progress?.toFixed(0)}%`}
+          {taskProgress?.toFixed(0)}
+          %
         </span>
         <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
           {progressLabel}
