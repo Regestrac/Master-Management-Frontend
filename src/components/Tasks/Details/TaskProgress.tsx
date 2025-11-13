@@ -33,27 +33,27 @@ const getEstimatedTime = (targetValue?: number | null, targetType?: string | nul
   return { value: targetValue, label: targetValue };
 };
 
-const getTaskProgress = (progress: number, total: number, targetType?: string | null) => {
-  if (!targetType) {
-    return 0;
-  }
+// const getTaskProgress = (progress: number, total: number, targetType?: string | null) => {
+//   if (!targetType) {
+//     return 0;
+//   }
 
-  // For percentage type, progress is already a percentage
-  if (targetType === 'percentage') {
-    return Math.min(progress, 100);
-  }
+//   // For percentage type, progress is already a percentage
+//   if (targetType === 'percentage') {
+//     return Math.min(progress, 100);
+//   }
 
-  // For time-based and count-based targets
-  if (['hours', 'days', 'weeks', 'months', 'repetition', 'sessions', 'points'].includes(targetType)) {
-    if (total <= 0) {
-      return 0; // Prevent division by zero
-    }
-    const percentage = (progress / total) * 100;
-    return Math.min(percentage, 100);
-  }
+//   // For time-based and count-based targets
+//   if (['hours', 'days', 'weeks', 'months', 'repetition', 'sessions', 'points'].includes(targetType)) {
+//     if (total <= 0) {
+//       return 0; // Prevent division by zero
+//     }
+//     const percentage = (progress / total) * 100;
+//     return Math.min(percentage, 100);
+//   }
 
-  return 0;
-};
+//   return 0;
+// };
 
 const getProgressLabel = (progress: number, timeSpend: number, targetType?: string | null) => {
   if (!targetType) {
@@ -103,11 +103,11 @@ const TaskProgress = () => {
   const currentProgress = isTimeBased ? timeSpend : progress;
 
   // Calculate progress percentage for the progress bar
-  const taskProgress = getTaskProgress(
-    currentProgress,
-    estimatedTarget.value,
-    targetType,
-  );
+  // const taskProgress = getTaskProgress(
+  //   currentProgress,
+  //   estimatedTarget.value,
+  //   targetType,
+  // );
 
   // Get the appropriate progress label
   const progressLabel = getProgressLabel(
@@ -122,7 +122,7 @@ const TaskProgress = () => {
         <span className={`font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
           Progress:
           {' '}
-          {taskProgress?.toFixed(0)}
+          {progress?.toFixed(0)}
           %
         </span>
         <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -140,7 +140,7 @@ const TaskProgress = () => {
           <div className={`w-full h-2 rounded-full ${darkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
             <div
               className='h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-500'
-              style={{ width: `${taskProgress}%` }}
+              style={{ width: `${progress}%` }}
             />
           </div>
         </div>

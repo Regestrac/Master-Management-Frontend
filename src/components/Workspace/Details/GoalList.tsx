@@ -364,9 +364,7 @@ const GoalList = () => {
                                     key={`assignee-${goal.id}-${userId}`}
                                     member={member}
                                     size='sm'
-                                    className={clsx(
-                                      darkMode ? 'border-white' : 'border-gray-700',
-                                    )}
+                                    className={darkMode ? 'border-white' : 'border-gray-700'}
                                   />
                                 );
                               })}
@@ -375,9 +373,7 @@ const GoalList = () => {
                             <div
                               className={clsx(
                                 'text-xs px-2 py-1 rounded border border-dashed',
-                                darkMode
-                                  ? 'text-gray-400 border-gray-600'
-                                  : 'text-gray-500 border-gray-300',
+                                darkMode ? 'text-gray-400 border-gray-600' : 'text-gray-500 border-gray-300',
                               )}
                             >
                               Assign
