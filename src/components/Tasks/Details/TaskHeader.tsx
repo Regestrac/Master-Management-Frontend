@@ -95,13 +95,16 @@ const TaskHeader = () => {
     navigateBack(navigate, searchParams, '/dashboard');
   };
 
-  const handleUpdateTask = (id: string, payload: object) => {
+  const handleUpdateTask = useCallback((id: string, payload: object) => {
     updateTask(id, payload).then((res) => {
       toast.success(res?.message || 'Updated successfully');
+      if (res?.progress !== undefined) {
+        updateCurrentTaskDetails({ progress: res?.progress });
+      }
     }).catch((err) => {
       toast.error(err?.error || 'Failed to update task');
     });
-  };
+  }, [updateCurrentTaskDetails]);
 
   const handleDueDateChange = (date: Date | null) => {
     const formattedDate = date ? dayjs(date).format('YYYY-MM-DD') : '';
@@ -174,7 +177,7 @@ const TaskHeader = () => {
 
     setEditingField(null);
     setTempValues((prev) => ({ ...prev, [field]: undefined }));
-  }, [taskDetails, tempValues, updateCurrentTaskDetails, updateTaskState]);
+  }, [handleUpdateTask, taskDetails.due_date, taskDetails?.id, taskDetails.target_value, taskDetails.title, tempValues, updateCurrentTaskDetails, updateTaskState]);
 
   const cancelEditing = useCallback(() => {
     setEditingField(null);
