@@ -68,7 +68,7 @@ const defaultCategories = [
 
 const TaskHeader = () => {
   const [editingField, setEditingField] = useState<any>(null);
-  const [tempValues, setTempValues] = useState({} as Record<string, string>);
+  const [tempValues, setTempValues] = useState({} as Record<string, string | undefined>);
   const [categories, setCategories] = useState<string[]>(defaultCategories);
   const targetValueRef = useRef<HTMLDivElement>(null);
 
@@ -142,14 +142,13 @@ const TaskHeader = () => {
     }
   };
 
-  const startEditing = (field: any, currentValue: any) => {
+  const startEditing = (field: string, currentValue: number) => {
     setEditingField(field);
-    setTempValues((prev) => ({ ...prev, [field]: currentValue }));
+    setTempValues((prev) => ({ ...prev, [field]: currentValue.toString() }));
   };
 
-  const saveField = useCallback((field: any) => {
+  const saveField = useCallback((field: string) => {
     const value = tempValues[field];
-    let shouldSave = false;
 
     if (field === 'targetValue') {
       const newValue = value ? Number(value) : null;
@@ -157,14 +156,12 @@ const TaskHeader = () => {
         handleUpdateTask(taskDetails?.id?.toString(), { target_value: newValue });
         updateTaskState({ id: taskDetails?.id, target_value: newValue });
         updateCurrentTaskDetails({ target_value: newValue });
-        shouldSave = true;
       }
     } else if (field === 'dueDate') {
       if (value !== taskDetails.due_date) {
         handleUpdateTask(taskDetails?.id?.toString(), { due_date: value });
         updateTaskState({ id: taskDetails?.id, due_date: value });
         updateCurrentTaskDetails({ due_date: value });
-        shouldSave = true;
       }
     } else if (field === 'title') {
       const newTitle = value?.trim();
@@ -172,18 +169,11 @@ const TaskHeader = () => {
         handleUpdateTask(taskDetails?.id?.toString(), { title: newTitle });
         updateTaskState({ id: taskDetails?.id, title: newTitle });
         updateCurrentTaskDetails({ title: newTitle });
-        shouldSave = true;
       }
     }
 
     setEditingField(null);
     setTempValues((prev) => ({ ...prev, [field]: undefined }));
-
-    if (shouldSave) {
-      toast.success('Changes saved');
-    } else {
-      toast.info('No changes to save');
-    }
   }, [taskDetails, tempValues, updateCurrentTaskDetails, updateTaskState]);
 
   const cancelEditing = useCallback(() => {
@@ -338,7 +328,7 @@ const TaskHeader = () => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            startEditing('targetValue', taskDetails.target_value || '');
+                            startEditing('targetValue', taskDetails.target_value || 0);
                           }}
                           className={`px-2 py-1 text-xs rounded-md transition-colors whitespace-nowrap ${darkMode ? 'hover:bg-gray-700/50' : 'hover:bg-gray-100'} ${taskDetails?.target_value ? (darkMode ? 'text-primary-300' : 'text-primary-700') : (darkMode ? 'text-gray-400' : 'text-gray-500')}`}
                         >

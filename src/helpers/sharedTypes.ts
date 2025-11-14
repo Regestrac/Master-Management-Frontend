@@ -22,6 +22,7 @@ export type TaskType = {
   target_value?: number | null;
   target_type?: TargetType | null;
   target_frequency?: TargetFrequency | null;
+  target_progress?: number;
 };
 
 export type SelectOptionType = {

@@ -56,7 +56,6 @@ type TasksStateType = {
   updateCurrentTaskDetails: (_task: Partial<TaskDetailsType>) => void;
   addTask: (_newTask: TaskType | TaskType[], _type?: 'merge' | 'replace') => void;
   updateTask: (_task: Partial<TaskType> & { id: number; }) => void;
-  updateTaskProgress: (_taskId: number, _progress: number) => void;
   deleteTask: (_id: number) => void;
   updateStartTimer: (_value: boolean) => void;
   updateStartedAt: (_time: string) => void;
@@ -87,14 +86,6 @@ export const useTaskStore = create<TasksStateType>()((set) => ({
     tasks: state.tasks.map((task) =>
       task.id === updatedTask.id ? { ...task, ...updatedTask } : task,
     ),
-  })),
-  updateTaskProgress: (taskId, progress) => set((state) => ({
-    tasks: state.tasks.map((task) =>
-      task.id === taskId ? { ...task, progress } : task,
-    ),
-    currentTaskDetails: state.currentTaskDetails.id === taskId
-      ? { ...state.currentTaskDetails, progress }
-      : state.currentTaskDetails,
   })),
   deleteTask: (id) => set((state) => ({
     tasks: state.tasks.filter((task) => task.id !== id),

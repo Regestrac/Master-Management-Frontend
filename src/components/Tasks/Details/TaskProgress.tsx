@@ -33,28 +33,6 @@ const getEstimatedTime = (targetValue?: number | null, targetType?: string | nul
   return { value: targetValue, label: targetValue };
 };
 
-// const getTaskProgress = (progress: number, total: number, targetType?: string | null) => {
-//   if (!targetType) {
-//     return 0;
-//   }
-
-//   // For percentage type, progress is already a percentage
-//   if (targetType === 'percentage') {
-//     return Math.min(progress, 100);
-//   }
-
-//   // For time-based and count-based targets
-//   if (['hours', 'days', 'weeks', 'months', 'repetition', 'sessions', 'points'].includes(targetType)) {
-//     if (total <= 0) {
-//       return 0; // Prevent division by zero
-//     }
-//     const percentage = (progress / total) * 100;
-//     return Math.min(percentage, 100);
-//   }
-
-//   return 0;
-// };
-
 const getProgressLabel = (progress: number, timeSpend: number, targetType?: string | null) => {
   if (!targetType) {
     return progress;
@@ -68,7 +46,7 @@ const getProgressLabel = (progress: number, timeSpend: number, targetType?: stri
       return formatDuration(timeSpend);
 
     case 'percentage':
-      return `${progress.toFixed(0)}%`;
+      return progress.toFixed(0);
 
     case 'repetition':
       return `${Math.round(progress)} rep${progress !== 1 ? 's' : ''}`;
@@ -87,7 +65,7 @@ const getProgressLabel = (progress: number, timeSpend: number, targetType?: stri
 const TaskProgress = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const taskDetails = useTaskStore((state) => state.currentTaskDetails);
-  const updateProgressInStore = useTaskStore((state) => state.updateTaskProgress);
+  const targetProgress = useTaskStore((state) => state.currentTaskDetails?.target_progress) || 0;
 
   const progress = taskDetails?.progress || 0;
   const timeSpend = taskDetails?.time_spend || 0;
@@ -100,14 +78,7 @@ const TaskProgress = () => {
   const estimatedTarget = getEstimatedTime(targetValue, targetType);
 
   // Determine current progress based on target type
-  const currentProgress = isTimeBased ? timeSpend : progress;
-
-  // Calculate progress percentage for the progress bar
-  // const taskProgress = getTaskProgress(
-  //   currentProgress,
-  //   estimatedTarget.value,
-  //   targetType,
-  // );
+  const currentProgress = isTimeBased ? timeSpend : targetProgress;
 
   // Get the appropriate progress label
   const progressLabel = getProgressLabel(
@@ -130,7 +101,8 @@ const TaskProgress = () => {
           {targetType && (
             <>
               &nbsp;of&nbsp;
-              {targetType === 'percentage' ? '100%' : estimatedTarget.label}
+              {estimatedTarget.label}
+              {targetType === 'percentage' ? '%' : null}
             </>
           )}
         </span>
@@ -146,16 +118,7 @@ const TaskProgress = () => {
         </div>
 
         {/* Progress controls for non-time-based targets */}
-        {isCountBased && targetValue > 0 && (
-          <TargetProgressTracker
-            taskId={taskDetails?.id?.toString() || ''}
-            currentProgress={currentProgress}
-            targetValue={targetValue}
-            onProgressUpdate={(newProgress) => {
-              updateProgressInStore(taskDetails?.id, newProgress);
-            }}
-          />
-        )}
+        {isCountBased && targetValue > 0 ? <TargetProgressTracker /> : null}
       </div>
     </div>
   );
