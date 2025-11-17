@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 
 import dayjs from 'dayjs';
-import { Archive, ArrowLeft, Check, CheckSquare, Copy, Eraser, Moon, MoreVertical, MoveRight, Star, Sun, Trash2 } from 'lucide-react';
+import { Archive, ArrowLeft, Calendar, Check, CheckSquare, Copy, Eraser, Moon, MoreVertical, MoveRight, Star, Sun, Trash2 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
+import clsx from 'clsx';
 
 import { capitalize, getPriorityColor, getStatusColor } from 'helpers/utils';
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
@@ -70,6 +71,8 @@ const TaskHeader = () => {
   const [editingField, setEditingField] = useState<any>(null);
   const [tempValues, setTempValues] = useState({} as Record<string, string | undefined>);
   const [categories, setCategories] = useState<string[]>(defaultCategories);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const datePickerRef = useRef<HTMLDivElement>(null);
   const targetValueRef = useRef<HTMLDivElement>(null);
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
@@ -184,9 +187,10 @@ const TaskHeader = () => {
     setTempValues({});
   }, []);
 
-  // Handle click outside to close the popup
+  // Handle click outside to close the popup and date picker
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // Handle target value editor
       if (targetValueRef.current && !targetValueRef.current.contains(event.target as Node)) {
         if (editingField === 'targetValue') {
           const value = tempValues.targetValue;
@@ -201,6 +205,11 @@ const TaskHeader = () => {
             cancelEditing();
           }
         }
+      }
+
+      // Handle date picker
+      if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
+        setShowDatePicker(false);
       }
     };
 
@@ -414,16 +423,59 @@ const TaskHeader = () => {
                   </div>
                 )}
 
-                {/* Due Date with DatePicker */}
+                {/* Due Date with Pill */}
                 <div className='flex items-center gap-2'>
-                  <span className={`text-sm whitespace-nowrap ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Due:</span>
-                  <div className='min-w-[120px] sm:min-w-[140px]'>
-                    <DatePicker
-                      name='due_date'
-                      placeholder='Set due date'
-                      className='text-xs'
-                      onChange={handleDueDateChange}
-                    />
+                  <div className='relative' ref={datePickerRef}>
+                    <button
+                      type='button'
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowDatePicker(!showDatePicker);
+                      }}
+                      className={clsx(
+                        'flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-colors',
+                        darkMode ? 'bg-blue-900/30 text-blue-300 hover:bg-blue-900/50 border border-blue-800/50' : 'text-gray-500 hover:bg-gray-100 border border-dashed border-gray-300',
+                        darkMode && taskDetails?.due_date ? 'bg-blue-900/30 text-blue-300 hover:bg-blue-900/50 border border-blue-800/50' : null,
+                        !darkMode && taskDetails?.due_date ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200' : null,
+                      )}
+                    >
+                      <Calendar className='w-3.5 h-3.5' />
+                      <span>{taskDetails?.due_date ? dayjs(taskDetails.due_date).format('MMM D, YYYY') : 'Set due date'}</span>
+                      {taskDetails?.due_date && (
+                        <span
+                          role='button'
+                          tabIndex={0}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDueDateChange(null);
+                            setShowDatePicker(false);
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              handleDueDateChange(null);
+                              setShowDatePicker(false);
+                            }
+                          }}
+                          className={`ml-1 p-0.5 rounded-full cursor-pointer ${darkMode ? 'hover:bg-blue-800/50' : 'hover:bg-blue-100'}`}
+                          aria-label='Clear due date'
+                        >
+                          <svg className='w-3 h-3' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M6 18L18 6M6 6l12 12' />
+                          </svg>
+                        </span>
+                      )}
+                    </button>
+                    {showDatePicker && (
+                      <div className='absolute z-50 min-w-[200px] w-fit mt-1'>
+                        <DatePicker
+                          name='due_date'
+                          placeholder='Set due date'
+                          className='text-xs'
+                          onChange={handleDueDateChange}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
 
