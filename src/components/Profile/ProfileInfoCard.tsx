@@ -1,24 +1,82 @@
+import { useState } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { LogOut } from 'lucide-react';
+import { LogOut, X, Loader2 } from 'lucide-react';
 
 import { useProfileStore } from 'stores/profileStore';
 import useModalStore from 'stores/modalStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
 import { logout } from 'services/auth';
+import { updateProfile } from 'services/profile';
+
+import CameraIcon from 'icons/CameraIcon';
 
 const ProfileInfoCard = () => {
   const user = useProfileStore((state) => state.data);
+  const updateProfileInfo = useProfileStore((state) => state.updateProfile);
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const clearProfile = useProfileStore((state) => state.clearProfile);
   const updateVisibility = useModalStore((state) => state.updateVisibility);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState('');
 
   const navigate = useNavigate();
 
   const userInitial = user?.first_name?.[0] || 'U';
   const userName = user?.first_name && user?.last_name ? `${user.first_name} ${user.last_name}` : 'User';
   const userEmail = user?.email || 'No email provided';
+
+  const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value;
+    setImageUrl(url);
+
+    // Simple URL validation
+    try {
+      new URL(url);
+      setPreviewUrl(url);
+    } catch {
+      setPreviewUrl('');
+    }
+  };
+
+  const handleSaveImage = () => {
+    if (!imageUrl) {
+      toast.error('Please enter a valid image URL');
+      return;
+    }
+
+    setIsLoading(true);
+    updateProfile({ avatar_url: imageUrl })
+      .then((res) => {
+        updateProfileInfo({ avatar_url: imageUrl });
+        toast.success(res?.message || 'Profile picture updated successfully');
+        setShowImageModal(false);
+        setImageUrl('');
+        setPreviewUrl('');
+      })
+      .catch((err) => {
+        toast.error(err?.error || 'Failed to update profile picture');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const handleOpenModal = () => {
+    setImageUrl(user?.avatar_url || '');
+    setPreviewUrl(user?.avatar_url || '');
+    setShowImageModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowImageModal(false);
+    setImageUrl('');
+    setPreviewUrl('');
+  };
 
   const handleLogout = () => {
     updateVisibility({
@@ -44,21 +102,22 @@ const ProfileInfoCard = () => {
         <div className='relative inline-block mb-4'>
           <div className='w-30 h-30 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-2xl font-bold overflow-hidden'>
             {user?.avatar_url ? (
-              <img
-                src={user?.avatar_url}
-                alt={`${userName} profile picture`}
-                className='w-full h-full rounded-full object-cover'
-              />
+              <div className='w-full h-full'>
+                <img
+                  src={user.avatar_url}
+                  alt={`${userName} profile picture`}
+                  className='w-full h-full object-cover min-w-full min-h-full'
+                  style={{ objectPosition: 'center' }}
+                />
+              </div>
             ) : userInitial}
           </div>
           <button
-            className='absolute bottom-0 right-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors'
+            onClick={handleOpenModal}
+            className='absolute bottom-0 right-0 w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors'
             aria-label='Edit profile picture'
           >
-            <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z' />
-              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 13a3 3 0 11-6 0 3 3 0 016 0z' />
-            </svg>
+            <CameraIcon />
           </button>
         </div>
         <h4 className='text-xl font-bold mb-1'>{userName}</h4>
@@ -89,6 +148,79 @@ const ProfileInfoCard = () => {
           <span>Sign Out</span>
         </button>
       </div>
+      {showImageModal && (
+        <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${darkMode ? 'bg-black/70' : 'bg-black/50'}`}>
+          <div className={`relative w-full max-w-md rounded-xl p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <div className='flex justify-between items-center mb-4'>
+              <h3 className='text-lg font-semibold'>Update Profile Picture</h3>
+              <button
+                onClick={handleCloseModal}
+                className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+                aria-label='Close'
+              >
+                <X className='w-5 h-5' />
+              </button>
+            </div>
+
+            <div className='mb-4'>
+              <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Image URL
+              </label>
+              <input
+                type='url'
+                value={imageUrl}
+                onChange={handleImageUrlChange}
+                placeholder='https://example.com/image.jpg'
+                className={`w-full px-3 py-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition`}
+              />
+            </div>
+
+            {previewUrl && (
+              <div className='mb-4'>
+                <p className={`text-sm mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Preview:</p>
+                <div className='w-full aspect-square rounded-lg border border-gray-200 dark:border-gray-600 overflow-hidden'>
+                  <div className='w-full h-full'>
+                    <img
+                      src={previewUrl}
+                      alt='Profile preview'
+                      className='w-full h-full object-cover min-w-full min-h-full'
+                      style={{ objectPosition: 'center' }}
+                      onError={(e) => {
+                        e.currentTarget.src = '';
+                        setPreviewUrl('');
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className='flex justify-end space-x-3 mt-6'>
+              <button
+                onClick={handleCloseModal}
+                className={`px-4 py-2 rounded-lg ${darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'} transition-colors`}
+                disabled={isLoading}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveImage}
+                disabled={!previewUrl || isLoading}
+                className={`px-4 py-2 rounded-lg flex items-center space-x-2 ${(!previewUrl || isLoading)
+                  ? 'bg-blue-400 cursor-not-allowed'
+                  : 'bg-blue-500 hover:bg-blue-600'} text-white transition-colors`}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className='w-4 h-4 animate-spin' />
+                    <span>Saving...</span>
+                  </>
+                ) : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
