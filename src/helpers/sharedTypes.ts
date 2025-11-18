@@ -66,7 +66,8 @@ export type ModalNamesType =
   | 'workspaceModal'
   | 'manageMembersModal'
   | 'leaveWorkspaceModal'
-  | 'signOutModal';
+  | 'signOutModal'
+  | 'updateProfilePictureModal';
 
 export type Member = {
   id: number;

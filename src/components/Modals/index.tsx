@@ -6,6 +6,7 @@ import WorkspaceModal from 'components/Modals/WorkspaceModal';
 import ManageMembersModal from 'components/Modals/ManageMembersModal';
 import LeaveWorkspaceModal from 'components/Modals/LeaveWorkspaceModal';
 import SignOutModal from 'components/Modals/SignOutModal';
+import UpdateProfilePictureModal from 'components/Modals/UpdateProfilePictureModal';
 
 const Modals = () => {
   const {
@@ -15,6 +16,7 @@ const Modals = () => {
     manageMembersModal,
     leaveWorkspaceModal,
     signOutModal,
+    updateProfilePictureModal,
   } = useModalStore((state) => state.modals);
 
   return (
@@ -25,6 +27,7 @@ const Modals = () => {
       {manageMembersModal.isVisible && <ManageMembersModal />}
       {leaveWorkspaceModal.isVisible && <LeaveWorkspaceModal />}
       {signOutModal.isVisible && <SignOutModal />}
+      {updateProfilePictureModal.isVisible && <UpdateProfilePictureModal />}
     </>
   );
 };
