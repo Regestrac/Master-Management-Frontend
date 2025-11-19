@@ -323,7 +323,7 @@ const GoalList = () => {
                       {goal.sub_task_count && goal.sub_task_count > 0 && (
                         <button
                           type='button'
-                          className='flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors'
+                          className={clsx('flex items-center gap-1 text-xs text-gray-500 transition-colors', darkMode ? 'hover:text-gray-300' : 'hover:text-gray-700')}
                           onClick={async (e) => {
                             e.stopPropagation();
                             await toggleSubtasks(goal);
@@ -397,8 +397,8 @@ const GoalList = () => {
                             key={subtask.id}
                             className={clsx(
                               'flex items-center gap-2 text-sm p-2 rounded',
-                              'hover:bg-gray-100 dark:hover:bg-gray-700',
-                              subtask.completed_at && 'text-gray-400 dark:text-gray-500',
+                              darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-700',
+                              subtask.completed_at && (darkMode ? 'text-gray-500' : 'text-gray-400'),
                             )}
                             onClick={(e) => {
                               e.stopPropagation();
@@ -408,11 +408,7 @@ const GoalList = () => {
                             <div
                               className={clsx(
                                 'w-2 h-2 rounded-full',
-                                subtask.completed_at
-                                  ? 'bg-green-500'
-                                  : subtask.status === 'in_progress'
-                                    ? 'bg-yellow-500'
-                                    : 'bg-gray-400',
+                                subtask.completed_at ? 'bg-green-500' : subtask.status === 'in_progress' ? 'bg-yellow-500' : 'bg-gray-400',
                               )}
                             />
                             <span className={clsx('truncate', subtask.completed_at && 'line-through')}>

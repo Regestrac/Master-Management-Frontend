@@ -77,7 +77,7 @@ const ProfileInfoCard = () => {
           </button>
         </div>
         <h4 className='text-xl font-bold mb-1'>{userName}</h4>
-        <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>
+        <p className={`text-sm mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
           {userEmail}
         </p>
         <ActiveStatus />

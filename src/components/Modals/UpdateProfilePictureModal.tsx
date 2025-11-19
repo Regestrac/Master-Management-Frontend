@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import { Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import clsx from 'clsx';
 
 import { useProfileStore } from 'stores/profileStore';
 import { useSettingsStore } from 'stores/settingsStore';
@@ -102,8 +103,8 @@ const UpdateProfilePictureModal = () => {
 
         {previewUrl && (
           <div className='mb-4'>
-            <p className={`text-sm mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Preview:</p>
-            <div className='w-full aspect-square rounded-lg border border-gray-200 dark:border-gray-600 overflow-hidden'>
+            <p className={clsx('text-sm mb-2', darkMode ? 'text-gray-300' : 'text-gray-700')}>Preview:</p>
+            <div className={clsx('w-full aspect-square rounded-lg border overflow-hidden', darkMode ? 'border-gray-600' : 'border-gray-200')}>
               <div className='w-full h-full'>
                 <img
                   src={previewUrl}

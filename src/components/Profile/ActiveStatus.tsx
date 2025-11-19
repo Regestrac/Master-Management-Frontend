@@ -17,6 +17,7 @@ const ActiveStatus = () => {
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
+
   return (
     <div className='flex items-center justify-center space-x-2 mb-4'>
       {isOnline ? (
