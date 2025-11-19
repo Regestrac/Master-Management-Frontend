@@ -25,9 +25,9 @@ const Achievements = () => {
                   {achievement.description}
                 </p>
               </div>
-              <span className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+              <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                 {achievement.date}
-              </span>
+              </p>
             </div>
           </div>
         ))}

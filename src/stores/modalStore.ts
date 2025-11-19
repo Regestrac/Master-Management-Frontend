@@ -23,6 +23,7 @@ const useModalStore = create<ModalStoreType>((set) => ({
     manageMembersModal: emptyModal,
     leaveWorkspaceModal: emptyModal,
     signOutModal: emptyModal,
+    updateProfilePictureModal: emptyModal,
   },
 
   updateVisibility: ({ modalType, isVisible, extraProps }) => set((state) => ({

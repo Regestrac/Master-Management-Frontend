@@ -142,9 +142,7 @@ const AppearanceSettings = () => {
               onClick={handleSetLight}
               className={clsx(
                 'p-4 rounded-lg border-2 transition-all',
-                themeMode === 'light'
-                  ? 'border-primary-500 bg-primary-50 hover:border-primary-500'
-                  : 'border-gray-300 hover:border-primary-500',
+                themeMode === 'light' ? 'border-primary-500 bg-primary-50 hover:border-primary-500' : 'border-gray-300 hover:border-primary-500',
                 darkMode && themeMode !== 'light' && 'bg-primary-900/20 border-gray-600',
               )}
             >
@@ -157,10 +155,8 @@ const AppearanceSettings = () => {
               onClick={handleSetDark}
               className={clsx(
                 'p-4 rounded-lg border-2 transition-all',
-                themeMode === 'dark'
-                  ? 'border-primary-500 hover:border-primary-500'
-                  : 'border-gray-300 hover:border-primary-500',
-                darkMode && themeMode === 'dark' ? 'bg-primary-900/20' : 'bg-primary-50',
+                themeMode === 'dark' ? 'border-primary-500 hover:border-primary-500' : 'border-gray-300 hover:border-primary-500',
+                darkMode ? 'bg-primary-900/20' : 'bg-primary-50',
                 darkMode && themeMode !== 'dark' && 'border-gray-600',
               )}
             >
@@ -173,10 +169,8 @@ const AppearanceSettings = () => {
               onClick={handleSetAuto}
               className={clsx(
                 'p-4 rounded-lg border-2 transition-all',
-                themeMode === 'auto'
-                  ? 'border-primary-500 hover:border-primary-500'
-                  : 'border-gray-300 hover:border-primary-500',
-                darkMode && themeMode === 'auto' ? 'bg-primary-900/20' : 'bg-primary-50',
+                themeMode === 'auto' ? 'border-primary-500 hover:border-primary-500' : 'border-gray-300 hover:border-primary-500',
+                darkMode ? 'bg-primary-900/20' : 'bg-primary-50',
                 darkMode && themeMode !== 'auto' && 'border-gray-600',
               )}
             >
@@ -197,12 +191,8 @@ const AppearanceSettings = () => {
                 key={index}
                 className={clsx(
                   'w-12 h-12 rounded-lg border-2 transition-all',
-                  colorOption.name === accentColor
-                    ? 'scale-110'
-                    : 'hover:scale-105',
-                  colorOption.name === accentColor
-                    ? darkMode ? 'border-white' : 'border-gray-900'
-                    : darkMode ? 'border-gray-600' : 'border-gray-300',
+                  colorOption.name === accentColor ? 'scale-110' : 'hover:scale-105',
+                  colorOption.name === accentColor ? darkMode ? 'border-white' : 'border-gray-900' : darkMode ? 'border-gray-600' : 'border-gray-300',
                 )}
                 style={{ backgroundColor: colorOption.color }}
                 title={colorOption.name}

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -54,18 +54,20 @@ const Profile = () => {
 
   const shouldResetForm = useRef(true);
 
+  const defaultValues = useMemo(() => ({
+    first_name: firstName || '',
+    last_name: lastName || '',
+    email: email || '',
+    jobTitle: userData.job_title || '',
+    company: userData.company || '',
+    timeZone: TIME_ZONE_OPTIONS.find((option) => option.value === userData.time_zone),
+    language: LANGUAGE_OPTIONS.find((option) => option.value === userData.language),
+    bio: userData.bio || '',
+  }), [firstName, lastName, email, userData]);
+
   const methods = useForm<ProfileFormType>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      first_name: firstName || '',
-      last_name: lastName || '',
-      email: email || '',
-      jobTitle: userData.job_title || '',
-      company: userData.company || '',
-      timeZone: TIME_ZONE_OPTIONS.find((option) => option.value === userData.time_zone),
-      language: LANGUAGE_OPTIONS.find((option) => option.value === userData.language),
-      bio: userData.bio || '',
-    },
+    defaultValues: defaultValues,
   });
 
   const { handleSubmit, reset, formState: { isDirty } } = methods;
@@ -82,16 +84,7 @@ const Profile = () => {
       bio: formData.bio,
     };
     updateProfile(payload).then((res) => {
-      updateProfileInfo({
-        first_name: formData.first_name,
-        last_name: formData.last_name,
-        email: formData.email,
-        job_title: formData.jobTitle,
-        company: formData.company,
-        time_zone: formData.timeZone?.value,
-        language: formData.language?.value,
-        bio: formData.bio,
-      });
+      updateProfileInfo(payload);
       toast.success(res.message || 'Profile updated successfully');
     }).catch((err) => {
       toast.error(err.error || 'Failed to update profile. Please try again.');
@@ -100,26 +93,14 @@ const Profile = () => {
 
   useEffect(() => {
     if (shouldResetForm.current && email && firstName && lastName) {
-      reset({
-        first_name: firstName || '',
-        last_name: lastName || '',
-        email: email || '',
-        jobTitle: userData.job_title || '',
-        company: userData.company || '',
-        timeZone: TIME_ZONE_OPTIONS.find((option) => option.value === userData.time_zone),
-        language: LANGUAGE_OPTIONS.find((option) => option.value === userData.language),
-        bio: userData.bio || '',
-      });
+      reset(defaultValues);
       shouldResetForm.current = false;
     }
-  }, [email, firstName, lastName, reset, userData.bio, userData.company, userData.job_title, userData.language, userData.time_zone]);
+  }, [email, firstName, lastName, reset, defaultValues]);
 
   return (
     <div>
-      <ProfileHeader
-        onSave={handleSubmit(handleSaveProfile)}
-        hasChanges={isDirty}
-      />
+      <ProfileHeader onSave={handleSubmit(handleSaveProfile)} hasChanges={isDirty} />
 
       <div className='mt-24 max-sm:mt-38'>
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>

@@ -50,7 +50,7 @@ const Tags = () => {
       return;
     }
     const updatedTags = [...tags, newTag.trim()];
-    updateTaskDetails({ ...taskDetails, tags: updatedTags });
+    updateTaskDetails({ tags: updatedTags });
     saveTags(updatedTags, 'add');
     setInput('');
     focusInput();
@@ -59,7 +59,7 @@ const Tags = () => {
 
   const removeTag = (tagToRemove: string) => {
     const updated = tags?.filter((t) => t !== tagToRemove) || [];
-    updateTaskDetails({ ...taskDetails, tags: updated });
+    updateTaskDetails({ tags: updated });
     saveTags(updated, 'remove');
   };
 

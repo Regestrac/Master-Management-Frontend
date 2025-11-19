@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 
 import dayjs from 'dayjs';
-import { Archive, ArrowLeft, Check, CheckSquare, Copy, Eraser, Moon, MoreVertical, MoveRight, Star, Sun, Trash2 } from 'lucide-react';
+import { Archive, ArrowLeft, Calendar, Check, CheckSquare, Copy, Eraser, Moon, MoreVertical, MoveRight, Star, Sun, Trash2 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FormProvider, useForm } from 'react-hook-form';
+import clsx from 'clsx';
 
 import { capitalize, getPriorityColor, getStatusColor } from 'helpers/utils';
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from 'helpers/configs';
@@ -68,8 +69,10 @@ const defaultCategories = [
 
 const TaskHeader = () => {
   const [editingField, setEditingField] = useState<any>(null);
-  const [tempValues, setTempValues] = useState({} as Record<string, string>);
+  const [tempValues, setTempValues] = useState({} as Record<string, string | undefined>);
   const [categories, setCategories] = useState<string[]>(defaultCategories);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const datePickerRef = useRef<HTMLDivElement>(null);
   const targetValueRef = useRef<HTMLDivElement>(null);
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
@@ -95,26 +98,29 @@ const TaskHeader = () => {
     navigateBack(navigate, searchParams, '/dashboard');
   };
 
-  const handleUpdateTask = (id: string, payload: object) => {
+  const handleUpdateTask = useCallback((id: string, payload: object) => {
     updateTask(id, payload).then((res) => {
       toast.success(res?.message || 'Updated successfully');
+      if (res?.progress !== undefined) {
+        updateCurrentTaskDetails({ progress: res?.progress });
+      }
     }).catch((err) => {
       toast.error(err?.error || 'Failed to update task');
     });
-  };
+  }, [updateCurrentTaskDetails]);
 
   const handleDueDateChange = (date: Date | null) => {
     const formattedDate = date ? dayjs(date).format('YYYY-MM-DD') : '';
     handleUpdateTask(taskDetails?.id?.toString(), { due_date: formattedDate || null });
     updateTaskState({ id: taskDetails?.id, due_date: formattedDate || '' });
-    updateCurrentTaskDetails({ ...taskDetails, due_date: formattedDate || '' });
+    updateCurrentTaskDetails({ due_date: formattedDate || '' });
   };
 
   const handlePriorityChange = (value: string | null) => {
     if (taskDetails?.priority !== value) {
       handleUpdateTask(taskDetails?.id?.toString(), { priority: value || '' });
       updateTaskState({ id: taskDetails?.id, priority: value as TaskType['priority'] });
-      updateCurrentTaskDetails({ ...taskDetails, priority: value as TaskType['priority'] });
+      updateCurrentTaskDetails({ priority: value as TaskType['priority'] });
     }
   };
 
@@ -122,7 +128,7 @@ const TaskHeader = () => {
     if (taskDetails?.status !== value) {
       handleUpdateTask(taskDetails?.id?.toString(), { status: value });
       updateTaskState({ id: taskDetails?.id, status: value as TaskType['status'] });
-      updateCurrentTaskDetails({ ...taskDetails, status: value as TaskType['status'] });
+      updateCurrentTaskDetails({ status: value as TaskType['status'] });
     }
   };
 
@@ -130,7 +136,7 @@ const TaskHeader = () => {
     if (taskDetails?.target_type !== value) {
       handleUpdateTask(taskDetails?.id?.toString(), { target_type: value });
       updateTaskState({ id: taskDetails?.id, target_type: value as TargetType });
-      updateCurrentTaskDetails({ ...taskDetails, target_type: value as TargetType });
+      updateCurrentTaskDetails({ target_type: value as TargetType });
     }
   };
 
@@ -138,62 +144,53 @@ const TaskHeader = () => {
     if (taskDetails?.target_frequency !== value) {
       handleUpdateTask(taskDetails?.id?.toString(), { target_frequency: value });
       updateTaskState({ id: taskDetails?.id, target_frequency: value as TargetFrequency });
-      updateCurrentTaskDetails({ ...taskDetails, target_frequency: value as TargetFrequency });
+      updateCurrentTaskDetails({ target_frequency: value as TargetFrequency });
     }
   };
 
-  const startEditing = (field: any, currentValue: any) => {
+  const startEditing = (field: string, currentValue: number) => {
     setEditingField(field);
-    setTempValues((prev) => ({ ...prev, [field]: currentValue }));
+    setTempValues((prev) => ({ ...prev, [field]: currentValue.toString() }));
   };
 
-  const saveField = useCallback((field: any) => {
+  const saveField = useCallback((field: string) => {
     const value = tempValues[field];
-    let shouldSave = false;
 
     if (field === 'targetValue') {
       const newValue = value ? Number(value) : null;
       if (newValue !== taskDetails.target_value) {
         handleUpdateTask(taskDetails?.id?.toString(), { target_value: newValue });
         updateTaskState({ id: taskDetails?.id, target_value: newValue });
-        updateCurrentTaskDetails({ ...taskDetails, target_value: newValue });
-        shouldSave = true;
+        updateCurrentTaskDetails({ target_value: newValue });
       }
     } else if (field === 'dueDate') {
       if (value !== taskDetails.due_date) {
         handleUpdateTask(taskDetails?.id?.toString(), { due_date: value });
         updateTaskState({ id: taskDetails?.id, due_date: value });
-        updateCurrentTaskDetails({ ...taskDetails, due_date: value });
-        shouldSave = true;
+        updateCurrentTaskDetails({ due_date: value });
       }
     } else if (field === 'title') {
       const newTitle = value?.trim();
       if (newTitle && newTitle !== taskDetails.title) {
         handleUpdateTask(taskDetails?.id?.toString(), { title: newTitle });
         updateTaskState({ id: taskDetails?.id, title: newTitle });
-        updateCurrentTaskDetails({ ...taskDetails, title: newTitle });
-        shouldSave = true;
+        updateCurrentTaskDetails({ title: newTitle });
       }
     }
 
     setEditingField(null);
     setTempValues((prev) => ({ ...prev, [field]: undefined }));
-
-    if (shouldSave) {
-      toast.success('Changes saved');
-    } else {
-      toast.info('No changes to save');
-    }
-  }, [taskDetails, tempValues, updateCurrentTaskDetails, updateTaskState]);
+  }, [handleUpdateTask, taskDetails.due_date, taskDetails?.id, taskDetails.target_value, taskDetails.title, tempValues, updateCurrentTaskDetails, updateTaskState]);
 
   const cancelEditing = useCallback(() => {
     setEditingField(null);
     setTempValues({});
   }, []);
 
-  // Handle click outside to close the popup
+  // Handle click outside to close the popup and date picker
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // Handle target value editor
       if (targetValueRef.current && !targetValueRef.current.contains(event.target as Node)) {
         if (editingField === 'targetValue') {
           const value = tempValues.targetValue;
@@ -208,6 +205,11 @@ const TaskHeader = () => {
             cancelEditing();
           }
         }
+      }
+
+      // Handle date picker
+      if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
+        setShowDatePicker(false);
       }
     };
 
@@ -241,7 +243,7 @@ const TaskHeader = () => {
   const handleTitleSave = async (newTitle: string) => {
     await updateTask(taskDetails?.id?.toString(), { title: newTitle });
     updateTaskState({ id: taskDetails?.id, title: newTitle });
-    updateCurrentTaskDetails({ ...taskDetails, title: newTitle });
+    updateCurrentTaskDetails({ title: newTitle });
     toast.success('Task title updated successfully');
   };
 
@@ -270,7 +272,7 @@ const TaskHeader = () => {
     if (taskDetails?.category !== category) {
       handleUpdateTask(taskDetails?.id?.toString(), { category: category || '' });
       updateTaskState({ id: taskDetails?.id, category: category || '' });
-      updateCurrentTaskDetails({ ...taskDetails, category: category || '' });
+      updateCurrentTaskDetails({ category: category || '' });
     }
   };
 
@@ -338,7 +340,7 @@ const TaskHeader = () => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            startEditing('targetValue', taskDetails.target_value || '');
+                            startEditing('targetValue', taskDetails.target_value || 0);
                           }}
                           className={`px-2 py-1 text-xs rounded-md transition-colors whitespace-nowrap ${darkMode ? 'hover:bg-gray-700/50' : 'hover:bg-gray-100'} ${taskDetails?.target_value ? (darkMode ? 'text-primary-300' : 'text-primary-700') : (darkMode ? 'text-gray-400' : 'text-gray-500')}`}
                         >
@@ -421,16 +423,59 @@ const TaskHeader = () => {
                   </div>
                 )}
 
-                {/* Due Date with DatePicker */}
+                {/* Due Date with Pill */}
                 <div className='flex items-center gap-2'>
-                  <span className={`text-sm whitespace-nowrap ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Due:</span>
-                  <div className='min-w-[120px] sm:min-w-[140px]'>
-                    <DatePicker
-                      name='due_date'
-                      placeholder='Set due date'
-                      className='text-xs'
-                      onChange={handleDueDateChange}
-                    />
+                  <div className='relative' ref={datePickerRef}>
+                    <button
+                      type='button'
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowDatePicker(!showDatePicker);
+                      }}
+                      className={clsx(
+                        'flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-colors',
+                        darkMode ? 'bg-blue-900/30 text-blue-300 hover:bg-blue-900/50 border border-blue-800/50' : 'text-gray-500 hover:bg-gray-100 border border-dashed border-gray-300',
+                        darkMode && taskDetails?.due_date ? 'bg-blue-900/30 text-blue-300 hover:bg-blue-900/50 border border-blue-800/50' : null,
+                        !darkMode && taskDetails?.due_date ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200' : null,
+                      )}
+                    >
+                      <Calendar className='w-3.5 h-3.5' />
+                      <span>{taskDetails?.due_date ? dayjs(taskDetails.due_date).format('MMM D, YYYY') : 'Set due date'}</span>
+                      {taskDetails?.due_date && (
+                        <span
+                          role='button'
+                          tabIndex={0}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDueDateChange(null);
+                            setShowDatePicker(false);
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              handleDueDateChange(null);
+                              setShowDatePicker(false);
+                            }
+                          }}
+                          className={`ml-1 p-0.5 rounded-full cursor-pointer ${darkMode ? 'hover:bg-blue-800/50' : 'hover:bg-blue-100'}`}
+                          aria-label='Clear due date'
+                        >
+                          <svg className='w-3 h-3' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M6 18L18 6M6 6l12 12' />
+                          </svg>
+                        </span>
+                      )}
+                    </button>
+                    {showDatePicker && (
+                      <div className='absolute z-50 min-w-[200px] w-fit mt-1'>
+                        <DatePicker
+                          name='due_date'
+                          placeholder='Set due date'
+                          className='text-xs'
+                          onChange={handleDueDateChange}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
 

@@ -65,7 +65,7 @@ const GenerateChecklistButton = ({ generatedChecklist, setGeneratedChecklist }: 
     saveChecklists(payload).then((res) => {
       toast.success(res?.message || 'Checklist saved');
       setGeneratedChecklist([]);
-      updateTaskDetails({ ...taskDetails, checklists: [...taskDetails.checklists, ...res.data] });
+      updateTaskDetails({ checklists: [...taskDetails.checklists, ...res.data] });
       setShowConfirmation(false);
     }).catch((err) => {
       toast.error(err?.error || 'Failed to save checklist');
