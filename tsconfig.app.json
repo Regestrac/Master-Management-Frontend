@@ -27,50 +27,24 @@
     /* Imports */
     "baseUrl": "src",
     "paths": {
-      "components/*": [
-        "components/*"
-      ],
-      "pages/*": [
-        "pages/*"
-      ],
-      "utils/*": [
-        "utils/*"
-      ],
-      "styles/*": [
-        "styles/*"
-      ],
-      "context/*": [
-        "context/*"
-      ],
-      "icons/*": [
-        "icons/*"
-      ],
-      "stores/*": [
-        "stores/*"
-      ],
-      "services/*": [
-        "services/*"
-      ],
-      "helpers/*": [
-        "helpers/*"
-      ],
-      "hooks/*": [
-        "hooks/*"
-      ],
-      "routes/*": [
-        "routes/*"
-      ],
-      "assets/*": [
-        "assets/*"
-      ],
-      "src/*": [
-        "*"
-      ],
+      "components/*": ["components/*"],
+      "pages/*": ["pages/*"],
+      "utils/*": ["utils/*"],
+      "styles/*": ["styles/*"],
+      "context/*": ["context/*"],
+      "icons/*": ["icons/*"],
+      "stores/*": ["stores/*"],
+      "services/*": ["services/*"],
+      "helpers/*": ["helpers/*"],
+      "hooks/*": ["hooks/*"],
+      "routes/*": ["routes/*"],
+      "assets/*": ["assets/*"],
+      "src/*": ["*"],
     }
   },
   "include": [
     "src",
     "vite-env.d.ts"
   ],
-  // "exclude": ["src/components/StyleGuide/**/*"]
+  "exclude": ["src/components/StyleGuide/**/*"]
 }
