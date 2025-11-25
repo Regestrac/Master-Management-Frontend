@@ -15,6 +15,7 @@ import { useSettingsStore } from 'stores/settingsStore';
 
 import { getWorkspaceGoals } from 'services/workspace';
 import { updateGoal, createGoal } from 'services/goals';
+import { getSubTasks } from 'services/tasks';
 
 import MemberAvatar from 'components/Workspace/Details/MemberAvatar';
 import Dropdown from 'components/Shared/Dropdown';
@@ -132,21 +133,8 @@ const GoalList = () => {
   }, []);
 
   // Fetch subtasks for a specific goal
-  const fetchSubtasks = useCallback(async (goalId: number) => {
-    // In a real implementation, you would fetch subtasks from your API here
-    // For example: const response = await getGoalSubtasks(goalId);
-    // For now, we'll simulate an API call with a timeout
-    return new Promise<Array<{ id: number; title: string; status: string; completed_at?: string }>>((resolve) => {
-      setTimeout(() => {
-        // Simulated subtasks - replace with actual API call
-        const mockSubtasks = [
-          { id: goalId * 100 + 1, title: 'Subtask 1', status: 'todo' },
-          { id: goalId * 100 + 2, title: 'Subtask 2', status: 'in_progress' },
-          { id: goalId * 100 + 3, title: 'Subtask 3', status: 'completed', completed_at: new Date().toISOString() },
-        ];
-        resolve(mockSubtasks);
-      }, 500); // Simulate network delay
-    });
+  const fetchSubtasks = useCallback((goalId: number) => {
+    return getSubTasks(goalId.toString()).then((res) => res?.data);
   }, []);
 
   // Toggle subtask visibility and fetch subtasks if needed
@@ -331,9 +319,9 @@ const GoalList = () => {
                           disabled={goal.isLoadingSubtasks}
                         >
                           <span>
-                            {goal.subtasks?.length || 0}
+                            {goal?.sub_task_count || 0}
                             {' '}
-                            subtasks
+                            {goal?.sub_task_count === 1 ? 'subtask' : 'subtasks'}
                           </span>
                           {goal.isLoadingSubtasks ? (
                             <Loader2 className='w-3 h-3 animate-spin' />
