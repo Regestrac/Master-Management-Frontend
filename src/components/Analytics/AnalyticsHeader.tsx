@@ -5,6 +5,7 @@ import { Menu, X, Sun, Moon } from 'lucide-react';
 import dayjs from 'dayjs';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import clsx from 'clsx';
 
 import { useNavbarStore } from 'stores/navbarStore';
 import { useSettingsStore } from 'stores/settingsStore';
@@ -131,7 +132,11 @@ const AnalyticsHeader = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className={`sm:ml-70 fixed top-0 left-0 right-0 z-40 ${darkMode ? 'bg-gray-900' : 'bg-white'} border-b ${darkMode ? 'border-gray-800' : 'border-gray-200'} px-4 lg:px-6 py-4`}>
+      <div className={clsx(
+        'sm:ml-70 fixed top-0 left-0 right-0 z-40 border-b px-4 lg:px-6 py-4',
+        darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200',
+      )}
+      >
         <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-4'>
           <div className='w-full md:w-auto flex items-center justify-between'>
             <div>
