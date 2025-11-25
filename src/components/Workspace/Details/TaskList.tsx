@@ -14,7 +14,7 @@ import useWorkspaceStore from 'stores/workspaceStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
 import { getWorkspaceTasks } from 'services/workspace';
-import { createTask, updateTask } from 'services/tasks';
+import { createTask, getSubTasks, updateTask } from 'services/tasks';
 
 import MemberAvatar from 'components/Workspace/Details/MemberAvatar';
 import CreateForm from 'components/Workspace/Details/CreateForm';
@@ -48,32 +48,33 @@ const TaskList = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
-
   const members = useWorkspaceStore((state) => state.members);
 
-  // const _formatDueDate = useCallback((dateString: string) => {
-  //   const date = new Date(dateString);
-  //   if (Number.isNaN(date.getTime())) {
-  //     return dateString;
-  //   }
-  //   return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-  // }, []);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { id } = useParams();
+  const [searchParams] = useSearchParams();
+
+  const shouldFetchTasksRef = useRef(true);
+  const previousSearchKey = useRef('');
 
   // Fetch subtasks for a specific task
-  const fetchSubtasks = useCallback(async (taskId: number) => {
-    // In a real implementation, you would fetch subtasks from your API here
-    // For example: const subtasks = await getTaskSubtasks(taskId);
-    // For now, we'll simulate an API call with a timeout
-    return new Promise<Array<{ id: number; title: string; status: string; completed_at?: string }>>((resolve) => {
-      setTimeout(() => {
-        // Simulated subtasks - replace with actual API call
-        const mockSubtasks = [
-          { id: taskId * 100 + 1, title: 'Subtask 1', status: 'todo' },
-          { id: taskId * 100 + 2, title: 'Subtask 2', status: 'in_progress' },
-          { id: taskId * 100 + 3, title: 'Subtask 3', status: 'completed', completed_at: new Date().toISOString() },
-        ];
-        resolve(mockSubtasks);
-      }, 500); // Simulate network delay
+  const fetchSubtasks = useCallback((taskId: number) => {
+    getSubTasks(taskId?.toString()).then((res) => {
+      setTasks((prevTasks) =>
+        prevTasks.map((t) =>
+          t.id === taskId
+            ? {
+              ...t,
+              subtasks: res?.data,
+              isLoadingSubtasks: false,
+              showSubtasks: true,
+            }
+            : t,
+        ),
+      );
+    }).catch((err) => {
+      toast.error(err?.message || 'Failed to fetch subtasks');
     });
   }, []);
 
@@ -106,21 +107,7 @@ const TaskList = () => {
         );
 
         // Fetch subtasks
-        const subtasks = await fetchSubtasks(taskId);
-
-        // Update task with fetched subtasks
-        setTasks((prevTasks) =>
-          prevTasks.map((t) =>
-            t.id === taskId
-              ? {
-                ...t,
-                subtasks,
-                isLoadingSubtasks: false,
-                showSubtasks: true,
-              }
-              : t,
-          ),
-        );
+        fetchSubtasks(taskId);
       } catch {
         toast.error('Failed to load subtasks.');
         // Reset loading state on error
@@ -143,14 +130,6 @@ const TaskList = () => {
       );
     }
   }, [fetchSubtasks]);
-
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const { id } = useParams();
-  const [searchParams] = useSearchParams();
-
-  const shouldFetchTasksRef = useRef(true);
-  const previousSearchKey = useRef('');
 
   // Member options for assignees dropdown
   const memberOptions = useMemo(() => members.map((member) => ({
