@@ -20,7 +20,7 @@ type StickyNotesType = {
 
 type CommentsType = {
   id: number;
-  user: string;
+  user_name: string;
   content: string;
   timestamp: string;
   edited?: boolean;
@@ -61,6 +61,9 @@ type TasksStateType = {
   updateStartedAt: (_time: string) => void;
   updateRecentTaskData: (_task: Partial<TaskType> & { id: number; }) => void;
   clearRecentTaskData: () => void;
+  addComment: (_comment: CommentsType) => void;
+  updateComment: (_commentId: number, _updates: Partial<CommentsType>) => void;
+  deleteComment: (_commentId: number) => void;
 };
 
 export const useTaskStore = create<TasksStateType>()((set) => ({
@@ -94,4 +97,24 @@ export const useTaskStore = create<TasksStateType>()((set) => ({
   updateStartedAt: (value) => set((state) => ({ currentTaskDetails: { ...state.currentTaskDetails, startedAt: value } })),
   updateRecentTaskData: (updatedTask) => set(() => ({ recentTaskData: updatedTask })),
   clearRecentTaskData: () => set(() => ({ recentTaskData: {} })),
+  addComment: (comment) => set((state) => ({
+    currentTaskDetails: {
+      ...state.currentTaskDetails,
+      comments: [...(state.currentTaskDetails.comments || []), comment],
+    },
+  })),
+  updateComment: (commentId, updates) => set((state) => ({
+    currentTaskDetails: {
+      ...state.currentTaskDetails,
+      comments: (state.currentTaskDetails.comments || []).map((c) =>
+        c.id === commentId ? { ...c, ...updates } : c,
+      ),
+    },
+  })),
+  deleteComment: (commentId) => set((state) => ({
+    currentTaskDetails: {
+      ...state.currentTaskDetails,
+      comments: (state.currentTaskDetails.comments || []).filter((c) => c.id !== commentId),
+    },
+  })),
 }));
