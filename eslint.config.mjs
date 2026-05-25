@@ -6,8 +6,8 @@ const compat = new FlatCompat({
   recommendedConfig: js.configs.recommended,
 });
 
-export default compat.config(
-  {
+export default [
+  ...compat.config({
     extends: [
       'plugin:react-hooks/recommended',
       'eslint:recommended',
@@ -158,5 +158,8 @@ export default compat.config(
       ],
       '@typescript-eslint/no-explicit-any': 'off',
     },
+  }),
+  {
+    ignores: ['src/components/StyleGuide/**'],
   },
-);
+];

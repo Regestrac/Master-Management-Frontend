@@ -15,7 +15,7 @@ self.addEventListener('install', (event) => {
       return cache.addAll(FILES_TO_CACHE);
     }).then(() => {
       return self.skipWaiting();
-    })
+    }),
   );
 });
 
@@ -28,11 +28,12 @@ self.addEventListener('activate', (event) => {
           if (cacheName !== CACHE_NAME) {
             return caches.delete(cacheName);
           }
-        })
+          return null;
+        }),
       );
     }).then(() => {
       return self.clients.claim();
-    })
+    }),
   );
 });
 
@@ -62,7 +63,7 @@ self.addEventListener('fetch', (event) => {
         .catch(() => {
           // Fallback to cache if network fails
           return caches.match(request).then((cachedResponse) => cachedResponse || caches.match('/'));
-        })
+        }),
     );
     return;
   }
@@ -95,6 +96,6 @@ self.addEventListener('fetch', (event) => {
             // Return cached version if available
             return caches.match(request);
           });
-      })
+      }),
   );
 });
