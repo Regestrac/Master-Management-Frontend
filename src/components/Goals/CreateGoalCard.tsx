@@ -81,10 +81,11 @@ const CreateGoalCard = ({ handleCancel, view }: CreateGoalCardPropsType) => {
       priority: formData?.priority,
       time_spend: 0,
       type: 'goal',
-      target_value: formData?.target_value,
+      target_value: Number(formData?.target_value),
       target_type: formData?.target_type,
       target_frequency: formData?.target_frequency,
       due_date: formData?.due_date ? formData.due_date.toISOString().split('T')[0] : null,
+      streak: 0,
     };
     createGoal(payload)
       .then((res) => {

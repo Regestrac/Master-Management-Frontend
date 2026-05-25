@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
 
-import { parseMarkdownJson } from 'helpers/utils';
+import { parseJsonArray } from 'helpers/utils';
 import { AI_BUTTON_STYLE } from 'helpers/configs';
 
 import { useTaskStore } from 'stores/taskStore';
@@ -49,7 +49,7 @@ const GenerateChecklistButton = ({ generatedChecklist, setGeneratedChecklist }: 
     if (!id) { return; }
     setIsLoading(true);
     generateChecklist(id, payload).then((res) => {
-      setGeneratedChecklist(parseMarkdownJson(res.data).checklists);
+      setGeneratedChecklist(parseJsonArray(res?.data));
       setShowConfirmation(true);
       toast.success(res?.message || 'Checklist generated');
     }).catch((err) => {

@@ -112,7 +112,7 @@ const Tags = () => {
       {/* Body */}
       <div className='p-6 space-y-4 min-h-56'>
         {/* --- Empty state ---------------------------------------------------- */}
-        {tags?.length === 0 && generatedTags.length === 0 && !adding && (
+        {tags?.length === 0 && generatedTags?.length === 0 && !adding && (
           <div className='flex flex-col items-center gap-4 pt-8 pb-2'>
             <Tag className='w-8 h-8 opacity-50' />
             <p className={clsx('text-sm', darkMode ? 'text-gray-400' : 'text-gray-500')}>No tags yet. Add your first tag to get started.</p>

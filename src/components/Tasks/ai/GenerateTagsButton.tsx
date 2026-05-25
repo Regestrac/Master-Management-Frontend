@@ -45,9 +45,9 @@ const GenerateTagsButton = ({ generatedTags, setGeneratedTags }: GenerateTagsBut
     setIsLoading(true);
     generateTags(id, payload).then((res) => {
       try {
-        setGeneratedTags(JSON.parse(res.tags).tags);
+        setGeneratedTags(JSON.parse(res.tags) || []);
       } catch {
-        setGeneratedTags(parseMarkdownJson(res.tags).tags);
+        setGeneratedTags(parseMarkdownJson(res.tags) || []);
       }
       setShowConfirmation(true);
       toast.success(res?.message || 'Tags generated');
