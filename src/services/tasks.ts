@@ -66,3 +66,19 @@ export const createCategory = (categoryName: string) => postHandler({
   path: 'tasks/categories',
   body: JSON.stringify({ name: categoryName }),
 });
+
+export const addComment = (taskId: string, data: object) => postHandler({
+  path: `tasks/${taskId}/comments`,
+  body: JSON.stringify(data),
+});
+
+export const updateComment = (taskId: string, commentId: number, data: object) => postHandler({
+  path: `tasks/${taskId}/comments/${commentId}`,
+  method: 'PATCH',
+  body: JSON.stringify(data),
+});
+
+export const deleteComment = (taskId: string, commentId: number) => postHandler({
+  path: `tasks/${taskId}/comments/${commentId}`,
+  method: 'DELETE',
+});
