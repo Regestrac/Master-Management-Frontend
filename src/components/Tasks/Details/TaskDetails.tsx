@@ -1,5 +1,4 @@
-import { useState } from 'react';
-
+import { useSearchParams } from 'react-router-dom';
 import {
   Edit3,
   MessageSquare,
@@ -46,7 +45,14 @@ const moreOptions = [
 ];
 
 const TaskDetails = () => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'overview';
+
+  const handleTabChange = (tabId: string) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('tab', tabId);
+    setSearchParams(newParams);
+  };
 
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
   const showNavbar = useNavbarStore((state) => state.showNavbar);
@@ -119,7 +125,7 @@ const TaskDetails = () => {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => handleTabChange(tab.id)}
                     className={`flex items-center space-x-2 px-3 py-2 border-b-2 transition-colors whitespace-nowrap ${activeTab === tab.id
                       ? 'border-primary-500 text-primary-600'
                       : `border-transparent ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-900'}`}`}
