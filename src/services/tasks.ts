@@ -67,6 +67,11 @@ export const createCategory = (categoryName: string) => postHandler({
   body: JSON.stringify({ name: categoryName }),
 });
 
+export const getComments = (taskId: string, signal?: AbortSignal) => getHandler({
+  path: `tasks/${taskId}/comments`,
+  signal,
+});
+
 export const addComment = (taskId: string, data: object) => postHandler({
   path: `tasks/${taskId}/comments`,
   body: JSON.stringify(data),

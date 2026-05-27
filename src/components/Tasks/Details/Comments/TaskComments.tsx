@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
+import { useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { MessageSquare, Pencil, Trash2, Send } from 'lucide-react';
+import { Loader2, MessageSquare, Pencil, Trash2, Send } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 import { useTaskStore } from 'stores/taskStore';
 import { useProfileStore } from 'stores/profileStore';
 import { useSettingsStore } from 'stores/settingsStore';
 
-import { addComment as addCommentApi, updateComment as updateCommentApi, deleteComment as deleteCommentApi } from 'services/tasks';
+import { addComment as addCommentApi, getComments as getCommentsApi, updateComment as updateCommentApi, deleteComment as deleteCommentApi } from 'services/tasks';
 
 const AVATAR_COLORS = [
   '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#3B82F6', '#EF4444', '#6366F1', '#14B8A6',
@@ -25,16 +26,34 @@ const getAvatarColor = (name: string) => {
 
 const TaskComments = () => {
   const darkMode = useSettingsStore((state) => state.settings.theme) === 'dark';
-  const taskDetails = useTaskStore((state) => state.currentTaskDetails);
+  const comments = useTaskStore((state) => state.currentTaskDetails.comments);
   const addCommentToStore = useTaskStore((state) => state.addComment);
   const updateCommentInStore = useTaskStore((state) => state.updateComment);
   const deleteCommentFromStore = useTaskStore((state) => state.deleteComment);
+  const updateCurrentTaskDetails = useTaskStore((state) => state.updateCurrentTaskDetails);
   const profile = useProfileStore((state) => state.data);
 
+  const { id } = useParams();
+  const prevIdRef = useRef('');
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState('');
+
+  useEffect(() => {
+    if (id && prevIdRef.current !== id) {
+      setIsLoading(true);
+      getCommentsApi(id).then((res) => {
+        updateCurrentTaskDetails({ comments: res?.comments || [] });
+      }).catch((err) => {
+        toast.error(err?.error || 'Failed to load comments.');
+      }).finally(() => {
+        setIsLoading(false);
+      });
+      prevIdRef.current = id;
+    }
+  }, [id, updateCurrentTaskDetails]);
 
   const currentUserName = profile.first_name
     ? `${profile.first_name} ${profile.last_name || ''}`.trim()
@@ -50,7 +69,7 @@ const TaskComments = () => {
 
     setIsSubmitting(true);
     try {
-      const res = await addCommentApi(String(taskDetails.id), { content });
+      const res = await addCommentApi(id!, { content });
       const comment = res?.comment || {
         id: Date.now(),
         user: currentUserName,
@@ -88,7 +107,7 @@ const TaskComments = () => {
 
     setIsSubmitting(true);
     try {
-      await updateCommentApi(String(taskDetails.id), commentId, { content });
+      await updateCommentApi(id!, commentId, { content });
       updateCommentInStore(commentId, { content, edited: true });
       setEditingId(null);
       setEditContent('');
@@ -107,7 +126,7 @@ const TaskComments = () => {
 
     setIsSubmitting(true);
     try {
-      await deleteCommentApi(String(taskDetails.id), commentId);
+      await deleteCommentApi(id!, commentId);
       deleteCommentFromStore(commentId);
       toast.success('Comment deleted');
     } catch (err: any) {
@@ -134,7 +153,7 @@ const TaskComments = () => {
       <div className={clsx('p-6 border-b', darkMode ? 'border-gray-700' : 'border-gray-200')}>
         <h3 className='text-lg font-semibold flex items-center'>
           <MessageSquare className='w-5 h-5 mr-2' />
-          {`Comments (${taskDetails?.comments?.length || 0})`}
+          {`Comments (${comments?.length || 0})`}
         </h3>
       </div>
       <div className='p-6'>
@@ -173,12 +192,17 @@ const TaskComments = () => {
         </div>
 
         <div className='space-y-4'>
-          {!taskDetails?.comments?.length && (
+          {isLoading && (
+            <div className='flex justify-center py-8'>
+              <Loader2 className='w-6 h-6 animate-spin text-primary-500' />
+            </div>
+          )}
+          {!isLoading && !comments?.length && (
             <p className={clsx('text-center py-8', darkMode ? 'text-gray-400' : 'text-gray-500')}>
               No comments yet. Be the first to comment!
             </p>
           )}
-          {taskDetails?.comments?.map((comment) => (
+          {!isLoading && comments?.map((comment) => (
             <div key={comment.id} className='flex space-x-3'>
               <div
                 className='w-8 h-8 rounded-full flex items-center justify-center text-white font-medium flex-shrink-0'
