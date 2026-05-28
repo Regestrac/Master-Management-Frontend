@@ -177,7 +177,7 @@ const TaskList = () => {
       setIsLoading(true);
       getWorkspaceTasks(id, searchKey)
         .then((res) => {
-          setTasks(res.tasks);
+          setTasks(res.tasks || []);
         })
         .catch((err) => {
           toast.error(err?.error || 'Failed to fetch tasks');
@@ -288,7 +288,7 @@ const TaskList = () => {
                 darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700',
               )}
             >
-              {tasks.length}
+              {tasks?.length || 0}
             </span>
             <div className='flex items-center justify-end gap-2 flex-1'>
               <button
@@ -315,12 +315,12 @@ const TaskList = () => {
                 placeholder='Task title'
               />
             )}
-            {tasks.length < 1 ? (
+            {tasks?.length < 1 && !isVisible ? (
               <p className={darkMode ? 'text-gray-600' : 'text-gray-400'}>
                 No tasks yet.
               </p>
             ) : (
-              tasks.map((task) => (
+              tasks?.map((task) => (
                 <div key={task.id} className='space-y-1'>
                   <div
                     onClick={() => handleTaskClick(task.id)}
@@ -406,7 +406,7 @@ const TaskList = () => {
                                 />
                               );
                             })}
-                            {task.assignees.length > 2 && (
+                            {task?.assignees?.length > 2 && (
                               <div className={clsx(
                                 'w-6 h-6 rounded-full flex items-center justify-center text-xs',
                                 'border-2',
@@ -416,7 +416,7 @@ const TaskList = () => {
                               )}
                               >
                                 +
-                                {task.assignees.length - 1}
+                                {task?.assignees?.length - 1}
                               </div>
                             )}
                           </div>
@@ -435,14 +435,14 @@ const TaskList = () => {
                       </Dropdown>
                     </div>
                   </div>
-                  {task.showSubtasks && (
+                  {task?.showSubtasks && (
                     <div className={clsx('mt-1 ml-12 space-y-1', darkMode ? 'text-gray-400' : 'text-gray-600')}>
-                      {task.isLoadingSubtasks ? (
+                      {task?.isLoadingSubtasks ? (
                         <div className='flex items-center justify-center py-2'>
                           <Loader2 className='w-4 h-4 animate-spin mr-2' />
                           <span className='text-sm'>Loading subtasks...</span>
                         </div>
-                      ) : task.subtasks && task.subtasks.length > 0 ? (
+                      ) : task?.subtasks && task?.subtasks?.length > 0 ? (
                         task.subtasks.map((subtask) => (
                           <div
                             key={subtask.id}
